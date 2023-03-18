@@ -69,7 +69,7 @@ const ExpenseFormModal = ({
   const handleAmountChange = (event) => {
     const newValue = event.target.value;
 
-    if (newValue === "" || (newValue > 1 && !isNaN(newValue))) {
+    if (newValue === "" || (newValue >= 0 && !isNaN(newValue))) {
       setAmount(newValue);
     } else {
       return;

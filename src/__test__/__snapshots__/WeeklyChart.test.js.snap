@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Can create a test snapshot 1`] = `
+<div>
+  <div
+    class="section col-md-8 mx-auto mb-5 mt-5"
+    style="background-color: rgb(84, 89, 83);"
+  >
+    <h3
+      class="section-title text-white text-center"
+    >
+      Weekly Spend Analysis
+    </h3>
+    <div
+      class="section-content"
+    >
+      <div
+        class="recharts-responsive-container"
+        style="width: 90%; height: 100%;"
+      />
+    </div>
+  </div>
+</div>
+`;

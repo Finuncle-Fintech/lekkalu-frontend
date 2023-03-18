@@ -1,11 +1,13 @@
 import './App.css';
-import Recharts from './Recharts';
-import ReactChartjs2 from './ChartJs2';
+import { Provider } from './provider/Provider';
+import Charts from './components/Charts';
 
 function App() {
    return (
       <div className='App'>
-         <Recharts />
+         <Provider>
+            <Charts />
+         </Provider>
       </div>
    );
 }

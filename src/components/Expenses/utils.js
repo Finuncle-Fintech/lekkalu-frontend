@@ -12,4 +12,8 @@ export const formatDate = (date) => {
   const offsetMinutes = pad(Math.abs(offset) % 60);
 
   return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}${sign}${offsetHours}:${offsetMinutes}`;
+};
+
+export const preventPropagationOnEnter = (event) => {
+  if (event.key === 'Enter') event.preventDefault();
 }

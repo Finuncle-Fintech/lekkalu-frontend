@@ -11,7 +11,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import ExpenseFormModal from "./ExpensesModal";
 import { Context } from 'provider/Provider';
-import { StyledHeaderRow, ModalContainer } from "./styled";
+import { ModalContainer } from "./styled";
 
 const Expenses = () => {
   const {
@@ -55,14 +55,6 @@ const Expenses = () => {
       <Typography variant="h6">Expense List</Typography>
       <Table>
         <TableBody>
-          {Boolean(expenses.length) &&
-            <StyledHeaderRow>
-            <TableCell>Amount</TableCell>
-            <TableCell>Tags</TableCell>
-            <TableCell>Last Updated</TableCell>
-            <TableCell>Actions</TableCell>
-            </StyledHeaderRow>
-          }
           {expenses && Boolean(expenses.length) && expenses.map((expense, index) => (
             <TableRow key={expense.id}>
               <TableCell>{expense.amount} ₹</TableCell>

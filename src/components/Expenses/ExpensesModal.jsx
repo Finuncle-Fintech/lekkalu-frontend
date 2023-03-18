@@ -9,7 +9,8 @@ import {
   Typography
 } from "@mui/material";
 import { ModalContainer } from "./styled";
-import { formatDate } from "./utils";
+import { formatDate, preventPropagationOnEnter } from "./utils";
+import TagInput from "./TagInput";
 
 const ExpenseFormModal = ({
   onAddExpense,
@@ -19,13 +20,13 @@ const ExpenseFormModal = ({
   onCancelEdit,
 }) => {
   const [open, setOpen] = useState(false);
-  const [amount, setAmount] = useState("");
-  const [tags, setTags] = useState("");
+  const [amount, setAmount] = useState(0);
+  const [tags, setTags] = useState([]);
 
   useEffect(() => {
     if (expenseToEdit) {
       setAmount(expenseToEdit.amount);
-      setTags(expenseToEdit.tags.join(" "));
+      setTags(expenseToEdit.tags);
       setOpen(true);
     }
   }, [expenseToEdit]);
@@ -33,10 +34,6 @@ const ExpenseFormModal = ({
   const handleClickOpen = () => {
     setOpen(true);
   };
-
-  function removeExtraSpaces(text) {
-    return text.replace(/\s{2,}/g, ' ');
-  }
 
   const handleClose = () => {
     setOpen(false);
@@ -47,11 +44,10 @@ const ExpenseFormModal = ({
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const arrayTags = removeExtraSpaces(tags).split(" ").map(tag => Number(tag));
 
     const newExpense = {
       amount,
-      tags: arrayTags,
+      tags,
       user: 1,
     };
 
@@ -76,25 +72,10 @@ const ExpenseFormModal = ({
     }
   };
 
-  function isInputValid(input) {
-    const regex = /^[\d\s]+$/;
-    return regex.test(input) || input === "";
-  }
-
-  const handleTagsChange = (event) => {
-    const newValue = event.target.value;
-
-    if (isInputValid(newValue)) {
-      setTags(newValue);
-    } else {
-      return;
-    }
-  };
-
   return (
     <ModalContainer>
       <Button variant="contained" color="primary" onClick={handleClickOpen}>
-        {editIndex !== null ? "Edit Expense" : "Add Expense"}
+        Add Expense
       </Button>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>{editIndex !== null ? "Edit Expense" : "Add Expense"}</DialogTitle>
@@ -104,16 +85,12 @@ const ExpenseFormModal = ({
             <TextField
               value={amount}
               onChange={handleAmountChange}
+              onKeyPress={preventPropagationOnEnter}
               required
               fullWidth
             />
-            <Typography variant="p">Provide tags separated by spaces:</Typography>
-            <TextField
-              value={tags}
-              onChange={handleTagsChange}
-              required
-              fullWidth
-            />
+            <Typography variant="p">Provide tags:</Typography>
+            <TagInput tags={tags} setTags={setTags} />
             <DialogActions>
               <Button onClick={handleClose}>Cancel</Button>
               <Button type="submit" color="primary">

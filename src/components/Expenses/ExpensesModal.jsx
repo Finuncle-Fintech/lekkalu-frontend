@@ -25,7 +25,7 @@ const ExpenseFormModal = ({
   useEffect(() => {
     if (expenseToEdit) {
       setAmount(expenseToEdit.amount);
-      setTags(expenseToEdit.tags.join(","));
+      setTags(expenseToEdit.tags.join(" "));
       setOpen(true);
     }
   }, [expenseToEdit]);

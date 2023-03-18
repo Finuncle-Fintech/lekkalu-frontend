@@ -95,7 +95,7 @@ const Provider = ({ children }) => {
         .then((res) => {
           dispatch({
             type: Types.CREATE_EXPENSE,
-            payload: data,
+            payload: {data, id: res.data.data.id},
           });
         });
     } catch (error) {

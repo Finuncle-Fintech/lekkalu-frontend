@@ -42,7 +42,9 @@ const Reducer = (state, action) => {
         };
       }
       case Types.CREATE_EXPENSE: {
-        const newState = state.expenses.length ? [ ...state.expenses, action.payload] : [action.payload] 
+        const newState = state.expenses.length
+          ? [ ...state.expenses, { ...action.payload.data, id: action.payload.id }]
+          : [action.payload];
 
         return {
            ...state,

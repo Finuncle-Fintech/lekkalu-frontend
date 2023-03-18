@@ -60,16 +60,14 @@ const Expenses = () => {
             <TableCell>Amount</TableCell>
             <TableCell>Tags</TableCell>
             <TableCell>Last Updated</TableCell>
-            <TableCell>User</TableCell>
             <TableCell>Actions</TableCell>
             </StyledHeaderRow>
           }
           {expenses && Boolean(expenses.length) && expenses.map((expense, index) => (
             <TableRow key={expense.id}>
-              <TableCell>{expense.amount} $</TableCell>
-              <TableCell sx={{width: 200}}>{expense.tags.join(", ")}</TableCell>
+              <TableCell>{expense.amount} ₹</TableCell>
+              <TableCell>{expense.tags.join(", ")}</TableCell>
               <TableCell>{new Date(expense.time).toDateString(0)}</TableCell>
-              <TableCell>{expense.user}</TableCell>
               <TableCell>
                 <IconButton edge="end" onClick={() => setEditIndex(index)}>
                   <EditIcon />

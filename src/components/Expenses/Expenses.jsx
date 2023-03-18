@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
   Typography,
   IconButton,
@@ -10,22 +10,33 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import ExpenseFormModal from "./ExpensesModal";
+import { Context } from 'provider/Provider';
 import { StyledHeaderRow, ModalContainer } from "./styled";
 
 const Expenses = () => {
-  const [expenses, setExpenses] = useState([]);
+  const {
+    expenses,
+    fetchExpenses,
+    deleteExpenseRequest,
+    createExpenseRequest,
+    changeExpenseRequest,
+  } = useContext(Context);
   const [editIndex, setEditIndex] = useState(null);
 
-  const deleteExpense = (index) => {
-    setExpenses(expenses.filter((_, i) => i !== index));
+  useEffect(() => {
+    if (!expenses.length) fetchExpenses();
+  }, []);
+
+  const deleteExpense = (id) => {
+    deleteExpenseRequest(id);
   };
 
   const createExpense = (expense) => {
-    setExpenses([...expenses, expense]);
+    createExpenseRequest(expense);
   };
 
   const updateExpense = (index, expense) => {
-    setExpenses(expenses.map((exp, idx) => (idx === index ? expense : exp)))
+    changeExpenseRequest(index, expense);
   };
 
   const returnExpenseToEdit = () => {
@@ -53,17 +64,17 @@ const Expenses = () => {
             <TableCell>Actions</TableCell>
             </StyledHeaderRow>
           }
-          {expenses.map((expense, index) => (
+          {expenses && Boolean(expenses.length) && expenses.map((expense, index) => (
             <TableRow key={expense.id}>
               <TableCell>{expense.amount} $</TableCell>
               <TableCell sx={{width: 200}}>{expense.tags.join(", ")}</TableCell>
-              <TableCell>{expense.time}</TableCell>
+              <TableCell>{new Date(expense.time).toDateString(0)}</TableCell>
               <TableCell>{expense.user}</TableCell>
               <TableCell>
                 <IconButton edge="end" onClick={() => setEditIndex(index)}>
                   <EditIcon />
                 </IconButton>
-                <IconButton edge="end" onClick={() => deleteExpense(index)}>
+                <IconButton edge="end" onClick={() => deleteExpense(expense.id)}>
                   <DeleteIcon />
                 </IconButton>
               </TableCell>

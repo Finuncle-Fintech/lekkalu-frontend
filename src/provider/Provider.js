@@ -27,7 +27,102 @@ const Provider = ({ children }) => {
    ];
 
    let weekData = [];
-   const { expense, weeklyExpense, budget, monthlyExpenses } = store;
+
+   const { expenses, weeklyExpense, budget, monthlyExpenses } = store;
+
+   const handleErrors = (error) => {
+      if (error.response) {
+        if (error.response.status === 403) {
+           alert(error.response.data.detail);
+        } else if (error.response.status === 500) {
+           alert(error.message);
+        }
+      }
+      if (error.message == 'Network Error') {
+        alert('Network Error');
+      }
+   };
+
+   const fetchExpenses = async () => {
+    try {
+      await axios
+          .get(`${process.env.REACT_APP_API}expenses/`, {
+             auth: {
+                username: process.env.REACT_APP_USER,
+                password: process.env.REACT_APP_PASSWORD,
+             },
+          })
+          .then((res) => {
+            dispatch({
+              type: Types.FETCH_EXPENSE,
+              payload: res.data,
+            });
+          });
+    } catch (error) {
+      handleErrors(error);
+    }
+   };
+
+   const deleteExpenseRequest = async (id) => {
+    try {
+      await axios
+          .delete(`${process.env.REACT_APP_API}expenses/${id}`, {
+             auth: {
+                username: process.env.REACT_APP_USER,
+                password: process.env.REACT_APP_PASSWORD,
+             },
+          })
+          .then((res) => {
+            dispatch({
+              type: Types.DELETE_EXPENSE,
+              payload: id,
+            });
+          });
+    } catch (error) {
+      handleErrors(error);
+    }
+   };
+
+   const createExpenseRequest = async (data) => {
+    try {
+      await axios
+        .post(`${process.env.REACT_APP_API}expenses/`, data, {
+          auth: {
+            username: process.env.REACT_APP_USER,
+            password: process.env.REACT_APP_PASSWORD,
+          },
+        })
+        .then((res) => {
+          dispatch({
+            type: Types.CREATE_EXPENSE,
+            payload: data,
+          });
+        });
+    } catch (error) {
+      handleErrors(error);
+    }
+  };
+
+  const changeExpenseRequest = async (index, expense) => {
+    try {
+      await axios
+        .put(`${process.env.REACT_APP_API}expenses/${expense.id}`, expense, {
+          auth: {
+            username: process.env.REACT_APP_USER,
+            password: process.env.REACT_APP_PASSWORD,
+          },
+        })
+        .then((res) => {
+          dispatch({
+            type: Types.EDIT_EXPENSE,
+            payload: {index, expense},
+          });
+        });
+    } catch (error) {
+      handleErrors(error);
+    }
+  };
+
    const fetchData = async () => {
       try {
          await axios
@@ -113,43 +208,26 @@ const Provider = ({ children }) => {
                   payload: finalMonthlyExp,
                });
             });
-
-         await axios
-            .get(`${process.env.REACT_APP_API}expenses/`, {
-               auth: {
-                  username: process.env.REACT_APP_USER,
-                  password: process.env.REACT_APP_PASSWORD,
-               },
-            })
-            .then((res) => {
-               dispatch({
-                  type: Types.FETCH_EXPENSE,
-                  payload: res.data,
-               });
-            });
       } catch (error) {
          // Handle errors
-         if (error.response) {
-            if (error.response.status === 403) {
-               alert(error.response.data.detail);
-            } else if (error.response.status === 500) {
-               alert(error.message);
-            }
-         }
-         if (error.message == 'Network Error') {
-            alert('Network Error');
-         }
+        handleErrors(error);
       }
+
+      fetchExpenses();
    };
 
    return (
       <Context.Provider
          value={{
-            expense,
+            expenses,
             budget,
             weeklyExpense,
             monthlyExpenses,
             fetchData,
+            fetchExpenses,
+            deleteExpenseRequest,
+            createExpenseRequest,
+            changeExpenseRequest
          }}
       >
          {children}

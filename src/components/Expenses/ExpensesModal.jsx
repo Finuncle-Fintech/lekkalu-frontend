@@ -8,8 +8,8 @@ import {
   DialogTitle,
   Typography
 } from "@mui/material";
-import { v4 as uuidv4 } from "uuid";
 import { ModalContainer } from "./styled";
+import { formatDate } from "./utils";
 
 const ExpenseFormModal = ({
   onAddExpense,
@@ -34,6 +34,10 @@ const ExpenseFormModal = ({
     setOpen(true);
   };
 
+  function removeExtraSpaces(text) {
+    return text.replace(/\s{2,}/g, ' ');
+  }
+
   const handleClose = () => {
     setOpen(false);
     if (editIndex !== null) {
@@ -43,18 +47,18 @@ const ExpenseFormModal = ({
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const arrayTags = removeExtraSpaces(tags).split(" ").map(tag => Number(tag));
 
     const newExpense = {
       amount,
-      tags: tags.split(","),
-      time: new Date().toLocaleString(),
-      user: process.env.REACT_APP_USER,
+      tags: arrayTags,
+      user: 1,
     };
 
     if (editIndex !== null) {
       onUpdateExpense(editIndex, { ...expenseToEdit, ...newExpense });
     } else {
-      onAddExpense({ id: uuidv4(), ...newExpense });
+      onAddExpense({ time: formatDate(new Date()), ...newExpense });
     }
 
     setAmount("");
@@ -67,6 +71,21 @@ const ExpenseFormModal = ({
 
     if (newValue === "" || (newValue > 1 && !isNaN(newValue))) {
       setAmount(newValue);
+    } else {
+      return;
+    }
+  };
+
+  function isInputValid(input) {
+    const regex = /^[\d\s]+$/;
+    return regex.test(input) || input === "";
+  }
+
+  const handleTagsChange = (event) => {
+    const newValue = event.target.value;
+
+    if (isInputValid(newValue)) {
+      setTags(newValue);
     } else {
       return;
     }
@@ -88,10 +107,10 @@ const ExpenseFormModal = ({
               required
               fullWidth
             />
-            <Typography variant="p">Provide tags:</Typography>
+            <Typography variant="p">Provide tags separated by spaces:</Typography>
             <TextField
               value={tags}
-              onChange={(e) => setTags(e.target.value)}
+              onChange={handleTagsChange}
               required
               fullWidth
             />

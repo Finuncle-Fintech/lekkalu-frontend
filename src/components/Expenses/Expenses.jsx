@@ -1,8 +1,10 @@
 import React, { useState, useContext, useEffect } from "react";
 import {
   Typography,
-  TablePagination
+  TablePagination,
+  IconButton
 } from "@mui/material";
+import { SkipNext, SkipPrevious } from '@mui/icons-material';
 import ExpenseFormModal from "./ExpensesModal";
 import { Context } from 'provider/Provider';
 import { ModalContainer } from "./styled";
@@ -20,12 +22,12 @@ const Expenses = () => {
   } = useContext(Context);
   const [editIndex, setEditIndex] = useState(null);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const rowsPerPage = 10;
 
   useEffect(() => {
     if (!tags.length) fetchTags();
     fetchExpenses(page, rowsPerPage);
-  }, [page, rowsPerPage]);
+  }, [page]);
 
   const getTagObjects = (tagValues) => {
     return tagValues
@@ -48,7 +50,7 @@ const Expenses = () => {
   };
 
   const createExpense = (expense) => {
-    createExpenseRequest({ ...expense, tags: getTagObjects(expense.tags) });
+    createExpenseRequest({ ...expense });
   };
 
   const updateExpense = (index, expense) => {
@@ -63,11 +65,6 @@ const Expenses = () => {
     setPage(newPage);
   };
 
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
-
   return (
     <ModalContainer>
       <ExpenseFormModal
@@ -78,20 +75,66 @@ const Expenses = () => {
         onCancelEdit={() => setEditIndex(null)}
       />
       <Typography variant="h6">Expense List</Typography>
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <IconButton
+          onClick={() => {
+            setPage((prevPage) => Math.max(prevPage - 3, 0));
+          }}
+        >
+          <SkipPrevious />
+        </IconButton>
+        <TablePagination
+          component="div"
+          count={90}
+          page={page}
+          onPageChange={handleChangePage}
+          rowsPerPage={rowsPerPage}
+          rowsPerPageOptions={[]}
+          labelDisplayedRows={() => ''}
+        />
+        <IconButton
+          onClick={() => {
+            setPage((prevPage) => Math.min(prevPage + 3, Math.floor(8)));
+          }}
+        >
+          <SkipNext />
+        </IconButton>
+        {page * 10 + 1} - {page * 10 + 10} of 90
+      </div>
       <ExpensesList
         expenses={expenses}
         getTagNames={getTagNames}
         setEditIndex={setEditIndex}
         deleteExpense={deleteExpense}
       />
-      <TablePagination
-        component="div"
-        count={90}
-        page={page}
-        onPageChange={handleChangePage}
-        rowsPerPage={10}
-        rowsPerPageOptions={[]}
-      />
+      {!!expenses.length &&
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <IconButton
+            onClick={() => {
+              setPage((prevPage) => Math.max(prevPage - 3, 0));
+            }}
+          >
+            <SkipPrevious />
+          </IconButton>
+          <TablePagination
+            component="div"
+            count={90}
+            page={page}
+            onPageChange={handleChangePage}
+            rowsPerPage={10}
+            rowsPerPageOptions={[]}
+            labelDisplayedRows={() => ''}
+          />
+          <IconButton
+            onClick={() => {
+              setPage((prevPage) => Math.min(prevPage + 3, 8));
+            }}
+          >
+            <SkipNext />
+          </IconButton>
+          {page * 10 + 1} - {page * 10 + 10} of 90
+        </div>
+      }
     </ModalContainer>
   );
 };

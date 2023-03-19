@@ -8,9 +8,13 @@ import {
   DialogTitle,
   Typography
 } from "@mui/material";
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { ModalContainer } from "./styled";
 import { formatDate, preventPropagationOnEnter } from "./utils";
 import TagInput from "./TagInput";
+import dayjs from "dayjs";
 
 const ExpenseFormModal = ({
   onAddExpense,
@@ -22,12 +26,13 @@ const ExpenseFormModal = ({
   const [open, setOpen] = useState(false);
   const [amount, setAmount] = useState(0);
   const [myTags, setMyTags] = useState([]);
+  const [selectedDate, setSelectedDate] = useState(new Date());
 
   useEffect(() => {
     if (expenseToEdit) {
       setAmount(expenseToEdit.amount);
       setMyTags(expenseToEdit.tags);
-      console.log(expenseToEdit.tags);
+      setSelectedDate(new Date(expenseToEdit.time));
       setOpen(true);
     }
   }, [expenseToEdit]);
@@ -43,6 +48,10 @@ const ExpenseFormModal = ({
     }
   };
 
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const tagIDs = myTags.map(tag => tag.id);
@@ -51,12 +60,13 @@ const ExpenseFormModal = ({
       amount,
       tags: tagIDs,
       user: 1,
+      time: formatDate(new Date(selectedDate))
     };
 
     if (editIndex !== null) {
       onUpdateExpense(editIndex, { ...expenseToEdit, ...newExpense });
     } else {
-      onAddExpense({ time: formatDate(new Date()), ...newExpense });
+      onAddExpense({ ...newExpense });
     }
 
     setAmount("");
@@ -93,6 +103,12 @@ const ExpenseFormModal = ({
             />
             <Typography variant="p">Provide tags:</Typography>
             <TagInput myTags={myTags} setTags={setMyTags} />
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker
+                defaultValue={dayjs(selectedDate)}
+                onChange={handleDateChange}
+              />
+            </LocalizationProvider>
             <DialogActions>
               <Button onClick={handleClose}>Cancel</Button>
               <Button type="submit" color="primary">

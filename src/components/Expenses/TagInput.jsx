@@ -1,21 +1,12 @@
 import React, { useState, useContext } from 'react';
-import { styled } from '@mui/system';
-import { TextField, Chip, Autocomplete } from '@mui/material';
+import { TextField, Autocomplete } from '@mui/material';
 import { preventPropagationOnEnter } from './utils';
 import { Context } from 'provider/Provider';
-
-const TagContainer = styled('div')({
-  display: 'flex',
-  flexWrap: 'wrap',
-  gap: '8px',
-  marginBottom: '8px',
-});
 
 const TagInput = ({myTags, setTags}) => {
   const [inputValue, setInputValue] = useState('');
   const [isError, setIsError] = useState(false);
   const { tags } = useContext(Context);
-  const options = tags.map(tag => tag.name);
 
   function isInputValid(input) {
     const regex = /^[\d\s]+$/;
@@ -45,7 +36,6 @@ const TagInput = ({myTags, setTags}) => {
         options={tags}
         value={myTags || []}
         onChange={(_, newValue) => {
-          console.log(myTags)
           setTags(newValue);
         }}
         getOptionLabel={(option) => option.name}

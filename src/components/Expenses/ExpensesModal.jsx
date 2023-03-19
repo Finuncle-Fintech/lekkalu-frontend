@@ -6,7 +6,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  Typography
+  Typography,
 } from "@mui/material";
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -15,6 +15,8 @@ import { ModalContainer } from "./styled";
 import { formatDate, preventPropagationOnEnter } from "./utils";
 import TagInput from "./TagInput";
 import dayjs from "dayjs";
+import ReactFileReader from "react-file-reader";
+import PublishIcon from '@mui/icons-material/Publish';
 
 const ExpenseFormModal = ({
   onAddExpense,
@@ -22,6 +24,7 @@ const ExpenseFormModal = ({
   expenseToEdit,
   editIndex,
   onCancelEdit,
+  handleFileUpload
 }) => {
   const [open, setOpen] = useState(false);
   const [amount, setAmount] = useState();
@@ -118,6 +121,12 @@ const ExpenseFormModal = ({
               </LocalizationProvider>
             </div>
             <DialogActions>
+              <ReactFileReader
+                fileTypes={[".xls", ".xlsx"]}
+                handleFiles={handleFileUpload}
+              >
+                <Button>Upload With Excel<PublishIcon sx={{ marginRight: "90px" }}/></Button>
+              </ReactFileReader>
               <Button onClick={handleClose}>Cancel</Button>
               <Button type="submit" color="primary">
                 {editIndex !== null ? "Update" : "Add"}

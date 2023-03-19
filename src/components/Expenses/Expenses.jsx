@@ -9,6 +9,8 @@ import ExpenseFormModal from "./ExpensesModal";
 import { Context } from 'provider/Provider';
 import { ModalContainer } from "./styled";
 import ExpensesList from "./ExpenseList";
+import { formatDate } from "./utils";
+import * as XLSX from "xlsx";
 
 const Expenses = () => {
   const {
@@ -35,6 +37,15 @@ const Expenses = () => {
       .filter((tag) => tag !== undefined);
   };
 
+  const getTagNumbers = (tagValues) => {
+    return tagValues
+      .map((tagValue) => {
+        const foundTag = tags.find((tag) => tag.name === tagValue);
+        return foundTag ? foundTag.id : null;
+      })
+      .filter((tag) => tag !== undefined);
+  };
+
   const getTagNames = (tagValues) => {
     return tagValues
       .map((tagValue) => {
@@ -43,6 +54,31 @@ const Expenses = () => {
       })
       .filter((tagName) => tagName !== null)
       .join(', ');
+  };
+
+  const handleFileUpload = (files) => {
+    const file = files[0];
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const data = event.target.result;
+      const workbook = XLSX.read(data, { type: "binary" });
+
+      const sheetName = workbook.SheetNames[0];
+      const sheet = workbook.Sheets[sheetName];
+
+      const parsedData = XLSX.utils.sheet_to_json(sheet);
+
+      if (parsedData.length > 0) {
+        parsedData.map(entry => {
+          const dateFormatted = formatDate(new Date(entry.date));
+          const tagsIds = getTagNumbers(entry.tags.split(", "));
+          delete entry.date;
+          createExpenseRequest({ ...entry, tags: tagsIds, time: dateFormatted, user: 1 });
+        });
+      }
+    };
+
+    reader.readAsBinaryString(file);
   };
 
   const deleteExpense = (id) => {
@@ -73,6 +109,7 @@ const Expenses = () => {
         expenseToEdit={returnExpenseToEdit()}
         editIndex={editIndex}
         onCancelEdit={() => setEditIndex(null)}
+        handleFileUpload={handleFileUpload}
       />
       <Typography variant="h6">Expense List</Typography>
       <div style={{ display: 'flex', alignItems: 'center' }}>

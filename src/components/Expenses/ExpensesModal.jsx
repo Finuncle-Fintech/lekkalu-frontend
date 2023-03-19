@@ -101,14 +101,17 @@ const ExpenseFormModal = ({
               required
               fullWidth
             />
-            <Typography variant="p">Provide tags:</Typography>
+            <Typography variant="p">Select tags:</Typography>
             <TagInput myTags={myTags} setTags={setMyTags} />
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DatePicker
-                defaultValue={dayjs(selectedDate)}
-                onChange={handleDateChange}
-              />
-            </LocalizationProvider>
+            <Typography variant="p">Choose the date:</Typography>
+            <div>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DatePicker
+                  defaultValue={dayjs(selectedDate)}
+                  onChange={handleDateChange}
+                />
+              </LocalizationProvider>
+            </div>
             <DialogActions>
               <Button onClick={handleClose}>Cancel</Button>
               <Button type="submit" color="primary">

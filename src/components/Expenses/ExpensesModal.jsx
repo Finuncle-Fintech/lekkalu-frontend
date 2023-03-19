@@ -24,7 +24,7 @@ const ExpenseFormModal = ({
   onCancelEdit,
 }) => {
   const [open, setOpen] = useState(false);
-  const [amount, setAmount] = useState(0);
+  const [amount, setAmount] = useState();
   const [myTags, setMyTags] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
 
@@ -74,10 +74,15 @@ const ExpenseFormModal = ({
     handleClose();
   };
 
+  const isAmountValid = (value) => {
+    const regex = /^(0|[1-9]\d*)(\.\d{0,2})?$/;
+    return regex.test(value);
+  }
+
   const handleAmountChange = (event) => {
     const newValue = event.target.value;
 
-    if (newValue === "" || (newValue >= 0 && !isNaN(newValue))) {
+    if (newValue === "" || isAmountValid(newValue)) {
       setAmount(newValue);
     } else {
       return;

@@ -1,4 +1,4 @@
-import { AppBar, Toolbar, Button } from '@mui/material';
+import { AppBar, Toolbar } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { HeaderButton } from './styled';
 

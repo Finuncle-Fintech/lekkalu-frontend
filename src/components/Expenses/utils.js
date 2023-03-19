@@ -16,4 +16,4 @@ export const formatDate = (date) => {
 
 export const preventPropagationOnEnter = (event) => {
   if (event.key === 'Enter') event.preventDefault();
-}
+};

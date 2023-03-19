@@ -6,6 +6,7 @@ const Types = {
    DELETE_EXPENSE: 'DELETE_EXPENSE',
    CREATE_EXPENSE: 'CREATE_EXPENSE',
    EDIT_EXPENSE: 'EDIT_EXPENSE',
+   FETCH_TAGS: 'FETCH_TAGS'
 };
 
 export default Types;

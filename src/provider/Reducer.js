@@ -5,6 +5,7 @@ export const InitialState = {
    expenses: [],
    weeklyExpense: [],
    monthlyExpenses: [],
+   tags: [],
 };
 
 const Reducer = (state, action) => {
@@ -60,6 +61,12 @@ const Reducer = (state, action) => {
            ...state,
            expenses: newState,
         };
+      }
+      case Types.FETCH_TAGS: {
+        return {
+          ...state,
+          tags: action.payload,
+       };
       }
   }
 };

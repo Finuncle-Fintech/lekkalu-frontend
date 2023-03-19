@@ -21,12 +21,13 @@ const ExpenseFormModal = ({
 }) => {
   const [open, setOpen] = useState(false);
   const [amount, setAmount] = useState(0);
-  const [tags, setTags] = useState([]);
+  const [myTags, setMyTags] = useState([]);
 
   useEffect(() => {
     if (expenseToEdit) {
       setAmount(expenseToEdit.amount);
-      setTags(expenseToEdit.tags);
+      setMyTags(expenseToEdit.tags);
+      console.log(expenseToEdit.tags);
       setOpen(true);
     }
   }, [expenseToEdit]);
@@ -44,10 +45,11 @@ const ExpenseFormModal = ({
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const tagIDs = myTags.map(tag => tag.id);
 
     const newExpense = {
       amount,
-      tags,
+      tags: tagIDs,
       user: 1,
     };
 
@@ -58,7 +60,7 @@ const ExpenseFormModal = ({
     }
 
     setAmount("");
-    setTags("");
+    setMyTags("");
     handleClose();
   };
 
@@ -90,7 +92,7 @@ const ExpenseFormModal = ({
               fullWidth
             />
             <Typography variant="p">Provide tags:</Typography>
-            <TagInput tags={tags} setTags={setTags} />
+            <TagInput myTags={myTags} setTags={setMyTags} />
             <DialogActions>
               <Button onClick={handleClose}>Cancel</Button>
               <Button type="submit" color="primary">

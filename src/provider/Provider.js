@@ -28,7 +28,7 @@ const Provider = ({ children }) => {
 
    let weekData = [];
 
-   const { expenses, weeklyExpense, budget, monthlyExpenses } = store;
+   const { expenses, tags, weeklyExpense, budget, monthlyExpenses } = store;
 
    const handleErrors = (error) => {
       if (error.response) {
@@ -42,6 +42,26 @@ const Provider = ({ children }) => {
         alert('Network Error');
       }
    };
+
+   const fetchTags = async () => {
+    try {
+      await axios
+        .get('http://localhost:8000/api/tag/', {
+          auth: {
+            username: process.env.REACT_APP_USER,
+            password: process.env.REACT_APP_PASSWORD,
+          },
+        })
+        .then((res) => {
+          dispatch({
+            type: Types.FETCH_TAGS,
+            payload: res.data,
+          });
+        });
+    } catch (error) {
+      handleErrors(error);
+    }
+  };
 
    const fetchExpenses = async () => {
     try {
@@ -220,6 +240,7 @@ const Provider = ({ children }) => {
       <Context.Provider
          value={{
             expenses,
+            tags,
             budget,
             weeklyExpense,
             monthlyExpenses,
@@ -227,7 +248,8 @@ const Provider = ({ children }) => {
             fetchExpenses,
             deleteExpenseRequest,
             createExpenseRequest,
-            changeExpenseRequest
+            changeExpenseRequest,
+            fetchTags
          }}
       >
          {children}

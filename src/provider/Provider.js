@@ -63,25 +63,30 @@ const Provider = ({ children }) => {
     }
   };
 
-   const fetchExpenses = async () => {
+  const fetchExpenses = async (page, rowsPerPage) => {
     try {
       await axios
-          .get(`${process.env.REACT_APP_API}expenses/`, {
-             auth: {
-                username: process.env.REACT_APP_USER,
-                password: process.env.REACT_APP_PASSWORD,
-             },
-          })
-          .then((res) => {
-            dispatch({
-              type: Types.FETCH_EXPENSE,
-              payload: res.data,
-            });
+        .get(`${process.env.REACT_APP_API}expenses/`, {
+          auth: {
+            username: process.env.REACT_APP_USER,
+            password: process.env.REACT_APP_PASSWORD,
+          },
+          params: {
+            page: page + 1,
+            per_page: rowsPerPage,
+          },
+        })
+        .then((res) => {
+          dispatch({
+            type: Types.FETCH_EXPENSE,
+            payload: res.data,
           });
+        });
     } catch (error) {
       handleErrors(error);
     }
-   };
+  };
+  
 
    const deleteExpenseRequest = async (id) => {
     try {
@@ -205,9 +210,6 @@ const Provider = ({ children }) => {
                   password: process.env.REACT_APP_PASSWORD,
                },
             })
-
-            // await axios
-            // .get(`${process.env.REACT_APP_API}monthly_expenses/`)
             .then((res) => {
                let finalMonthlyExp = [];
                let response = res.data;
@@ -233,7 +235,7 @@ const Provider = ({ children }) => {
         handleErrors(error);
       }
 
-      fetchExpenses();
+      //Removed fetch expenses here, because it breaks pagination request on expenses page
    };
 
    return (

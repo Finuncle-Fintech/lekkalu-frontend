@@ -24,7 +24,8 @@ const ExpenseFormModal = ({
   expenseToEdit,
   editIndex,
   onCancelEdit,
-  handleFileUpload
+  handleFileUpload,
+  Context
 }) => {
   const [open, setOpen] = useState(false);
   const [amount, setAmount] = useState();
@@ -94,7 +95,12 @@ const ExpenseFormModal = ({
 
   return (
     <ModalContainer>
-      <Button variant="contained" color="primary" onClick={handleClickOpen}>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={handleClickOpen}
+        data-testid="add-expense"
+      >
         Add Expense
       </Button>
       <Dialog open={open} onClose={handleClose}>
@@ -110,7 +116,7 @@ const ExpenseFormModal = ({
               fullWidth
             />
             <Typography variant="p">Select tags:</Typography>
-            <TagInput myTags={myTags} setTags={setMyTags} />
+            <TagInput myTags={myTags} setTags={setMyTags} Context={Context}/>
             <Typography variant="p">Choose the date:</Typography>
             <div>
               <LocalizationProvider dateAdapter={AdapterDayjs}>

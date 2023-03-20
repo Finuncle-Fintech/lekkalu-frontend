@@ -1,9 +1,8 @@
 import React, { useState, useContext } from 'react';
 import { TextField, Autocomplete } from '@mui/material';
 import { preventPropagationOnEnter } from './utils';
-import { Context } from 'provider/Provider';
 
-const TagInput = ({myTags, setTags}) => {
+const TagInput = ({myTags, setTags, Context}) => {
   const [inputValue, setInputValue] = useState('');
   const [isError, setIsError] = useState(false);
   const { tags } = useContext(Context);

@@ -6,13 +6,12 @@ import {
 } from "@mui/material";
 import { SkipNext, SkipPrevious } from '@mui/icons-material';
 import ExpenseFormModal from "./ExpensesModal";
-import { Context } from 'provider/Provider';
 import { ModalContainer } from "./styled";
 import ExpensesList from "./ExpenseList";
 import { formatDate } from "./utils";
 import * as XLSX from "xlsx";
 
-const Expenses = () => {
+const Expenses = ({ Context }) => {
   const {
     expenses,
     tags,
@@ -110,6 +109,7 @@ const Expenses = () => {
         editIndex={editIndex}
         onCancelEdit={() => setEditIndex(null)}
         handleFileUpload={handleFileUpload}
+        Context={Context}
       />
       <Typography variant="h6">Expense List</Typography>
       <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -177,3 +177,4 @@ const Expenses = () => {
 };
 
 export default Expenses;
+

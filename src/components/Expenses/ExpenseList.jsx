@@ -15,10 +15,10 @@ const ExpensesList = ({ expenses, getTagNames, setEditIndex, deleteExpense }) =>
               <TableCell>{getTagNames(expense.tags)}</TableCell>
               <TableCell>{new Date(expense.time).toDateString(0)}</TableCell>
               <TableCell>
-                <IconButton edge="end" onClick={() => setEditIndex(index)}>
+                <IconButton placeholder="edit-expense" edge="end" onClick={() => setEditIndex(index)}>
                   <EditIcon />
                 </IconButton>
-                <IconButton edge="end" onClick={() => deleteExpense(expense.id)}>
+                <IconButton placeholder="delete-expense" edge="end" onClick={() => deleteExpense(expense.id)}>
                   <DeleteIcon />
                 </IconButton>
               </TableCell>

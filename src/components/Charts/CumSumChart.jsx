@@ -11,7 +11,7 @@ import {
    Tooltip,
    Legend,
 } from 'recharts';
-import Colors from '../constants/colors';
+import Colors from 'constants/colors';
 
 //export const handleMouseOver = jest.fn();
 //export const handleSyncMethod = jest.fn();

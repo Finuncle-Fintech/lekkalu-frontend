@@ -1,9 +1,9 @@
 import React from 'react';
 import { useState, useEffect, useContext } from 'react';
-import { Context } from '../provider/Provider';
+import { Context } from 'provider/Provider';
 import { WeeklyChart } from './WeeklyChart';
 import BeatLoader from 'react-spinners/BeatLoader';
-import Colors from '../constants/colors';
+import Colors from 'constants/colors';
 import { SpentBalanceChart } from './SpentBalanceChart';
 import { CumSumChart } from './CumSumChart';
 

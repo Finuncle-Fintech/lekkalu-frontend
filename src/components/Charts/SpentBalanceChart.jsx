@@ -11,7 +11,7 @@ import {
    Tooltip,
    Legend,
 } from 'recharts';
-import Colors from '../constants/colors';
+import Colors from 'constants/colors';
 
 const CustomTooltip = ({ active, payload, label }) => {
    if (active && payload && payload.length) {

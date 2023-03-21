@@ -10,7 +10,7 @@ import {
    Tooltip,
    Legend,
 } from 'recharts';
-import Colors from '../constants/colors';
+import Colors from 'constants/colors';
 
 export const WeeklyChart = (WeekData) => {
    return (

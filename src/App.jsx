@@ -1,12 +1,12 @@
-import './App.css';
-import { Provider } from './provider/Provider';
-import Charts from './components/Charts';
+import 'App.css';
+import { Provider } from 'provider/Provider';
+import Router from 'Router';
 
 function App() {
    return (
       <div className='App'>
          <Provider>
-            <Charts />
+            <Router />
          </Provider>
       </div>
    );

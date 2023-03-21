@@ -5,7 +5,8 @@ import App from './App';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-   <React.StrictMode>
+  // Commented because the app renders twice with this:
+  //<React.StrictMode>
       <App />
-   </React.StrictMode>
+  //</React.StrictMode>
 );

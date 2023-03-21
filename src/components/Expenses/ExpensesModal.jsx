@@ -114,6 +114,7 @@ const ExpenseFormModal = ({
               onKeyPress={preventPropagationOnEnter}
               required
               fullWidth
+              data-testid="amount-expense"
             />
             <Typography variant="p">Select tags:</Typography>
             <TagInput myTags={myTags} setTags={setMyTags} Context={Context}/>
@@ -134,7 +135,7 @@ const ExpenseFormModal = ({
                 <Button>Upload With Excel<PublishIcon sx={{ marginRight: "90px" }}/></Button>
               </ReactFileReader>
               <Button onClick={handleClose}>Cancel</Button>
-              <Button type="submit" color="primary">
+              <Button type="submit" color="primary" data-testid="submit-expense">
                 {editIndex !== null ? "Update" : "Add"}
               </Button>
             </DialogActions>

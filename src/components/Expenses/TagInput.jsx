@@ -46,6 +46,7 @@ const TagInput = ({myTags, setTags, Context}) => {
             label="Tag"
             variant="outlined"
             helperText="Select a tag from the list"
+            data-testid="tags-expense"
             error={isError}
             fullWidth
           />

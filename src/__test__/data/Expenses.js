@@ -8,7 +8,7 @@ export const mockExpenses = [
   {
     id: 1,
     amount: 10.0,
-    tags: [1, 2],
+    tags: [3, 2],
     user: 1,
     time: "2023-01-01T10:00:00Z",
   },
@@ -35,4 +35,6 @@ export const mockState = {
   fetchTags: jest.fn(),
   fetchExpenses: jest.fn(),
   deleteExpenseRequest: jest.fn(),
+  changeExpenseRequest: jest.fn(),
+  createExpenseRequest: jest.fn(),
 };

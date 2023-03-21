@@ -122,7 +122,7 @@ const Expenses = ({ Context }) => {
         </IconButton>
         <TablePagination
           component="div"
-          count={80}
+          count={70}
           page={page}
           onPageChange={handleChangePage}
           rowsPerPage={rowsPerPage}
@@ -131,12 +131,12 @@ const Expenses = ({ Context }) => {
         />
         <IconButton
           onClick={() => {
-            setPage((prevPage) => Math.min(prevPage + 3, 7));
+            setPage((prevPage) => Math.min(prevPage + 3, 6));
           }}
         >
           <SkipNext />
         </IconButton>
-        {page * 10 + 1} - {page * 10 + 10} of 80
+        {page * 10 + 1} - {page * 10 + 10} of 70
       </div>
       <ExpensesList
         expenses={expenses}
@@ -155,7 +155,7 @@ const Expenses = ({ Context }) => {
           </IconButton>
           <TablePagination
             component="div"
-            count={80}
+            count={70}
             page={page}
             onPageChange={handleChangePage}
             rowsPerPage={10}
@@ -164,12 +164,12 @@ const Expenses = ({ Context }) => {
           />
           <IconButton
             onClick={() => {
-              setPage((prevPage) => Math.min(prevPage + 3, 7));
+              setPage((prevPage) => Math.min(prevPage + 3, 6));
             }}
           >
             <SkipNext />
           </IconButton>
-          {page * 10 + 1} - {page * 10 + 10} of 80
+          {page * 10 + 1} - {page * 10 + 10} of 70
         </div>
       }
     </ModalContainer>

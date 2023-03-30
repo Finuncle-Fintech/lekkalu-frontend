@@ -1,6 +1,7 @@
 import { AppBar, Toolbar } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { HeaderButton } from './styled';
+import Signin from 'components/Signin/Signin';
 
 const Header = () => {
   return (
@@ -12,6 +13,7 @@ const Header = () => {
         <HeaderButton color="inherit" component={Link} to="/expenses">
           Expenses
         </HeaderButton>
+        <Signin/>
       </Toolbar>
     </AppBar>
   );

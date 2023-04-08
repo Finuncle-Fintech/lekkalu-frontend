@@ -11,6 +11,8 @@ const Context = createContext({
 const Provider = ({ children }) => {
    const [store, dispatch] = useReducer(Reducer, InitialState);
    let finalDataWeekly = [];
+   let finalLiabilities = [];
+   let finalAssets = [];
    const monthNames = [
       'January',
       'February',
@@ -28,125 +30,136 @@ const Provider = ({ children }) => {
 
    let weekData = [];
 
-   const { expenses, tags, weeklyExpense, budget, monthlyExpenses } = store;
+   const {
+      expenses,
+      tags,
+      weeklyExpense,
+      budget,
+      monthlyExpenses,
+      assets,
+      liabilities,
+   } = store;
 
    const handleErrors = (error) => {
       if (error.response) {
-        if (error.response.status === 403) {
-           alert(error.response.data.detail);
-        } else if (error.response.status === 500) {
-           alert(error.message);
-        }
+         if (error.response.status === 403) {
+            alert(error.response.data.detail);
+         } else if (error.response.status === 500) {
+            alert(error.message);
+         }
       }
       if (error.message == 'Network Error') {
-        alert('Network Error');
+         alert('Network Error');
       }
    };
 
    const fetchTags = async () => {
-    try {
-      await axios
-        .get('http://localhost:8000/api/tag/', {
-          auth: {
-            username: process.env.REACT_APP_USER,
-            password: process.env.REACT_APP_PASSWORD,
-          },
-        })
-        .then((res) => {
-          dispatch({
-            type: Types.FETCH_TAGS,
-            payload: res.data,
-          });
-        });
-    } catch (error) {
-      handleErrors(error);
-    }
-  };
+      try {
+         await axios
+            .get(`${process.env.REACT_APP_API}tag/`, {
+               auth: {
+                  username: process.env.REACT_APP_USER,
+                  password: process.env.REACT_APP_PASSWORD,
+               },
+            })
+            .then((res) => {
+               dispatch({
+                  type: Types.FETCH_TAGS,
+                  payload: res.data,
+               });
+            });
+      } catch (error) {
+         handleErrors(error);
+      }
+   };
 
-  const fetchExpenses = async (page, rowsPerPage) => {
-    try {
-      await axios
-        .get(`${process.env.REACT_APP_API}expenses/`, {
-          auth: {
-            username: process.env.REACT_APP_USER,
-            password: process.env.REACT_APP_PASSWORD,
-          },
-          params: {
-            page: page + 1,
-            per_page: rowsPerPage,
-          },
-        })
-        .then((res) => {
-          dispatch({
-            type: Types.FETCH_EXPENSE,
-            payload: res.data,
-          });
-        });
-    } catch (error) {
-      handleErrors(error);
-    }
-  };
-  
+   const fetchExpenses = async (page, rowsPerPage) => {
+      try {
+         await axios
+            .get(`${process.env.REACT_APP_API}expenses/`, {
+               auth: {
+                  username: process.env.REACT_APP_USER,
+                  password: process.env.REACT_APP_PASSWORD,
+               },
+               params: {
+                  page: page + 1,
+                  per_page: rowsPerPage,
+               },
+            })
+            .then((res) => {
+               dispatch({
+                  type: Types.FETCH_EXPENSE,
+                  payload: res.data,
+               });
+            });
+      } catch (error) {
+         handleErrors(error);
+      }
+   };
 
    const deleteExpenseRequest = async (id) => {
-    try {
-      await axios
-          .delete(`${process.env.REACT_APP_API}expenses/${id}`, {
-             auth: {
-                username: process.env.REACT_APP_USER,
-                password: process.env.REACT_APP_PASSWORD,
-             },
-          })
-          .then((res) => {
-            dispatch({
-              type: Types.DELETE_EXPENSE,
-              payload: id,
+      try {
+         await axios
+            .delete(`${process.env.REACT_APP_API}expenses/${id}`, {
+               auth: {
+                  username: process.env.REACT_APP_USER,
+                  password: process.env.REACT_APP_PASSWORD,
+               },
+            })
+            .then((res) => {
+               dispatch({
+                  type: Types.DELETE_EXPENSE,
+                  payload: id,
+               });
             });
-          });
-    } catch (error) {
-      handleErrors(error);
-    }
+      } catch (error) {
+         handleErrors(error);
+      }
    };
 
    const createExpenseRequest = async (data) => {
-    try {
-      await axios
-        .post(`${process.env.REACT_APP_API}expenses/`, data, {
-          auth: {
-            username: process.env.REACT_APP_USER,
-            password: process.env.REACT_APP_PASSWORD,
-          },
-        })
-        .then((res) => {
-          dispatch({
-            type: Types.CREATE_EXPENSE,
-            payload: {data, id: res.data.data.id},
-          });
-        });
-    } catch (error) {
-      handleErrors(error);
-    }
-  };
+      try {
+         await axios
+            .post(`${process.env.REACT_APP_API}expenses/`, data, {
+               auth: {
+                  username: process.env.REACT_APP_USER,
+                  password: process.env.REACT_APP_PASSWORD,
+               },
+            })
+            .then((res) => {
+               dispatch({
+                  type: Types.CREATE_EXPENSE,
+                  payload: { data, id: res.data.data.id },
+               });
+            });
+      } catch (error) {
+         handleErrors(error);
+      }
+   };
 
-  const changeExpenseRequest = async (index, expense) => {
-    try {
-      await axios
-        .put(`${process.env.REACT_APP_API}expenses/${expense.id}`, expense, {
-          auth: {
-            username: process.env.REACT_APP_USER,
-            password: process.env.REACT_APP_PASSWORD,
-          },
-        })
-        .then((res) => {
-          dispatch({
-            type: Types.EDIT_EXPENSE,
-            payload: {index, expense},
-          });
-        });
-    } catch (error) {
-      handleErrors(error);
-    }
-  };
+   const changeExpenseRequest = async (index, expense) => {
+      try {
+         await axios
+            .put(
+               `${process.env.REACT_APP_API}expenses/${expense.id}`,
+               expense,
+               {
+                  auth: {
+                     username: process.env.REACT_APP_USER,
+                     password: process.env.REACT_APP_PASSWORD,
+                  },
+               }
+            )
+            .then((res) => {
+               dispatch({
+                  type: Types.EDIT_EXPENSE,
+                  payload: { index, expense },
+               });
+            });
+      } catch (error) {
+         handleErrors(error);
+      }
+   };
 
    const fetchData = async () => {
       try {
@@ -203,6 +216,56 @@ const Provider = ({ children }) => {
                   payload: finalDataWeekly,
                });
             });
+
+         await axios
+            .get(`${process.env.REACT_APP_API}assets/`, {
+               auth: {
+                  username: process.env.REACT_APP_USER,
+                  password: process.env.REACT_APP_PASSWORD,
+               },
+            })
+            .then((res) => {
+               let totalVal = 0;
+               res.data.map((da) => {
+                  totalVal += da.market_value;
+                  finalAssets = [
+                     ...finalAssets,
+                     {
+                        name: da.name,
+                        value: parseFloat(da.market_value),
+                     },
+                  ];
+               });
+               dispatch({
+                  type: Types.FETCH_ASSETS,
+                  payload: { finalAssets, totalVal },
+               });
+            });
+
+         await axios
+            .get(`${process.env.REACT_APP_API}loans/`, {
+               auth: {
+                  username: process.env.REACT_APP_USER,
+                  password: process.env.REACT_APP_PASSWORD,
+               },
+            })
+            .then((res) => {
+               let totalVal = 0;
+               res.data.map((da) => {
+                  totalVal += parseFloat(da.balance);
+                  finalLiabilities = [
+                     ...finalLiabilities,
+                     {
+                        name: da.name,
+                        value: parseFloat(da.balance),
+                     },
+                  ];
+               });
+               dispatch({
+                  type: Types.FETCH_LIABILITIES,
+                  payload: { finalLiabilities, totalVal },
+               });
+            });
          await axios
             .get(`${process.env.REACT_APP_API}monthly_expenses/`, {
                auth: {
@@ -232,7 +295,7 @@ const Provider = ({ children }) => {
             });
       } catch (error) {
          // Handle errors
-        handleErrors(error);
+         handleErrors(error);
       }
 
       //Removed fetch expenses here, because it breaks pagination request on expenses page
@@ -246,12 +309,14 @@ const Provider = ({ children }) => {
             budget,
             weeklyExpense,
             monthlyExpenses,
+            assets,
+            liabilities,
             fetchData,
             fetchExpenses,
             deleteExpenseRequest,
             createExpenseRequest,
             changeExpenseRequest,
-            fetchTags
+            fetchTags,
          }}
       >
          {children}

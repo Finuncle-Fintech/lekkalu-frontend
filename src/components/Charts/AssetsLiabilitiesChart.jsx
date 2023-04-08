@@ -15,7 +15,7 @@ export const AssetsLiabilitiesChart = (props) => {
    let totalValue = props.data.totalVal;
    let pieData;
    if (props.type == 'assets') {
-      pieData = props.data.FinalAssets;
+      pieData = props.data.finalAssets;
    } else if (props.type == 'liabilities') {
       pieData = props.data.finalLiabilities;
    }
@@ -62,18 +62,6 @@ export const AssetsLiabilitiesChart = (props) => {
    //    },
    // ];
 
-   // const SumOfAllValue = () => {
-   //    totalValue = 0;
-   //    pieData.map((data) => {
-   //       console.log(data);
-   //       totalValue += data.value;
-   //    });
-   // };
-
-   // const renderCustomizedLabel = ({ percent, name }) => {
-   //    return name + ' ' + (percent * 100).toFixed(0) + ' %';
-   // };
-
    let RenderCustomizedLabelLine = (props) => {
       return props.percent * 100 > 1 ? (
          <path
@@ -119,31 +107,6 @@ export const AssetsLiabilitiesChart = (props) => {
       );
    };
 
-   // const CustomLegend = ({payload}) => {
-   //    return (
-   //       <div
-   //             className='custom-tooltip'
-   //             style={{
-   //                backgroundColor: '#ffff',
-   //                padding: '5px',
-   //                border: '0.7px solid #cccc',
-   //                borderRadius: 5 + 'px',
-   //             }}
-   //          >
-   //             {payload={pieData.map((item, index) => ({
-   //                id: item.name,
-   //                type: 'square',
-   //                value:
-   //                   item.name +
-   //                   ` : ` +
-   //                   ((item.value * 100) / totalValue).toFixed(2) +
-   //                   `%`,
-   //                color: `url(#myGradient${index})`,
-   //             }))}}
-   //             </div>
-   //    )
-   // }
-
    let renderCusomizedLegend = (props) => {
       const { payload } = props;
       return (
@@ -164,7 +127,6 @@ export const AssetsLiabilitiesChart = (props) => {
 
    const CustomTooltip = ({ active, payload, percent }) => {
       if (active) {
-         //SumOfAllValue();
          return (
             <div
                className='custom-tooltip'
@@ -189,7 +151,10 @@ export const AssetsLiabilitiesChart = (props) => {
 
    return (
       <>
-         {pieData && pieData.length !== 0 ? (
+         {console.log(pieData.value)}
+         {pieData &&
+         pieData.length !== 0 &&
+         !(pieData.length == 1 && pieData[0].value == 0) ? (
             <ResponsiveContainer width={'80%'} aspect={3}>
                <PieChart>
                   <defs>
@@ -213,7 +178,6 @@ export const AssetsLiabilitiesChart = (props) => {
                         </linearGradient>
                      ))}
                   </defs>
-                  {console.log('pied', pieData)}
                   <Pie
                      data={pieData}
                      color='#000000'
@@ -255,12 +219,11 @@ export const AssetsLiabilitiesChart = (props) => {
                            `%`,
                         color: `url(#myGradient${index})`,
                      }))}
-                     //content={renderCusomizedLegend}
                   />
                </PieChart>
             </ResponsiveContainer>
          ) : (
-            <h4>No data for chart</h4>
+            <h4>No data for {props.type} chart</h4>
          )}
       </>
    );

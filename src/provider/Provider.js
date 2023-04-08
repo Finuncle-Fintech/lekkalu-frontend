@@ -225,7 +225,7 @@ const Provider = ({ children }) => {
                },
             })
             .then((res) => {
-               let totalVal = 0;
+               let totalVal = 0.000000001;
                res.data.map((da) => {
                   totalVal += da.market_value;
                   finalAssets = [
@@ -250,7 +250,7 @@ const Provider = ({ children }) => {
                },
             })
             .then((res) => {
-               let totalVal = 0;
+               let totalVal = 0.000000001;
                res.data.map((da) => {
                   totalVal += parseFloat(da.balance);
                   finalLiabilities = [

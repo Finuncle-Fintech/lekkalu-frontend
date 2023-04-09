@@ -34,12 +34,12 @@ const CustomTooltip = ({ active, payload, label }) => {
 export const CumSumChart = (cumSumData) => {
    return (
       <div
-         className='section col-md-8 mx-auto mb-5 mt-5'
+         className='section-outer-wrapper col-md-8 mx-auto mb-5 mt-5'
          style={{ backgroundColor: Colors.graphBG }}
       >
          <h3 className='section-title text-white text-center'>Monthly</h3>
-         <div className='section-content'>
-            <ResponsiveContainer width='90%' aspect={3}>
+         <div className='section-inner-wrapper'>
+            <ResponsiveContainer width='100%' aspect={2}>
                <ComposedChart
                   width={500}
                   height={400}

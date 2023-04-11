@@ -9,7 +9,6 @@ import {
    Surface,
    Symbols,
 } from 'recharts';
-import { useEffect } from 'react';
 
 export const AssetsLiabilitiesChart = (props) => {
    let totalValue = props.data.totalVal;
@@ -62,67 +61,39 @@ export const AssetsLiabilitiesChart = (props) => {
    //    },
    // ];
 
-   let RenderCustomizedLabelLine = (props) => {
-      return props.percent * 100 > 1 ? (
-         <path
-            stroke={props.stroke}
-            d={`M${props.points[0].x},${props.points[0].y}L${props.points[1].x},${props.points[1].y}`}
-            className='customized-label-line'
-         />
-      ) : (
-         <polyline stroke={props.stroke} fill='none' />
-      );
+   const RADIAN = Math.PI / 180;
+   const renderCustomizedLabel = ({
+      cx,
+      cy,
+      midAngle,
+      innerRadius,
+      outerRadius,
+      percent,
+      index,
+   }) => {
+      const radius = innerRadius + (outerRadius - innerRadius) * 0.7;
+      const x = cx + radius * Math.cos(-midAngle * RADIAN);
+      const y = cy + radius * Math.sin(-midAngle * RADIAN);
+      if (percent * 100 > 3)
+         return (
+            <text
+               x={x}
+               y={y}
+               fill='white'
+               textAnchor='middle'
+               dominantBaseline='central'
+            >
+               {`${(percent * 100).toFixed(1)}%`}
+            </text>
+         );
+      return null;
    };
 
-   let RenderLabel2 = (props) => {
-      const RADIAN = Math.PI / 180;
-      const radius =
-         25 + props.innerRadius + (props.outerRadius - props.innerRadius);
-      const x = props.cx + radius * Math.cos(-props.midAngle * RADIAN);
-      const y = props.cy + radius * Math.sin(-props.midAngle * RADIAN);
-
-      return props.percent * 100 > 1 ? (
-         <text
-            className='recharts-text recharts-pie-label-text'
-            x={x}
-            y={y}
-            fontSize='16'
-            fontFamily='sans-serif'
-            dominantBaseline='central'
-            cy={props.cy}
-            cx={props.cx}
-            fill='#666'
-            textAnchor={props.x > props.cx ? 'start' : 'end'}
-         >
-            {props.name}{' '}
-            {Number.isInteger(props.percent * 100)
-               ? Number(props.percent * 100)
-               : Number(props.percent * 100).toFixed(1)}
-            %
-         </text>
-      ) : (
-         <g>
-            <text x={500} y={y} fill='#transparent' rotate='90'></text>
-         </g>
-      );
-   };
-
-   let renderCusomizedLegend = (props) => {
-      const { payload } = props;
-      return (
-         <div className='customized-legend'>
-            <ul>
-               {payload.map((entry, index) => (
-                  <li
-                     key={`item-${index}`}
-                     style={{ color: `url(#myGradient${index})` }}
-                  >
-                     {entry.value}
-                  </li>
-               ))}
-            </ul>
-         </div>
-      );
+   const numDifferentiation = (val) => {
+      if (val >= 10000000) val = (val / 10000000).toFixed(2) + ' Cr';
+      else if (val >= 100000) val = (val / 100000).toFixed(2) + ' Lac';
+      else if (val >= 1000) val = (val / 1000).toFixed(2) + ' K';
+      return val;
    };
 
    const CustomTooltip = ({ active, payload, percent }) => {
@@ -141,6 +112,8 @@ export const AssetsLiabilitiesChart = (props) => {
                   {`${payload[0].name} : ` +
                      ((`${payload[0].value}` * 100) / totalValue).toFixed(2) +
                      '%'}
+                  <br />
+                  {`\u20B9 ${numDifferentiation(payload[0].value)} `}
                </label>
             </div>
          );
@@ -184,8 +157,8 @@ export const AssetsLiabilitiesChart = (props) => {
                      cy='50%'
                      outerRadius={120}
                      fill='#8884d8'
-                     label={RenderLabel2}
-                     labelLine={RenderCustomizedLabelLine}
+                     label={renderCustomizedLabel}
+                     labelLine={false}
                   >
                      {/* {pieData.map((entry, index) => (
                   <Cell

@@ -6,6 +6,8 @@ export const InitialState = {
    weeklyExpense: [],
    monthlyExpenses: [],
    tags: [],
+   assets: [],
+   liabilities: [],
 };
 
 const Reducer = (state, action) => {
@@ -34,41 +36,58 @@ const Reducer = (state, action) => {
             monthlyExpenses: action.payload,
          };
       }
+      case Types.FETCH_ASSETS: {
+         return {
+            ...state,
+            assets: action.payload,
+         };
+      }
+      case Types.FETCH_LIABILITIES: {
+         return {
+            ...state,
+            liabilities: action.payload,
+         };
+      }
       case Types.DELETE_EXPENSE: {
-        const newExpenses = state.expenses.filter(expense => expense.id != action.payload);
+         const newExpenses = state.expenses.filter(
+            (expense) => expense.id != action.payload
+         );
 
-        return {
-           ...state,
-           expenses: newExpenses,
-        };
+         return {
+            ...state,
+            expenses: newExpenses,
+         };
       }
       case Types.CREATE_EXPENSE: {
-        const newState = state.expenses.length
-          ? [ ...state.expenses, { ...action.payload.data, id: action.payload.id }]
-          : [action.payload];
+         const newState = state.expenses.length
+            ? [
+                 ...state.expenses,
+                 { ...action.payload.data, id: action.payload.id },
+              ]
+            : [action.payload];
 
-        return {
-           ...state,
-           expenses: newState,
-        };
+         return {
+            ...state,
+            expenses: newState,
+         };
       }
       case Types.EDIT_EXPENSE: {
-        const { index, expense } = action.payload;
-        const newState = state.expenses;
-        newState[index] = expense;
+         const { index, expense } = action.payload;
+         const newState = state.expenses;
+         newState[index] = expense;
 
-        return {
-           ...state,
-           expenses: newState,
-        };
+         return {
+            ...state,
+            expenses: newState,
+         };
       }
       case Types.FETCH_TAGS: {
-        return {
-          ...state,
-          tags: action.payload,
-       };
+         return {
+            ...state,
+            tags: action.payload,
+         };
       }
-  }
+   }
 };
 
 export default Reducer;

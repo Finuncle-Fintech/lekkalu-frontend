@@ -6,9 +6,11 @@ import BeatLoader from 'react-spinners/BeatLoader';
 import Colors from 'constants/colors';
 import { SpentBalanceChart } from './SpentBalanceChart';
 import { CumSumChart } from './CumSumChart';
+import { AssetsLiabilitiesChart } from './AssetsLiabilitiesChart';
 
 const Test = () => {
-   const { weeklyExpense, fetchData, monthlyExpenses } = useContext(Context);
+   const { weeklyExpense, fetchData, monthlyExpenses, assets, liabilities } =
+      useContext(Context);
    const [loading, setLoading] = useState(true);
    const [error, setError] = useState();
 
@@ -38,6 +40,11 @@ const Test = () => {
                <WeeklyChart data={weeklyExpense} />
                <SpentBalanceChart data={monthlyExpenses} />
                <CumSumChart data={monthlyExpenses} />
+               <AssetsLiabilitiesChart data={assets} type={'assets'} />
+               <AssetsLiabilitiesChart
+                  data={liabilities}
+                  type={'liabilities'}
+               />
             </>
          )}
       </div>

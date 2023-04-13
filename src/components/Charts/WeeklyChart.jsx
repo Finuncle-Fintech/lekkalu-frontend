@@ -1,5 +1,6 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React from 'react';
+import './WeeklyChart.css';
 import {
    ResponsiveContainer,
    LineChart,
@@ -15,14 +16,14 @@ import Colors from 'constants/colors';
 export const WeeklyChart = (WeekData) => {
    return (
       <div
-         className='section col-md-8 mx-auto mb-5 mt-5'
+         className='section-outer-wrapper col-md-8 mx-auto mb-5 mt-5'
          style={{ backgroundColor: Colors.graphBG }}
       >
          <h3 className='section-title text-white text-center'>
             Weekly Spend Analysis
          </h3>
-         <div className='section-content'>
-            <ResponsiveContainer width='90%' aspect={3}>
+         <div className='section-inner-wrapper'>
+            <ResponsiveContainer width='100%' aspect={2}>
                <LineChart
                   data={WeekData.data}
                   margin={{ top: 5, right: 0, bottom: 25, left: 10 }}

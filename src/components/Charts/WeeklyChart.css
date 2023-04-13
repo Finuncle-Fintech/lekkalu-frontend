@@ -1,0 +1,9 @@
+.section-inner-wrapper{
+    min-width: 350px;
+    max-width: 600px;
+
+}
+.section-outer-wrapper{
+    min-width: 400px;
+    max-width: 650px;
+}

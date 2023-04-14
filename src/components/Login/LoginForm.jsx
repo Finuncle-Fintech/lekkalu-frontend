@@ -1,12 +1,16 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import validation from './LoginValidation';
+import { useNavigate } from 'react-router';
+import axios from 'axios';
 
-const initialData = { email: '', password: '' };
+const initialData = { username: '', password: '' };
 
 const LoginForm = () => {
    const [logInData, setLogInData] = useState(initialData);
    const [responseErrors, setResponseErrors] = useState([]);
    const [errors, setErrors] = useState({});
+
+   let navigate = useNavigate();
 
    const onInputChange = (ev) => {
       const name = ev.target.name;
@@ -17,33 +21,58 @@ const LoginForm = () => {
       });
    };
 
-   const onLogInClick = (ev) => {
+   const onLogInClick = async (ev) => {
       ev.preventDefault();
 
       const [errors] = validation(logInData);
       setErrors(errors);
 
       if (Object.keys(errors).length === 0) {
+         await axios
+            .post(`http://localhost:8000/token/`, logInData)
+            .then((response) => {
+               console.log('res login', response.data.access);
+
+               if (response.data.access) {
+                  console.log('res login', response);
+                  localStorage.setItem('user', JSON.stringify(response.data));
+                  // navigate({});
+
+                  navigate('/Dashboard');
+               }
+            })
+            .catch((error) => {
+               console.log('login error', error);
+               setResponseErrors(
+                  <div className='alert alert-danger' role='alert'>
+                     {error.response.data}
+                  </div>
+               );
+            });
       }
    };
-
+   useEffect(() => {
+      const userData = JSON.parse(localStorage.getItem('user'));
+      if (userData !== null) {
+         navigate('/Dashbaord');
+      }
+   });
    return (
       <div>
          <form>
-            {/* <!-- Email input --> */}
+            <div>{responseErrors}</div>
+
             <div className='form-outline mb-4 mt-4'>
-               <label className='form-label' htmlFor='email'></label>
                <input
-                  type='email'
                   className='form-control'
-                  name='email'
-                  placeholder='E-mail'
+                  name='username'
+                  placeholder='Username'
                   required
-                  value={logInData.userName}
+                  value={logInData.username}
                   onChange={onInputChange}
                />
-               {errors.email && (
-                  <div className='text-danger'>{errors.email}</div>
+               {errors.username && (
+                  <div className='text-danger'>{errors.username}</div>
                )}
             </div>
 

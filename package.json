@@ -23,6 +23,7 @@
     "react-spinners": "^0.13.8",
     "reactstrap": "^9.1.8",
     "recharts": "^2.4.3",
+    "sweetalert": "^2.1.2",
     "web-vitals": "^2.1.4",
     "xlsx": "^0.18.5"
   },

@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import validation from './SignupValidation';
+import swal from 'sweetalert';
+import axios from 'axios';
 
 const initialData = {
-   userName: '',
+   username: '',
    email: '',
    password: '',
    confirmPassword: '',
@@ -20,7 +22,7 @@ const SignupForm = () => {
    //    setIsChecked(!isChecked);
    // };
 
-   const onRegisterClick = (ev) => {
+   const onRegisterClick = async (ev) => {
       ev.preventDefault();
 
       const [errors] = validation(registerData);
@@ -28,6 +30,55 @@ const SignupForm = () => {
 
       if (Object.keys(errors).length === 0) {
          console.log(registerData);
+         const userData = {
+            username: registerData.username,
+            email: registerData.email,
+            password: registerData.password,
+         };
+         await axios
+            .post(`http://localhost:8000/users/api/users`, userData)
+            .then((response) => {
+               console.log(response);
+               swal({
+                  title: response.statusText,
+                  text: 'Your account created please login',
+                  icon: 'success',
+                  button: 'OK',
+               });
+            })
+            .catch((error) => {
+               console.log(error);
+               if (error.response.status === 400) {
+                  setResponseErrors(
+                     <>
+                        {error.response.data.username && (
+                           <div
+                              className='alert alert-danger mt-4'
+                              role='alert'
+                           >
+                              {`username, ` + error.response.data.username}
+                           </div>
+                        )}
+                        {error.response.data.email && (
+                           <div
+                              className='alert alert-danger mt-4'
+                              role='alert'
+                           >
+                              {`email, ` + error.response.data.email}
+                           </div>
+                        )}
+                     </>
+                  );
+               } else {
+                  //alert("server side error.");
+                  swal({
+                     title: 'Error!',
+                     text: 'server side error.',
+                     icon: 'error',
+                     button: 'OK',
+                  });
+               }
+            });
       }
    };
 
@@ -48,19 +99,19 @@ const SignupForm = () => {
    return (
       <div>
          <form>
+            {responseErrors}
             {/* <!-- Name input --> */}
             <div className='form-outline mb-4 mt-4'>
-               <label className='form-label' htmlFor='name'></label>
                <input
                   type='text'
                   className='form-control '
-                  placeholder='Name'
-                  name='userName'
-                  value={registerData.userName}
+                  placeholder='Username'
+                  name='username'
+                  value={registerData.username}
                   onChange={onInputChange}
                />
-               {errors.userName && (
-                  <div className='text-danger'>{errors.userName}</div>
+               {errors.username && (
+                  <div className='text-danger'>{errors.username}</div>
                )}
             </div>
             {/* <!-- Email input --> */}

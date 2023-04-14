@@ -5,8 +5,8 @@ const validation = (values) => {
       '^(?=.{8,32}$)(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).*'
    );
 
-   if (!values.userName) {
-      errors.userName = 'Name is required.';
+   if (!values.username) {
+      errors.username = 'Username is required.';
       isValid = false;
    }
    if (!values.email) {
@@ -21,7 +21,7 @@ const validation = (values) => {
       isValid = false;
    } else if (!passwordRegex.test(values.password)) {
       errors.password =
-         'Password should be more than 8 character and contain spacial symbol and letters.';
+         'Password should be more than 8 character and contain atleast 1 uppercase letter and digit.';
       isValid = false;
    }
    if (!values.confirmPassword) {
@@ -31,8 +31,7 @@ const validation = (values) => {
       errors.confirmPassword = "Password don't match.";
       isValid = false;
    }
-   if (values.terms === 'false') {
-      console.log('values', values.terms);
+   if (values.terms === 'false' || values.terms === false) {
       errors.terms = 'Please accept T&C.';
       isValid = false;
    } else {

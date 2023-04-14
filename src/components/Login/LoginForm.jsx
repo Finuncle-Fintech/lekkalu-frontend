@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import validation from './LoginValidation';
 import { useNavigate } from 'react-router';
 import axios from 'axios';
+import swal from 'sweetalert';
 
 const initialData = { username: '', password: '' };
 
@@ -35,19 +36,40 @@ const LoginForm = () => {
 
                if (response.data.access) {
                   console.log('res login', response);
-                  localStorage.setItem('user', JSON.stringify(response.data));
-                  // navigate({});
-
-                  navigate('/Dashboard');
+                  //localStorage.setItem('user', JSON.stringify(response.data));
+                  // navigate('/Dashboard');
+                  alert('success');
                }
             })
             .catch((error) => {
                console.log('login error', error);
-               setResponseErrors(
-                  <div className='alert alert-danger' role='alert'>
-                     {error.response.data}
-                  </div>
-               );
+               if (error.response.status === 401) {
+                  setResponseErrors(
+                     <>
+                        {error.response.data.detail && (
+                           <div
+                              className='alert alert-danger mt-4'
+                              role='alert'
+                           >
+                              {error.response.data.detail}
+                           </div>
+                        )}
+                     </>
+                  );
+               } else {
+                  // setResponseErrors(
+                  //    <div className='alert alert-danger' role='alert'>
+                  //       {error.response.data}
+                  //    </div>
+                  // );
+                  //alert("server side error.");
+                  swal({
+                     title: 'Error!',
+                     text: 'server side error or connection interrupted.',
+                     icon: 'error',
+                     button: 'OK',
+                  });
+               }
             });
       }
    };

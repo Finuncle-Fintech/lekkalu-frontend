@@ -38,13 +38,15 @@ const SignupForm = () => {
          await axios
             .post(`http://localhost:8000/users/api/users`, userData)
             .then((response) => {
-               console.log(response);
                swal({
                   title: response.statusText,
                   text: 'Your account created please login',
                   icon: 'success',
                   button: 'OK',
                });
+               setRegisterData(initialData);
+               setResponseErrors([]);
+               setErrors([]);
             })
             .catch((error) => {
                console.log(error);
@@ -73,7 +75,7 @@ const SignupForm = () => {
                   //alert("server side error.");
                   swal({
                      title: 'Error!',
-                     text: 'server side error.',
+                     text: 'server side error or connection interrupted.',
                      icon: 'error',
                      button: 'OK',
                   });

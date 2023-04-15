@@ -162,9 +162,11 @@ const Provider = ({ children }) => {
    };
 
    const fetchData = async () => {
+      // api.finuncle.com/
       try {
          await axios
-            .get(`${process.env.REACT_APP_API}budget/`, {
+         .get(`api.finuncle.com/budget/`, {
+            // .get(`${process.env.REACT_APP_API}budget/`, {
                auth: {
                   username: process.env.REACT_APP_USER,
                   password: process.env.REACT_APP_PASSWORD,

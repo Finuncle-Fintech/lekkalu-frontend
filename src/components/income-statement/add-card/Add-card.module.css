@@ -1,0 +1,55 @@
+.container{
+    /* margin: 0 1rem; */
+    cursor: pointer;
+}
+.card {
+    border: 1px solid rgba(150, 150, 150, 0.2);
+    /* background: -webkit-linear-gradient(top, rgba(10, 10, 10, 0.8), transparent); */
+    background: #1976d2;
+    overflow: hidden;
+    position: relative;
+    border-radius: 5px;
+    text-align: center;
+    /* box-shadow: inset 5px 5px 20px rgba(228, 212, 212, 0.1); */
+    padding: 1rem;
+    width: 250px;
+    height: 180px;
+
+  }
+  
+  .label {
+    margin-top: 0;
+    font-family: Oswald, sans-serif;
+    font-size: 1.5rem;
+    letter-spacing: 2px;
+    color: rgb(255, 255, 255);
+    font-weight: 700;
+  }
+  .value {
+    margin-top: 0;
+    font-family: Oswald, sans-serif;
+    font-size: 2rem;
+    letter-spacing: 2px;
+    color: rgba(255, 255, 255, 1);
+    font-weight: 700;
+  }
+  
+  .shine {
+    width: 1000px;
+    height: 100px;
+    margin-left: -100px;
+    transform: rotate(30deg);
+    background: -webkit-linear-gradient(top, transparent, rgba(255, 255, 255, 0.4), transparent);
+    position: absolute;
+    animation: shine 6s ease-in-out infinite;
+    -webkit-animation: shine 6s ease-in-out infinite;
+  }
+  
+  @keyframes shine {
+    0%, 100% {
+      margin-top: -100px;
+    }
+    50% {
+      margin-top: 800px;
+    }
+  }

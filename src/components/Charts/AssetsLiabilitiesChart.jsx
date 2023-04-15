@@ -125,73 +125,75 @@ export const AssetsLiabilitiesChart = (props) => {
    return (
       <>
          {pieData && pieData.length !== 0 ? (
-            <ResponsiveContainer width={'80%'} aspect={3}>
-               <PieChart>
-                  <defs>
-                     {pieData.map((entry, index) => (
-                        <linearGradient
-                           id={`myGradient${index}`}
-                           key={`myGradient${index}`}
-                        >
-                           <stop
-                              offset='0%'
-                              stopColor={
-                                 Colors.PIE[index % Colors.PIE.length].start
-                              }
-                           />
-                           <stop
-                              offset='100%'
-                              stopColor={
-                                 Colors.PIE[index % Colors.PIE.length].end
-                              }
-                           />
-                        </linearGradient>
-                     ))}
-                  </defs>
-                  <Pie
-                     data={pieData}
-                     color='#000000'
-                     dataKey='value'
-                     nameKey='name'
-                     cx='50%'
-                     cy='50%'
-                     outerRadius={120}
-                     fill='#8884d8'
-                     label={renderCustomizedLabel}
-                     labelLine={false}
-                  >
-                     {/* {pieData.map((entry, index) => (
+            <div className='section-outer-wrapper col-md-8 mx-auto mb-5 mt-5'>
+               <ResponsiveContainer width={'100%'} height={'100%'}>
+                  <PieChart>
+                     <defs>
+                        {pieData.map((entry, index) => (
+                           <linearGradient
+                              id={`myGradient${index}`}
+                              key={`myGradient${index}`}
+                           >
+                              <stop
+                                 offset='0%'
+                                 stopColor={
+                                    Colors.PIE[index % Colors.PIE.length].start
+                                 }
+                              />
+                              <stop
+                                 offset='100%'
+                                 stopColor={
+                                    Colors.PIE[index % Colors.PIE.length].end
+                                 }
+                              />
+                           </linearGradient>
+                        ))}
+                     </defs>
+                     <Pie
+                        data={pieData}
+                        color='#000000'
+                        dataKey='value'
+                        nameKey='name'
+                        cx='50%'
+                        cy='50%'
+                        outerRadius={120}
+                        fill='#8884d8'
+                        label={renderCustomizedLabel}
+                        labelLine={false}
+                     >
+                        {/* {pieData.map((entry, index) => (
                   <Cell
                      key={`cell-${index}`}
                      fill={COLORS[index % COLORS.length]}
                   />
                ))} */}
 
-                     {pieData.map((entry, index) => (
-                        <Cell
-                           key={`cell-${index}`}
-                           fill={`url(#myGradient${index})`}
-                        />
-                     ))}
-                  </Pie>
-                  <Tooltip content={<CustomTooltip />} />
-                  <Legend
-                     layout='vertical'
-                     verticalAlign='top'
-                     align='right'
-                     payload={pieData.map((item, index) => ({
-                        id: item.name,
-                        type: 'square',
-                        value:
-                           item.name +
-                           ` : ` +
-                           ((item.value * 100) / totalValue).toFixed(2) +
-                           `%`,
-                        color: `url(#myGradient${index})`,
-                     }))}
-                  />
-               </PieChart>
-            </ResponsiveContainer>
+                        {pieData.map((entry, index) => (
+                           <Cell
+                              key={`cell-${index}`}
+                              fill={`url(#myGradient${index})`}
+                           />
+                        ))}
+                     </Pie>
+                     <Tooltip content={<CustomTooltip />} />
+                     <Legend
+                        layout='vertical'
+                        verticalAlign='top'
+                        align='right'
+                        payload={pieData.map((item, index) => ({
+                           id: item.name,
+                           type: 'square',
+                           value:
+                              item.name +
+                              ` : ` +
+                              ((item.value * 100) / totalValue).toFixed(2) +
+                              `%`,
+                           color: `url(#myGradient${index})`,
+                        }))}
+                     />
+                  </PieChart>
+               </ResponsiveContainer>
+            </div>
          ) : (
             <h4>No data for {props.type} chart</h4>
          )}

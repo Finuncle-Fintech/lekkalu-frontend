@@ -32,7 +32,7 @@ const validation = (values) => {
       isValid = false;
    }
    if (values.terms === 'false' || values.terms === false) {
-      errors.terms = 'Please accept T&C.';
+      errors.terms = 'Please accept T&C to continue.';
       isValid = false;
    } else {
       isValid = true;

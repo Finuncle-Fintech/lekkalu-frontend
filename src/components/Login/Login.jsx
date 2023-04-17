@@ -14,8 +14,9 @@ import {
 } from 'reactstrap';
 import SignupForm from './SignupForm';
 import LoginForm from './LoginForm';
+import { useNavigate } from 'react-router';
 
-const Signin = () => {
+const Login = () => {
    const [modal, setModal] = useState(false);
 
    // State for current active Tab
@@ -26,6 +27,17 @@ const Signin = () => {
       if (currentActiveTab !== tab) setCurrentActiveTab(tab);
    };
 
+   const closeModalHandler = () => {
+      setModal(false);
+   };
+
+   const userLocalInfo = JSON.parse(localStorage.getItem('user'));
+   var navigate = useNavigate();
+
+   const onLogoutClick = () => {
+      localStorage.removeItem('user');
+      navigate('/');
+   };
    return (
       <>
          <Modal
@@ -85,7 +97,7 @@ const Signin = () => {
                      <TabPane tabId='1'>
                         <Row>
                            <Col sm='12'>
-                              <LoginForm />
+                              <LoginForm onCloseModal={closeModalHandler} />
                            </Col>
                         </Row>
                      </TabPane>
@@ -100,15 +112,31 @@ const Signin = () => {
                </div>
             </ModalBody>
          </Modal>
-         <button
-            className='btn btn-light text-primary loginbtn'
-            type='button'
-            onClick={() => setModal(true)}
-         >
-            Login
-         </button>
+
+         {userLocalInfo !== null ? (
+            <>
+               {' '}
+               <button
+                  className='btn btn-danger d-flex ms-auto px-5'
+                  type='button'
+                  onClick={onLogoutClick}
+               >
+                  Logout
+               </button>
+            </>
+         ) : (
+            <>
+               <button
+                  className='btn btn-light text-primary d-flex ms-auto px-5'
+                  type='button'
+                  onClick={() => setModal(true)}
+               >
+                  Login
+               </button>
+            </>
+         )}
       </>
    );
 };
 
-export default Signin;
+export default Login;

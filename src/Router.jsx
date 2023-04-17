@@ -4,6 +4,7 @@ import Expenses from 'components/Expenses/Expenses';
 import Header from 'components/Header/Header';
 import { Context } from 'provider/Provider';
 import Dashboard from 'components/Dashboard/Dashboard';
+import Terms from 'components/Login/Terms';
 const RouterComponent = () => {
    return (
       <Router>
@@ -28,11 +29,19 @@ const RouterComponent = () => {
             />
             <Route
                exact
-               path='/Dashboard'
+               path='/dashboard'
                element={
                   <>
-                     <Header />
-                     <Dashboard />
+                     <Header></Header>
+                     <Dashboard></Dashboard>
+                  </>
+               }
+            ></Route>
+            <Route
+               path='/Terms'
+               element={
+                  <>
+                     <Terms></Terms>
                   </>
                }
             />

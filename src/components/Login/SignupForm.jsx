@@ -29,9 +29,8 @@ const SignupForm = () => {
       setErrors(errors);
 
       if (Object.keys(errors).length === 0) {
-         console.log(registerData);
          const userData = {
-            username: registerData.username,
+            username: registerData.username.toLowerCase(),
             email: registerData.email,
             password: registerData.password,
          };
@@ -49,7 +48,7 @@ const SignupForm = () => {
                setErrors([]);
             })
             .catch((error) => {
-               console.log(error);
+               // console.log(error);
                if (error.response.status === 400) {
                   setResponseErrors(
                      <>
@@ -173,7 +172,10 @@ const SignupForm = () => {
                         checked={isChecked}
                         onChange={onInputChange}
                      />
-                     I agree to the <a href='#!'>Terms and Conditions</a>
+                     I agree to the{' '}
+                     <a href='/terms' target='_blank' rel='noreferrer'>
+                        Terms and Conditions
+                     </a>
                      {errors.terms && (
                         <div className='text-danger'>{errors.terms}</div>
                      )}

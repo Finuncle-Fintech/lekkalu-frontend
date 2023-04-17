@@ -6,7 +6,7 @@ import swal from 'sweetalert';
 
 const initialData = { username: '', password: '' };
 
-const LoginForm = () => {
+const LoginForm = (props) => {
    const [logInData, setLogInData] = useState(initialData);
    const [responseErrors, setResponseErrors] = useState([]);
    const [errors, setErrors] = useState({});
@@ -29,20 +29,21 @@ const LoginForm = () => {
       setErrors(errors);
 
       if (Object.keys(errors).length === 0) {
+         const userData = {
+            username: logInData.username.toLowerCase(),
+            password: logInData.password,
+         };         
          await axios
-            .post(`http://localhost:8000/token/`, logInData)
+            .post(`http://localhost:8000/token/`, userData)
             .then((response) => {
-               console.log('res login', response.data.access);
-
+         
                if (response.data.access) {
-                  console.log('res login', response);
-                  //localStorage.setItem('user', JSON.stringify(response.data));
-                  // navigate('/Dashboard');
-                  alert('success');
+                  localStorage.setItem('user', JSON.stringify(response.data));
+                  navigate('/dashboard');
+                  props.onCloseModal();
                }
             })
             .catch((error) => {
-               console.log('login error', error);
                if (error.response.status === 401) {
                   setResponseErrors(
                      <>
@@ -76,7 +77,7 @@ const LoginForm = () => {
    useEffect(() => {
       const userData = JSON.parse(localStorage.getItem('user'));
       if (userData !== null) {
-         navigate('/Dashbaord');
+         navigate('/dashboard');
       }
    });
    return (

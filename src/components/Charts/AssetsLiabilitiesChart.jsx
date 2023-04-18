@@ -11,11 +11,13 @@ import {
 } from 'recharts';
 
 export const AssetsLiabilitiesChart = (props) => {
+
+   console.log('data', props);
    let totalValue = props.data.totalVal;
    let pieData;
-   if (props.type == 'assets') {
+   if (props.type === 'assets') {
       pieData = props.data.finalAssets;
-   } else if (props.type == 'liabilities') {
+   } else if (props.type === 'liabilities') {
       pieData = props.data.finalLiabilities;
    }
    // const pieData = [

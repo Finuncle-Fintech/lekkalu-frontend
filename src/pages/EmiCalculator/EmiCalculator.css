@@ -1,0 +1,161 @@
+.container {
+  width: 95vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  position: relative;
+  margin: auto;
+  padding: 3rem auto;
+}
+
+.container > div {
+  width: 100%;
+}
+
+.save {
+  margin: 1rem 0rem;
+  padding: 0.5rem 2.5rem;
+  outline: none;
+  border: none;
+  background-color: rgb(10, 109, 10);
+  color: white;
+  font-weight: bold;
+}
+
+.parent {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  margin: 1rem 0px;
+}
+
+.input-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0.5rem auto;
+  position: relative;
+}
+
+.input-container > h1 {
+  margin-right: 40px;
+  font-size: 20px;
+  font-weight: lighter;
+  font-family: sans-serif;
+  white-space: nowrap;
+}
+
+.input-field {
+  width: 100%;
+  margin: auto;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  position: relative;
+}
+
+.input-field > input {
+  width: 65%;
+  padding: 0.8rem 0px;
+  outline: none;
+  border: none;
+  border-bottom-left-radius: 5px;
+  border-top-left-radius: 5px;
+  text-indent: 15px;
+}
+
+.input-field > input[type="number"]:focus {
+  outline: 3px solid lightblue;
+}
+.input-field > button {
+  width: 35%;
+  padding: 1rem 0px;
+  background-color: #ddd;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  outline: none;
+  border: none;
+}
+
+input[type="range"] {
+  margin: 0;
+  padding: 0;
+  height: 50px;
+  background-color: #ccc;
+  outline: none;
+  cursor: pointer;
+  width: 100%;
+}
+input[type="date"] {
+  padding: 0 1rem;
+  outline: none;
+}
+
+datalist {
+  display: flex;
+  justify-content: space-between;
+}
+
+.output {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid black;
+  position: relative;
+  margin: 2rem 0rem 4rem 0rem;
+}
+.output-text {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.output-chart {
+  width: 100%;
+}
+
+.result {
+  display: block;
+  font-family: sans-serif;
+  font-weight: lighter;
+  padding: 1rem 0rem;
+}
+
+.result > h4 {
+  font-size: 14px;
+  text-align: center;
+}
+
+.result > p {
+  font-size: 30px;
+  text-align: center;
+}
+
+@media screen and (min-width: 760px) {
+  .container > div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .parent {
+    margin: 1rem 0px;
+    width: 48%;
+  }
+  .input-field > button {
+    width: 20%;
+  }
+  .input-field > input {
+    width: 80%;
+  }
+  .output-text {
+    width: 50%;
+  }
+  .output-chart {
+    width: 50%;
+  }
+}

@@ -1,6 +1,6 @@
-import { AppBar, Toolbar } from '@mui/material';
-import { Link } from 'react-router-dom';
-import { HeaderButton } from './styled';
+import { AppBar, Toolbar } from "@mui/material";
+import { Link } from "react-router-dom";
+import { HeaderButton } from "./styled";
 
 const Header = () => {
   return (
@@ -11,6 +11,9 @@ const Header = () => {
         </HeaderButton>
         <HeaderButton color="inherit" component={Link} to="/expenses">
           Expenses
+        </HeaderButton>
+        <HeaderButton color="inherit" component={Link} to="/calculator">
+          EMI Calculator
         </HeaderButton>
       </Toolbar>
     </AppBar>

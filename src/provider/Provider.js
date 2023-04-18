@@ -56,7 +56,7 @@ const Provider = ({ children }) => {
    const fetchTags = async () => {
       try {
          await axios
-            .get(`${process.env.REACT_APP_API}api/tag/`, {
+            .get(`${process.env.REACT_APP_BACKEND_API}tag/`, {
                auth: {
                   username: process.env.REACT_APP_USER,
                   password: process.env.REACT_APP_PASSWORD,
@@ -76,7 +76,7 @@ const Provider = ({ children }) => {
    const fetchExpenses = async (page, rowsPerPage) => {
       try {
          await axios
-            .get(`${process.env.REACT_APP_API}api/expenses/`, {
+            .get(`${process.env.REACT_APP_BACKEND_API}expenses/`, {
                auth: {
                   username: process.env.REACT_APP_USER,
                   password: process.env.REACT_APP_PASSWORD,
@@ -100,7 +100,7 @@ const Provider = ({ children }) => {
    const deleteExpenseRequest = async (id) => {
       try {
          await axios
-            .delete(`${process.env.REACT_APP_API}api/expenses/${id}`, {
+            .delete(`${process.env.REACT_APP_BACKEND_API}expenses/${id}`, {
                auth: {
                   username: process.env.REACT_APP_USER,
                   password: process.env.REACT_APP_PASSWORD,
@@ -120,7 +120,7 @@ const Provider = ({ children }) => {
    const createExpenseRequest = async (data) => {
       try {
          await axios
-            .post(`${process.env.REACT_APP_API}api/expenses/`, data, {
+            .post(`${process.env.REACT_APP_BACKEND_API}expenses/`, data, {
                auth: {
                   username: process.env.REACT_APP_USER,
                   password: process.env.REACT_APP_PASSWORD,
@@ -141,7 +141,7 @@ const Provider = ({ children }) => {
       try {
          await axios
             .put(
-               `${process.env.REACT_APP_API}api/expenses/${expense.id}`,
+               `${process.env.REACT_APP_BACKEND_API}expenses/${expense.id}`,
                expense,
                {
                   auth: {
@@ -164,7 +164,7 @@ const Provider = ({ children }) => {
    const fetchData = async () => {
       try {
          await axios
-            .get(`${process.env.REACT_APP_API}api/budget/`, {
+            .get(`${process.env.REACT_APP_BACKEND_API}budget/`, {
                auth: {
                   username: process.env.REACT_APP_USER,
                   password: process.env.REACT_APP_PASSWORD,
@@ -178,7 +178,7 @@ const Provider = ({ children }) => {
             });
 
          await axios
-            .get(`${process.env.REACT_APP_API}api/weekly_expenses/`, {
+            .get(`${process.env.REACT_APP_BACKEND_API}weekly_expenses/`, {
                auth: {
                   username: process.env.REACT_APP_USER,
                   password: process.env.REACT_APP_PASSWORD,
@@ -218,7 +218,7 @@ const Provider = ({ children }) => {
             });
 
          await axios
-            .get(`${process.env.REACT_APP_API}api/assets/`, {
+            .get(`${process.env.REACT_APP_BACKEND_API}assets/`, {
                auth: {
                   username: process.env.REACT_APP_USER,
                   password: process.env.REACT_APP_PASSWORD,
@@ -243,7 +243,7 @@ const Provider = ({ children }) => {
             });
 
          await axios
-            .get(`${process.env.REACT_APP_API}api/loans/`, {
+            .get(`${process.env.REACT_APP_BACKEND_API}loans/`, {
                auth: {
                   username: process.env.REACT_APP_USER,
                   password: process.env.REACT_APP_PASSWORD,
@@ -267,7 +267,7 @@ const Provider = ({ children }) => {
                });
             });
          await axios
-            .get(`${process.env.REACT_APP_API}api/monthly_expenses/`, {
+            .get(`${process.env.REACT_APP_BACKEND_API}monthly_expenses/`, {
                auth: {
                   username: process.env.REACT_APP_USER,
                   password: process.env.REACT_APP_PASSWORD,

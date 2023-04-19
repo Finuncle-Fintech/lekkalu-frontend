@@ -6,12 +6,19 @@ import SourceCard from "../sources-card/SourceCard";
 
 import Heading from "components/shared/heading/Heading";
 import Add from "../add-card/AddCard";
+import StatsAccordion from "../stats-accordion/StatsAccordion";
+import { numDifferentiation } from "utils/AppUtils";
 const IncomeStatementSummary = ({
   incomeStatement,
   totalIncome,
   totalExpense,
   difference,
 }) => {
+  console.log({ totalIncome, totalExpense });
+  const [expanded, setExpanded] = React.useState(false);
+  const handleChange = (panel) => (event, isExpanded) => {
+    setExpanded(isExpanded ? panel : false);
+  };
   let incomeOverviewData = [];
   const typesOfIncome = [
     ...new Set(
@@ -46,24 +53,93 @@ const IncomeStatementSummary = ({
 
   return (
     <div className={styles.container}>
-      <Heading text={"Overview"} color="#1976d2" />
       <div className={styles.statsContainer}>
-        <StatsCard label="Total Income" value={`${totalIncome} INR`} />
-        <StatsCard label="Total Expense" value={`${totalExpense} INR`} />
-        <StatsCard
-          label={difference < 0 ? "Deficit" : "Surplus"}
-          value={`${((difference / totalIncome) * 100).toFixed(2)} %`}
-          bg={difference < 0 && "red"}
-        />
+        <StatsAccordion
+          label="Income Overview"
+          expanded={expanded}
+          handleChange={handleChange}
+        >
+          <div className={styles.statsBar}>
+            <div style={{ width: "100%" }}>
+              <span style={{ fontSize: "1rem", fontWeight: "bold" }}>
+                Total Income{" : "}
+              </span>
+              <span
+                style={{
+                  fontSize: "1.2rem",
+                  fontWeight: "bold",
+                  color: "#00b208",
+                }}
+              >
+                {numDifferentiation(totalIncome)}₹
+              </span>
+            </div>
+            <div style={{ width: "100%" }}>
+              <span style={{ fontSize: "1rem", fontWeight: "bold" }}>
+                Sources{" : "}
+              </span>
+              <div style={{ display: "flex", gap: "10px" }}>
+                <Add label="Add Source" />
+                <div className={styles.horizontalScroll}>
+                  {incomeOverviewData.map((each, idx) => {
+                    return (
+                      <SourceCard
+                        key={each.name + each.value + idx}
+                        label={each.name}
+                        value={`${numDifferentiation(each.value)}₹`}
+                        bg="#00b208"
+                      />
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          </div>
+        </StatsAccordion>
+        <StatsAccordion
+          label="Expense Overview"
+          expanded={expanded}
+          handleChange={handleChange}
+        >
+          <div className={styles.statsBar}>
+            <div>
+              <span style={{ fontSize: "1rem", fontWeight: "bold" }}>
+                Total Expense{" : "}
+              </span>
+              <span
+                style={{
+                  fontSize: "1.2rem",
+                  fontWeight: "bold",
+                  color: "#fa4646",
+                }}
+              >
+                {numDifferentiation(totalExpense)}₹
+              </span>
+            </div>
+            <div>
+              <span style={{ fontSize: "1rem", fontWeight: "bold" }}>
+                Sources{" : "}
+              </span>
+              <div style={{ display: "flex", gap: "10px" }}>
+                <Add label="Add Source" />
+                <div className={styles.horizontalScroll}>
+                  {expenseOverviewData.map((each) => {
+                    return (
+                      <SourceCard
+                        label={each.name}
+                        value={`${numDifferentiation(each.value)}₹`}
+                        bg="#fa4646"
+                      />
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          </div>
+        </StatsAccordion>
       </div>
-      <div>
-        <Heading text={"Income Sources"} color="#1976d2" />
-        <div className={styles.statsContainer}>
-          <Add label="Add Source" />
-          {incomeOverviewData.map((each) => {
-            return <SourceCard label={each.name} value={`${each.value} INR`} />;
-          })}
-        </div>
+
+      <div className={styles.charts}>
         <div className={styles.chartWrapper}>
           <IncomeStatementChart
             type="income-overview"
@@ -71,15 +147,6 @@ const IncomeStatementSummary = ({
             totalVal={totalIncome}
             incomeOverviewData={incomeOverviewData}
           />
-        </div>
-      </div>
-      <div>
-        <Heading text={"Expense Sources"} color="#1976d2" />
-        <div className={styles.statsContainer}>
-          <Add label="Add Source" />
-          {expenseOverviewData.map((each) => {
-            return <SourceCard label={each.name} value={`${each.value} INR`} />;
-          })}
         </div>
         <div className={styles.chartWrapper}>
           <IncomeStatementChart
@@ -95,3 +162,22 @@ const IncomeStatementSummary = ({
 };
 
 export default IncomeStatementSummary;
+const StatsTile = ({ label, value }) => {
+  return (
+    <div>
+      <span style={{ fontSize: "1rem", fontWeight: "bold" }}>
+        {label}
+        {" : "}
+      </span>
+      <span
+        style={{
+          fontSize: "1.2rem",
+          fontWeight: "bold",
+          color: "green",
+        }}
+      >
+        {value}₹
+      </span>
+    </div>
+  );
+};

@@ -8,7 +8,7 @@ export const incomeStatement={
             name:"Sodexo"
         },
         {
-            type:INCOME_TYPES.INTEREST_INCOME,
+            type:INCOME_TYPES.PERK,
             value:0,
             name:"Equity NXP"
         },

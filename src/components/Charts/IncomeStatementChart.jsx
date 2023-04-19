@@ -129,7 +129,7 @@ export const IncomeStatementChart = (props) => {
   return (
     <>
       {pieData && pieData.length !== 0 ? (
-        <ResponsiveContainer width={"100%"} aspect={3}>
+        <ResponsiveContainer width="100%" aspect={3}>
           <PieChart>
             <defs>
               {pieData.map((entry, index) => (

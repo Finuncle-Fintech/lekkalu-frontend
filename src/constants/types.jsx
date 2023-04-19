@@ -1,6 +1,6 @@
 export const INCOME_TYPES = {
   SALARY: "SALARY",
-  PERK: "PERK",
+  PERK: "PERKS",
   INTEREST_INCOME: "INTEREST INCOME",
 };
 export const EXPENSE_TYPES = {

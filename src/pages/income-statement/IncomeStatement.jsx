@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import IncomeStatementSummary from "components/income-statement/summary/IncomeStatementSummary";
 import GenericTabs from "components/shared/tabs/Tabs";
-import { incomeStatement } from "constants/income-statement-test-dataset";
+// import { incomeStatement } from "constants/income-statement-test-dataset";
 import SummarizeIcon from "@mui/icons-material/Summarize";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import MoneyOffIcon from "@mui/icons-material/MoneyOff";
@@ -15,11 +15,18 @@ const tabsList = [
 ];
 
 const IncomeStatement = ({ Context }) => {
+  const { fetchIncomeStatement, incomeStatement } = useContext(Context);
   const [currentab, setCurrentTab] = React.useState(0);
 
   const handleTabChange = (event, newValue) => {
     setCurrentTab(newValue);
   };
+  useEffect(() => {
+    fetchIncomeStatement();
+  }, []);
+  useEffect(() => {
+    console.log({ incomeStatement });
+  }, [JSON.stringify(incomeStatement)]);
 
   const loadCurrentTab = () => {
     switch (currentab) {

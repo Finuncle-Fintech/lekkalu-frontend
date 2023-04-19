@@ -6,8 +6,8 @@ const Add = ({ label }) => {
     <div className={cardStyles.container}>
       <div className={cardStyles.card}>
         {/* <div className={cardStyles.shine}></div> */}
-        <p className={cardStyles.label}>{label}</p>
-        <AddCircleOutlineIcon sx={{ fontSize: "50px", color: "#fff" }} />
+        {/* <p className={cardStyles.label}>{label}</p> */}
+        <AddCircleOutlineIcon sx={{ fontSize: "30px", color: "#fff" }} />
       </div>
       {/* <div className={cardStyles.shadow}></div> */}
     </div>

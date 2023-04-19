@@ -2,34 +2,40 @@
     /* margin: 0 1rem; */
 }
 .card {
-    border: 1px solid rgba(150, 150, 150, 0.2);
+    border: 1px solid rgba(0, 0, 0, 0.2);
     /* background: -webkit-linear-gradient(top, rgba(10, 10, 10, 0.8), transparent); */
-    background: rgb(0, 0, 0);
+    background: green;
     overflow: hidden;
     position: relative;
     border-radius: 5px;
     text-align: center;
-    box-shadow: inset 5px 5px 20px rgba(255, 255, 255, 0.1);
-    padding: 1rem;
-    width: 250px;
-    height: 180px;
+    /* box-shadow: inset 5px 5px 20px green; */
+    padding: 1rem 0.5rem;
+    width: fit-content;
+    white-space: nowrap;
+    /* max-width: 250px; */
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
   }
   
   .label {
     margin-top: 0;
     font-family: Oswald, sans-serif;
-    font-size: 1.5rem;
+    font-size: 0.8rem;
     letter-spacing: 2px;
-    color: rgb(120, 180, 236);
-    font-weight: 700;
+    color: rgb(255, 255, 255);
+    font-weight: 600;
   }
   .value {
     margin-top: 0;
     font-family: Oswald, sans-serif;
-    font-size: 2rem;
+    font-size: 1rem;
     letter-spacing: 2px;
-    color: rgba(255, 255, 255, 1);
+    /* color: rgb(226, 223, 21); */
+    color: rgb(252, 248, 54);
     font-weight: 700;
   }
   

@@ -5,25 +5,65 @@
     
 }
 .statsContainer{
+    width: 100%;
     display: flex;
+    /* align-items: start;
+    justify-content: start; */
     gap: 20px;
-    flex-wrap: wrap;
+    /* flex-wrap: wrap; */
     background:#f0f1f3;
     padding: 1rem 1rem;
     border-radius: 20px;
+}
+.statsBar{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(25,118,210,0.1);
+    border-radius: 10px;
+    padding:1rem;
 }
 .chartWrapper{
     display: flex;
     width: 100%;
     justify-content: center;
-    margin: 2rem 0;
-    padding: 2rem 0;
+    /* margin: 2rem 0;
+    padding: 2rem 0; */
+    /* background-color: #f0f1f3;
+    border-radius: 20px; */
+}
+.statsTile{
+    display: flex;
+    align-items: center;
+}
+.horizontalScroll{
+    flex-grow: 1;
+    display: flex;
+    /* width: 100%; */
+    max-width: 600px;
+    overflow-x: auto;
+    gap:10px
+}
+.charts{
+    width: 100%;
+    display: flex;
+    overflow-x: hidden;
     background-color: #f0f1f3;
     border-radius: 20px;
+    margin: 2rem 0;
+    padding: 2rem 0;
+}
+
+
+@media screen and (max-width: 1024px) {
+    .charts{
+        flex-direction: column;
+    }
 }
 
 @media screen and (max-width: 768px) {
     .statsContainer{
+        flex-direction: column;
         justify-content: center;
     }
     

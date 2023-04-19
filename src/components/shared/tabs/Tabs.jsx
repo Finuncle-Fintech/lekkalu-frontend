@@ -8,7 +8,7 @@ export default function GenericTabs({ tabs, handleChange, value }) {
       {tabs &&
         tabs?.length &&
         tabs.map((each) => {
-          return <Tab icon={each?.icon} label={each?.label} />;
+          return <Tab key={each.label} icon={each?.icon} label={each?.label} />;
         })}
     </Tabs>
   );

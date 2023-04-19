@@ -38,6 +38,7 @@ const Provider = ({ children }) => {
       monthlyExpenses,
       assets,
       liabilities,
+      incomeStatement
    } = store;
 
    const handleErrors = (error) => {
@@ -162,11 +163,9 @@ const Provider = ({ children }) => {
    };
 
    const fetchData = async () => {
-      // api.finuncle.com/
       try {
          await axios
-         .get(`api.finuncle.com/budget/`, {
-            // .get(`${process.env.REACT_APP_API}budget/`, {
+            .get(`${process.env.REACT_APP_API}budget/`, {
                auth: {
                   username: process.env.REACT_APP_USER,
                   password: process.env.REACT_APP_PASSWORD,
@@ -303,6 +302,95 @@ const Provider = ({ children }) => {
       //Removed fetch expenses here, because it breaks pagination request on expenses page
    };
 
+   const fetchToken = async () => {
+      try {
+         const auth = {
+            username: process.env.REACT_APP_USER,
+            password: process.env.REACT_APP_PASSWORD
+         };
+
+         return await axios.post('https://api.finuncle.com/token/', auth)
+            .then(response => {
+               console.log(response.data);
+               return response.data
+            })
+
+      } catch (error) {
+         handleErrors(error);
+      }
+   };
+
+   const fetchIncomeSources = async () => {
+      try {
+         const token = await fetchToken()
+         const headers = {
+            'Authorization': `Bearer ${token?.access}`,
+            'Content-Type': 'application/json'
+         };
+
+         return axios.get('https://api.finuncle.com/api/income_source/', { headers })
+            .then(response => {
+               return response.data
+            })
+      } catch (error) {
+         handleErrors(error);
+         return []
+      }
+   };
+
+   const fetchIncomeExpenses = async () => {
+      try {
+         const token = await fetchToken()
+         const headers = {
+            'Authorization': `Bearer ${token?.access}`,
+            'Content-Type': 'application/json'
+         };
+
+         return axios.get('https://api.finuncle.com/api/income_expense/', { headers })
+            .then(response => {
+               return response.data
+            })
+      } catch (error) {
+         handleErrors(error);
+         return []
+      }
+   };
+   const fetchIncomeStatement = async () => {
+      try {
+         let populatedIncomeStatement = { income: [], expenses: [] }
+         let transformedIncomeArray = []
+         let transformedExpensesArray = []
+
+         const incomeSources = await fetchIncomeSources();
+         const incomeExpenses = await fetchIncomeExpenses();
+
+         if (incomeSources.length) {
+            //API returns [{‘name’: ‘day_job_income’, ‘type’:’salary’,’amount’:50000}]
+            //Transform to [{‘name’: ‘day_job_income’, ‘type’:’salary’,’value’:50000}]
+            transformedIncomeArray = incomeSources.map((each) => {
+               return { name: each.name, type: each.type, value: parseFloat(each.amount) }
+            })
+         }
+         if (incomeExpenses.length) {
+            //API returns [{‘name’: ‘day_job_income’, ‘type’:’salary’,’amount’:50000}]
+            //Transform to [{‘name’: ‘day_job_income’, ‘type’:’salary’,’value’:50000}]
+            transformedExpensesArray = incomeExpenses.map((each) => {
+               console.log({ original: each.amount, value: parseFloat(each.amount) })
+               return { name: each.name, type: each.type, value: parseFloat(each.amount) }
+            })
+         }
+         populatedIncomeStatement.income = transformedIncomeArray
+         populatedIncomeStatement.expenses = transformedExpensesArray
+
+         dispatch({
+            type: Types.SET_INCOME_STATEMENT,
+            payload: populatedIncomeStatement,
+         });
+      } catch (error) {
+         handleErrors(error);
+      }
+   };
+
    return (
       <Context.Provider
          value={{
@@ -313,12 +401,17 @@ const Provider = ({ children }) => {
             monthlyExpenses,
             assets,
             liabilities,
+            incomeStatement,
             fetchData,
             fetchExpenses,
             deleteExpenseRequest,
             createExpenseRequest,
             changeExpenseRequest,
             fetchTags,
+            fetchToken,
+            fetchIncomeSources,
+            fetchIncomeExpenses,
+            fetchIncomeStatement
          }}
       >
          {children}

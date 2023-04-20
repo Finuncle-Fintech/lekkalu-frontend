@@ -103,8 +103,8 @@ datalist {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border: 1px solid black;
   position: relative;
+  flex-direction: column;
   margin: 2rem 0rem 4rem 0rem;
 }
 .output-text {
@@ -117,6 +117,7 @@ datalist {
 
 .output-chart {
   width: 100%;
+  position: relative;
 }
 
 .result {
@@ -135,7 +136,26 @@ datalist {
   font-size: 30px;
   text-align: center;
 }
+.table-container {
+  width: 100%;
+  position: relative;
+  margin: 1.5rem 0rem;
+}
 
+.table-container > table {
+  width: 100%;
+  text-align: center;
+}
+
+th {
+  padding: 1rem 0rem;
+  background-color: #ccc;
+  border: 1px solid black;
+}
+td {
+  padding: 0.5rem 0rem;
+  border: 1px solid black;
+}
 @media screen and (min-width: 760px) {
   .container > div {
     display: flex;
@@ -152,6 +172,11 @@ datalist {
   .input-field > input {
     width: 80%;
   }
+
+  .output {
+    flex-direction: row;
+  }
+
   .output-text {
     width: 50%;
   }

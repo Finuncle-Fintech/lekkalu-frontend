@@ -11,8 +11,6 @@ import {
 } from 'recharts';
 
 export const AssetsLiabilitiesChart = (props) => {
-
-   console.log('data', props);
    let totalValue = props.data.totalVal;
    let pieData;
    if (props.type === 'assets') {

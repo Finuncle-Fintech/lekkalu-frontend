@@ -1,5 +1,3 @@
-import { pickBy } from "lodash";
-
 export const parseQueryString = (queryString) => {
   const paramsArray = queryString.substring(1).split("&");
   return paramsArray.reduce((result, param) => {
@@ -10,8 +8,8 @@ export const parseQueryString = (queryString) => {
 };
 
 export const createUrlString = (params) => {
-  const validParams = pickBy(params, (value) => !!value);
-  const url = Object.entries(validParams)
+  // const validParams = pickBy(params, (value) => !!value);
+  const url = Object.entries(params)
     .map((e) => e.join("="))
     .join("&");
   return url;

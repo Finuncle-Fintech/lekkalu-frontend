@@ -84,7 +84,6 @@ const EmiCalculator = () => {
     );
   }, [data, results]);
 
-  console.log("repayment table", results?.repayment_table);
   return (
     <div className="container">
       <div className="buttons">

@@ -17,3 +17,11 @@
         gap: 5vw;
     }
 }
+@media (max-width:768px) {
+    .footer{
+        flex-direction: column;
+        height: auto;
+        padding:2vw;
+        gap: 5vw;
+    }
+}

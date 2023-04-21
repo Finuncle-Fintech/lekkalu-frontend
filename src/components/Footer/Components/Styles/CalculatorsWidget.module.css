@@ -21,15 +21,24 @@
     }.container > h5 > a:hover{
         text-decoration: underline solid white 1px;
     }
-
+    @media (max-width:768px) {
+        .container{
+            width: 70%;
+        }
+        .container > h3 > a{
+            font-size: 3vw;
     
+        } .container > h5 > a{
+            font-size: 2vw;
+
+        }
+    }
     @media (max-width:560px) {
         .container{
             width: 70%;
         }
         .container > h3 > a{
             font-size: 4vw;
-    
         } .container > h5 > a{
             font-size: 3vw;
 

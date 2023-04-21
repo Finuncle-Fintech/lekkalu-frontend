@@ -1,0 +1,83 @@
+.container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 20vw;
+}
+
+    .container > h3 > a{
+        color: white;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 1.4vw;
+        margin-bottom: 1vw;
+    } .phraseP{
+        color: white;
+        font-weight: normal;
+        font-size: 1vw;
+        text-decoration: none;
+    }
+    .containerSN{
+        display: flex;
+        gap: 1vw;
+    }
+        .containerSN > a > img{
+            width: 1.3vw;
+        }
+
+    .containerDownload> a > button{
+        border: 1px white solid;
+        background-color: transparent;
+        border-radius: 1vw;
+        text-align: center;
+        width: 13vw;
+        color: white;
+        transition: .2s;
+    }
+    .containerDownload> a > button:hover{
+        background-color: white;
+        color:#0289C8;
+    }
+    .containerDownload{
+        display: flex;
+        justify-content: start;
+        align-items: center;
+        gap: 1vw;
+    }
+        .containerDownload > div   {
+            background-color: white;
+            padding: .5vw;
+            border-radius: 1vw;
+        }
+        .containerDownload > div > img {
+            width:3vw;
+        }
+
+        @media (max-width:560px) {
+            .container{
+                width: 70%;
+            }
+            .container > h3 > a{
+                font-size: 4vw;
+        
+            } .container > h5 > a{
+                font-size: 3vw;
+    
+            }
+            .containerSN{
+                display: flex;
+                gap: 3vw;
+            }
+            .containerSN > a > img{
+                width: 4vw;
+            }
+            .phraseP{
+                font-size: 3vw;
+            }
+
+            .containerDownload> a > button{
+                width: 100%;
+            }   .containerDownload > div > img {
+                width:7vw;
+            }
+        }

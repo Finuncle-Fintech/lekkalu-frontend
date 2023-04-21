@@ -1,0 +1,36 @@
+.container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+}
+
+    .container > h3 > a{
+        color: white;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 1.4vw;
+        margin-bottom: 1vw;
+
+    } .container > h5 > a{
+        color: white;
+        font-weight: normal;
+        font-size: 1vw;
+
+        text-decoration: none;
+    }.container > h5 > a:hover{
+        text-decoration: underline solid white 1px;
+    }
+
+    @media (max-width:560px) {
+        .container{
+            width: 70%;
+        }
+        .container > h3 > a{
+            font-size: 4vw;
+    
+        } .container > h5 > a{
+            font-size: 3vw;
+
+        }
+    }

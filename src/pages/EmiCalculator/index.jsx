@@ -12,6 +12,7 @@ import {
   handleShare,
   calculateEmiOutputs,
   calculateLoanPrincipalAndInterestPayable,
+  isObjectEmpty,
 } from "components/EMI_Components/utils";
 import FormInput from "components/EMI_Components/FormInput";
 import DisplayResult from "components/EMI_Components/DisplayResult";
@@ -20,7 +21,7 @@ import { AssetsLiabilitiesChart } from "../../components/Charts/AssetsLiabilitie
 
 import "./EmiCalculator.css";
 
-let defaultData = {
+const defaultData = {
   loan_principal: "0",
   loan_interest: "0",
   loan_tenure: "0",
@@ -37,9 +38,9 @@ const defaultResults = {
 
 const EmiCalculator = () => {
   const location = useLocation();
-  defaultData = parseQueryString(location.search);
+  const parsedObject = parseQueryString(location.search);
 
-  const [data, setData] = useState(defaultData);
+  const [data, setData] = useState( !isObjectEmpty(parsedObject) ? parsedObject : defaultData);
   const [results, setResults] = useState(defaultResults);
   const [assets, setAssets] = useState();
   const [isLoading, setIsLoading] = useState(false);
@@ -50,11 +51,7 @@ const EmiCalculator = () => {
   };
 
   const handleSave = async () => {
-    if (!Object.values(data).every(Boolean)) {
-      alert("Form Not Completely Filled");
-      return;
-    }
-
+    console.log('data', data);
     setIsLoading(true);
     try {
       await axios.post(`${process.env.REACT_APP_API}expenses/`, data, {
@@ -84,6 +81,7 @@ const EmiCalculator = () => {
     );
   }, [data, results]);
 
+  console.log("default data", defaultData);
   return (
     <div className="container">
       <div className="buttons">

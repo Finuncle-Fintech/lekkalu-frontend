@@ -2,7 +2,9 @@ export const parseQueryString = (queryString) => {
   const paramsArray = queryString.substring(1).split("&");
   return paramsArray.reduce((result, param) => {
     const [key, value] = param.split("=");
-    result[key] = value;
+    if (key !== "") { // only add to result if value is not an empty string
+      result[key] = value;
+    }
     return result;
   }, {});
 };
@@ -13,6 +15,10 @@ export const createUrlString = (params) => {
     .join("&");
   return url;
 };
+
+export const isObjectEmpty=(obj)=> {
+  return Object.keys(obj).length === 0;
+}
 
 export const copyToClipboard = (str) => {
   navigator.clipboard

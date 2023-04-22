@@ -12,7 +12,7 @@ const Header = () => {
         <HeaderButton color="inherit" component={Link} to="/expenses">
           Expenses
         </HeaderButton>
-        <HeaderButton color="inherit" component={Link} to="/calculator">
+        <HeaderButton color="inherit" component={Link} to="/loan_emi_calculator">
           EMI Calculator
         </HeaderButton>
       </Toolbar>

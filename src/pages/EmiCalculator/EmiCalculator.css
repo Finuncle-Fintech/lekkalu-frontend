@@ -18,9 +18,21 @@
   padding: 0.5rem 2.5rem;
   outline: none;
   border: none;
-  background-color: rgb(10, 109, 10);
+  background-color: rgb(74, 74, 255);
   color: white;
   font-weight: bold;
+}
+
+.tooltip {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  padding: 0.5rem;
+  background-color: #333;
+  color: #fff;
+  font-size: 0.8rem;
+  text-align: center;
 }
 
 .parent {
@@ -34,18 +46,20 @@
 .input-container {
   width: 100%;
   display: flex;
-  justify-content: center;
+  /* justify-content: center; */
+  flex-direction: column;
   align-items: center;
   margin: 0.5rem auto;
   position: relative;
 }
 
 .input-container > h1 {
-  margin-right: 40px;
+  width: 100%;
   font-size: 20px;
   font-weight: lighter;
   font-family: sans-serif;
   white-space: nowrap;
+  text-align: left;
 }
 
 .input-field {
@@ -58,7 +72,7 @@
 
 .input-field > input {
   width: 65%;
-  padding: 0.8rem 0px;
+  padding: 0.3rem 0px;
   outline: none;
   border: none;
   border-bottom-left-radius: 5px;
@@ -71,7 +85,7 @@
 }
 .input-field > button {
   width: 35%;
-  padding: 1rem 0px;
+  padding: 0.4rem 0px;
   background-color: #ddd;
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;
@@ -116,7 +130,8 @@ datalist {
 }
 
 .output-chart {
-  width: 100%;
+  width: 90%;
+  margin: 0px auto;
   position: relative;
 }
 
@@ -166,6 +181,13 @@ td {
     margin: 1rem 0px;
     width: 48%;
   }
+  .input-container {
+    flex-direction: row;
+  }
+  .input-container > h1 {
+    margin-right: 20px;
+    width: 170px;
+  }
   .input-field > button {
     width: 20%;
   }
@@ -181,6 +203,6 @@ td {
     width: 50%;
   }
   .output-chart {
-    width: 50%;
+    width: 40%;
   }
 }

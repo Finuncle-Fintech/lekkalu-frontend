@@ -1,8 +1,15 @@
+import {
+  FormGroup,
+  InputGroup,
+  Input,
+  Label,
+  InputGroupText,
+  Container,
+} from "reactstrap";
 
 const FormInput = ({
   handleChange,
   value,
-  options,
   name,
   type,
   label,
@@ -11,41 +18,43 @@ const FormInput = ({
   max,
   step,
   showSlider,
+  tooltip,
 }) => {
   return (
-    <div className="parent">
-      <div className="input-container">
-        {label && <h1>{label}</h1>}
-        <div className="input-field">
-          <input
+    <Container>
+      <FormGroup>
+        {label && (
+          <Label
+            htmlFor={name}
+            style={{ whiteSpace: "nowrap", margin: "0px 15px 0px 0px" }}
+          >
+            {label}
+          </Label>
+        )}
+        <InputGroup>
+          <Input
             type={type}
             name={name}
             value={value}
             onChange={handleChange}
+            id={name}
           />
-          <button>{symbol}</button>
-        </div>
-      </div>
+          <InputGroupText>{symbol}</InputGroupText>
+        </InputGroup>
+      </FormGroup>
       {showSlider && (
-        <>
-          <input
-            type="range"
-            min={min}
-            max={max}
-            step={step}
-            list={name}
-            defaultValue={value}
-            name={name}
-            onChange={handleChange}
-          />
-          <datalist id={name}>
-            {options.map((value, _idx) => (
-              <option key={_idx} value={value}></option>
-            ))}
-          </datalist>
-        </>
+        <input
+          type="range"
+          min={min}
+          max={max}
+          step={step}
+          list={name}
+          value={value}
+          name={name}
+          onChange={handleChange}
+        />
       )}
-    </div>
+    </Container>
   );
 };
 

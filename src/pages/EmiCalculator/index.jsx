@@ -102,10 +102,11 @@ const EmiCalculator = () => {
           name="loan_principal"
           type="number"
           label="Loan Principal"
-          symbol="$"
+          symbol="amount"
           min="0"
           max={"10000"}
           step="10"
+          tooltip="input the loan principal, amount you want to borrow"
           showSlider
         />
         <FormInput
@@ -119,6 +120,7 @@ const EmiCalculator = () => {
           min="0"
           max={"100"}
           step="1"
+          tooltip="input per cent interest per annum"
           showSlider
         />
       </div>
@@ -133,6 +135,7 @@ const EmiCalculator = () => {
         min="0"
         max={"30"}
         step="1"
+        tooltip="how long do you want the loan for?"
         showSlider
       />
 
@@ -140,15 +143,18 @@ const EmiCalculator = () => {
         <FormInput
           handleChange={handleChange}
           value={data.disbursement_date}
+          label="Disbursement Date"
           name="disbursement_date"
           type="date"
           symbol="Date"
+          tooltip="input the Disbursement date for your loan"
         />
         <FormInput
           handleChange={handleChange}
           value={data.emi_day}
           name="emi_day"
           type="number"
+          tooltip="input the EMI Day Number"
           symbol="EMI Day"
         />
       </div>
@@ -162,7 +168,7 @@ const EmiCalculator = () => {
           <DisplayResult value={results?.total_payment} label="Total Payment" />
         </div>
         <div className="output-chart">
-          {assets && <AssetsLiabilitiesChart data={assets} type={"assets"} />}
+          {assets && data.loan_principal && data.loan_interest && data.loan_tenure && <AssetsLiabilitiesChart data={assets} type={"assets"} />}
         </div>
       </div>
 

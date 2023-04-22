@@ -4,10 +4,10 @@ const RepaymentTable = ({ repaymentTable }) => {
       <thead>
         <tr>
           <th>Month</th>
-          <th>{`Principal ($)`}</th>
-          <th>{`Interest ($)`}</th>
-          <th>{`Total Payment ($)`}</th>
-          <th>{`Outstanding Principal ($)`}</th>
+          <th>Principal</th>
+          <th>Interest</th>
+          <th>Total Payment</th>
+          <th>Outstanding Principal</th>
         </tr>
       </thead>
       <tbody>

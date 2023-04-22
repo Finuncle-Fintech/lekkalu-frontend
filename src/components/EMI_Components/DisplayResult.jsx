@@ -5,7 +5,7 @@ const DisplayResult = ({ value, label }) => {
   return (
     <section className="result">
       <h4>{label}</h4>
-      <p>{ value && `$${formatNumberWithCommas(value)}`}</p>
+      <p>{value ? `${formatNumberWithCommas(value)}`: "0" }</p>
     </section>
   );
 };

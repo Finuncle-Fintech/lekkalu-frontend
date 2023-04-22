@@ -11,7 +11,7 @@ const RouterComponent = () => {
       <Routes>
         <Route path="/" element={<><Header /><Charts /></>} />
         <Route path="/expenses" element={<><Header /><Expenses Context={Context} /></>} />
-        <Route path="/calculator" element={<><Header/><EmiCalculator/></> } />
+        <Route path="/loan_emi_calculator" element={<><Header/><EmiCalculator/></> } />
       </Routes>
     </Router>
   );

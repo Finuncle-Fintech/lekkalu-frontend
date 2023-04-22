@@ -8,7 +8,6 @@ export const parseQueryString = (queryString) => {
 };
 
 export const createUrlString = (params) => {
-  // const validParams = pickBy(params, (value) => !!value);
   const url = Object.entries(params)
     .map((e) => e.join("="))
     .join("&");

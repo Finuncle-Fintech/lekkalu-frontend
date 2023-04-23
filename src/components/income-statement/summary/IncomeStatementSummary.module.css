@@ -25,8 +25,8 @@
 }
 .chartWrapper{
     display: flex;
-    width: 100%;
-    justify-content: center;
+    /* width: 100%; */
+    justify-content: space-between;
     /* margin: 2rem 0;
     padding: 2rem 0; */
     /* background-color: #f0f1f3;
@@ -47,7 +47,6 @@
 .charts{
     width: 100%;
     display: flex;
-    overflow-x: hidden;
     background-color: #f0f1f3;
     border-radius: 20px;
     margin: 2rem 0;
@@ -58,6 +57,14 @@
 @media screen and (max-width: 1024px) {
     .charts{
         flex-direction: column;
+    }
+    .chartWrapper{
+        width: 100%;
+    }
+}
+@media screen and (min-width: 1024px) {
+    .chartWrapper{
+        width: 100%;
     }
 }
 

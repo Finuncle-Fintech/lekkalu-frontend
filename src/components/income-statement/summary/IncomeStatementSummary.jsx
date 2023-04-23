@@ -146,6 +146,7 @@ const IncomeStatementSummary = ({
             data={incomeStatement}
             totalVal={totalIncome}
             incomeOverviewData={incomeOverviewData}
+            details={true}
           />
         </div>
         <div className={styles.chartWrapper}>
@@ -154,6 +155,7 @@ const IncomeStatementSummary = ({
             data={incomeStatement}
             totalVal={totalExpense}
             expenseOverviewData={expenseOverviewData}
+            details={true}
           />
         </div>
       </div>
@@ -162,22 +164,3 @@ const IncomeStatementSummary = ({
 };
 
 export default IncomeStatementSummary;
-const StatsTile = ({ label, value }) => {
-  return (
-    <div>
-      <span style={{ fontSize: "1rem", fontWeight: "bold" }}>
-        {label}
-        {" : "}
-      </span>
-      <span
-        style={{
-          fontSize: "1.2rem",
-          fontWeight: "bold",
-          color: "green",
-        }}
-      >
-        {value}₹
-      </span>
-    </div>
-  );
-};

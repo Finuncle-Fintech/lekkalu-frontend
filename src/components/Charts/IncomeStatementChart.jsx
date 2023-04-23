@@ -9,8 +9,10 @@ import {
   Surface,
   Symbols,
 } from "recharts";
-
+import styles from "./IncomeStatementChart.module.css";
+import useWindowDimensions from "hooks/useWindowDimensions";
 export const IncomeStatementChart = (props) => {
+  const size = useWindowDimensions();
   let totalValue = props.totalVal;
   let pieData;
   if (props.type == "income") {
@@ -112,13 +114,103 @@ export const IncomeStatementChart = (props) => {
             borderRadius: 5 + "px",
           }}
         >
-          <label>
-            {`${payload[0].name} : ` +
-              ((`${payload[0].value}` * 100) / totalValue).toFixed(2) +
-              "%"}
-            <br />
-            {`\u20B9 ${numDifferentiation(payload[0].value)} `}
-          </label>
+          {(props.type == "income-overview") & props?.details ? (
+            <div className={styles.mainTooltip}>
+              <label
+                style={{
+                  fontWeight: "bold",
+                }}
+              >
+                <span
+                  style={{
+                    fontWeight: "bold",
+                    color:
+                      Colors.PIE[
+                        pieData.map((e) => e.name).indexOf(payload[0].name)
+                      ].end,
+                  }}
+                >
+                  {`${payload[0].name} : `}
+                </span>
+                <span
+                  style={{
+                    fontWeight: "bold",
+                    color: "#fa4646",
+                  }}
+                >{`\u20B9 ${numDifferentiation(payload[0].value)} `}</span>
+              </label>
+              <div className={styles.detailsContainer}>
+                {props.data.income
+                  ?.filter((each) => each?.type === payload[0].name)
+                  ?.map((each) => {
+                    return (
+                      <div style={{ width: "100%" }}>
+                        <p style={{ width: "100%", lineHeight: "0.5rem" }}>
+                          <span style={{ fontWeight: 600 }}>
+                            {each?.name} :
+                          </span>
+                          <span style={{ fontWeight: 700 }}>
+                            {`\u20B9 ${numDifferentiation(each.value)} `}
+                          </span>
+                        </p>
+                      </div>
+                    );
+                  })}
+              </div>
+            </div>
+          ) : (props.type == "expense-overview") & props?.details ? (
+            <div className={styles.mainTooltip}>
+              <label
+                style={{
+                  fontWeight: "bold",
+                }}
+              >
+                <span
+                  style={{
+                    fontWeight: "bold",
+                    color:
+                      Colors.PIE[
+                        pieData.map((e) => e.name).indexOf(payload[0].name)
+                      ].end,
+                  }}
+                >
+                  {`${payload[0].name} : `}
+                </span>
+                <span
+                  style={{
+                    fontWeight: "bold",
+                    color: "#fa4646",
+                  }}
+                >{`\u20B9 ${numDifferentiation(payload[0].value)} `}</span>
+              </label>
+              <div className={styles.detailsContainer}>
+                {props.data.expenses
+                  ?.filter((each) => each?.type === payload[0].name)
+                  ?.map((each) => {
+                    return (
+                      <div style={{ width: "100%" }}>
+                        <p style={{ width: "100%", lineHeight: "0.5rem" }}>
+                          <span style={{ fontWeight: 600 }}>
+                            {each?.name} :
+                          </span>
+                          <span style={{ fontWeight: 700 }}>
+                            {`\u20B9 ${numDifferentiation(each.value)} `}
+                          </span>
+                        </p>
+                      </div>
+                    );
+                  })}
+              </div>
+            </div>
+          ) : (
+            <label>
+              {`${payload[0].name} : ` +
+                ((`${payload[0].value}` * 100) / totalValue).toFixed(2) +
+                "%"}
+              <br />
+              {`\u20B9 ${numDifferentiation(payload[0].value)} `}
+            </label>
+          )}
         </div>
       );
     }
@@ -129,66 +221,71 @@ export const IncomeStatementChart = (props) => {
   return (
     <>
       {pieData && pieData.length !== 0 ? (
-        <ResponsiveContainer width="100%" aspect={3}>
-          <PieChart>
-            <defs>
-              {pieData.map((entry, index) => (
-                <linearGradient
-                  id={`myGradient${index}`}
-                  key={`myGradient${index}`}
-                >
-                  <stop
-                    offset="0%"
-                    stopColor={Colors.PIE[index % Colors.PIE.length].start}
-                  />
-                  <stop
-                    offset="100%"
-                    stopColor={Colors.PIE[index % Colors.PIE.length].end}
-                  />
-                </linearGradient>
-              ))}
-            </defs>
-            <Pie
-              data={pieData}
-              color="#000000"
-              dataKey="value"
-              nameKey="name"
-              cx="50%"
-              cy="50%"
-              outerRadius="100%"
-              fill="#8884d8"
-              label={renderCustomizedLabel}
-              labelLine={false}
-            >
-              {/* {pieData.map((entry, index) => (
+        <div className="section-outer-wrapper col-md-9 mx-auto mb-5 mt-5">
+          <ResponsiveContainer width="100%" aspect={size.width <= 1024 ? 2 : 3}>
+            <PieChart>
+              <defs>
+                {pieData.map((entry, index) => (
+                  <linearGradient
+                    id={`myGradient${index}`}
+                    key={`myGradient${index}`}
+                  >
+                    <stop
+                      offset="0%"
+                      stopColor={Colors.PIE[index % Colors.PIE.length].start}
+                    />
+                    <stop
+                      offset="100%"
+                      stopColor={Colors.PIE[index % Colors.PIE.length].end}
+                    />
+                  </linearGradient>
+                ))}
+              </defs>
+              <Pie
+                data={pieData}
+                color="#000000"
+                dataKey="value"
+                nameKey="name"
+                cx="50%"
+                cy="50%"
+                outerRadius="100%"
+                fill="#8884d8"
+                label={renderCustomizedLabel}
+                labelLine={false}
+              >
+                {/* {pieData.map((entry, index) => (
                   <Cell
                      key={`cell-${index}`}
                      fill={COLORS[index % COLORS.length]}
                   />
                ))} */}
 
-              {pieData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={`url(#myGradient${index})`} />
-              ))}
-            </Pie>
-            <Tooltip content={<CustomTooltip />} />
-            <Legend
-              layout="vertical"
-              verticalAlign="top"
-              align="right"
-              payload={pieData.map((item, index) => ({
-                id: item.name,
-                type: "square",
-                value:
-                  item.name +
-                  ` : ` +
-                  ((item.value * 100) / totalValue).toFixed(2) +
-                  `%`,
-                color: `url(#myGradient${index})`,
-              }))}
-            />
-          </PieChart>
-        </ResponsiveContainer>
+                {pieData.map((entry, index) => (
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={`url(#myGradient${index})`}
+                  />
+                ))}
+              </Pie>
+              <Tooltip content={<CustomTooltip />} />
+              <Legend
+                layout={size.width <= 1024 ? "horizontal" : "vertical"}
+                verticalAlign="top"
+                align={size.width <= 1024 ? "center" : "right"}
+                payload={pieData.map((item, index) => ({
+                  id: item.name,
+                  type: "square",
+                  value:
+                    item.name +
+                    ` : ` +
+                    ((item.value * 100) / totalValue).toFixed(2) +
+                    `%`,
+                  color: `url(#myGradient${index})`,
+                }))}
+              />
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
       ) : (
         <h4>No data for {props.type} chart</h4>
       )}

@@ -7,6 +7,8 @@ import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import MoneyOffIcon from "@mui/icons-material/MoneyOff";
 import Income from "components/income-statement/income/Income";
 import { Expenses } from "components/income-statement/expenses/Expenses";
+import { BeatLoader } from "react-spinners";
+import Colors from "constants/colors";
 
 const tabsList = [
   { label: "Summary", icon: <SummarizeIcon /> },
@@ -70,12 +72,26 @@ const IncomeStatement = ({ Context }) => {
   const difference = totalIncome - totalExpense;
   return (
     <div>
-      <GenericTabs
+      {/* <GenericTabs
         tabs={tabsList}
         handleChange={handleTabChange}
         value={currentab}
-      />
-      <div>{loadCurrentTab()}</div>
+      /> */}
+      {incomeStatement.income.length === 0 &&
+      incomeStatement.expenses.length === 0 ? (
+        <div
+          className="section col-md-8 mx-auto pb-5 pt-5 mt-5"
+          style={{
+            backgroundColor: Colors.graphBG,
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <BeatLoader stylecolor={Colors.loaderColor} />
+        </div>
+      ) : (
+        <div>{loadCurrentTab()}</div>
+      )}
     </div>
   );
 };

@@ -40,10 +40,13 @@ const EmiCalculator = () => {
   const location = useLocation();
   const parsedObject = parseQueryString(location.search);
 
-  const [data, setData] = useState( !isObjectEmpty(parsedObject) ? parsedObject : defaultData);
+  const [data, setData] = useState(
+    !isObjectEmpty(parsedObject) ? parsedObject : defaultData
+  );
   const [results, setResults] = useState(defaultResults);
   const [assets, setAssets] = useState();
   const [isLoading, setIsLoading] = useState(false);
+  const [isCopied, setIsCopied] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -51,7 +54,7 @@ const EmiCalculator = () => {
   };
 
   const handleSave = async () => {
-    console.log('data', data);
+    console.log("data", data);
     setIsLoading(true);
     try {
       await axios.post(`${process.env.REACT_APP_API}expenses/`, data, {
@@ -81,15 +84,20 @@ const EmiCalculator = () => {
     );
   }, [data, results]);
 
-  console.log("default data", defaultData);
+  const handleCopy = (data) => {
+    setIsCopied(true);
+    handleShare(data);
+    setTimeout(() => setIsCopied(false), 3000);
+  };
+
   return (
     <div className="container">
       <div className="buttons">
         <button className="save" onClick={handleSave} disabled={isLoading}>
           {isLoading ? "Saving..." : "Save"}
         </button>
-        <button className="save" onClick={() => handleShare(data)}>
-          share
+        <button className="save" onClick={() => handleCopy(data)}>
+          {isCopied ? "Copied!" : "Share"}
         </button>
       </div>
       <div>
@@ -166,7 +174,12 @@ const EmiCalculator = () => {
           <DisplayResult value={results?.total_payment} label="Total Payment" />
         </div>
         <div className="output-chart">
-          {assets && data.loan_principal && data.loan_interest && data.loan_tenure && <AssetsLiabilitiesChart data={assets} type={"assets"} />}
+          {assets &&
+            data.loan_principal &&
+            data.loan_interest &&
+            data.loan_tenure && (
+              <AssetsLiabilitiesChart data={assets} type={"assets"} />
+            )}
         </div>
       </div>
 

@@ -20,14 +20,17 @@ export const isObjectEmpty=(obj)=> {
   return Object.keys(obj).length === 0;
 }
 
-export const copyToClipboard = (str) => {
+export const copyToClipboard = (str , setIsCopied) => {
   navigator.clipboard
     .writeText(str)
     .then(() => {
       console.log("String copied to clipboard!");
+      setIsCopied(true);
     })
     .catch((error) => {
       console.error("Failed to copy string: ", error);
+    }).finally(() => {
+      setIsCopied(false);
     });
 };
 

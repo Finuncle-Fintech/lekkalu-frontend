@@ -1,0 +1,32 @@
+.footer{
+    width: 100%;
+    background-color: #0289C8;
+    display: grid;
+    grid-template-columns: 9fr 1fr;
+    bottom: 0px;
+    padding-top: 2vw;
+    padding: 1vw;
+}
+.linksFooter{
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    width: 80%;
+    justify-self: flex-end;
+}
+
+@media (max-width:768px) {
+    .footer{
+        display: flex;
+        flex-direction: column-reverse;
+       
+        height: auto;
+        padding:2vw;
+        gap: 5vw;
+    }
+    .linksFooter{
+        flex-direction: column;
+        align-self: flex-start;
+        gap: 2vw;
+    }
+}

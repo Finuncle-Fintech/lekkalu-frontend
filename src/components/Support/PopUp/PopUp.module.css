@@ -1,0 +1,111 @@
+.container{
+    position: fixed;
+    display: none;
+    flex-direction: column;
+    top: 15vh;
+    left: 25vw;
+    width: 45vw;
+    background-color: #EAEAEA;
+    padding: 2vw;
+    gap: 0.4vw;
+}   
+    .close{
+        width: 3vw;
+        align-self: flex-end;
+        cursor: pointer;
+    }
+    .title{
+        font-size: 2rem;
+        font-weight: bold;
+        color: #0289C8;
+    }
+    .form{
+        justify-self: center;
+        align-self: center;
+        display: flex;
+        flex-direction: column;
+        width: 70%;
+        gap: 1.5vw;
+    }
+        .containerInput{
+            display: flex;
+            justify-content: space-between;
+            
+        }
+        .inputName{
+            align-self: flex-start;
+            width: 12vw;
+            border: none;
+            color: black;
+            border-radius: 0.2rem;
+            padding: 0.2vw;
+            transition: 0.2s;
+        }.inputName:focus{
+            outline: none;
+            border-bottom: 1px #0289C8 solid;
+        }
+        .inputEmail{
+            width: 14vw;
+            align-self: flex-start;
+            border: none;
+            color: black;
+            border-radius: 0.2rem;
+            padding: 0.2vw;
+            transition: 0.2s;
+        }.inputEmail:focus{
+            outline: none;
+            border-bottom: 1px #0289C8 solid;
+        }
+            .errorEmail{
+                color: red;
+                font-size: 0.8rem;
+                position: absolute;
+            }
+        .textarea{
+            border: none;
+            border-radius: 0.4rem;
+        }.textarea:focus{
+            outline: none;
+            border: 1px solid #0289C8;
+        }
+        .submit{
+            color: rgb(37, 37, 37);
+            border-radius: 0.3rem;
+            border: 1px solid #9d9d9d;
+        }
+        .submit:hover{
+            border: 1px solid #0289C8;
+            background-color: #0289C8;
+            color: white;
+        }
+
+        @media (max-width:768px) {
+            .container{
+                width: 80vw;
+                top: 15vh;
+                left: 10vw;
+
+            }
+                .title{
+                    font-size: 1.5rem;
+                }
+                .close{
+                    width: 6vw;
+                }
+                .form{
+                    justify-content: space-between;
+                    gap: 2vw;
+                }
+                .containerInput{
+                    flex-direction: column;
+                    gap: 2vw;
+                }
+                .inputEmail{
+                    width: 100%;
+                }.inputName{
+                    width: 100%;
+                }
+                .textarea{
+                    height: 20vw;
+                }
+        }

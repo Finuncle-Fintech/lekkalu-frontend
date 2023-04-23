@@ -13,11 +13,11 @@ const RepaymentTable = ({ repaymentTable }) => {
       <tbody>
         {repaymentTable.map((record) => (
           <tr key={record.month}>
-            <td>{record.month}</td>
-            <td>{record.principal}</td>
-            <td>{record.interest}</td>
-            <td>{record.total_payment}</td>
-            <td>{record.outstandingPrincipal}</td>
+            <td>{Math.abs(record.month)}</td>
+            <td>{Math.abs(record.principal)}</td>
+            <td>{Math.abs(record.interest)}</td>
+            <td>{Math.abs(record.total_payment)}</td>
+            <td>{Math.abs(record.outstandingPrincipal)}</td>
           </tr>
         ))}
       </tbody>

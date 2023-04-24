@@ -2,6 +2,7 @@ import { useState } from 'react';
 import validation from './SignupValidation';
 import swal from 'sweetalert';
 import axios from 'axios';
+import { BASE_URL } from 'utils/constant';
 
 const initialData = {
    username: '',
@@ -18,10 +19,6 @@ const SignupForm = () => {
 
    const [isChecked, setIsChecked] = useState(false);
 
-   // const handleOnChange = () => {
-   //    setIsChecked(!isChecked);
-   // };
-
    const onRegisterClick = async (ev) => {
       ev.preventDefault();
 
@@ -35,7 +32,7 @@ const SignupForm = () => {
             password: registerData.password,
          };
          await axios
-            .post(`http://localhost:8000/users/api/users`, userData)
+            .post(`${BASE_URL}users/api/users`, userData)
             .then((response) => {
                swal({
                   title: response.statusText,
@@ -84,7 +81,7 @@ const SignupForm = () => {
    };
 
    const onInputChange = (ev) => {
-      if (ev.target.name == 'terms') {
+      if (ev.target.name === 'terms') {
          setIsChecked(!isChecked);
          ev.target.value = !isChecked;
       }

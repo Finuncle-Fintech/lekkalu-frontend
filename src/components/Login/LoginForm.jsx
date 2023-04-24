@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import validation from './LoginValidation';
 import { useNavigate } from 'react-router';
 import axios from 'axios';
 import swal from 'sweetalert';
+import { BASE_URL } from 'utils/constant';
 
 const initialData = { username: '', password: '' };
 
@@ -34,7 +35,7 @@ const LoginForm = (props) => {
             password: logInData.password,
          };         
          await axios
-            .post(`http://localhost:8000/token/`, userData)
+            .post(`${BASE_URL}token/`, userData)
             .then((response) => {
          
                if (response.data.access) {
@@ -58,12 +59,6 @@ const LoginForm = (props) => {
                      </>
                   );
                } else {
-                  // setResponseErrors(
-                  //    <div className='alert alert-danger' role='alert'>
-                  //       {error.response.data}
-                  //    </div>
-                  // );
-                  //alert("server side error.");
                   swal({
                      title: 'Error!',
                      text: 'server side error or connection interrupted.',
@@ -74,12 +69,7 @@ const LoginForm = (props) => {
             });
       }
    };
-   useEffect(() => {
-      const userData = JSON.parse(localStorage.getItem('user'));
-      if (userData !== null) {
-         navigate('/dashboard');
-      }
-   });
+
    return (
       <div>
          <form>

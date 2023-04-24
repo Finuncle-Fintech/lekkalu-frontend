@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useLayoutEffect, useState } from 'react';
 import classNames from 'classnames';
 import 'font-awesome/css/font-awesome.min.css';
 import {
@@ -31,13 +31,26 @@ const Login = () => {
       setModal(false);
    };
 
+   const openModalHandler = () => {
+      setModal(true);
+   };
+
    const userLocalInfo = JSON.parse(localStorage.getItem('user'));
    var navigate = useNavigate();
 
    const onLogoutClick = () => {
       localStorage.removeItem('user');
       navigate('/');
+      setModal(true);
    };
+
+   const userData = localStorage.getItem('user');
+   useLayoutEffect(() => {
+      if (userData === null) {
+         openModalHandler();
+      }
+   },[userData]);
+
    return (
       <>
          <Modal

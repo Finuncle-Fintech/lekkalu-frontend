@@ -15,7 +15,7 @@ const Test = () => {
    const [error, setError] = useState();
 
    const fetchAPI = async () => {
-      await fetchData().then(() => {});
+      await fetchData().then((data) => { console.log({data}) }).catch((err => console.log({err})));
    };
    useEffect(() => {
       fetchAPI();

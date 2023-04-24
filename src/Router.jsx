@@ -4,6 +4,9 @@ import Expenses from "components/Expenses/Expenses";
 import Header from "components/Header/Header";
 import { Context } from "provider/Provider";
 import IncomeStatement from "pages/income-statement/IncomeStatement";
+import EmiCalculator from "pages/EmiCalculator";
+import SupportPopUp from "components/Support/PopUp/PopUp";
+import Footer from "components/Footer/Footer";
 
 const RouterComponent = () => {
   return (
@@ -15,6 +18,8 @@ const RouterComponent = () => {
             <>
               <Header />
               <Charts />
+              <Footer />
+              <SupportPopUp />
             </>
           }
         />
@@ -24,6 +29,19 @@ const RouterComponent = () => {
             <>
               <Header />
               <Expenses Context={Context} />
+              <Footer />
+              <SupportPopUp />
+            </>
+          }
+        />
+        <Route
+          path="/loan_emi_calculator"
+          element={
+            <>
+              <Header />
+              <EmiCalculator />
+              <Footer />
+              <SupportPopUp />
             </>
           }
         />

@@ -8,12 +8,13 @@ import FeedbackButton from './Components/FeedbackButton'
 export default function Footer(){
     return(
         <footer className={styles.footer}>
+             <FeedbackButton />
             <div className={styles.linksFooter}>
                 <AboutUs />
                 <CalculatorWidget />
                 <FollowUs />
             </div>
-            <FeedbackButton />
+           
         </footer>
     )
 }

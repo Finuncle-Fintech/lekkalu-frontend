@@ -1,21 +1,34 @@
+.blur{
+    display: none;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0px;
+    z-index: 0;
+    background-color: rgba(0, 0, 0, 0.211);
+    backdrop-filter: blur(3px);
+}
 .container{
+    z-index: 1;
     position: fixed;
     display: none;
+    justify-content: center;
+    align-items: center;
     flex-direction: column;
     top: 15vh;
-    left: 25vw;
-    width: 45vw;
+    left: 30vw;
+    width: 40vw;
     background-color: #EAEAEA;
-    padding: 2vw;
+    padding: 1vw;
     gap: 0.4vw;
 }   
     .close{
-        width: 3vw;
+        width: 2vw;
         align-self: flex-end;
         cursor: pointer;
     }
     .title{
-        font-size: 2rem;
+        font-size: 1.5rem;
         font-weight: bold;
         color: #0289C8;
     }

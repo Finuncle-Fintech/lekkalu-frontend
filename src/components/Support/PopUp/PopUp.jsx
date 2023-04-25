@@ -4,7 +4,12 @@ import { useState, useRef } from 'react'
 import checkEmail from './utils/checkEmail'
 
 export default function SupportPopUp(){
+
+    //
     const [close, setClose] = useState(false)
+    const handleClose = () =>{
+        setClose(close?false:true)
+    }
 
     const formRef = useRef(null)
     const emailRef = useRef(null)
@@ -32,24 +37,29 @@ export default function SupportPopUp(){
         }
       
     }
-
+ 
     return(
-        <div className={styles.container} style={{display:close&&'none'}} id='popUpSupport'>
-            <img src={closeImage} alt="" className={styles.close} onClick={()=>setClose(close?false:true)}/>
-            <h3 className={styles.title}>Share Your Thoughts with Us</h3>
+        <>
+            <div className={styles.blur} style={{display:close&&'none'}} id='blurBackground' onClick={handleClose}></div>
 
-            <form ref={formRef} action="" className={styles.form} onSubmit={handleSubmit}>
-                <div className={styles.containerInput}>
-                    <input type="text" placeholder='Name' className={styles.inputName} required />
-                    <div>
-                        <input type="Email" placeholder='Email' className={styles.inputEmail} onChange={handleChange} required ref={emailRef}/>
-                        {error&&(<p className={styles.errorEmail}>Check the email please.</p>)}
+            <div className={styles.container} style={{display:close&&'none'}} id='popUpSupport'>
+                <img src={closeImage} alt="" className={styles.close} onClick={handleClose}/>
+                <h3 className={styles.title}>Share Your Thoughts with Us</h3>
+
+                <form ref={formRef} action="" className={styles.form} onSubmit={handleSubmit}>
+                    <div className={styles.containerInput}>
+                        <input type="text" placeholder='Name' className={styles.inputName} required />
+                        <div>
+                            <input type="Email" placeholder='Email' className={styles.inputEmail} onChange={handleChange} required ref={emailRef}/>
+                            {error&&(<p className={styles.errorEmail}>Check the email please.</p>)}
+                        </div>
                     </div>
-                </div>
-                <textarea name="" placeholder='Subject and description.' id="SubjectUser" cols="30" rows="10" className={styles.textarea} required></textarea>
-                <button type="submit" value="Submit" className={styles.submit} >Submit</button>
-            </form>
+                    <textarea name="" placeholder='Subject and description.' id="SubjectUser" cols="30" rows="10" className={styles.textarea} required></textarea>
+                    <button type="submit" value="Submit" className={styles.submit} >Submit</button>
+                </form>
 
-        </div>
+            </div>
+            
+        </>
     )
 }

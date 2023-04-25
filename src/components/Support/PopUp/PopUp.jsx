@@ -43,8 +43,10 @@ export default function SupportPopUp(){
             <div className={styles.blur} style={{display:close&&'none'}} id='blurBackground' onClick={handleClose}></div>
 
             <div className={styles.container} style={{display:close&&'none'}} id='popUpSupport'>
-                <img src={closeImage} alt="" className={styles.close} onClick={handleClose}/>
-                <h3 className={styles.title}>Share Your Thoughts with Us</h3>
+                <div className={styles.containerCloseTitle}>
+                    <img src={closeImage} alt="" className={styles.close} onClick={handleClose}/>
+                    <h3 className={styles.title}>Share Your Thoughts with Us</h3>
+                </div>
 
                 <form ref={formRef} action="" className={styles.form} onSubmit={handleSubmit}>
                     <div className={styles.containerInput}>

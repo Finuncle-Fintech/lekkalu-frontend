@@ -22,15 +22,22 @@
     padding: 1vw;
     gap: 0.4vw;
 }   
+    .containerCloseTitle{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: row-reverse;
+        gap: 4vw;
+    }
     .close{
-        width: 2vw;
-        align-self: flex-end;
+        width: 3vw;
         cursor: pointer;
     }
     .title{
         font-size: 1.5rem;
         font-weight: bold;
         color: #0289C8;
+        margin-bottom: 0px;
     }
     .form{
         justify-self: center;

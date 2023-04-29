@@ -2,7 +2,7 @@ import { useState } from 'react';
 import validation from './SignupValidation';
 import swal from 'sweetalert';
 import axios from 'axios';
-import { BASE_URL } from 'utils/constant';
+
 
 const initialData = {
    username: '',
@@ -32,7 +32,7 @@ const SignupForm = () => {
             password: registerData.password,
          };
          await axios
-            .post(`${BASE_URL}users/api/users`, userData)
+            .post(`${process.env.REACT_APP_BACKEND_URL}users/api/users`, userData)
             .then((response) => {
                swal({
                   title: response.statusText,

@@ -3,7 +3,7 @@ import validation from './LoginValidation';
 import { useNavigate } from 'react-router';
 import axios from 'axios';
 import swal from 'sweetalert';
-import { BASE_URL } from 'utils/constant';
+
 
 const initialData = { username: '', password: '' };
 
@@ -35,7 +35,7 @@ const LoginForm = (props) => {
             password: logInData.password,
          };         
          await axios
-            .post(`${BASE_URL}token/`, userData)
+            .post(`${process.env.REACT_APP_BACKEND_URL}token/`, userData)
             .then((response) => {
          
                if (response.data.access) {

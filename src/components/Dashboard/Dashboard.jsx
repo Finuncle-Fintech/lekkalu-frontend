@@ -1,4 +1,6 @@
+import Charts from 'components/Charts/Charts';
+
 const Dashboard = () => {
-   return <h1>You are logged in.</h1>;
+   return <><Charts /></>;
 };
 export default Dashboard;

@@ -9,7 +9,6 @@ const Context = createContext({
 });
 
 const Provider = ({ children }) => {
-   const userLocalInfo = JSON.parse(localStorage.getItem('user'));
    const [store, dispatch] = useReducer(Reducer, InitialState);
    let finalDataWeekly = [];
    let finalLiabilities = [];
@@ -57,12 +56,13 @@ const Provider = ({ children }) => {
 
    const fetchTags = async () => {
       try {
-         const headers = {
-            'Authorization': `Bearer ${userLocalInfo?.access}`,
-            'Content-Type': 'application/json'
-         };
          await axios
-            .get(`${process.env.REACT_APP_BACKEND_API}tag/`, {headers})
+            .get(`${process.env.REACT_APP_BACKEND_API}tag/`, {
+               auth: {
+                  username: process.env.REACT_APP_USER,
+                  password: process.env.REACT_APP_PASSWORD,
+               },
+            })
             .then((res) => {
                dispatch({
                   type: Types.FETCH_TAGS,
@@ -76,14 +76,12 @@ const Provider = ({ children }) => {
 
    const fetchExpenses = async (page, rowsPerPage) => {
       try {
-         
-         const headers = {
-            'Authorization': `Bearer ${userLocalInfo?.access}`,
-            'Content-Type': 'application/json'
-         };
          await axios
             .get(`${process.env.REACT_APP_BACKEND_API}expenses/`, {
-               headers,
+               auth: {
+                  username: process.env.REACT_APP_USER,
+                  password: process.env.REACT_APP_PASSWORD,
+               },
                params: {
                   page: page + 1,
                   per_page: rowsPerPage,
@@ -102,13 +100,13 @@ const Provider = ({ children }) => {
 
    const deleteExpenseRequest = async (id) => {
       try {
-         
-         const headers = {
-            'Authorization': `Bearer ${userLocalInfo?.access}`,
-            'Content-Type': 'application/json'
-         };
          await axios
-            .delete(`${process.env.REACT_APP_BACKEND_API}expenses/${id}`, {headers})
+            .delete(`${process.env.REACT_APP_BACKEND_API}expenses/${id}`, {
+               auth: {
+                  username: process.env.REACT_APP_USER,
+                  password: process.env.REACT_APP_PASSWORD,
+               },
+            })
             .then((res) => {
                dispatch({
                   type: Types.DELETE_EXPENSE,
@@ -122,13 +120,13 @@ const Provider = ({ children }) => {
 
    const createExpenseRequest = async (data) => {
       try {
-         
-         const headers = {
-            'Authorization': `Bearer ${userLocalInfo?.access}`,
-            'Content-Type': 'application/json'
-         };
          await axios
-            .post(`${process.env.REACT_APP_BACKEND_API}expenses/`, data, {headers})
+            .post(`${process.env.REACT_APP_BACKEND_API}expenses/`, data, {
+               auth: {
+                  username: process.env.REACT_APP_USER,
+                  password: process.env.REACT_APP_PASSWORD,
+               },
+            })
             .then((res) => {
                dispatch({
                   type: Types.CREATE_EXPENSE,
@@ -142,15 +140,16 @@ const Provider = ({ children }) => {
 
    const changeExpenseRequest = async (index, expense) => {
       try {
-        
-         const headers = {
-            'Authorization': `Bearer ${userLocalInfo?.access}`,
-            'Content-Type': 'application/json'
-         };
          await axios
             .put(
                `${process.env.REACT_APP_BACKEND_API}expenses/${expense.id}`,
-               expense,{headers},
+               expense,
+               {
+                  auth: {
+                     username: process.env.REACT_APP_USER,
+                     password: process.env.REACT_APP_PASSWORD,
+                  },
+               }
             )
             .then((res) => {
                dispatch({
@@ -164,29 +163,28 @@ const Provider = ({ children }) => {
    };
 
    const fetchData = async () => {
-
       try {
-        
-         const headers = {
-            'Authorization': `Bearer ${userLocalInfo?.access}`,
-            'Content-Type': 'application/json'
-         };
-                
          await axios
             .get(`${process.env.REACT_APP_BACKEND_API}budget/`, {
-               headers
+               auth: {
+                  username: process.env.REACT_APP_USER,
+                  password: process.env.REACT_APP_PASSWORD,
+               },
             })
             .then((res) => {
                dispatch({
                   type: Types.FETCH_BUDGET,
                   payload: res.data,
                });
-            })
-            
+            });
+
          await axios
-            .get(`${process.env.REACT_APP_BACKEND_API}weekly_expenses/`,
-              { headers}
-            )
+            .get(`${process.env.REACT_APP_BACKEND_API}weekly_expenses/`, {
+               auth: {
+                  username: process.env.REACT_APP_USER,
+                  password: process.env.REACT_APP_PASSWORD,
+               },
+            })
             .then((res) => {
                weekData = res.data;
                let totlamount = 0;
@@ -221,9 +219,12 @@ const Provider = ({ children }) => {
             });
 
          await axios
-            .get(`${process.env.REACT_APP_BACKEND_API}assets/`,
-               {headers}
-            )
+            .get(`${process.env.REACT_APP_BACKEND_API}assets/`, {
+               auth: {
+                  username: process.env.REACT_APP_USER,
+                  password: process.env.REACT_APP_PASSWORD,
+               },
+            })
             .then((res) => {
                let totalVal = 0.000000001;
                res.data.map((da) => {
@@ -243,9 +244,12 @@ const Provider = ({ children }) => {
             });
 
          await axios
-            .get(`${process.env.REACT_APP_BACKEND_API}loans/`, 
-               {headers}
-            )
+            .get(`${process.env.REACT_APP_BACKEND_API}loans/`, {
+               auth: {
+                  username: process.env.REACT_APP_USER,
+                  password: process.env.REACT_APP_PASSWORD,
+               },
+            })
             .then((res) => {
                let totalVal = 0.000000001;
                res.data.map((da) => {
@@ -264,7 +268,12 @@ const Provider = ({ children }) => {
                });
             });
          await axios
-            .get(`${process.env.REACT_APP_BACKEND_API}monthly_expenses/`, {headers})
+            .get(`${process.env.REACT_APP_BACKEND_API}monthly_expenses/`, {
+               auth: {
+                  username: process.env.REACT_APP_USER,
+                  password: process.env.REACT_APP_PASSWORD,
+               },
+            })
             .then((res) => {
                let finalMonthlyExp = [];
                let response = res.data;

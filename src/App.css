@@ -13,22 +13,3 @@
 .sb-tooltip-balance{
     margin: 2px;
 }
-
-.close-btn {
-    margin-left: 360px;
-    font-size: 28px;
-    background-color: white;
-}
-
-.loginbtn {
-    width: 200px;
-    margin-left: 75%;
-}
-
-@media(max-width: 600px) {
-    .loginbtn {
-        width: 200px;
-        font-size:smaller;
-        margin-left: 35%;
-    }
-}

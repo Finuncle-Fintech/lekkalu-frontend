@@ -1,0 +1,15 @@
+.accordion{
+    margin: 0px !important;
+    overflow-x: auto;
+    width: 100%;
+    /* flex-grow: 1; */
+}
+.heading{
+    color: #1976d2;
+    font-size: 1rem;
+    font-weight: 800 !important;
+    /* line-height: 72px; */
+    /* margin: 1rem; */
+    text-transform: uppercase;
+    
+}

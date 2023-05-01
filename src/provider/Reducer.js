@@ -8,6 +8,7 @@ export const InitialState = {
    tags: [],
    assets: [],
    liabilities: [],
+   incomeStatement: { income: [], expenses: [] }
 };
 
 const Reducer = (state, action) => {
@@ -61,9 +62,9 @@ const Reducer = (state, action) => {
       case Types.CREATE_EXPENSE: {
          const newState = state.expenses.length
             ? [
-                 ...state.expenses,
-                 { ...action.payload.data, id: action.payload.id },
-              ]
+               ...state.expenses,
+               { ...action.payload.data, id: action.payload.id },
+            ]
             : [action.payload];
 
          return {
@@ -79,6 +80,12 @@ const Reducer = (state, action) => {
          return {
             ...state,
             expenses: newState,
+         };
+      }
+      case Types.SET_INCOME_STATEMENT: {
+         return {
+            ...state,
+            incomeStatement: action.payload,
          };
       }
       case Types.FETCH_TAGS: {

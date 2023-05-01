@@ -20,9 +20,8 @@
     "react-file-reader": "^1.1.4",
     "react-router": "^6.9.0",
     "react-router-dom": "^6.9.0",
-    "react-scripts": "5.0.1",
+    "react-scripts": "^5.0.1",
     "react-spinners": "^0.13.8",
-    "reactstrap": "^9.1.8",
     "recharts": "^2.4.3",
     "sweetalert": "^2.1.2",
     "web-vitals": "^2.1.4",
@@ -37,7 +36,7 @@
     "build:qa": "env-cmd -f ./environments/.qa.env npm run-script build",
     "start:prod": "env-cmd -f ./environments/.prod.env react-scripts start",
     "build:prod": "env-cmd -f ./environments/.prod.env npm run-script build"
-  },
+    },
   "eslintConfig": {
     "extends": [
       "react-app",

@@ -19,7 +19,7 @@ const Expenses = ({ Context }) => {
     deleteExpenseRequest,
     createExpenseRequest,
     changeExpenseRequest,
-    fetchTags
+    fetchTags,
   } = useContext(Context);
   const [editIndex, setEditIndex] = useState(null);
   const [page, setPage] = useState(0);

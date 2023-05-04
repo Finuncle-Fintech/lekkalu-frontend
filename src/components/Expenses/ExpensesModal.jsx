@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   TextField,
   Button,
@@ -31,6 +31,7 @@ const ExpenseFormModal = ({
   const [amount, setAmount] = useState();
   const [myTags, setMyTags] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const { tags, createTag } = useContext(Context)
 
   useEffect(() => {
     if (expenseToEdit) {
@@ -52,13 +53,36 @@ const ExpenseFormModal = ({
     }
   };
 
-  const handleDateChange = (date) => {
+  const handleDateChange = async(date) => {
     setSelectedDate(date);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const tagIDs = myTags.map(tag => tag.id);
+
+
+
+    const getNewId = () =>{
+      const maxId = tags.map((tag)=>tag.id)
+      return (Math.max(...maxId)+1)
+    }
+
+    const newMyTags = []
+    myTags.forEach( async(newTag)=>{
+      const exist = tags.some((tag) =>tag.name===newTag.name)
+      if(!exist){
+        const newTagElement = {
+          id:getNewId(),
+          name:newTag.name
+        }
+        newMyTags.push(newTagElement)
+        tags.push(newTagElement)
+        await createTag(newTagElement)
+      }else{
+        newMyTags.push(newTag)
+      }
+    })
+    const tagIDs = newMyTags.map(tag => tag.id);
 
     const newExpense = {
       amount,
@@ -117,7 +141,11 @@ const ExpenseFormModal = ({
               data-testid="amount-expense"
             />
             <Typography variant="p">Select tags:</Typography>
-            <TagInput myTags={myTags} setTags={setMyTags} Context={Context}/>
+            <TagInput 
+              myTags={myTags} 
+              setTags={setMyTags} 
+              Context={Context}
+            />
             <Typography variant="p">Choose the date:</Typography>
             <div>
               <LocalizationProvider dateAdapter={AdapterDayjs}>

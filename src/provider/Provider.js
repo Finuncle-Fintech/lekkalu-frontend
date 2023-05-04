@@ -73,7 +73,19 @@ const Provider = ({ children }) => {
          handleErrors(error);
       }
    };
-
+   const createTag = async(tag) =>{
+      try{
+         await axios 
+            .post(`${process.env.REACT_APP_BACKEND_API}tag/`, tag, {
+               auth:{
+                  username: process.env.REACT_APP_USER,
+                  password: process.env.REACT_APP_PASSWORD,
+               }
+            })
+      } catch(error){
+         handleErrors(error)
+      }
+   }
    const fetchExpenses = async (page, rowsPerPage) => {
       try {
          await axios
@@ -408,6 +420,7 @@ const Provider = ({ children }) => {
             createExpenseRequest,
             changeExpenseRequest,
             fetchTags,
+            createTag,
             fetchToken,
             fetchIncomeSources,
             fetchIncomeExpenses,

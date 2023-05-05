@@ -28,7 +28,7 @@ const ExpenseFormModal = ({
   Context
 }) => {
   const [open, setOpen] = useState(false);
-  const [amount, setAmount] = useState();
+  const [amount, setAmount] = useState('');
   const [myTags, setMyTags] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const { tags, createTag } = useContext(Context)

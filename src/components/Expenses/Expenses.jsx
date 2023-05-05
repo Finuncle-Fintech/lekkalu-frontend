@@ -68,7 +68,7 @@ const Expenses = ({ Context }) => {
       const parsedData = XLSX.utils.sheet_to_json(sheet);
 
       if (parsedData.length > 0) {
-        parsedData.map(entry => {
+        parsedData.forEach(entry => {
           const dateFormatted = formatDate(new Date(entry.date));
           const tagsIds = getTagNumbers(entry.tags.split(", "));
           delete entry.date;

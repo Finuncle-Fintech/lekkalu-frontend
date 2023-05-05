@@ -1,24 +1,19 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { TextField, Autocomplete, createFilterOptions } from '@mui/material';
-
-
 
 const filter = createFilterOptions();
 
-
 const TagInput = ({myTags, setTags, Context}) => {
+  
   const { tags } = useContext(Context);
 
   const handlerGetOptionLabel = (option) =>{
     return option.name 
   }
   
-  const handleChange = async(option, newValue) =>{
+  const handleChange = (_, newValue) =>{
     setTags(newValue);
   }
-
-
-
 
   return (
     <div>
@@ -27,7 +22,6 @@ const TagInput = ({myTags, setTags, Context}) => {
         value={myTags || []}
         onChange={handleChange}
         getOptionLabel={handlerGetOptionLabel}
-        getOptionSelected={(option, value) => option.value === value.value}
 
         filterOptions={(options, params)=>{
 

@@ -3,7 +3,7 @@ import { TextField, Autocomplete, createFilterOptions } from '@mui/material';
 
 const filter = createFilterOptions();
 
-const TagInput = ({myTags, setTags, Context}) => {
+const TagInput = ({myTags, setTags, Context, errorTag}) => {
   
   const { tags } = useContext(Context);
 
@@ -22,7 +22,7 @@ const TagInput = ({myTags, setTags, Context}) => {
         value={myTags || []}
         onChange={handleChange}
         getOptionLabel={handlerGetOptionLabel}
-
+        
         filterOptions={(options, params)=>{
 
             const filtered = filter(options, params);
@@ -44,6 +44,7 @@ const TagInput = ({myTags, setTags, Context}) => {
           <TextField
             {...params}
             label="Tag"
+            error={errorTag}
             variant="outlined"
             helperText="Select a tag from the list"
             data-testid="tags-expense"

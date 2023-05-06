@@ -30,6 +30,7 @@ const ExpenseFormModal = ({
   const [open, setOpen] = useState(false);
   const [amount, setAmount] = useState('');
   const [myTags, setMyTags] = useState([]);
+  const [errorTag, setErrorTag] = useState(false)
   const [selectedDate, setSelectedDate] = useState(new Date());
   const { tags, createTag } = useContext(Context)
 
@@ -57,16 +58,18 @@ const ExpenseFormModal = ({
     setSelectedDate(date);
   };
 
+  const getNewId = () =>{
+    const maxId = tags.map((tag)=>tag.id)
+    return (Math.max(...maxId)+1)
+  }
   const handleSubmit = (e) => {
     e.preventDefault();
-
-
-
-    const getNewId = () =>{
-      const maxId = tags.map((tag)=>tag.id)
-      return (Math.max(...maxId)+1)
+    if(myTags.length>=0){
+      setErrorTag(true)
+      return
+    }else{
+      setErrorTag(false)
     }
-
     const newMyTags = []
     myTags.forEach( async(newTag)=>{
       const exist = tags.some((tag) =>tag.name===newTag.name)
@@ -82,6 +85,8 @@ const ExpenseFormModal = ({
         newMyTags.push(newTag)
       }
     })
+
+  
     const tagIDs = newMyTags.map(tag => tag.id);
 
     const newExpense = {
@@ -145,6 +150,7 @@ const ExpenseFormModal = ({
               myTags={myTags} 
               setTags={setMyTags} 
               Context={Context}
+              errorTag={errorTag}
             />
             <Typography variant="p">Choose the date:</Typography>
             <div>

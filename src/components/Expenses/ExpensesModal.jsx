@@ -62,10 +62,10 @@ const ExpenseFormModal = ({
     const maxId = tags.map((tag)=>tag.id)
     return (Math.max(...maxId)+1)
   }
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    
-    
+  
     if(myTags.length===0){
       setErrorTag(true)
       return

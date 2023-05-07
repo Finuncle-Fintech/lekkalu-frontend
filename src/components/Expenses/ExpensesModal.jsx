@@ -64,12 +64,15 @@ const ExpenseFormModal = ({
   }
   const handleSubmit = (e) => {
     e.preventDefault();
-    if(myTags.length>=0){
+    
+    
+    if(myTags.length===0){
       setErrorTag(true)
       return
     }else{
       setErrorTag(false)
     }
+
     const newMyTags = []
     myTags.forEach( async(newTag)=>{
       const exist = tags.some((tag) =>tag.name===newTag.name)
@@ -86,7 +89,6 @@ const ExpenseFormModal = ({
       }
     })
 
-  
     const tagIDs = newMyTags.map(tag => tag.id);
 
     const newExpense = {

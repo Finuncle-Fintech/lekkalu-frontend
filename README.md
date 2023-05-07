@@ -1,6 +1,8 @@
 Lekka is a Software Platform for users to manage their personal finance better
 Lekkalu-Frontend is REACT based website frontend depict user's finances
 
+To access REST API Documenation, headover to api.fununcle.com/swagger
+
 To access the development local URL follow the given command:
 
 ### `npm run start:dev`

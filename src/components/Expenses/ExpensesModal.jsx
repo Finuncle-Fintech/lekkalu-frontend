@@ -63,32 +63,40 @@ const ExpenseFormModal = ({
     return (Math.max(...maxId)+1)
   }
 
-  const handleSubmit = (e) => {
+  const loadTags = (arr) =>{
+    
+    const promises = myTags.map(async (newTag) => {
+        const exist = tags.some((tag) => tag.name === newTag.name);
+        if (!exist) {
+          const newTagElement = {
+            id: getNewId(),
+            name: newTag.name,
+          };
+          arr.push(newTagElement);
+          tags.push(newTagElement);
+          await createTag(newTagElement);
+          return newTagElement;
+      } else {
+        arr.push(newTag);
+        return newTag;
+      }
+    });
+    return Promise.all(promises);
+}
+
+  const handleSubmit = async(e) => {
     e.preventDefault();
-  
+ 
     if(myTags.length===0){
       setErrorTag(true)
       return
     }else{
       setErrorTag(false)
     }
-
+    
     const newMyTags = []
-    myTags.forEach( async(newTag)=>{
-      const exist = tags.some((tag) =>tag.name===newTag.name)
-      if(!exist){
-        const newTagElement = {
-          id:getNewId(),
-          name:newTag.name
-        }
-        newMyTags.push(newTagElement)
-        tags.push(newTagElement)
-        await createTag(newTagElement)
-      }else{
-        newMyTags.push(newTag)
-      }
-    })
-
+    await Promise.resolve(loadTags(newMyTags))
+  
     const tagIDs = newMyTags.map(tag => tag.id);
 
     const newExpense = {

@@ -19,7 +19,7 @@ const RouterComponent = () => {
               <Header />
               <Charts />
               <Footer />
-              <SupportPopUp />
+              <SupportPopUp Context={Context} />
             </>
           }
         />
@@ -30,7 +30,7 @@ const RouterComponent = () => {
               <Header />
               <Expenses Context={Context} />
               <Footer />
-              <SupportPopUp />
+              <SupportPopUp Context={Context} />
             </>
           }
         />
@@ -41,7 +41,7 @@ const RouterComponent = () => {
               <Header />
               <EmiCalculator />
               <Footer />
-              <SupportPopUp />
+              <SupportPopUp Context={Context} />
             </>
           }
         />

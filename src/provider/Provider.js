@@ -31,6 +31,7 @@ const Provider = ({ children }) => {
    let weekData = [];
 
    const {
+      statusFeedback,
       expenses,
       tags,
       weeklyExpense,
@@ -38,7 +39,7 @@ const Provider = ({ children }) => {
       monthlyExpenses,
       assets,
       liabilities,
-      incomeStatement
+      incomeStatement,
    } = store;
 
    const handleErrors = (error) => {
@@ -54,6 +55,26 @@ const Provider = ({ children }) => {
       }
    };
 
+   const giveFeedback = async(data) =>{
+      try{
+         await axios
+            .post(`${process.env.REACT_APP_BACKEND_API}feedback/`, data, {
+                  auth: {
+                  username: process.env.REACT_APP_USER,
+                  password: process.env.REACT_APP_PASSWORD,
+               },
+            })
+            .then((res) => {
+               dispatch({
+                  type: Types.STATUS_FEEDBACK,
+                  payload: res.status,
+               });
+            });
+         }catch(err){
+            handleErrors(err)
+         }
+   }
+   
    const fetchTags = async () => {
       try {
          await axios
@@ -402,6 +423,8 @@ const Provider = ({ children }) => {
             assets,
             liabilities,
             incomeStatement,
+            statusFeedback,
+            giveFeedback,
             fetchData,
             fetchExpenses,
             deleteExpenseRequest,

@@ -8,7 +8,8 @@ export const InitialState = {
    tags: [],
    assets: [],
    liabilities: [],
-   incomeStatement: { income: [], expenses: [] }
+   incomeStatement: { income: [], expenses: [] },
+   statusFeedback:[]
 };
 
 const Reducer = (state, action) => {
@@ -93,6 +94,12 @@ const Reducer = (state, action) => {
             ...state,
             tags: action.payload,
          };
+      }
+      case Types.STATUS_FEEDBACK: {
+         return{
+            ...state, 
+            statusFeedback: action.payload
+         }
       }
    }
 };

@@ -56,6 +56,8 @@ const Provider = ({ children }) => {
    };
 
    const giveFeedback = async(data) =>{
+      
+      const statusFeedback = []
       try{
          await axios
             .post(`${process.env.REACT_APP_BACKEND_API}feedback/`, data, {
@@ -65,14 +67,14 @@ const Provider = ({ children }) => {
                },
             })
             .then((res) => {
-               dispatch({
-                  type: Types.STATUS_FEEDBACK,
-                  payload: res.status,
-               });
+               statusFeedback.push(res.status)
             });
          }catch(err){
+            statusFeedback.push(err)
             handleErrors(err)
          }
+
+         return statusFeedback
    }
    
    const fetchTags = async () => {

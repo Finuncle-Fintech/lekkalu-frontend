@@ -11,14 +11,16 @@ export default function SupportPopUp({Context}){
         setClose(close?false:true)
     }
 
-    const { giveFeedback, statusFeedback } = useContext(Context)
+    const { giveFeedback } = useContext(Context)
     const formRef = useRef(null)
     const emailRef = useRef(null)
     const nameRef = useRef(null)
     const subjectRef = useRef(null)
+    const submitRef = useRef(null)
     const [ email, setEmail ] = useState('')
     const [ error, setError ] = useState()
     const [emailSended, setEmailSended ] = useState(false)
+    const [sending, setSending ] = useState(false)
 
     const handleSubmit = async(event) =>{
         event.preventDefault()
@@ -31,11 +33,18 @@ export default function SupportPopUp({Context}){
                 subject_and_description:subjectRef.current.value
             }
 
-            await giveFeedback(newFeedback)
-            if(statusFeedback===201){
+            setSending(true)
+            const statusFeedback = await giveFeedback(newFeedback)
+            if(statusFeedback[0]===201){
+              
+
                 handleClose()
                 setEmailSended(true)
                 setTimeout(()=>{resetValues()},2400)
+            }else{
+                alert('Error sending the feedback')
+                handleClose()
+                resetValues()
             }
         }
         else{
@@ -56,6 +65,7 @@ export default function SupportPopUp({Context}){
         emailRef.current.value = ''
         nameRef.current.value = ''
         subjectRef.current.value = ''
+        setSending(false)
     }
 
     return(
@@ -78,7 +88,7 @@ export default function SupportPopUp({Context}){
                         </div>
                     </div>
                     <textarea name="" placeholder='Subject and description.' ref={subjectRef} id="SubjectUser" cols="30" rows="10" className={styles.textarea} required></textarea>
-                    <button type="submit" value="Submit" className={styles.submit} >Submit</button>
+                    <button ref={submitRef} type="submit" value="Submit" disabled={sending} className={styles.submit} >Submit</button>
                 </form>
             </div>
             

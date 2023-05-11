@@ -17,6 +17,7 @@ import TagInput from "./TagInput";
 import dayjs from "dayjs";
 import ReactFileReader from "react-file-reader";
 import PublishIcon from '@mui/icons-material/Publish';
+import Swal from "sweetalert2";
 
 const ExpenseFormModal = ({
   onAddExpense,
@@ -112,6 +113,12 @@ const ExpenseFormModal = ({
       onAddExpense({ ...newExpense });
     }
 
+    Swal.fire({
+      icon:'success',
+      title:'The expense was added correctly.',
+      timer:1300,
+      timerProgressBar:true 
+    })
     setAmount("");
     setMyTags("");
     handleClose();

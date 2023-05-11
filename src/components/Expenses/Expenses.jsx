@@ -10,6 +10,7 @@ import { ModalContainer } from "./styled";
 import ExpensesList from "./ExpenseList";
 import { formatDate } from "./utils";
 import * as XLSX from "xlsx";
+import Swal from "sweetalert2";
 
 const Expenses = ({ Context }) => {
   const {
@@ -73,6 +74,12 @@ const Expenses = ({ Context }) => {
           const tagsIds = getTagNumbers(entry.tags.split(", "));
           delete entry.date;
           createExpenseRequest({ ...entry, tags: tagsIds, time: dateFormatted, user: 1 });
+          Swal.fire({
+            icon:'success',
+            title:'The expense was added correctly.',
+            timer:1300,
+            timerProgressBar:true 
+          })
         });
       }
     };

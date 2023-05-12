@@ -3,7 +3,7 @@ import {
    SpentBalanceChart,
    handleMouseOver,
    handleSyncMethod,
-} from '../components/SpentBalanceChart';
+} from '../components/Charts/SpentBalanceChart';
 import { setup } from './utils/setup.util';
 import { SpentBalanceData } from './data/Data';
 

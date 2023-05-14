@@ -36,13 +36,12 @@ export const Signin = () => {
                     </Typography>
                     <Box component="form" noValidate sx={{ mt: 1 }}>
                         <TextField
-                            margin="normal"
+                            autoComplete="username"
+                            name="username"
                             required
                             fullWidth
-                            id="email"
-                            label="Email Address"
-                            name="email"
-                            autoComplete="email"
+                            id="username"
+                            label="Username"
                             autoFocus
                         />
                         <TextField

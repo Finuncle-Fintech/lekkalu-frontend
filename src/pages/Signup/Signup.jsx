@@ -11,6 +11,8 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { Link as ReactRouterLink } from 'react-router-dom';
 import Copyright from "../../components/Copyright/Copyright";
+import Checkbox from "@mui/material/Checkbox";
+import FormControlLabel from "@mui/material/FormControlLabel";
 
 export const Signup = () => {
     const handleSubmit = (event) => {
@@ -84,6 +86,14 @@ export const Signup = () => {
                                     id="confirm-password"
                                     autoComplete="new-password"
                                 />
+                            </Grid>
+                            <Grid item xs={12} >
+                                <FormControlLabel control={<Checkbox value="agreed" color="success" />}
+                                    label={"I have read, understood and agreed to EMI Calculator's Terms and Conditions"} />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <FormControlLabel control={<Checkbox value="agreed" color="success" />}
+                                                  label={"I have read, understood and agreed to EMI Calculator's Privacy Policy"} />
                             </Grid>
                         </Grid>
                         <Button

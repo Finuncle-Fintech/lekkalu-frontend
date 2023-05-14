@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useContext} from "react";
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -11,11 +11,30 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { Link as ReactRouterLink } from 'react-router-dom';
+import { Link as ReactRouterLink, useNavigate } from 'react-router-dom';
 import Copyright from "../../components/Copyright/Copyright";
 
 
-export const Signin = () => {
+export const Signin = ({Context}) => {
+    const { fetchToken } = useContext(Context);
+    const navigate = useNavigate();
+
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+
+        try {
+            const data = new FormData(event.currentTarget);
+            const username = data.get('username')
+            const password = data.get('password')
+
+            await fetchToken(username, password)
+            navigate("/")
+        }
+        catch(error) {
+            console.log(error)
+        }
+    };
+
     return (
         <div>
             <Container component="main" maxWidth="xs">
@@ -34,7 +53,7 @@ export const Signin = () => {
                     <Typography component="h1" variant="h4">
                         Sign in
                     </Typography>
-                    <Box component="form" noValidate sx={{ mt: 1 }}>
+                    <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
                         <TextField
                             autoComplete="username"
                             name="username"

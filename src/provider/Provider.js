@@ -1,4 +1,4 @@
-import React, { createContext, useReducer } from 'react';
+import React, { createContext, useReducer, useState } from 'react';
 import { InitialState } from './Reducer';
 import axios from 'axios';
 import Reducer from './Reducer';
@@ -9,6 +9,7 @@ const Context = createContext({
 });
 
 const Provider = ({ children }) => {
+   const [authToken, setAuthToken] = useState(null)
    const userLocalInfo = JSON.parse(localStorage.getItem('user'));
    const [store, dispatch] = useReducer(Reducer, InitialState);
    let finalDataWeekly = [];
@@ -328,16 +329,16 @@ const Provider = ({ children }) => {
       //Removed fetch expenses here, because it breaks pagination request on expenses page
    };
 
-   const fetchToken = async () => {
+   const fetchToken = async (username, password) => {
       try {
          const auth = {
-            username: process.env.REACT_APP_USER,
-            password: process.env.REACT_APP_PASSWORD
+            username: username,
+            password: password
          };
 
-         return await axios.post('https://api.finuncle.com/token/', auth)
+         return await axios.post(`${process.env.REACT_APP_BACKEND_URL}token/`, auth)
             .then(response => {
-               console.log(response.data);
+               setAuthToken(response.data)
                return response.data
             })
 
@@ -420,6 +421,7 @@ const Provider = ({ children }) => {
    return (
       <Context.Provider
          value={{
+            authToken,
             expenses,
             tags,
             budget,

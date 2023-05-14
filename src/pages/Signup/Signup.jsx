@@ -14,7 +14,7 @@ import Copyright from "../../components/Copyright/Copyright";
 import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
 
-export const Signup = () => {
+export const Signup = ({Context}) => {
     const handleSubmit = (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);

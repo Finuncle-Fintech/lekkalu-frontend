@@ -21,12 +21,18 @@ import { AssetsLiabilitiesChart } from "../../components/Charts/AssetsLiabilitie
 
 import "./EmiCalculator.css";
 
+const today = new Date();
+const year = today.getFullYear();
+const month = String(today.getMonth() + 1).padStart(2, '0');
+const day = String(today.getDate()).padStart(2, '0');
+const formattedDate = `${year}-${month}-${day}`;
+
 const defaultData = {
-  loan_principal: "0",
-  loan_interest: "0",
-  loan_tenure: "0",
-  emi_day: "",
-  disbursement_date: "",
+  loan_principal: 300000,
+  loan_interest: 11,
+  loan_tenure: 36,
+  emi_day:5,
+  disbursement_date: formattedDate,
 };
 
 const defaultResults = {
@@ -43,6 +49,7 @@ const EmiCalculator = () => {
   const [data, setData] = useState(
     !isObjectEmpty(parsedObject) ? parsedObject : defaultData
   );
+
   const [results, setResults] = useState(defaultResults);
   const [assets, setAssets] = useState();
   const [isLoading, setIsLoading] = useState(false);
@@ -110,8 +117,8 @@ const EmiCalculator = () => {
           label="Loan Principal"
           symbol="amount"
           min="0"
-          max={"10000"}
-          step="10"
+          max={"10000000"}
+          step="100"
           tooltip="input the loan principal, amount you want to borrow"
           showSlider
         />
@@ -139,8 +146,8 @@ const EmiCalculator = () => {
         label="Loan Tenure"
         symbol="Month"
         min="0"
-        max={"30"}
-        step="1"
+        max={"240"}
+        step="5"
         tooltip="how long do you want the loan for?"
         showSlider
       />

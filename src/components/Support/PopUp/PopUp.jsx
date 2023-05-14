@@ -1,35 +1,51 @@
 import closeImage from './static/close.png'
 import styles from './PopUp.module.css'
-import { useState, useRef } from 'react'
+import { useState, useRef, useContext } from 'react'
 import checkEmail from './utils/checkEmail'
+import SendForm from './Components/SendForm/SendForm'
+import Background from './Components/Background/Background'
 
-export default function SupportPopUp(){
-
-    //
+export default function SupportPopUp({Context}){
     const [close, setClose] = useState(false)
     const handleClose = () =>{
         setClose(close?false:true)
     }
 
+    const { giveFeedback } = useContext(Context)
     const formRef = useRef(null)
     const emailRef = useRef(null)
+    const nameRef = useRef(null)
+    const subjectRef = useRef(null)
+    const submitRef = useRef(null)
     const [ email, setEmail ] = useState('')
     const [ error, setError ] = useState()
-    const handleChange = () =>{
-        const emailInput = emailRef.current
-        emailInput.style.borderBottom=''
+    const [emailSended, setEmailSended ] = useState(false)
+    const [sending, setSending ] = useState(false)
 
-        setError(false)
-        setEmail(emailInput.value)
-
-    }
-    const handleSubmit = (event) =>{
+    const handleSubmit = async(event) =>{
         event.preventDefault()
         const emailInput = emailRef.current
-        const form = formRef.current
 
         if(checkEmail(email)){
-            form.submit()
+            const newFeedback = {
+                name:nameRef.current.value,
+                email:email,
+                subject_and_description:subjectRef.current.value
+            }
+
+            setSending(true)
+            const statusFeedback = await giveFeedback(newFeedback)
+            if(statusFeedback[0]===201){
+              
+
+                handleClose()
+                setEmailSended(true)
+                setTimeout(()=>{resetValues()},2400)
+            }else{
+                alert('Error sending the feedback')
+                handleClose()
+                resetValues()
+            }
         }
         else{
             emailInput.style.borderBottom='1px red solid'
@@ -37,10 +53,25 @@ export default function SupportPopUp(){
         }
       
     }
- 
+    const handleChange = () =>{
+        const emailInput = emailRef.current
+        emailInput.style.borderBottom=''
+
+        setError(false)
+        setEmail(emailInput.value)
+    }
+    const resetValues = () =>{
+        setEmailSended(false)
+        emailRef.current.value = ''
+        nameRef.current.value = ''
+        subjectRef.current.value = ''
+        setSending(false)
+    }
+
     return(
-        <>
-            <div className={styles.blur} style={{display:close&&'none'}} id='blurBackground' onClick={handleClose}></div>
+        <> 
+            <Background handleClose={handleClose} close={close} />
+            <SendForm emailSended={emailSended} />
 
             <div className={styles.container} style={{display:close&&'none'}} id='popUpSupport'>
                 <div className={styles.containerCloseTitle}>
@@ -50,16 +81,15 @@ export default function SupportPopUp(){
 
                 <form ref={formRef} action="" className={styles.form} onSubmit={handleSubmit}>
                     <div className={styles.containerInput}>
-                        <input type="text" placeholder='Name' className={styles.inputName} required />
+                        <input type="text" placeholder='Name' className={styles.inputName} ref={nameRef} required />
                         <div>
                             <input type="Email" placeholder='Email' className={styles.inputEmail} onChange={handleChange} required ref={emailRef}/>
                             {error&&(<p className={styles.errorEmail}>Check the email please.</p>)}
                         </div>
                     </div>
-                    <textarea name="" placeholder='Subject and description.' id="SubjectUser" cols="30" rows="10" className={styles.textarea} required></textarea>
-                    <button type="submit" value="Submit" className={styles.submit} >Submit</button>
+                    <textarea name="" placeholder='Subject and description.' ref={subjectRef} id="SubjectUser" cols="30" rows="10" className={styles.textarea} required></textarea>
+                    <button ref={submitRef} type="submit" value="Submit" disabled={sending} className={styles.submit} >Submit</button>
                 </form>
-
             </div>
             
         </>

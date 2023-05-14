@@ -32,6 +32,7 @@ const Provider = ({ children }) => {
    let weekData = [];
 
    const {
+      statusFeedback,
       expenses,
       tags,
       weeklyExpense,
@@ -39,7 +40,7 @@ const Provider = ({ children }) => {
       monthlyExpenses,
       assets,
       liabilities,
-      incomeStatement
+      incomeStatement,
    } = store;
 
    const handleErrors = (error) => {
@@ -55,6 +56,28 @@ const Provider = ({ children }) => {
       }
    };
 
+   const giveFeedback = async(data) =>{
+      
+      const statusFeedback = []
+      try{
+         await axios
+            .post(`${process.env.REACT_APP_BACKEND_API}feedback/`, data, {
+                  auth: {
+                  username: process.env.REACT_APP_USER,
+                  password: process.env.REACT_APP_PASSWORD,
+               },
+            })
+            .then((res) => {
+               statusFeedback.push(res.status)
+            });
+         }catch(err){
+            statusFeedback.push(err)
+            handleErrors(err)
+         }
+
+         return statusFeedback
+   }
+   
    const fetchTags = async () => {
       try {
          const headers = {
@@ -73,7 +96,19 @@ const Provider = ({ children }) => {
          handleErrors(error);
       }
    };
-
+   const createTag = async(tag) =>{
+      try{
+         await axios 
+            .post(`${process.env.REACT_APP_BACKEND_API}tag/`, tag, {
+               auth:{
+                  username: process.env.REACT_APP_USER,
+                  password: process.env.REACT_APP_PASSWORD,
+               }
+            })
+      } catch(error){
+         handleErrors(error)
+      }
+   }
    const fetchExpenses = async (page, rowsPerPage) => {
       try {
          
@@ -393,12 +428,15 @@ const Provider = ({ children }) => {
             assets,
             liabilities,
             incomeStatement,
+            statusFeedback,
+            giveFeedback,
             fetchData,
             fetchExpenses,
             deleteExpenseRequest,
             createExpenseRequest,
             changeExpenseRequest,
             fetchTags,
+            createTag,
             fetchToken,
             fetchIncomeSources,
             fetchIncomeExpenses,

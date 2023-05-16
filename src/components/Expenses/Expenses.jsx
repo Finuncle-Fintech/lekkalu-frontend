@@ -74,7 +74,7 @@ const Expenses = ({ Context }) => {
           const tagsIds = getTagNumbers(entry.tags.split(", "))
           const {amount} = entry
           delete entry.amount
-          delete entry.date;
+          delete entry.date
           createExpenseRequest({ ...entry, amount:amount.toString() , tags: tagsIds, time: dateFormatted, user: 1 });
         });
       }

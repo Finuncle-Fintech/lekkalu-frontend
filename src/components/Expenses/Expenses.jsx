@@ -67,12 +67,15 @@ const Expenses = ({ Context }) => {
 
       const parsedData = XLSX.utils.sheet_to_json(sheet);
 
+
       if (parsedData.length > 0) {
         parsedData.forEach(entry => {
           const dateFormatted = formatDate(new Date(entry.date));
-          const tagsIds = getTagNumbers(entry.tags.split(", "));
+          const tagsIds = getTagNumbers(entry.tags.split(", "))
+          const {amount} = entry
+          delete entry.amount
           delete entry.date;
-          createExpenseRequest({ ...entry, tags: tagsIds, time: dateFormatted, user: 1 });
+          createExpenseRequest({ ...entry, amount:amount.toString() , tags: tagsIds, time: dateFormatted, user: 1 });
         });
       }
     };

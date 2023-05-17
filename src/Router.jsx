@@ -7,6 +7,7 @@ import IncomeStatement from "pages/income-statement/IncomeStatement";
 import EmiCalculator from "pages/EmiCalculator";
 import SupportPopUp from "components/Support/PopUp/PopUp";
 import Footer from "components/Footer/Footer";
+import SocialLogin from "components/Social-login/SocialLogin";
 
 const RouterComponent = () => {
   return (
@@ -40,6 +41,17 @@ const RouterComponent = () => {
             <>
               <Header />
               <EmiCalculator />
+              <Footer />
+              <SupportPopUp Context={Context} />
+            </>
+          }
+        />
+          <Route
+          path="/login"
+          element={
+            <>
+              <Header />
+                <SocialLogin />
               <Footer />
               <SupportPopUp Context={Context} />
             </>

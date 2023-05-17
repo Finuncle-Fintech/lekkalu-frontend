@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import GoogleLogin from "react-google-login";
+import GoogleLogin from "react-google-button";
 import FacebookLogin from "react-facebook-login";
 
 function SocialLogin() {
@@ -8,7 +8,7 @@ function SocialLogin() {
   // Google Login Success
   const responseGoogle = async (response) => {
     try {
-      const res = await fetch("http://localhost:8000/api/google_login/", {
+      const res = await fetch("http://localhost:8000/rest-auth/google_login/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -34,7 +34,7 @@ function SocialLogin() {
   // Facebook Login Success
   const responseFacebook = async (response) => {
     try {
-      const res = await fetch("http://localhost:8000/api/facebook_login/", {
+      const res = await fetch("http://localhost:8000/rest-auth/facebook_login/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

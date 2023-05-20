@@ -128,6 +128,7 @@ const Provider = ({ children }) => {
                   payload: res.data,
                });
             });
+           
       } catch (error) {
          handleErrors(error);
       }

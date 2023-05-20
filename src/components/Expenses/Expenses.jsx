@@ -23,6 +23,7 @@ const Expenses = ({ Context }) => {
   } = useContext(Context);
   const [editIndex, setEditIndex] = useState(null);
   const [page, setPage] = useState(0);
+  const [ loadExcelStatus, setLoadExcelStatus ]  = useState(false)
   const rowsPerPage = 10;
 
   useEffect(() => {
@@ -58,7 +59,7 @@ const Expenses = ({ Context }) => {
   const handleFileUpload = (files) => {
     const file = files[0];
     const reader = new FileReader();
-    reader.onload = (event) => {
+    reader.onload = async(event) => {
       const data = event.target.result;
       const workbook = XLSX.read(data, { type: "binary" });
 
@@ -67,17 +68,26 @@ const Expenses = ({ Context }) => {
 
       const parsedData = XLSX.utils.sheet_to_json(sheet);
 
-
+      
       if (parsedData.length > 0) {
-        parsedData.forEach(entry => {
-          const dateFormatted = formatDate(new Date(entry.date));
-          const tagsIds = getTagNumbers(entry.tags.split(", "))
-          const {amount} = entry
-          delete entry.amount
-          delete entry.date
-          createExpenseRequest({ ...entry, amount:amount.toString() , tags: tagsIds, time: dateFormatted, user: 1 });
-        });
+        const loadExcel = ()=>{
+          setLoadExcelStatus(true)
+          const promise = parsedData.map(async entry => {
+            const dateFormatted = formatDate(new Date(entry.date));
+            const tagsIds = getTagNumbers(entry.tags.split(", "))
+            const {amount} = entry
+            delete entry.amount
+            delete entry.date
+            
+            await createExpenseRequest({ ...entry, amount:amount.toFixed(2).toString() , tags: tagsIds, time: dateFormatted, user: 1 });
+
+          });
+
+          return Promise.all(promise)
+        }
+        await loadExcel() 
       }
+      setLoadExcelStatus(false)
     };
 
     reader.readAsBinaryString(file);
@@ -112,6 +122,7 @@ const Expenses = ({ Context }) => {
         editIndex={editIndex}
         onCancelEdit={() => setEditIndex(null)}
         handleFileUpload={handleFileUpload}
+        loadExcelStatus = {loadExcelStatus}
         Context={Context}
       />
       <Typography variant="h6">Expense List</Typography>

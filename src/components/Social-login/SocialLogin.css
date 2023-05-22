@@ -1,0 +1,63 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  .login-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .login-form input,
+  .login-form button {
+    width: 300px; /* Adjust the width as needed */
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .login-form button {
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .login-form button:hover {
+    background-color: #45a049;
+  }
+  .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  .social-login {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px; /* Adjust the gap between the buttons */
+  }
+  
+  .social-login button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 200px; /* Adjust the width as needed */
+    height: 40px; /* Adjust the height as needed */
+    background-color: #ffffff; /* Adjust the background color */
+    border: 1px solid #cccccc; /* Adjust the border styles */
+    color: #000000; /* Adjust the text color */
+    cursor: pointer;
+  }
+  
+  .social-login button:hover {
+    background-color: #f5f5f5; /* Adjust the background color on hover */
+  }
+  
+  .social-login button i {
+    margin-right: 5px; /* Adjust the margin between the icon and text */
+  } 

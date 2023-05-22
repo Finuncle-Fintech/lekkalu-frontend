@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import GoogleLogin from "react-google-button";
 import FacebookLogin from "react-facebook-login";
+import AppleLogin from "react-apple-login";
+import axios from "axios";
 
 function SocialLogin() {
   const [accessToken, setAccessToken] = useState(null);
@@ -8,17 +10,11 @@ function SocialLogin() {
   // Google Login Success
   const responseGoogle = async (response) => {
     try {
-      const res = await fetch("http://localhost:8000/rest-auth/google_login/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          access_token: response.accessToken,
-        }),
+      const res = await axios.post("http://localhost:8000/rest-auth/google_login/", {
+        access_token: response.accessToken,
       });
 
-      const data = await res.json();
+      const data = res.data;
       console.log(data);
       setAccessToken(data.access_token);
     } catch (err) {
@@ -34,17 +30,11 @@ function SocialLogin() {
   // Facebook Login Success
   const responseFacebook = async (response) => {
     try {
-      const res = await fetch("http://localhost:8000/rest-auth/facebook_login/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          access_token: response.accessToken,
-        }),
+      const res = await axios.post("http://localhost:8000/rest-auth/facebook_login/", {
+        access_token: response.accessToken,
       });
 
-      const data = await res.json();
+      const data = res.data;
       console.log(data);
       setAccessToken(data.access_token);
     } catch (err) {
@@ -57,10 +47,30 @@ function SocialLogin() {
     console.log(error);
   };
 
+  // Apple Login Success
+  const responseApple = async (response) => {
+    try {
+      const res = await axios.post("http://localhost:8000/rest-auth/apple_login/", {
+        id_token: response.authorization.id_token,
+      });
+
+      const data = res.data;
+      console.log(data);
+      setAccessToken(data.access_token);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  // Apple Login Error
+  const responseAppleError = (error) => {
+    console.log(error);
+  };
+
   return (
     <div>
       <GoogleLogin
-        clientId="your-google-client-id"
+        clientId="lekka-387109"
         buttonText="Login with Google"
         onSuccess={responseGoogle}
         onFailure={responseGoogleError}
@@ -68,10 +78,18 @@ function SocialLogin() {
       />
 
       <FacebookLogin
-        appId="your-facebook-app-id"
+        appId="225440500220299"
         fields="name,email,picture"
         callback={responseFacebook}
         onFailure={responseFacebookError}
+      />
+
+      <AppleLogin
+        clientId="your-apple-client-id"
+        redirectURI="your-redirect-uri"
+        onSuccess={responseApple}
+        onError={responseAppleError}
+        responseType="code id_token"
       />
 
       {accessToken && <p>Access Token: {accessToken}</p>}

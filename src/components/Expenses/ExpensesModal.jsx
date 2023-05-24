@@ -151,7 +151,7 @@ const ExpenseFormModal = ({
       >
         Add Expense
       </Button>
-      <Dialog open={open} onClose={handleClose}>
+      <Dialog open={open}>
         
         <DialogTitle>{editIndex !== null ? "Edit Expense" : "Add Expense"}</DialogTitle>
         <DialogContent>

@@ -77,7 +77,7 @@ const Expenses = ({ Context }) => {
           Swal.fire({
             icon:'success',
             title:'The expense was added correctly.',
-            timer:1300,
+            timer:1700,
             timerProgressBar:true 
           })
         });

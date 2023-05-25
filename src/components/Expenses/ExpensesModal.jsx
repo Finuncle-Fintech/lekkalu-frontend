@@ -116,7 +116,7 @@ const ExpenseFormModal = ({
     Swal.fire({
       icon:'success',
       title:`${editIndex !== null ? "The expense was updated correctly" : "The expense was added correctly"}`,
-      timer:1300,
+      timer:2300,
       timerProgressBar:true 
     })
     setAmount("");
@@ -139,7 +139,6 @@ const ExpenseFormModal = ({
     }
   };
 
-  console.log(editIndex)
   return (
     <ModalContainer>
       <Button

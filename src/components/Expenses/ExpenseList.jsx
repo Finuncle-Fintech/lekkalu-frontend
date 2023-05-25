@@ -9,16 +9,22 @@ const ExpensesList = ({ expenses, getTagNames, setEditIndex, deleteExpense }) =>
   const deleteHandler = (expense) =>{
 
       Swal.fire({
+        title:'Are you sure?',
+        text:`You won't be able to revert this`,
         icon:'warning',
-        title:'Do you want to delete this expense?',
         showConfirmButton:true,
         showCancelButton:true,
-        confirmButtonText:'Yes.',
+        confirmButtonText:'Delete',
         confirmButtonColor:"Red"
       }).then((res)=>{
         switch(res.isConfirmed){
           case true:
               deleteExpense(expense.id)
+              Swal.fire(
+                'Deleted',
+                'Your expense deleted successfully.',
+                'success'
+              )
         }
       })
     

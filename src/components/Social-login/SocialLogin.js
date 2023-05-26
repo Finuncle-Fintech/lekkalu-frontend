@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import GoogleLogin from "react-google-button";
+import { GoogleLogin } from "react-google-login";
 import FacebookLogin from "react-facebook-login";
 import AppleLogin from "react-apple-login";
 import axios from "axios";

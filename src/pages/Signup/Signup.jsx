@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -13,15 +13,38 @@ import { Link as ReactRouterLink } from 'react-router-dom';
 import Copyright from "../../components/Copyright/Copyright";
 import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
+import axios from "axios";
+import { useNavigate } from "react-router";
 
-export const Signup = ({Context}) => {
-    const handleSubmit = (event) => {
+export const Signup = ({ Context }) => {
+    const navigate = useNavigate()
+    const [acceptedTerms, setAcceptedTerms] = useState()
+    const [acceptedPrivacyPolicy, setAcceptPrivacyPolicy] = useState()
+
+    const handleSubmit = async (event) => {
         event.preventDefault();
+        console.log(acceptedTerms, acceptedPrivacyPolicy)
         const data = new FormData(event.currentTarget);
-        console.log({
-            email: data.get('email'),
-            password: data.get('password'),
-        });
+        console.log(data.get('termsAndConditions'))
+
+        await axios.post(`${process.env.REACT_APP_BACKEND_URL}users/api/users`,
+                JSON.stringify({
+                    "username": data.get('username'),
+                    "email": data.get('email'),
+                    "password": data.get('password')
+                }),
+                {
+                    headers:{
+                        "Content-Type": "application/json"
+                    }
+                }
+            )
+            .then((res) => {
+                res.status === 201 ? navigate("/signin") : console.log(res.data)
+            })
+            .catch(error => {
+                console.log(error)
+            })
     };
 
     return (
@@ -76,24 +99,15 @@ export const Signup = ({Context}) => {
                                     autoComplete="new-password"
                                 />
                             </Grid>
-                            <Grid item xs={12}>
-                                <TextField
-                                    required
-                                    fullWidth
-                                    name="confirmPassword"
-                                    label="Confirm Password"
-                                    type="password"
-                                    id="confirm-password"
-                                    autoComplete="new-password"
-                                />
-                            </Grid>
                             <Grid item xs={12} >
-                                <FormControlLabel control={<Checkbox value="agreed" color="success" />}
+                                <FormControlLabel required name="termsAndConditions" control={<Checkbox
+                                    onChange={(e) => setAcceptedTerms(e.target.checked)} color="success" />}
                                     label={"I have read, understood and agreed to EMI Calculator's Terms and Conditions"} />
                             </Grid>
                             <Grid item xs={12}>
-                                <FormControlLabel control={<Checkbox value="agreed" color="success" />}
-                                                  label={"I have read, understood and agreed to EMI Calculator's Privacy Policy"} />
+                                <FormControlLabel required name="privacyPolicy" control={<Checkbox
+                                    onChange={(e) => setAcceptPrivacyPolicy(e.target.checked)} color="success" />}
+                                    label={"I have read, understood and agreed to EMI Calculator's Privacy Policy"} />
                             </Grid>
                         </Grid>
                         <Button
@@ -101,10 +115,11 @@ export const Signup = ({Context}) => {
                             fullWidth
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
+                            disabled={!acceptedTerms || !acceptedPrivacyPolicy}
                         >
                             Sign Up
                         </Button>
-                        <Grid container justifyContent="flex-end">
+                        <Grid container justifyContent="center">
                             <Grid item>
                                 <Link component={ReactRouterLink} to="/signin" variant="body2">
                                     {"Already have an account? Sign in"}

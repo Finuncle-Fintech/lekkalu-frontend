@@ -3,6 +3,7 @@ import { InitialState } from './Reducer';
 import axios from 'axios';
 import Reducer from './Reducer';
 import Types from './Types';
+import setCookie from 'components/Support/PopUp/utils/SetCookie';
 
 const Context = createContext({
    ...InitialState,
@@ -57,13 +58,13 @@ const Provider = ({ children }) => {
       }
    };
 
-   const giveFeedback = async(data) =>{
-      
+   const giveFeedback = async (data) => {
+
       const statusFeedback = []
-      try{
+      try {
          await axios
             .post(`${process.env.REACT_APP_BACKEND_API}feedback/`, data, {
-                  auth: {
+               auth: {
                   username: process.env.REACT_APP_USER,
                   password: process.env.REACT_APP_PASSWORD,
                },
@@ -71,14 +72,14 @@ const Provider = ({ children }) => {
             .then((res) => {
                statusFeedback.push(res.status)
             });
-         }catch(err){
-            statusFeedback.push(err)
-            handleErrors(err)
-         }
+      } catch (err) {
+         statusFeedback.push(err)
+         handleErrors(err)
+      }
 
-         return statusFeedback
+      return statusFeedback
    }
-   
+
    const fetchTags = async () => {
       try {
          const headers = {
@@ -86,7 +87,7 @@ const Provider = ({ children }) => {
             'Content-Type': 'application/json'
          };
          await axios
-            .get(`${process.env.REACT_APP_BACKEND_API}tag/`, {headers})
+            .get(`${process.env.REACT_APP_BACKEND_API}tag/`, { headers })
             .then((res) => {
                dispatch({
                   type: Types.FETCH_TAGS,
@@ -97,22 +98,22 @@ const Provider = ({ children }) => {
          handleErrors(error);
       }
    };
-   const createTag = async(tag) =>{
-      try{
-         await axios 
+   const createTag = async (tag) => {
+      try {
+         await axios
             .post(`${process.env.REACT_APP_BACKEND_API}tag/`, tag, {
-               auth:{
+               auth: {
                   username: process.env.REACT_APP_USER,
                   password: process.env.REACT_APP_PASSWORD,
                }
             })
-      } catch(error){
+      } catch (error) {
          handleErrors(error)
       }
    }
    const fetchExpenses = async (page, rowsPerPage) => {
       try {
-         
+
          const headers = {
             'Authorization': `Bearer ${userLocalInfo?.access}`,
             'Content-Type': 'application/json'
@@ -138,13 +139,13 @@ const Provider = ({ children }) => {
 
    const deleteExpenseRequest = async (id) => {
       try {
-         
+
          const headers = {
             'Authorization': `Bearer ${userLocalInfo?.access}`,
             'Content-Type': 'application/json'
          };
          await axios
-            .delete(`${process.env.REACT_APP_BACKEND_API}expenses/${id}`, {headers})
+            .delete(`${process.env.REACT_APP_BACKEND_API}expenses/${id}`, { headers })
             .then((res) => {
                dispatch({
                   type: Types.DELETE_EXPENSE,
@@ -158,13 +159,13 @@ const Provider = ({ children }) => {
 
    const createExpenseRequest = async (data) => {
       try {
-         
+
          const headers = {
             'Authorization': `Bearer ${userLocalInfo?.access}`,
             'Content-Type': 'application/json'
          };
          await axios
-            .post(`${process.env.REACT_APP_BACKEND_API}expenses/`, data, {headers})
+            .post(`${process.env.REACT_APP_BACKEND_API}expenses/`, data, { headers })
             .then((res) => {
                dispatch({
                   type: Types.CREATE_EXPENSE,
@@ -178,7 +179,7 @@ const Provider = ({ children }) => {
 
    const changeExpenseRequest = async (index, expense) => {
       try {
-        
+
          const headers = {
             'Authorization': `Bearer ${userLocalInfo?.access}`,
             'Content-Type': 'application/json'
@@ -186,7 +187,7 @@ const Provider = ({ children }) => {
          await axios
             .put(
                `${process.env.REACT_APP_BACKEND_API}expenses/${expense.id}`,
-               expense,{headers},
+               expense, { headers },
             )
             .then((res) => {
                dispatch({
@@ -202,12 +203,12 @@ const Provider = ({ children }) => {
    const fetchData = async () => {
 
       try {
-        
+
          const headers = {
             'Authorization': `Bearer ${userLocalInfo?.access}`,
             'Content-Type': 'application/json'
          };
-                
+
          await axios
             .get(`${process.env.REACT_APP_BACKEND_API}budget/`, {
                headers
@@ -218,10 +219,10 @@ const Provider = ({ children }) => {
                   payload: res.data,
                });
             })
-            
+
          await axios
             .get(`${process.env.REACT_APP_BACKEND_API}weekly_expenses/`,
-              { headers}
+               { headers }
             )
             .then((res) => {
                weekData = res.data;
@@ -258,7 +259,7 @@ const Provider = ({ children }) => {
 
          await axios
             .get(`${process.env.REACT_APP_BACKEND_API}assets/`,
-               {headers}
+               { headers }
             )
             .then((res) => {
                let totalVal = 0.000000001;
@@ -279,8 +280,8 @@ const Provider = ({ children }) => {
             });
 
          await axios
-            .get(`${process.env.REACT_APP_BACKEND_API}loans/`, 
-               {headers}
+            .get(`${process.env.REACT_APP_BACKEND_API}loans/`,
+               { headers }
             )
             .then((res) => {
                let totalVal = 0.000000001;
@@ -300,7 +301,7 @@ const Provider = ({ children }) => {
                });
             });
          await axios
-            .get(`${process.env.REACT_APP_BACKEND_API}monthly_expenses/`, {headers})
+            .get(`${process.env.REACT_APP_BACKEND_API}monthly_expenses/`, { headers })
             .then((res) => {
                let finalMonthlyExp = [];
                let response = res.data;
@@ -339,6 +340,7 @@ const Provider = ({ children }) => {
          return await axios.post(`${process.env.REACT_APP_BACKEND_URL}token/`, auth)
             .then(response => {
                setAuthToken(response.data)
+               setCookie('refresh', response?.data?.refresh, 30)
                return response.data
             })
 

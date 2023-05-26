@@ -1,20 +1,26 @@
 import { useContext } from "react";
 import { Context } from "provider/Provider";
 import axiosClient from "components/Axios/Axios";
+import getCookie from "components/Support/PopUp/utils/GetCookie";
 
 const useRefreshToken = () => {
-    const { authToken, setAuthToken } = useContext(Context)
+    const { setAuthToken } = useContext(Context)
 
     const refresh = async () => {
-        const response = await axiosClient.post('token/refresh/', 
-        JSON.stringify({
-            "refresh": authToken?.refresh
-        })
+        const response = await axiosClient.post('token/refresh/',
+            JSON.stringify({
+                "refresh": getCookie("refresh")
+            }),
+            {
+                headers:{
+                    "Content-Type": "application/json"
+                }
+            }
         )
 
-        setAuthToken(response?.data?.accessToken)
+        setAuthToken(response?.data?.access)
 
-        return response.data?.accessToken
+        return response.data?.access
     }
 
     return refresh

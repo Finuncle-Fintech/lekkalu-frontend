@@ -422,6 +422,7 @@ const Provider = ({ children }) => {
       <Context.Provider
          value={{
             authToken,
+            setAuthToken,
             expenses,
             tags,
             budget,

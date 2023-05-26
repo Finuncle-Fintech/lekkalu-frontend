@@ -40,7 +40,7 @@ export const Signup = ({ Context }) => {
                 }
             )
             .then((res) => {
-                res.status === 201 ? navigate("/signin") : console.log(res.data)
+                res?.status === 201 ? navigate("/signin") : console.log(res?.data)
             })
             .catch(error => {
                 console.log(error)

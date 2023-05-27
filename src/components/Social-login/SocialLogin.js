@@ -10,7 +10,7 @@ function SocialLogin() {
   // Google Login Success
   const responseGoogle = async (response) => {
     try {
-      const res = await axios.post("http://localhost:8000/rest-auth/google_login/", {
+      const res = await axios.post("http://localhost:8000/rest-auth/google/", {
         access_token: response.accessToken,
       });
 
@@ -30,7 +30,7 @@ function SocialLogin() {
   // Facebook Login Success
   const responseFacebook = async (response) => {
     try {
-      const res = await axios.post("http://localhost:8000/rest-auth/facebook_login/", {
+      const res = await axios.post("http://localhost:8000/rest-auth/facebook/", {
         access_token: response.accessToken,
       });
 
@@ -70,7 +70,7 @@ function SocialLogin() {
   return (
     <div>
       <GoogleLogin
-        clientId="lekka-387109"
+        clientId="  1065900923652-qudpnguh6ogu4nhddpqc2r9ssnahtduf.apps.googleusercontent.com"
         buttonText="Login with Google"
         onSuccess={responseGoogle}
         onFailure={responseGoogleError}

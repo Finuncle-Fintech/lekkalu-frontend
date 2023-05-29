@@ -1,6 +1,7 @@
 import { AppBar, Toolbar } from "@mui/material";
 import { Link } from "react-router-dom";
 import { HeaderButton } from "./styled";
+import Notification from "components/Notifications";
 
 const Header = () => {
   return (
@@ -22,6 +23,7 @@ const Header = () => {
         >
           EMI Calculator
         </HeaderButton>
+        <Notification />
       </Toolbar>
     </AppBar>
   );

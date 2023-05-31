@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBell } from "@fortawesome/free-regular-svg-icons";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 // import { useGetNotification } from "./useGetNotification";
+import { useGetTag } from "../../utils/hooks/useGetTag";
 
 interface NotificationDataProps {
   notificationData: string;
@@ -37,6 +38,14 @@ const Notification: React.FC = () => {
     boolean
   >(false);
   // const { data, isLoading, isError } = useGetNotification(); // fetches notification data from notification endpoint
+
+  const { tag, loading, error, errorMessage } = useGetTag();
+
+  console.log("sample for Tags -----");
+  console.log("loading ", loading);
+  console.log("tag data", tag);
+  console.log("error message", errorMessage);
+  console.log("error", error);
 
   const handleIsNotificationVisible = () => {
     setisNotificationVisible(!isNotificationVisible);

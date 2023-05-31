@@ -1,12 +1,8 @@
+import React from "react";
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
 
-import {
-  optionsPrincipal,
-  optionsInterest,
-  optionsMonth,
-} from "components/EMI_Components/constant";
 import {
   parseQueryString,
   handleShare,
@@ -23,15 +19,15 @@ import "./EmiCalculator.css";
 
 const today = new Date();
 const year = today.getFullYear();
-const month = String(today.getMonth() + 1).padStart(2, '0');
-const day = String(today.getDate()).padStart(2, '0');
+const month = String(today.getMonth() + 1).padStart(2, "0");
+const day = String(today.getDate()).padStart(2, "0");
 const formattedDate = `${year}-${month}-${day}`;
 
 const defaultData = {
   loan_principal: 300000,
   loan_interest: 11,
   loan_tenure: 36,
-  emi_day:5,
+  emi_day: 5,
   disbursement_date: formattedDate,
 };
 
@@ -61,7 +57,6 @@ const EmiCalculator = () => {
   };
 
   const handleSave = async () => {
-    console.log("data", data);
     setIsLoading(true);
     try {
       await axios.post(`${process.env.REACT_APP_API}expenses/`, data, {
@@ -111,7 +106,6 @@ const EmiCalculator = () => {
         <FormInput
           handleChange={handleChange}
           value={data.loan_principal}
-          options={optionsPrincipal}
           name="loan_principal"
           type="number"
           label="Loan Principal"
@@ -125,7 +119,6 @@ const EmiCalculator = () => {
         <FormInput
           handleChange={handleChange}
           value={data.loan_interest}
-          options={optionsInterest}
           name="loan_interest"
           type="number"
           label="Loan Interest"
@@ -140,7 +133,6 @@ const EmiCalculator = () => {
       <FormInput
         handleChange={handleChange}
         value={data.loan_tenure}
-        options={optionsMonth}
         name="loan_tenure"
         type="number"
         label="Loan Tenure"

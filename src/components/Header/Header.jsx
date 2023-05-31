@@ -1,7 +1,7 @@
 import { AppBar, Toolbar } from "@mui/material";
 import { Link } from "react-router-dom";
 import { HeaderButton } from "./styled";
-import Notification from "components/Notifications";
+import Notification from "../Notifications";
 
 const Header = () => {
   return (

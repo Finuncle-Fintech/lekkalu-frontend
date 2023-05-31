@@ -1,14 +1,14 @@
 import React, { useContext, useEffect } from "react";
-import IncomeStatementSummary from "components/income-statement/summary/IncomeStatementSummary";
-import GenericTabs from "components/shared/tabs/Tabs";
+import IncomeStatementSummary from "../../components/income-statement/summary/IncomeStatementSummary";
+import GenericTabs from "../../components/shared/tabs/Tabs";
 // import { incomeStatement } from "constants/income-statement-test-dataset";
 import SummarizeIcon from "@mui/icons-material/Summarize";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import MoneyOffIcon from "@mui/icons-material/MoneyOff";
-import Income from "components/income-statement/income/Income";
-import { Expenses } from "components/income-statement/expenses/Expenses";
+import Income from "../../components/income-statement/income/Income";
+import { Expenses } from "../../components/income-statement/expenses/Expenses";
 import { BeatLoader } from "react-spinners";
-import Colors from "constants/colors";
+import Colors from "../../constants/colors";
 
 const tabsList = [
   { label: "Summary", icon: <SummarizeIcon /> },

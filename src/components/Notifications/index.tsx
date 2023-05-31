@@ -4,6 +4,10 @@ import { faBell } from "@fortawesome/free-regular-svg-icons";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 // import { useGetNotification } from "./useGetNotification";
 
+interface NotificationDataProps {
+  notificationData: string;
+}
+
 // Dummy Notification Data
 const NOTIFICATION_DATA = [
   "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text",
@@ -15,7 +19,9 @@ const NOTIFICATION_DATA = [
   "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text",
 ];
 
-const NotificationItem = ({ notificationData }) => {
+const NotificationItem: React.FC<NotificationDataProps> = ({
+  notificationData,
+}) => {
   return (
     <div className="w-full px-2 py-4 relative flex items-center text-black border-b-[1px] border-black-200 border-solid">
       <div className="w-[90%] text-[12px]">{notificationData}</div>
@@ -26,9 +32,10 @@ const NotificationItem = ({ notificationData }) => {
   );
 };
 
-const Notification = () => {
-  const [isNotificationVisible, setisNotificationVisible] =
-    React.useState(false);
+const Notification: React.FC = () => {
+  const [isNotificationVisible, setisNotificationVisible] = React.useState<
+    boolean
+  >(false);
   // const { data, isLoading, isError } = useGetNotification(); // fetches notification data from notification endpoint
 
   const handleIsNotificationVisible = () => {

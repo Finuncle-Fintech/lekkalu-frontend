@@ -163,7 +163,8 @@ const Provider = ({ children }) => {
                },
             })
             .then((res) => {
-               dispatch({
+         
+               dispatch({                  
                   type: Types.CREATE_EXPENSE,
                   payload: { data, id: res.data.data.id },
                });

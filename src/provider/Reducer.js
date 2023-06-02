@@ -8,7 +8,7 @@ export const InitialState = {
    tags: [],
    assets: [],
    liabilities: [],
-   depreciation:[],
+   deprecations:[],
    incomeStatement: { income: [], expenses: [] }
 };
 
@@ -50,10 +50,10 @@ const Reducer = (state, action) => {
             liabilities: action.payload,
          };
       }
-      case Types.FETCH_depreciation:{
+      case Types.FETCH_DEPRECATIONS:{
          return{
             ...state,
-            depreciation:action.payload
+            deprecations:action.payload
          }
       }
       case Types.DELETE_EXPENSE: {

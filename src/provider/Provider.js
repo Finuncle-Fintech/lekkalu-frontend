@@ -45,7 +45,7 @@ const Provider = ({ children }) => {
       assets,
       liabilities,
       incomeStatement,
-      depreciation
+      deprecations
    } = store;
 
    const handleErrors = (error) => {
@@ -336,8 +336,7 @@ const Provider = ({ children }) => {
                });
             });
             
-         await axiosPrivate
-         //get assets depreciation
+         await axios
             .get(`${process.env.REACT_APP_BACKEND_API}physical_assets/`, {
                auth: {
                   username: process.env.REACT_APP_USER,
@@ -347,7 +346,7 @@ const Provider = ({ children }) => {
                const data = res.data
                
                dispatch({
-                  type:Types.FETCH_depreciation,
+                  type:Types.FETCH_DEPRECATIONS,
                   payload:data
                })
             })
@@ -473,7 +472,7 @@ const Provider = ({ children }) => {
             liabilities,
             incomeStatement,
             statusFeedback,
-            depreciation,
+            deprecations,
             giveFeedback,
             fetchData,
             fetchExpenses,

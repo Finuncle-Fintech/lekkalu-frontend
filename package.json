@@ -25,8 +25,8 @@
     "reactstrap": "^9.2.0",
     "recharts": "^2.7.2",
     "sweetalert": "^2.1.2",
-    "sweetalert2": "^11.7.12",
-    "web-vitals": "^3.3.2",
+    "sweetalert2": "^11.7.10",
+    "web-vitals": "^2.1.4",
     "xlsx": "^0.18.5"
   },
   "scripts": {

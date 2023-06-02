@@ -7,15 +7,16 @@ import Colors from 'constants/colors';
 import { SpentBalanceChart } from './SpentBalanceChart';
 import { CumSumChart } from './CumSumChart';
 import { AssetsLiabilitiesChart } from './AssetsLiabilitiesChart';
+import AssetsDeprecationsChart from './AssetsDeprecationsChart';
 
 const Test = () => {
-   const { weeklyExpense, fetchData, monthlyExpenses, assets, liabilities } =
+   const { weeklyExpense, fetchData, monthlyExpenses, assets, liabilities, deprecations } =
       useContext(Context);
    const [loading, setLoading] = useState(true);
    const [error, setError] = useState();
 
    const fetchAPI = async () => {
-      await fetchData().then((data) => { console.log({data}) }).catch((err => console.log({err})));
+      await fetchData().then(() => {});
    };
    useEffect(() => {
       fetchAPI();
@@ -41,6 +42,7 @@ const Test = () => {
                <SpentBalanceChart data={monthlyExpenses} />
                <CumSumChart data={monthlyExpenses} />
                <AssetsLiabilitiesChart data={assets} type={'assets'} />
+               <AssetsDeprecationsChart data={deprecations}/>
                <AssetsLiabilitiesChart
                   data={liabilities}
                   type={'liabilities'}

@@ -17,7 +17,10 @@ import TagInput from "./TagInput";
 import dayjs from "dayjs";
 import ReactFileReader from "react-file-reader";
 import PublishIcon from '@mui/icons-material/Publish';
+<<<<<<< HEAD
 import Swal from "sweetalert2";
+=======
+>>>>>>> 7d2e197 (feat/loader-fix)
 import LoadStatus from "./components/LoadStatus";
 
 const ExpenseFormModal = ({
@@ -27,8 +30,13 @@ const ExpenseFormModal = ({
   editIndex,
   onCancelEdit,
   handleFileUpload,
+<<<<<<< HEAD
   loadExcelStatus,
   Context
+=======
+  Context,
+  loadExcelStatus
+>>>>>>> 7d2e197 (feat/loader-fix)
 }) => {
   const [open, setOpen] = useState(false);
   const [amount, setAmount] = useState('');

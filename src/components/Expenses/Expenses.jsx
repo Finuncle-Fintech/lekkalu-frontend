@@ -83,12 +83,7 @@ const Expenses = ({ Context }) => {
             delete entry.date
             
             await createExpenseRequest({ ...entry, amount:amount.toFixed(2).toString() , tags: tagsIds, time: dateFormatted, user: 1 });
-            Swal.fire({
-              icon:'success',
-              title:'The expense was added correctly.',
-              timer:2300,
-              timerProgressBar:true 
-            })
+      
           });
 
           return Promise.all(promise)
@@ -96,6 +91,12 @@ const Expenses = ({ Context }) => {
         await loadExcel()
       }
       setLoadExcelStatus(false)
+      Swal.fire({
+        icon:'success',
+        title:'The expense was added correctly.',
+        timer:2300,
+        timerProgressBar:true 
+      })
     };
 
     reader.readAsBinaryString(file);

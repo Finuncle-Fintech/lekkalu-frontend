@@ -40,6 +40,7 @@ const Provider = ({ children }) => {
       assets,
       liabilities,
       incomeStatement,
+      deprecations
    } = store;
 
    const handleErrors = (error) => {
@@ -329,6 +330,22 @@ const Provider = ({ children }) => {
                   payload: finalMonthlyExp,
                });
             });
+            
+         await axios
+            .get(`${process.env.REACT_APP_BACKEND_API}physical_assets/`, {
+               auth: {
+                  username: process.env.REACT_APP_USER,
+                  password: process.env.REACT_APP_PASSWORD,
+               },
+            }).then((res)=>{
+               const data = res.data
+               
+               dispatch({
+                  type:Types.FETCH_DEPRECATIONS,
+                  payload:data
+               })
+            })
+
       } catch (error) {
          // Handle errors
          handleErrors(error);
@@ -438,6 +455,7 @@ const Provider = ({ children }) => {
             liabilities,
             incomeStatement,
             statusFeedback,
+            deprecations,
             giveFeedback,
             fetchData,
             fetchExpenses,

@@ -27,8 +27,8 @@ export const Signin = ({Context}) => {
             const username = data.get('username')
             const password = data.get('password')
 
-            await fetchToken(username, password)
-            navigate("/")
+            const loginUser = await fetchToken(username, password)
+            loginUser == 200 ? navigate("/") : console.log("User with provided details does not exist")
         }
         catch(error) {
             console.log(error)

@@ -11,7 +11,6 @@ const Context = createContext({
 
 const Provider = ({ children }) => {
    const [authToken, setAuthToken] = useState(null)
-   const userLocalInfo = JSON.parse(localStorage.getItem('user'));
    const [store, dispatch] = useReducer(Reducer, InitialState);
    let finalDataWeekly = [];
    let finalLiabilities = [];
@@ -83,7 +82,7 @@ const Provider = ({ children }) => {
    const fetchTags = async () => {
       try {
          const headers = {
-            'Authorization': `Bearer ${userLocalInfo?.access}`,
+            'Authorization': `Bearer ${authToken?.access}`,
             'Content-Type': 'application/json'
          };
          await axios
@@ -115,7 +114,7 @@ const Provider = ({ children }) => {
       try {
 
          const headers = {
-            'Authorization': `Bearer ${userLocalInfo?.access}`,
+            'Authorization': `Bearer ${authToken?.access}`,
             'Content-Type': 'application/json'
          };
          await axios
@@ -141,7 +140,7 @@ const Provider = ({ children }) => {
       try {
 
          const headers = {
-            'Authorization': `Bearer ${userLocalInfo?.access}`,
+            'Authorization': `Bearer ${authToken?.access}`,
             'Content-Type': 'application/json'
          };
          await axios
@@ -161,7 +160,7 @@ const Provider = ({ children }) => {
       try {
 
          const headers = {
-            'Authorization': `Bearer ${userLocalInfo?.access}`,
+            'Authorization': `Bearer ${authToken?.access}`,
             'Content-Type': 'application/json'
          };
          await axios
@@ -181,7 +180,7 @@ const Provider = ({ children }) => {
       try {
 
          const headers = {
-            'Authorization': `Bearer ${userLocalInfo?.access}`,
+            'Authorization': `Bearer ${authToken?.access}`,
             'Content-Type': 'application/json'
          };
          await axios
@@ -205,7 +204,7 @@ const Provider = ({ children }) => {
       try {
 
          const headers = {
-            'Authorization': `Bearer ${userLocalInfo?.access}`,
+            'Authorization': `Bearer ${authToken?.access}`,
             'Content-Type': 'application/json'
          };
 
@@ -341,7 +340,11 @@ const Provider = ({ children }) => {
             .then(response => {
                setAuthToken(response.data)
                setCookie('refresh', response?.data?.refresh, 30)
-               return response.data
+               return response.status
+            })
+            .catch(error => {
+               console.log(error?.response?.data?.detail)
+               handleErrors(error);
             })
 
       } catch (error) {

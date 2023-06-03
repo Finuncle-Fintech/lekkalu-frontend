@@ -37,7 +37,8 @@
     "start:qa": "env-cmd -f ./environments/.qa.env react-scripts start",
     "build:qa": "env-cmd -f ./environments/.qa.env npm run-script build",
     "start:prod": "env-cmd -f ./environments/.prod.env react-scripts start",
-    "build:prod": "env-cmd -f ./environments/.prod.env npm run-script build"
+    "build:prod": "env-cmd -f ./environments/.prod.env npm run-script build",
+    "start": "npm run start:prod"
   },
   "eslintConfig": {
     "extends": [

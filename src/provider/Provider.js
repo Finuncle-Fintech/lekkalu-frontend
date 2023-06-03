@@ -1,6 +1,7 @@
 import React, { createContext, useReducer, useState } from 'react';
+import axiosClient from 'components/Axios/Axios';
+import useAxiosPrivate from 'hooks/useAxiosPrivate';
 import { InitialState } from './Reducer';
-import axios from 'axios';
 import Reducer from './Reducer';
 import Types from './Types';
 import setCookie from 'components/Support/PopUp/utils/SetCookie';
@@ -11,6 +12,7 @@ const Context = createContext({
 });
 
 const Provider = ({ children }) => {
+   const axiosPrivate = useAxiosPrivate()
    const [authToken, setAuthToken] = useState(null)
    const [store, dispatch] = useReducer(Reducer, InitialState);
    let finalDataWeekly = [];
@@ -63,11 +65,11 @@ const Provider = ({ children }) => {
       const statusFeedback = []
       try {
          const headers = {
-            'Authorization': `Bearer ${authToken?.access}`,
+            'Authorization': `Bearer ${authToken}`,
             'Content-Type': 'application/json'
          };
 
-         await axios
+         await axiosPrivate
             .post(`${process.env.REACT_APP_BACKEND_API}feedback/`, data, {headers})
             .then((res) => {
                statusFeedback.push(res.status)
@@ -83,11 +85,11 @@ const Provider = ({ children }) => {
    const fetchTags = async () => {
       try {
          const headers = {
-            'Authorization': `Bearer ${authToken?.access}`,
+            'Authorization': `Bearer ${authToken}`,
             'Content-Type': 'application/json'
          };
 
-         await axios
+         await axiosPrivate
             .get(`${process.env.REACT_APP_BACKEND_API}tag/`, { headers })
             .then((res) => {
                dispatch({
@@ -103,11 +105,11 @@ const Provider = ({ children }) => {
    const createTag = async (tag) => {
       try {
          const headers = {
-            'Authorization': `Bearer ${authToken?.access}`,
+            'Authorization': `Bearer ${authToken}`,
             'Content-Type': 'application/json'
          };
 
-         await axios
+         await axiosPrivate
             .post(`${process.env.REACT_APP_BACKEND_API}tag/`, tag, {headers})
       } catch (error) {
          handleErrors(error)
@@ -118,10 +120,10 @@ const Provider = ({ children }) => {
       try {
 
          const headers = {
-            'Authorization': `Bearer ${authToken?.access}`,
+            'Authorization': `Bearer ${authToken}`,
             'Content-Type': 'application/json'
          };
-         await axios
+         await axiosPrivate
             .get(`${process.env.REACT_APP_BACKEND_API}expenses/`, {
                headers,
                params: {
@@ -144,11 +146,11 @@ const Provider = ({ children }) => {
       try {
 
          const headers = {
-            'Authorization': `Bearer ${authToken?.access}`,
+            'Authorization': `Bearer ${authToken}`,
             'Content-Type': 'application/json'
          };
          
-         await axios
+         await axiosPrivate
             .delete(`${process.env.REACT_APP_BACKEND_API}expenses/${id}`, { headers })
             .then((res) => {
                dispatch({
@@ -165,10 +167,10 @@ const Provider = ({ children }) => {
       try {
 
          const headers = {
-            'Authorization': `Bearer ${authToken?.access}`,
+            'Authorization': `Bearer ${authToken}`,
             'Content-Type': 'application/json'
          };
-         await axios
+         await axiosPrivate
             .post(`${process.env.REACT_APP_BACKEND_API}expenses/`, data, { headers })
             .then((res) => {
                dispatch({
@@ -185,10 +187,10 @@ const Provider = ({ children }) => {
       try {
 
          const headers = {
-            'Authorization': `Bearer ${authToken?.access}`,
+            'Authorization': `Bearer ${authToken}`,
             'Content-Type': 'application/json'
          };
-         await axios
+         await axiosPrivate
             .put(
                `${process.env.REACT_APP_BACKEND_API}expenses/${expense.id}`,
                expense, { headers },
@@ -207,13 +209,13 @@ const Provider = ({ children }) => {
    const fetchData = async () => {
 
       try {
-
+         console.log(`CURRENT TOKEN ${authToken}`)
          const headers = {
-            'Authorization': `Bearer ${authToken?.access}`,
+            'Authorization': `Bearer ${authToken}`,
             'Content-Type': 'application/json'
          };
 
-         await axios
+         await axiosPrivate
             .get(`${process.env.REACT_APP_BACKEND_API}budget/`, {
                headers
             })
@@ -224,7 +226,7 @@ const Provider = ({ children }) => {
                });
             })
 
-         await axios
+         await axiosPrivate
             .get(`${process.env.REACT_APP_BACKEND_API}weekly_expenses/`,
                { headers }
             )
@@ -261,7 +263,7 @@ const Provider = ({ children }) => {
                });
             });
 
-         await axios
+         await axiosPrivate
             .get(`${process.env.REACT_APP_BACKEND_API}assets/`,
                { headers }
             )
@@ -283,7 +285,7 @@ const Provider = ({ children }) => {
                });
             });
 
-         await axios
+         await axiosPrivate
             .get(`${process.env.REACT_APP_BACKEND_API}loans/`,
                { headers }
             )
@@ -304,7 +306,7 @@ const Provider = ({ children }) => {
                   payload: { finalLiabilities, totalVal },
                });
             });
-         await axios
+         await axiosPrivate
             .get(`${process.env.REACT_APP_BACKEND_API}monthly_expenses/`, { headers })
             .then((res) => {
                let finalMonthlyExp = [];
@@ -341,9 +343,9 @@ const Provider = ({ children }) => {
             password: password
          };
 
-         return await axios.post(`${process.env.REACT_APP_BACKEND_URL}token/`, auth)
+         return await axiosClient.post(`${process.env.REACT_APP_BACKEND_URL}token/`, auth)
             .then(response => {
-               setAuthToken(response.data)
+               setAuthToken(response?.data?.access)
                setCookie('refresh', response?.data?.refresh, 30)
                return response.status
             })
@@ -359,13 +361,12 @@ const Provider = ({ children }) => {
 
    const fetchIncomeSources = async () => {
       try {
-         const token = await fetchToken()
          const headers = {
-            'Authorization': `Bearer ${authToken?.access}`,
+            'Authorization': `Bearer ${authToken}`,
             'Content-Type': 'application/json'
          };
 
-         return axios.get('https://api.finuncle.com/api/income_source/', { headers })
+         return axiosPrivate.get('https://api.finuncle.com/api/income_source/', { headers })
             .then(response => {
                return response.data
             })
@@ -377,13 +378,12 @@ const Provider = ({ children }) => {
 
    const fetchIncomeExpenses = async () => {
       try {
-         const token = await fetchToken()
          const headers = {
-            'Authorization': `Bearer ${authToken?.access}`,
+            'Authorization': `Bearer ${authToken}`,
             'Content-Type': 'application/json'
          };
 
-         return axios.get('https://api.finuncle.com/api/income_expense/', { headers })
+         return axiosPrivate.get('https://api.finuncle.com/api/income_expense/', { headers })
             .then(response => {
                return response.data
             })

@@ -55,7 +55,7 @@ const useAxiosPrivate = () => {
             axiosPrivateClient.interceptors.response.eject(requestInterceptor)
         }
 
-    }, [refresh, setAuthToken])
+    }, [refresh, setAuthToken, authToken])
 
     return axiosPrivateClient
 }

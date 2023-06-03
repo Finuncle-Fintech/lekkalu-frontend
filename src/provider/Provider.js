@@ -216,6 +216,7 @@ const Provider = ({ children }) => {
    const fetchData = async () => {
 
       try {
+         console.log(`CURRENT TOKEN ${authToken}`)
          const headers = {
             'Authorization': `Bearer ${authToken}`,
             'Content-Type': 'application/json'

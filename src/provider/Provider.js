@@ -4,6 +4,7 @@ import axios from 'axios';
 import Reducer from './Reducer';
 import Types from './Types';
 import setCookie from 'components/Support/PopUp/utils/SetCookie';
+import deleteCookie from 'components/Support/PopUp/utils/DeleteCookie';
 
 const Context = createContext({
    ...InitialState,
@@ -424,11 +425,17 @@ const Provider = ({ children }) => {
       }
    };
 
+   const signOut = () => {
+      setAuthToken(null)
+      deleteCookie('refresh')
+   };
+
    return (
       <Context.Provider
          value={{
             authToken,
             setAuthToken,
+            signOut,
             expenses,
             tags,
             budget,

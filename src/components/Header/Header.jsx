@@ -1,8 +1,12 @@
 import {AppBar, Toolbar, Box} from "@mui/material";
 import { Link } from "react-router-dom";
 import { HeaderButton } from "./styled";
+import { useContext } from "react";
+import { Context } from "provider/Provider";
 
 const Header = () => {
+  const {signOut} = useContext(Context)
+
   return (
     <AppBar position="static">
       <Toolbar>
@@ -31,7 +35,7 @@ const Header = () => {
         <HeaderButton color="inherit" component={Link} to="/signup">
           Sign up
         </HeaderButton>
-        <HeaderButton color="inherit" component={Link} to="/signout">
+        <HeaderButton color="inherit" onClick={() => signOut()}>
           Sign out
         </HeaderButton>
       </Toolbar>

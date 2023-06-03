@@ -1,14 +1,19 @@
-import React, { createContext, useReducer } from 'react';
+import React, { createContext, useReducer, useState } from 'react';
+import axiosClient from 'components/Axios/Axios';
+import useAxiosPrivate from 'hooks/useAxiosPrivate';
 import { InitialState } from './Reducer';
-import axios from 'axios';
 import Reducer from './Reducer';
 import Types from './Types';
+import setCookie from 'components/Support/PopUp/utils/SetCookie';
+import deleteCookie from 'components/Support/PopUp/utils/DeleteCookie';
 
 const Context = createContext({
    ...InitialState,
 });
 
 const Provider = ({ children }) => {
+   const axiosPrivate = useAxiosPrivate()
+   const [authToken, setAuthToken] = useState(null)
    const [store, dispatch] = useReducer(Reducer, InitialState);
    let finalDataWeekly = [];
    let finalLiabilities = [];
@@ -55,37 +60,37 @@ const Provider = ({ children }) => {
       }
    };
 
-   const giveFeedback = async(data) =>{
-      
+   const giveFeedback = async (data) => {
+
       const statusFeedback = []
-      try{
-         await axios
-            .post(`${process.env.REACT_APP_BACKEND_API}feedback/`, data, {
-                  auth: {
-                  username: process.env.REACT_APP_USER,
-                  password: process.env.REACT_APP_PASSWORD,
-               },
-            })
+      try {
+         const headers = {
+            'Authorization': `Bearer ${authToken}`,
+            'Content-Type': 'application/json'
+         };
+
+         await axiosPrivate
+            .post(`${process.env.REACT_APP_BACKEND_API}feedback/`, data, {headers})
             .then((res) => {
                statusFeedback.push(res.status)
             });
-         }catch(err){
-            statusFeedback.push(err)
-            handleErrors(err)
-         }
+      } catch (err) {
+         statusFeedback.push(err)
+         handleErrors(err)
+      }
 
-         return statusFeedback
+      return statusFeedback
    }
-   
+
    const fetchTags = async () => {
       try {
-         await axios
-            .get(`${process.env.REACT_APP_BACKEND_API}tag/`, {
-               auth: {
-                  username: process.env.REACT_APP_USER,
-                  password: process.env.REACT_APP_PASSWORD,
-               },
-            })
+         const headers = {
+            'Authorization': `Bearer ${authToken}`,
+            'Content-Type': 'application/json'
+         };
+
+         await axiosPrivate
+            .get(`${process.env.REACT_APP_BACKEND_API}tag/`, { headers })
             .then((res) => {
                dispatch({
                   type: Types.FETCH_TAGS,
@@ -96,27 +101,31 @@ const Provider = ({ children }) => {
          handleErrors(error);
       }
    };
-   const createTag = async(tag) =>{
-      try{
-         await axios 
-            .post(`${process.env.REACT_APP_BACKEND_API}tag/`, tag, {
-               auth:{
-                  username: process.env.REACT_APP_USER,
-                  password: process.env.REACT_APP_PASSWORD,
-               }
-            })
-      } catch(error){
+
+   const createTag = async (tag) => {
+      try {
+         const headers = {
+            'Authorization': `Bearer ${authToken}`,
+            'Content-Type': 'application/json'
+         };
+
+         await axiosPrivate
+            .post(`${process.env.REACT_APP_BACKEND_API}tag/`, tag, {headers})
+      } catch (error) {
          handleErrors(error)
       }
    }
+
    const fetchExpenses = async (page, rowsPerPage) => {
       try {
-         await axios
+
+         const headers = {
+            'Authorization': `Bearer ${authToken}`,
+            'Content-Type': 'application/json'
+         };
+         await axiosPrivate
             .get(`${process.env.REACT_APP_BACKEND_API}expenses/`, {
-               auth: {
-                  username: process.env.REACT_APP_USER,
-                  password: process.env.REACT_APP_PASSWORD,
-               },
+               headers,
                params: {
                   page: page + 1,
                   per_page: rowsPerPage,
@@ -135,13 +144,14 @@ const Provider = ({ children }) => {
 
    const deleteExpenseRequest = async (id) => {
       try {
-         await axios
-            .delete(`${process.env.REACT_APP_BACKEND_API}expenses/${id}`, {
-               auth: {
-                  username: process.env.REACT_APP_USER,
-                  password: process.env.REACT_APP_PASSWORD,
-               },
-            })
+
+         const headers = {
+            'Authorization': `Bearer ${authToken}`,
+            'Content-Type': 'application/json'
+         };
+         
+         await axiosPrivate
+            .delete(`${process.env.REACT_APP_BACKEND_API}expenses/${id}`, { headers })
             .then((res) => {
                dispatch({
                   type: Types.DELETE_EXPENSE,
@@ -155,13 +165,13 @@ const Provider = ({ children }) => {
 
    const createExpenseRequest = async (data) => {
       try {
-         await axios
-            .post(`${process.env.REACT_APP_BACKEND_API}expenses/`, data, {
-               auth: {
-                  username: process.env.REACT_APP_USER,
-                  password: process.env.REACT_APP_PASSWORD,
-               },
-            })
+
+         const headers = {
+            'Authorization': `Bearer ${authToken}`,
+            'Content-Type': 'application/json'
+         };
+         await axiosPrivate
+            .post(`${process.env.REACT_APP_BACKEND_API}expenses/`, data, { headers })
             .then((res) => {
                dispatch({
                   type: Types.CREATE_EXPENSE,
@@ -175,16 +185,15 @@ const Provider = ({ children }) => {
 
    const changeExpenseRequest = async (index, expense) => {
       try {
-         await axios
+
+         const headers = {
+            'Authorization': `Bearer ${authToken}`,
+            'Content-Type': 'application/json'
+         };
+         await axiosPrivate
             .put(
                `${process.env.REACT_APP_BACKEND_API}expenses/${expense.id}`,
-               expense,
-               {
-                  auth: {
-                     username: process.env.REACT_APP_USER,
-                     password: process.env.REACT_APP_PASSWORD,
-                  },
-               }
+               expense, { headers },
             )
             .then((res) => {
                dispatch({
@@ -198,28 +207,29 @@ const Provider = ({ children }) => {
    };
 
    const fetchData = async () => {
+
       try {
-         await axios
+         console.log(`CURRENT TOKEN ${authToken}`)
+         const headers = {
+            'Authorization': `Bearer ${authToken}`,
+            'Content-Type': 'application/json'
+         };
+
+         await axiosPrivate
             .get(`${process.env.REACT_APP_BACKEND_API}budget/`, {
-               auth: {
-                  username: process.env.REACT_APP_USER,
-                  password: process.env.REACT_APP_PASSWORD,
-               },
+               headers
             })
             .then((res) => {
                dispatch({
                   type: Types.FETCH_BUDGET,
                   payload: res.data,
                });
-            });
-
-         await axios
-            .get(`${process.env.REACT_APP_BACKEND_API}weekly_expenses/`, {
-               auth: {
-                  username: process.env.REACT_APP_USER,
-                  password: process.env.REACT_APP_PASSWORD,
-               },
             })
+
+         await axiosPrivate
+            .get(`${process.env.REACT_APP_BACKEND_API}weekly_expenses/`,
+               { headers }
+            )
             .then((res) => {
                weekData = res.data;
                let totlamount = 0;
@@ -253,13 +263,10 @@ const Provider = ({ children }) => {
                });
             });
 
-         await axios
-            .get(`${process.env.REACT_APP_BACKEND_API}assets/`, {
-               auth: {
-                  username: process.env.REACT_APP_USER,
-                  password: process.env.REACT_APP_PASSWORD,
-               },
-            })
+         await axiosPrivate
+            .get(`${process.env.REACT_APP_BACKEND_API}assets/`,
+               { headers }
+            )
             .then((res) => {
                let totalVal = 0.000000001;
                res.data.map((da) => {
@@ -278,13 +285,10 @@ const Provider = ({ children }) => {
                });
             });
 
-         await axios
-            .get(`${process.env.REACT_APP_BACKEND_API}loans/`, {
-               auth: {
-                  username: process.env.REACT_APP_USER,
-                  password: process.env.REACT_APP_PASSWORD,
-               },
-            })
+         await axiosPrivate
+            .get(`${process.env.REACT_APP_BACKEND_API}loans/`,
+               { headers }
+            )
             .then((res) => {
                let totalVal = 0.000000001;
                res.data.map((da) => {
@@ -302,13 +306,8 @@ const Provider = ({ children }) => {
                   payload: { finalLiabilities, totalVal },
                });
             });
-         await axios
-            .get(`${process.env.REACT_APP_BACKEND_API}monthly_expenses/`, {
-               auth: {
-                  username: process.env.REACT_APP_USER,
-                  password: process.env.REACT_APP_PASSWORD,
-               },
-            })
+         await axiosPrivate
+            .get(`${process.env.REACT_APP_BACKEND_API}monthly_expenses/`, { headers })
             .then((res) => {
                let finalMonthlyExp = [];
                let response = res.data;
@@ -337,17 +336,22 @@ const Provider = ({ children }) => {
       //Removed fetch expenses here, because it breaks pagination request on expenses page
    };
 
-   const fetchToken = async () => {
+   const fetchToken = async (username, password) => {
       try {
          const auth = {
-            username: process.env.REACT_APP_USER,
-            password: process.env.REACT_APP_PASSWORD
+            username: username,
+            password: password
          };
 
-         return await axios.post('https://api.finuncle.com/token/', auth)
+         return await axiosClient.post(`${process.env.REACT_APP_BACKEND_URL}token/`, auth)
             .then(response => {
-               console.log(response.data);
-               return response.data
+               setAuthToken(response?.data?.access)
+               setCookie('refresh', response?.data?.refresh, 30)
+               return response.status
+            })
+            .catch(error => {
+               console.log(error?.response?.data?.detail)
+               handleErrors(error);
             })
 
       } catch (error) {
@@ -357,13 +361,12 @@ const Provider = ({ children }) => {
 
    const fetchIncomeSources = async () => {
       try {
-         const token = await fetchToken()
          const headers = {
-            'Authorization': `Bearer ${token?.access}`,
+            'Authorization': `Bearer ${authToken}`,
             'Content-Type': 'application/json'
          };
 
-         return axios.get('https://api.finuncle.com/api/income_source/', { headers })
+         return axiosPrivate.get('https://api.finuncle.com/api/income_source/', { headers })
             .then(response => {
                return response.data
             })
@@ -375,13 +378,12 @@ const Provider = ({ children }) => {
 
    const fetchIncomeExpenses = async () => {
       try {
-         const token = await fetchToken()
          const headers = {
-            'Authorization': `Bearer ${token?.access}`,
+            'Authorization': `Bearer ${authToken}`,
             'Content-Type': 'application/json'
          };
 
-         return axios.get('https://api.finuncle.com/api/income_expense/', { headers })
+         return axiosPrivate.get('https://api.finuncle.com/api/income_expense/', { headers })
             .then(response => {
                return response.data
             })
@@ -390,6 +392,7 @@ const Provider = ({ children }) => {
          return []
       }
    };
+
    const fetchIncomeStatement = async () => {
       try {
          let populatedIncomeStatement = { income: [], expenses: [] }
@@ -426,9 +429,17 @@ const Provider = ({ children }) => {
       }
    };
 
+   const signOut = () => {
+      setAuthToken(null)
+      deleteCookie('refresh')
+   };
+
    return (
       <Context.Provider
          value={{
+            authToken,
+            setAuthToken,
+            signOut,
             expenses,
             tags,
             budget,

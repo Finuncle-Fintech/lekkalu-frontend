@@ -356,7 +356,7 @@ const Provider = ({ children }) => {
       try {
          const token = await fetchToken()
          const headers = {
-            'Authorization': `Bearer ${token?.access}`,
+            'Authorization': `Bearer ${authToken?.access}`,
             'Content-Type': 'application/json'
          };
 
@@ -374,7 +374,7 @@ const Provider = ({ children }) => {
       try {
          const token = await fetchToken()
          const headers = {
-            'Authorization': `Bearer ${token?.access}`,
+            'Authorization': `Bearer ${authToken?.access}`,
             'Content-Type': 'application/json'
          };
 
@@ -387,6 +387,7 @@ const Provider = ({ children }) => {
          return []
       }
    };
+
    const fetchIncomeStatement = async () => {
       try {
          let populatedIncomeStatement = { income: [], expenses: [] }

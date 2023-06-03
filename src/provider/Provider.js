@@ -62,13 +62,13 @@ const Provider = ({ children }) => {
 
       const statusFeedback = []
       try {
+         const headers = {
+            'Authorization': `Bearer ${authToken?.access}`,
+            'Content-Type': 'application/json'
+         };
+
          await axios
-            .post(`${process.env.REACT_APP_BACKEND_API}feedback/`, data, {
-               auth: {
-                  username: process.env.REACT_APP_USER,
-                  password: process.env.REACT_APP_PASSWORD,
-               },
-            })
+            .post(`${process.env.REACT_APP_BACKEND_API}feedback/`, data, {headers})
             .then((res) => {
                statusFeedback.push(res.status)
             });
@@ -86,6 +86,7 @@ const Provider = ({ children }) => {
             'Authorization': `Bearer ${authToken?.access}`,
             'Content-Type': 'application/json'
          };
+
          await axios
             .get(`${process.env.REACT_APP_BACKEND_API}tag/`, { headers })
             .then((res) => {
@@ -98,19 +99,21 @@ const Provider = ({ children }) => {
          handleErrors(error);
       }
    };
+
    const createTag = async (tag) => {
       try {
+         const headers = {
+            'Authorization': `Bearer ${authToken?.access}`,
+            'Content-Type': 'application/json'
+         };
+
          await axios
-            .post(`${process.env.REACT_APP_BACKEND_API}tag/`, tag, {
-               auth: {
-                  username: process.env.REACT_APP_USER,
-                  password: process.env.REACT_APP_PASSWORD,
-               }
-            })
+            .post(`${process.env.REACT_APP_BACKEND_API}tag/`, tag, {headers})
       } catch (error) {
          handleErrors(error)
       }
    }
+
    const fetchExpenses = async (page, rowsPerPage) => {
       try {
 
@@ -144,6 +147,7 @@ const Provider = ({ children }) => {
             'Authorization': `Bearer ${authToken?.access}`,
             'Content-Type': 'application/json'
          };
+         
          await axios
             .delete(`${process.env.REACT_APP_BACKEND_API}expenses/${id}`, { headers })
             .then((res) => {

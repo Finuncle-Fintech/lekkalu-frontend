@@ -29,4 +29,4 @@ function CircleLoading() {
     );
   }
   
-  export default CircleLoading;
+export default CircleLoading;

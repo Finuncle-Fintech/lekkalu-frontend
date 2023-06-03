@@ -5,4 +5,8 @@ export const HeaderButton = styled(Button)({
   color: "white",
   "&:hover": { color: "white" },
   "&:active": { color: "white" },
+  toolbar: {
+    display: "flex",
+    justifyContent: "space-between",
+  },
 });

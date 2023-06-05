@@ -69,10 +69,8 @@ const Expenses = ({ Context }) => {
 
       const parsedData = XLSX.utils.sheet_to_json(sheet);
 
-
+      
       if (parsedData.length > 0) {
-
-
         const loadExcel = ()=>{
           setLoadExcelStatus(true)
           const promise = parsedData.map(async entry => {

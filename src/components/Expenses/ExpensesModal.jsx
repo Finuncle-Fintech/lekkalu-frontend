@@ -17,8 +17,8 @@ import TagInput from "./TagInput";
 import dayjs from "dayjs";
 import ReactFileReader from "react-file-reader";
 import PublishIcon from '@mui/icons-material/Publish';
-import Swal from "sweetalert2";
 import LoadStatus from "./components/LoadStatus";
+import Swal from "sweetalert2";
 
 const ExpenseFormModal = ({
   onAddExpense,
@@ -28,7 +28,7 @@ const ExpenseFormModal = ({
   onCancelEdit,
   handleFileUpload,
   loadExcelStatus,
-  Context
+  Context,
 }) => {
   const [open, setOpen] = useState(false);
   const [amount, setAmount] = useState('');
@@ -153,6 +153,7 @@ const ExpenseFormModal = ({
       </Button>
       <Dialog open={open} onClose={handleClose}>
         
+        
         <DialogTitle>{editIndex !== null ? "Edit Expense" : "Add Expense"}</DialogTitle>
         <DialogContent>
           <form onSubmit={handleSubmit}>
@@ -181,10 +182,10 @@ const ExpenseFormModal = ({
                 />
               </LocalizationProvider>
             </div>
-            <DialogActions >
+            <DialogActions  >
               <ReactFileReader
                 fileTypes={[".xls", ".xlsx"]}
-                handleFiles={!loadExcelStatus&&handleFileUpload}
+                handleFiles={!loadExcelStatus&&!loadExcelStatus&&handleFileUpload}
                 disabled={loadExcelStatus}
               >
                 <Button disabled={loadExcelStatus} >Upload With Excel<PublishIcon sx={{ marginRight: "90px" }}/></Button>

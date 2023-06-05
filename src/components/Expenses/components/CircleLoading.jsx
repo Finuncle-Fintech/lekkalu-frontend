@@ -30,4 +30,3 @@ function CircleLoading() {
   }
   
 export default CircleLoading;
-

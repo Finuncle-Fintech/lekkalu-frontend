@@ -13,14 +13,6 @@
     font-size: 1rem;
     color: white;
 }
-
-@media (max-width:560px) {
-    .container{
-        width: 40vw;
-        height: 6vw;
-        padding: 1vw;
-    }
-}
 .container{
     z-index: 1;
     background-color: #0289C8;

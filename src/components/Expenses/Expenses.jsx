@@ -81,7 +81,7 @@ const Expenses = ({ Context }) => {
             delete entry.date
             
             await createExpenseRequest({ ...entry, amount:amount.toFixed(2).toString() , tags: tagsIds, time: dateFormatted, user: 1 });
-      
+            
           });
 
           return Promise.all(promise)
@@ -128,8 +128,8 @@ const Expenses = ({ Context }) => {
         expenseToEdit={returnExpenseToEdit()}
         editIndex={editIndex}
         onCancelEdit={() => setEditIndex(null)}
-        handleFileUpload={handleFileUpload}
         loadExcelStatus = {loadExcelStatus}
+        handleFileUpload={handleFileUpload}
         Context={Context}
       />
       <Typography variant="h6">Expense List</Typography>

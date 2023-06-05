@@ -16,9 +16,9 @@ import { formatDate, preventPropagationOnEnter } from "./utils";
 import TagInput from "./TagInput";
 import dayjs from "dayjs";
 import ReactFileReader from "react-file-reader";
-import PublishIcon from '@mui/icons-material/Publish';
 import LoadStatus from "./components/LoadStatus";
 import Swal from "sweetalert2";
+import ButtonExcel from "./components/ButtonExcel";
 
 const ExpenseFormModal = ({
   onAddExpense,
@@ -187,8 +187,7 @@ const ExpenseFormModal = ({
                 handleFiles={!loadExcelStatus&&!loadExcelStatus&&handleFileUpload}
                 disabled={loadExcelStatus}
               >
-                <Button disabled={loadExcelStatus} >Upload With Excel<PublishIcon sx={{ marginRight: "90px" }}/></Button>
-                {loadExcelStatus&&<LoadStatus />}
+                <ButtonExcel loadExcelStatus={loadExcelStatus} />
               </ReactFileReader>
               <Button onClick={handleClose}>Cancel</Button>
               <Button disabled={loadExcelStatus} type="submit" color="primary" data-testid="submit-expense">

@@ -1,59 +1,95 @@
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Charts from "./components/Charts/Charts";
-import Expenses from "./components/Expenses/Expenses";
-import Header from "./components/Header/Header";
-import { Context } from "./provider/Provider";
-import IncomeStatement from "./pages/income-statement/IncomeStatement";
-import EmiCalculator from "./pages/EmiCalculator";
-import SupportPopUp from "./components/Support/PopUp/PopUp";
-import Footer from "./components/Footer/Footer";
+import { useContext } from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import ProtectedRoutes from './components/ProtectedRoutes/ProtectedRoutes';
+import Charts from 'components/Charts/Charts';
+import Expenses from 'components/Expenses/Expenses';
+import Header from 'components/Header/Header';
+import { Context } from 'provider/Provider';
+import IncomeStatement from 'pages/income-statement/IncomeStatement';
+import EmiCalculator from 'pages/EmiCalculator';
+import SupportPopUp from 'components/Support/PopUp/PopUp';
+import Footer from 'components/Footer/Footer';
+import Signin from './pages/Signin/Signin';
+import Signup from './pages/Signup/Signup';
+import PersistLogin from 'components/PersistLogin/PersistLogin';
 
 const RouterComponent = () => {
+  const { authToken } = useContext(Context);
+
   return (
     <Router>
       <Routes>
         <Route
-          path="/"
+          path="/signin"
           element={
             <>
-              <Header />
-              <Charts />
-              <Footer />
+              <Signin Context={Context} />
               <SupportPopUp Context={Context} />
             </>
           }
         />
         <Route
-          path="/expenses"
+          path="/signup"
           element={
             <>
-              <Header />
-              <Expenses Context={Context} />
-              <Footer />
+              <Signup Context={Context} />
               <SupportPopUp Context={Context} />
             </>
           }
         />
-        <Route
-          path="/loan_emi_calculator"
-          element={
-            <>
-              <Header />
-              <EmiCalculator />
-              <Footer />
-              <SupportPopUp Context={Context} />
-            </>
-          }
-        />
-        <Route
-          path="/income-statement"
-          element={
-            <>
-              <Header />
-              <IncomeStatement Context={Context} />
-            </>
-          }
-        />
+
+        <Route element={<PersistLogin />}>
+          <Route
+            path="/"
+            element={
+              <ProtectedRoutes authToken={authToken}>
+                <>
+                  <Header />
+                  <Charts />
+                  <Footer />
+                  <SupportPopUp Context={Context} />
+                </>
+              </ProtectedRoutes>
+            }
+          />
+          <Route
+            path="/loan_emi_calculator"
+            element={
+              <ProtectedRoutes authToken={authToken}>
+                <>
+                  <Header />
+                  <EmiCalculator />
+                  <Footer />
+                  <SupportPopUp Context={Context} />
+                </>
+              </ProtectedRoutes>
+            }
+          />
+          <Route
+            path="/income-statement"
+            element={
+              <ProtectedRoutes authToken={authToken}>
+                <>
+                  <Header />
+                  <IncomeStatement Context={Context} />
+                </>
+              </ProtectedRoutes>
+            }
+          />
+          <Route
+            path="/expenses"
+            element={
+              <ProtectedRoutes authToken={authToken}>
+                <>
+                  <Header />
+                  <Expenses Context={Context} />
+                  <Footer />
+                  <SupportPopUp Context={Context} />
+                </>
+              </ProtectedRoutes>
+            }
+          />
+        </Route>
       </Routes>
     </Router>
   );

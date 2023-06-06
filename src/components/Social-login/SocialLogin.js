@@ -74,6 +74,14 @@ function SocialLogin() {
         onFailure={responseFacebookError}
       />
 
+      <AppleLogin
+        clientId="your-apple-client-id"
+        redirectURI="your-redirect-uri"
+        onSuccess={responseApple}
+        onError={responseAppleError}
+        responseType="code id_token"
+      />
+
       {accessToken && <p>Access Token: {accessToken}</p>}
     </div>
   );

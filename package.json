@@ -18,7 +18,10 @@
     "react-dom": "^18.2.0",
     "react-facebook-login": "^4.1.1",
     "react-file-reader": "^1.1.4",
+<<<<<<< Updated upstream
     "react-google-button": "^0.7.2",
+=======
+>>>>>>> Stashed changes
     "react-google-login": "^5.2.2",
     "react-router": "^6.9.0",
     "react-router-dom": "^6.9.0",
@@ -26,6 +29,11 @@
     "react-spinners": "^0.13.8",
     "reactstrap": "^9.1.9",
     "recharts": "^2.4.3",
+<<<<<<< Updated upstream
+=======
+    "sweetalert": "^2.1.2",
+    "sweetalert2": "^11.7.10",
+>>>>>>> Stashed changes
     "web-vitals": "^2.1.4",
     "xlsx": "^0.18.5"
   },

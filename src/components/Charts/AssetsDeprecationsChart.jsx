@@ -1,4 +1,4 @@
-import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend} from "recharts"
+import { LineChart, Line, Brush, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend} from "recharts"
 import Colors from "constants/colors"
 
 const calculateDeprecationData = (purchaseValue, depreciation_frequency, deprecationPercent, sellDate, purchasedDate, active, sellValue) =>{
@@ -58,7 +58,7 @@ export default function AssetsDeprecationsChart({data}){
                 <LineChart  margin={{ top: 5, right: 0, bottom: 25, left: 10 }}  data={dataToShow} >
                     <Line dataKey='value' type='monotone'  name={`${name} value`}/>
 
-                    <XAxis dataKey="data"  tick={{ fill: Colors.white }}  />
+                    <XAxis dataKey="data"  tick={{ fill: Colors.white }}/>
 
                     <YAxis dataKey="value" type='category'  tickFormatter={(tick) => {
                         return `\u20B9${tick}`;
@@ -70,6 +70,7 @@ export default function AssetsDeprecationsChart({data}){
                      align='center'
                   />
                     <Tooltip />
+                    <Brush data='data' height={30} />
                 </LineChart>
             </ResponsiveContainer>
 

@@ -26,5 +26,4 @@ describe("deleteExpenseRequest", () => {
             expect(mockState.deleteExpenseRequest).toHaveBeenCalled();
         });
     });
-    
 });

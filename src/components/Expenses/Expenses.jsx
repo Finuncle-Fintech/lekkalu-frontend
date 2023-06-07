@@ -6,7 +6,7 @@ import {
 } from "@mui/material";
 import { SkipNext, SkipPrevious } from '@mui/icons-material';
 import ExpenseFormModal from "./ExpensesModal";
-import { ModalContainer } from "./styled";
+import { ModalContainer, modalSuccesCreated } from "./styled";
 import ExpensesList from "./ExpenseList";
 import { formatDate } from "./utils";
 import * as XLSX from "xlsx";
@@ -48,14 +48,16 @@ const Expenses = ({ Context }) => {
       .filter((tag) => tag !== undefined);
   };
 
-  const getTagNames = (tagValues) => {
-    return tagValues
+  const getTagNames =(tagValues) => {
+    const tagNames = tagValues&&tagValues
       .map((tagValue) => {
         const foundTag = tags.find((tag) => tag.id === tagValue);
         return foundTag ? foundTag.name : null;
       })
       .filter((tagName) => tagName !== null)
       .join(', ');
+
+    return tagNames
   };
 
   const handleFileUpload = (files) => {
@@ -97,7 +99,7 @@ const Expenses = ({ Context }) => {
         icon:'success',
         title:'The expense was added correctly.',
         timer:2300,
-        timerProgressBar:true 
+        timerProgressBar:true,
       })
     };
 

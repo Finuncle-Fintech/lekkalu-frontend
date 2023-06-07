@@ -35,7 +35,7 @@ const ExpensesList = ({ expenses, getTagNames, setEditIndex, deleteExpense }) =>
       <TableBody>
         {expenses &&
           Boolean(expenses.length) &&
-          expenses.map((expense, index) => (
+          expenses.map((expense, index) =>{ return(
             <TableRow key={expense.id}>
               <TableCell>{expense.amount} ₹</TableCell>
               <TableCell>{getTagNames(expense.tags)}</TableCell>
@@ -49,7 +49,7 @@ const ExpensesList = ({ expenses, getTagNames, setEditIndex, deleteExpense }) =>
                 </IconButton>
               </TableCell>
             </TableRow>
-          ))}
+          )})}
       </TableBody>
     </Table>
   );

@@ -16,9 +16,9 @@ import { formatDate, preventPropagationOnEnter } from "./utils";
 import TagInput from "./TagInput";
 import dayjs from "dayjs";
 import ReactFileReader from "react-file-reader";
-import LoadStatus from "./components/LoadStatus";
 import Swal from "sweetalert2";
 import ButtonExcel from "./components/ButtonExcel";
+import ModalExcelClosed from "./components/ModalExcelClosed";
 
 const ExpenseFormModal = ({
   onAddExpense,
@@ -28,6 +28,7 @@ const ExpenseFormModal = ({
   onCancelEdit,
   handleFileUpload,
   loadExcelStatus,
+  createExpenseExcelStatus,
   Context,
 }) => {
   const [open, setOpen] = useState(false);
@@ -142,6 +143,10 @@ const ExpenseFormModal = ({
   };
 
   return (
+    <>
+    {
+      (!open&&loadExcelStatus)?(<ModalExcelClosed createExpenseExcelStatus={createExpenseExcelStatus} />):<></>
+    }
     <ModalContainer>
       <Button
         variant="contained"
@@ -151,7 +156,10 @@ const ExpenseFormModal = ({
       >
         Add Expense
       </Button>
-      <Dialog open={open} onClose={handleClose}>
+      <Dialog open={open} onClose={()=>{
+        handleClose()}}
+      >
+        
         
         <DialogTitle>{editIndex !== null ? "Edit Expense" : "Add Expense"}</DialogTitle>
         <DialogContent>
@@ -198,6 +206,8 @@ const ExpenseFormModal = ({
         </DialogContent>
       </Dialog>
     </ModalContainer>
+    
+    </>
   );
 };
 

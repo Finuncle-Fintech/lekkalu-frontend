@@ -25,6 +25,7 @@ const Expenses = ({ Context }) => {
   const [editIndex, setEditIndex] = useState(null);
   const [page, setPage] = useState(0);
   const [ loadExcelStatus, setLoadExcelStatus ]  = useState(false)
+  const [newData, setNewData ] = useState([])
   const rowsPerPage = 10;
 
   useEffect(() => {
@@ -71,6 +72,8 @@ const Expenses = ({ Context }) => {
 
       
       if (parsedData.length > 0) {
+        setNewData([{excelLength:parsedData.length}])
+        
         const loadExcel = ()=>{
           setLoadExcelStatus(true)
           const promise = parsedData.map(async entry => {
@@ -80,8 +83,9 @@ const Expenses = ({ Context }) => {
             delete entry.amount
             delete entry.date
             
-            await createExpenseRequest({ ...entry, amount:amount.toFixed(2).toString() , tags: tagsIds, time: dateFormatted, user: 1 });
+            const createStatus = await createExpenseRequest({ ...entry, amount:amount.toFixed(2).toString() , tags: tagsIds, time: dateFormatted, user: 1 });
             
+            setNewData((prevData)=>[...prevData, createStatus])
           });
 
           return Promise.all(promise)
@@ -130,6 +134,7 @@ const Expenses = ({ Context }) => {
         onCancelEdit={() => setEditIndex(null)}
         loadExcelStatus = {loadExcelStatus}
         handleFileUpload={handleFileUpload}
+        createExpenseExcelStatus = {newData}
         Context={Context}
       />
       <Typography variant="h6">Expense List</Typography>

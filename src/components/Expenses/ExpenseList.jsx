@@ -29,7 +29,6 @@ const ExpensesList = ({ expenses, getTagNames, setEditIndex, deleteExpense }) =>
       })
     
   }
-
   return (
     <Table>
       <TableBody>

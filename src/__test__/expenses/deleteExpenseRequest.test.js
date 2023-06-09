@@ -15,7 +15,19 @@ describe("deleteExpenseRequest", () => {
                 <Expenses Context={TestContext}/>
             </TestContext.Provider>
         );
+    test("successfully deletes an expense", async () => {
+        render(
+            <TestContext.Provider value={mockState}>
+                <Expenses Context={TestContext}/>
+            </TestContext.Provider>
+        );
 
+        fireEvent.click(screen.getAllByPlaceholderText("delete-expense")[0]);
+        await waitFor(() => {
+            // expect(mockState.deleteExpenseRequest).toHaveBeenCalled();
+            expect(screen.getByText('Delete')).toBeInTheDocument()
+        });
+        fireEvent.click(screen.getByText('Delete'));
         fireEvent.click(screen.getAllByPlaceholderText("delete-expense")[0]);
         await waitFor(() => {
             // expect(mockState.deleteExpenseRequest).toHaveBeenCalled();
@@ -28,5 +40,9 @@ describe("deleteExpenseRequest", () => {
             expect(mockState.deleteExpenseRequest).toHaveBeenCalled();
         });
     });
+        await waitFor(() => {
+            // expect(mockState.deleteExpenseRequest).toHaveBeenCalled();
+            expect(mockState.deleteExpenseRequest).toHaveBeenCalled();
+        });
+    });
 });
-

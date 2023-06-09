@@ -1,10 +1,7 @@
 import React, {createContext} from "react";
 import {render, fireEvent, waitFor, screen} from "@testing-library/react";
-import React, {createContext} from "react";
-import {render, fireEvent, waitFor, screen} from "@testing-library/react";
 import "@testing-library/jest-dom";
 import Expenses from "components/Expenses/Expenses";
-import {mockState} from "__test__/data/Expenses";
 import {mockState} from "__test__/data/Expenses";
 
 const TestContext = createContext(mockState);
@@ -12,12 +9,6 @@ const TestContext = createContext(mockState);
 window.scrollTo = jest.fn()
 
 describe("deleteExpenseRequest", () => {
-    test("successfully deletes an expense", async () => {
-        render(
-            <TestContext.Provider value={mockState}>
-                <Expenses Context={TestContext}/>
-            </TestContext.Provider>
-        );
     test("successfully deletes an expense", async () => {
         render(
             <TestContext.Provider value={mockState}>

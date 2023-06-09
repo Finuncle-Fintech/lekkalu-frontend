@@ -1,5 +1,6 @@
 import { LineChart, Line, Brush, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend} from "recharts"
 import Colors from "constants/colors"
+import { useEffect, useRef } from "react"
 
 const calculateDeprecationData = (purchaseValue, depreciation_frequency, deprecationPercent, sellDate, purchasedDate, active, sellValue) =>{
     const initalVal = parseFloat(purchaseValue)
@@ -42,14 +43,45 @@ function shortNumbers(n){
     return Math.round(n*d/p(10,x))/d+" kMGTPE"[x/3];
 }
 function shortDate (date){
-    const shortDate = date.slice(2, date.length-1)
-    return shortDate.replace('-', '/').replace('-', '/')
+    return date.replace('-', '/').replace('-', '/')
 }
 
-export default function AssetsDeprecationsChart({data}){
-    const { depreciation_frequency, depreciation_percent, sell_date, sell_value, name, purchase_value, purchase_date } = data[0]
 
-    const dataToShow = calculateDeprecationData(purchase_value, depreciation_frequency, depreciation_percent, sell_date, purchase_date, name, sell_value)
+
+export default function AssetsDeprecationsChart({data}){
+    const brushRef = useRef(undefined)
+   
+    if(data[0] === undefined) return
+    const { depreciation_frequency, depreciation_percent, sell_date, sell_value, name, purchase_value, purchase_date } = data[0]
+    let dataToShow = calculateDeprecationData(purchase_value, depreciation_frequency, depreciation_percent, sell_date, purchase_date, name, sell_value)
+
+    const handlerTicketFormatter = (date)=>{
+
+        let newDate
+        if (brushRef.current && brushRef.current.props) {
+            const { startIndex, endIndex } = brushRef.current.props;
+            if (endIndex-startIndex>15) {
+                newDate = date.slice(0, 4);
+            }else if( endIndex-startIndex>6 ){
+                 const getMonth = (dateNum)=>{
+                    const months = [
+                        'January', 'February', 'March', 'April', 'May', 'June',
+                        'July', 'August', 'September', 'October', 'November', 'December'
+                      ];
+
+                    const year = dateNum.slice(2,4)
+                    const month = dateNum.slice(5,7)
+                     
+                    const num = parseInt(month)-1
+
+                    return `${months[num]}/${year} `
+                    
+                }
+                newDate = getMonth(date)
+            }
+          }
+          return newDate || date;
+    }
 
     return(
         <div className='section-outer-wrapper col-md-8 mx-auto mb-5 mt-5'  style={{ backgroundColor: Colors.graphBG }}>
@@ -58,7 +90,8 @@ export default function AssetsDeprecationsChart({data}){
                 <LineChart  margin={{ top: 5, right: 0, bottom: 25, left: 10 }}  data={dataToShow} >
                     <Line dataKey='value' type='monotone'  name={`${name} value`}/>
 
-                    <XAxis dataKey="data"  tick={{ fill: Colors.white }}/>
+                
+                    <XAxis dataKey="data"  tick={{ fill: Colors.white }} tickFormatter={handlerTicketFormatter} />
 
                     <YAxis dataKey="value" type='category'  tickFormatter={(tick) => {
                         return `\u20B9${tick}`;
@@ -70,7 +103,8 @@ export default function AssetsDeprecationsChart({data}){
                      align='center'
                   />
                     <Tooltip />
-                    <Brush data='data' height={30} />
+                    <Brush data='data' height={30} ref={brushRef}/>
+
                 </LineChart>
             </ResponsiveContainer>
 

@@ -49,9 +49,8 @@ const Test = () => {
                <WeeklyChart data={weeklyExpense} />
                <SpentBalanceChart data={monthlyExpenses} />
                <CumSumChart data={monthlyExpenses} />
-               <AssetsdepreciationChart data={depreciation}/>
-               <AssetsLiabilitiesChart data={assets} type={'assets'} />
                <AssetsDeprecationsChart data={deprecations}/>
+               <AssetsLiabilitiesChart data={assets} type={'assets'} />
                <AssetsLiabilitiesChart
                   data={liabilities}
                   type={'liabilities'}

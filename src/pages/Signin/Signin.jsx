@@ -166,7 +166,7 @@ export const Signin = ({ Context }) => {
 
                         <div>
       <GoogleLogin
-        clientId="your-google-client-id"
+        clientId="500430174142-l81aj9joeiookg94buo9jq0j7il8t2o3.apps.googleusercontent.com"
         buttonText="Login with Google"
         onSuccess={responseGoogle}
         onFailure={responseGoogleError}
@@ -174,14 +174,14 @@ export const Signin = ({ Context }) => {
       />
 
       <FacebookLogin
-        appId="your-facebook-app-id"
+        appId="225440500220299"
         fields="name,email,picture"
         callback={responseFacebook}
         onFailure={responseFacebookError}
                             />
                             
     <AppleLogin
-        clientId="your-apple-client-id"
+        clientId="UN2XK86RAV"
         redirectURI="your-redirect-uri"
         onSuccess={responseApple}
         onError={responseAppleError}

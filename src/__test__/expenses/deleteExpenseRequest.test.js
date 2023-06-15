@@ -32,9 +32,4 @@ describe("deleteExpenseRequest", () => {
             expect(mockState.deleteExpenseRequest).toHaveBeenCalled();
         });
     });
-        await waitFor(() => {
-            // expect(mockState.deleteExpenseRequest).toHaveBeenCalled();
-            expect(mockState.deleteExpenseRequest).toHaveBeenCalled();
-        });
-    });
 });

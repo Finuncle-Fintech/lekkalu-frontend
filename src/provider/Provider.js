@@ -138,6 +138,7 @@ const Provider = ({ children }) => {
                   payload: res.data,
                });
             });
+           
       } catch (error) {
          handleErrors(error);
       }
@@ -165,6 +166,7 @@ const Provider = ({ children }) => {
    };
 
    const createExpenseRequest = async (data) => {
+      const createExpenseStatus = []
       try {
 
          const headers = {
@@ -174,14 +176,18 @@ const Provider = ({ children }) => {
          await axiosPrivate
             .post(`${process.env.REACT_APP_BACKEND_API}expenses/`, data, { headers })
             .then((res) => {
-               dispatch({
+               dispatch({                  
                   type: Types.CREATE_EXPENSE,
                   payload: { data, id: res.data.data.id },
                });
+
+               createExpenseStatus.push(res)
             });
       } catch (error) {
          handleErrors(error);
       }
+
+      return createExpenseStatus
    };
 
    const changeExpenseRequest = async (index, expense) => {

@@ -1,0 +1,20 @@
+.container{
+    position: fixed;
+    right: 0px;
+    bottom: 0px;
+    border-radius: .5vw;
+    background-color: #0289C8;
+    display: flex;
+    align-items: center;
+    gap: 1vw;
+    margin: .5rem;
+    color: white;
+    z-index: 1;
+    padding:1vw;
+    font-size: 1rem;
+}
+    .container > button{
+        border-radius: .4vw;
+        border: none;
+        color: #0289C8;
+    }

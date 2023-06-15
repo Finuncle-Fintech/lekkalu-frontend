@@ -16,8 +16,9 @@ import { formatDate, preventPropagationOnEnter } from "./utils";
 import TagInput from "./TagInput";
 import dayjs from "dayjs";
 import ReactFileReader from "react-file-reader";
-import PublishIcon from '@mui/icons-material/Publish';
 import Swal from "sweetalert2";
+import ButtonExcel from "./components/ButtonExcel";
+import ModalExcelClosed from "./components/ModalExcelClosed";
 
 const ExpenseFormModal = ({
   onAddExpense,
@@ -26,7 +27,9 @@ const ExpenseFormModal = ({
   editIndex,
   onCancelEdit,
   handleFileUpload,
-  Context
+  loadExcelStatus,
+  createExpenseExcelStatus,
+  Context,
 }) => {
   const [open, setOpen] = useState(false);
   const [amount, setAmount] = useState('');
@@ -140,6 +143,10 @@ const ExpenseFormModal = ({
   };
 
   return (
+    <>
+    {
+      (!open&&loadExcelStatus)?(<ModalExcelClosed createExpenseExcelStatus={createExpenseExcelStatus} />):<></>
+    }
     <ModalContainer>
       <Button
         variant="contained"
@@ -149,7 +156,11 @@ const ExpenseFormModal = ({
       >
         Add Expense
       </Button>
-      <Dialog open={open} onClose={handleClose}>
+      <Dialog open={open} onClose={()=>{
+        handleClose()}}
+      >
+        
+        
         <DialogTitle>{editIndex !== null ? "Edit Expense" : "Add Expense"}</DialogTitle>
         <DialogContent>
           <form onSubmit={handleSubmit}>
@@ -178,15 +189,16 @@ const ExpenseFormModal = ({
                 />
               </LocalizationProvider>
             </div>
-            <DialogActions>
+            <DialogActions  >
               <ReactFileReader
                 fileTypes={[".xls", ".xlsx"]}
-                handleFiles={handleFileUpload}
+                handleFiles={!loadExcelStatus&&!loadExcelStatus&&handleFileUpload}
+                disabled={loadExcelStatus}
               >
-                <Button>Upload With Excel<PublishIcon sx={{ marginRight: "90px" }}/></Button>
+                <ButtonExcel loadExcelStatus={loadExcelStatus} />
               </ReactFileReader>
               <Button onClick={handleClose}>Cancel</Button>
-              <Button type="submit" color="primary" data-testid="submit-expense">
+              <Button disabled={loadExcelStatus} type="submit" color="primary" data-testid="submit-expense">
                 {editIndex !== null ? "Update" : "Add"}
               </Button>
             </DialogActions>
@@ -194,6 +206,8 @@ const ExpenseFormModal = ({
         </DialogContent>
       </Dialog>
     </ModalContainer>
+    
+    </>
   );
 };
 

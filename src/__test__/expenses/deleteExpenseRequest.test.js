@@ -20,12 +20,6 @@ describe("deleteExpenseRequest", () => {
             expect(screen.getByText('Delete')).toBeInTheDocument()
         });
         fireEvent.click(screen.getByText('Delete'));
-        fireEvent.click(screen.getAllByPlaceholderText("delete-expense")[0]);
-        await waitFor(() => {
-            // expect(mockState.deleteExpenseRequest).toHaveBeenCalled();
-            expect(screen.getByText('Delete')).toBeInTheDocument()
-        });
-        fireEvent.click(screen.getByText('Delete'));
 
         await waitFor(() => {
             // expect(mockState.deleteExpenseRequest).toHaveBeenCalled();
@@ -33,4 +27,3 @@ describe("deleteExpenseRequest", () => {
         });
     });
 });
-

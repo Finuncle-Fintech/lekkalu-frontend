@@ -22,7 +22,7 @@
     "react-router-dom": "^6.9.0",
     "react-scripts": "^5.0.1",
     "react-spinners": "^0.13.8",
-    "reactstrap": "^9.1.10",
+    "reactstrap": "^9.2.0",
     "recharts": "^2.4.3",
     "sweetalert": "^2.1.2",
     "sweetalert2": "^11.4.8",

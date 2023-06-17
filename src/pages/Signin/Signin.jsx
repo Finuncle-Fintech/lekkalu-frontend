@@ -1,4 +1,4 @@
-import React, {useContext} from "react";
+import React, { useContext } from "react";
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -13,9 +13,10 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { Link as ReactRouterLink, useNavigate } from 'react-router-dom';
 import Copyright from "../../components/Copyright/Copyright";
+import Swal from "sweetalert2";
 
 
-export const Signin = ({Context}) => {
+export const Signin = ({ Context }) => {
     const { fetchToken } = useContext(Context);
     const navigate = useNavigate();
 
@@ -28,9 +29,27 @@ export const Signin = ({Context}) => {
             const password = data.get('password')
 
             const loginUser = await fetchToken(username, password)
-            loginUser == 200 ? navigate("/") : console.log("User with provided details does not exist")
+
+            loginUser == 200
+                ?
+                navigate("/")
+                :
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'error',
+                    html: '<p>User with provided details does not exist</p>',
+                    showConfirmButton: false,
+                    timer: 3000
+                })
         }
-        catch(error) {
+        catch (error) {
+            Swal.fire({
+                position: 'top-end',
+                icon: 'error',
+                html: `<p>${error}</p>`,
+                showConfirmButton: false,
+                timer: 3000
+            })
             console.log(error)
         }
     };

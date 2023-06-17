@@ -15,37 +15,54 @@ import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import axios from "axios";
 import { useNavigate } from "react-router";
+import Swal from "sweetalert2";
 
 export const Signup = ({ Context }) => {
     const navigate = useNavigate()
     const [acceptedTerms, setAcceptedTerms] = useState()
     const [acceptedPrivacyPolicy, setAcceptPrivacyPolicy] = useState()
+    const [errors, setErrors] = useState([])
+    const [loading, setLoading] = useState(false)
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        console.log(acceptedTerms, acceptedPrivacyPolicy)
         const data = new FormData(event.currentTarget);
-        console.log(data.get('termsAndConditions'))
+        setErrors([])
+        setLoading(true)
 
         await axios.post(`${process.env.REACT_APP_BACKEND_URL}users/api/users`,
-                JSON.stringify({
-                    "username": data.get('username'),
-                    "email": data.get('email'),
-                    "password": data.get('password')
-                }),
-                {
-                    headers:{
-                        "Content-Type": "application/json"
-                    }
+            JSON.stringify({
+                "username": data.get('username'),
+                "email": data.get('email'),
+                "password": data.get('password')
+            }),
+            {
+                headers: {
+                    "Content-Type": "application/json"
                 }
-            )
+            })
             .then((res) => {
-                res?.status === 201 ? navigate("/signin") : console.log(res?.data)
+                res?.status === 201
+                    ?
+                    navigate("/signin")
+                    :
+                    Swal.fire({
+                        position: 'top-end',
+                        icon: 'error',
+                        html: `<p>${res?.data}</p>`,
+                        showConfirmButton: false,
+                        timer: 3000
+                    })
+                console.log(res?.data)
             })
             .catch(error => {
-                console.log(error)
-            })
-    };
+                for (const key in error?.response?.data) {
+                    setErrors(curr => [...curr, `${key}: ${error?.response?.data[key]}`])
+                }
+            });
+
+        setLoading(false)
+    }
 
     return (
         <div>
@@ -65,6 +82,19 @@ export const Signup = ({ Context }) => {
                     <Typography component="h1" variant="h4">
                         Sign up
                     </Typography>
+                    <div className="my-3">
+                        {
+                            errors.length > 0
+                                ?
+                                errors.map((e, i) => {
+                                    return (
+                                        <p key={i} className="my-2 fw-bold text-danger">{e}</p>
+                                    )
+                                })
+                                :
+                                null
+                        }
+                    </div>
                     <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
@@ -115,7 +145,7 @@ export const Signup = ({ Context }) => {
                             fullWidth
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
-                            disabled={!acceptedTerms || !acceptedPrivacyPolicy}
+                            disabled={!acceptedTerms || !acceptedPrivacyPolicy || loading}
                         >
                             Sign Up
                         </Button>

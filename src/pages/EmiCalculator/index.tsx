@@ -1,7 +1,7 @@
-import React from "react";
-import { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
-import axios from "axios";
+import React from 'react';
+import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
+import axios from 'axios';
 
 import {
   parseQueryString,
@@ -9,16 +9,18 @@ import {
   calculateEmiOutputs,
   calculateLoanPrincipalAndInterestPayable,
   isObjectEmpty,
-} from "../../components/EMI_Components/utils";
-import FormInput from "../../components/EMI_Components/FormInput";
-import DisplayResult from "../../components/EMI_Components/DisplayResult";
-import RepaymentTable from "../../components/EMI_Components/RepaymentTable";
-import { AssetsLiabilitiesChart } from "../../components/Charts/AssetsLiabilitiesChart";
+} from '../../components/EMI_Components/utils';
+import FormInput from '../../components/EMI_Components/FormInput';
+import DisplayResult from '../../components/EMI_Components/DisplayResult';
+import RepaymentTable from '../../components/EMI_Components/RepaymentTable';
+import { AssetsLiabilitiesChart } from '../../components/Charts/AssetsLiabilitiesChart';
+
+import { useLogin } from '../../utils/hooks/useLoginUser';
 
 const today = new Date();
 const year = today.getFullYear();
-const month = String(today.getMonth() + 1).padStart(2, "0");
-const day = String(today.getDate()).padStart(2, "0");
+const month = String(today.getMonth() + 1).padStart(2, '0');
+const day = String(today.getDate()).padStart(2, '0');
 const formattedDate = `${year}-${month}-${day}`;
 
 interface DefaultDataProps {
@@ -45,18 +47,19 @@ const defaultData = {
 };
 
 const defaultResults = {
-  loan_emi: "0",
-  total_interest_payable: "0",
-  total_payment: "0",
+  loan_emi: '0',
+  total_interest_payable: '0',
+  total_payment: '0',
   repayment_table: [],
 };
 
 const EmiCalculator = () => {
+  const { handleSubmit } = useLogin();
   const location = useLocation();
   const parsedObject = parseQueryString(location.search);
 
   const [data, setData] = useState<DefaultDataProps>(
-    !isObjectEmpty(parsedObject) ? parsedObject : defaultData
+    !isObjectEmpty(parsedObject) ? parsedObject : defaultData,
   );
 
   const [results, setResults] = useState<DefaultResultsProps>(defaultResults);
@@ -70,20 +73,26 @@ const EmiCalculator = () => {
   };
 
   const handleSave = async () => {
-    setIsLoading(true);
-    try {
-      await axios.post(`${process.env.REACT_APP_API}expenses/`, data, {
-        auth: {
-          username: process.env.REACT_APP_USER as string,
-          password: process.env.REACT_APP_PASSWORD as string,
-        },
-      });
-    } catch (error) {
-      console.error("Error:", error);
-      alert("Error occurred during API call.");
-    } finally {
-      setIsLoading(false);
-    }
+    // setIsLoading(true);
+    // try {
+    //   await axios.post(`${process.env.REACT_APP_API}expenses/`, data, {
+    //     auth: {
+    //       username: process.env.REACT_APP_USER as string,
+    //       password: process.env.REACT_APP_PASSWORD as string,
+    //     },
+    //   });
+    // } catch (error) {
+    //   console.error('Error:', error);
+    //   alert('Error occurred during API call.');
+    // } finally {
+    //   setIsLoading(false);
+    // }
+
+    const auth = {
+      username: 'reacter',
+      password: 'p2dFqnu3@',
+    };
+    handleSubmit(auth);
   };
 
   useEffect(() => {
@@ -95,8 +104,8 @@ const EmiCalculator = () => {
     setAssets(
       calculateLoanPrincipalAndInterestPayable(
         data?.loan_principal,
-        results?.total_interest_payable
-      )
+        results?.total_interest_payable,
+      ),
     );
   }, [data, results]);
 
@@ -115,13 +124,13 @@ const EmiCalculator = () => {
             onClick={handleSave}
             disabled={isLoading}
           >
-            {isLoading ? "Saving..." : "Save"}
+            {isLoading ? 'Saving...' : 'Save'}
           </button>
           <button
             className="my-[1rem] py-[0.5rem] px-[2.5rem] outline-none border-none bg-blue-500 text-white font-bold"
             onClick={() => handleCopy(data)}
           >
-            {isCopied ? "Copied!" : "Share"}
+            {isCopied ? 'Copied!' : 'Share'}
           </button>
         </div>
         <div className="w-full relative flex flex-col justify-between items-center md:flex-row ">
@@ -133,7 +142,7 @@ const EmiCalculator = () => {
             label="Loan Principal"
             symbol="amount"
             min="0"
-            max={"10000000"}
+            max={'10000000'}
             step="100"
             showSlider
           />
@@ -145,7 +154,7 @@ const EmiCalculator = () => {
             label="Loan Interest"
             symbol="%"
             min="0"
-            max={"100"}
+            max={'100'}
             step="1"
             showSlider
           />
@@ -158,7 +167,7 @@ const EmiCalculator = () => {
           label="Loan Tenure"
           symbol="Month"
           min="0"
-          max={"240"}
+          max={'240'}
           step="5"
           showSlider
         />
@@ -198,7 +207,7 @@ const EmiCalculator = () => {
               data.loan_principal &&
               data.loan_interest &&
               data.loan_tenure && (
-                <AssetsLiabilitiesChart data={assets} type={"assets"} />
+                <AssetsLiabilitiesChart data={assets} type={'assets'} />
               )}
           </div>
         </div>

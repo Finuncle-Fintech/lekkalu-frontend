@@ -2,7 +2,7 @@ import { AppBar, Toolbar, Box } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { HeaderButton } from './styled';
 import { useContext } from 'react';
-import { Context } from 'provider/Provider';
+import { Context } from '../../provider/Provider';
 
 const Header = () => {
   const { signOut, authToken } = useContext(Context);

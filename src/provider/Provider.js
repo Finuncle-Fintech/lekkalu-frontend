@@ -1,12 +1,13 @@
 import React, { createContext, useReducer, useState } from 'react';
-import axiosClient from 'components/Axios/Axios';
-import useAxiosPrivate from 'hooks/useAxiosPrivate';
+import axios from 'axios';
+
+import axiosClient from '../components/Axios/Axios';
+import useAxiosPrivate from '../hooks/useAxiosPrivate';
 import { InitialState } from './Reducer';
 import Reducer from './Reducer';
 import Types from './Types';
-import setCookie from 'components/Support/PopUp/utils/SetCookie';
-import deleteCookie from 'components/Support/PopUp/utils/DeleteCookie';
-import axios from 'axios';
+import setCookie from '../components/Support/PopUp/utils/SetCookie';
+import deleteCookie from '../components/Support/PopUp/utils/DeleteCookie';
 
 const Context = createContext({
   ...InitialState,
@@ -47,6 +48,8 @@ const Provider = ({ children }) => {
     liabilities,
     incomeStatement,
   } = store;
+
+  console.log('Axios Private', axiosPrivate);
 
   const handleErrors = (error) => {
     if (error.response) {
@@ -347,7 +350,10 @@ const Provider = ({ children }) => {
       await axiosClient
         .post(`${process.env.REACT_APP_BACKEND_URL}token/`, auth)
         .then((response) => {
-          setAuthToken(response?.data?.access);
+          dispatch({
+            type: Types.SET_AUTH_TOKEN,
+            payload: response?.data?.success,
+          });
           setCookie('refresh', response?.data?.refresh, 30);
           return response.status;
         });
@@ -450,6 +456,7 @@ const Provider = ({ children }) => {
   return (
     <Context.Provider
       value={{
+        dispatch,
         authToken,
         setAuthToken,
         signOut,

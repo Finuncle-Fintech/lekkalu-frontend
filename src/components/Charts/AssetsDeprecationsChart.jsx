@@ -91,9 +91,9 @@ export default function AssetsDeprecationsChart({data}){
                     <Line dataKey='value' type='monotone'  name={`${name} value`}/>
 
                 
-                    <XAxis dataKey="data"  tick={{ fill: Colors.white }} tickFormatter={handlerTicketFormatter} />
+                    <XAxis tickMargin={10} dataKey="data"  tick={{ fill: Colors.white }} tickFormatter={handlerTicketFormatter} />
 
-                    <YAxis dataKey="value" type='category'  tickFormatter={(tick) => {
+                    <YAxis tickMargin={10} dataKey="value" type='category'  tickFormatter={(tick) => {
                         return `\u20B9${tick}`;
                      }} tick={{ fill: Colors.white }} />
 

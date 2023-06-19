@@ -336,8 +336,8 @@ const Provider = ({ children }) => {
                });
             });
             
-         await axios
-         //get assets deprecation
+         await axiosPrivate
+         //get assets depreciation
             .get(`${process.env.REACT_APP_BACKEND_API}physical_assets/`, {
                auth: {
                   username: process.env.REACT_APP_USER,

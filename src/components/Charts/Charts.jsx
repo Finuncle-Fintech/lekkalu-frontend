@@ -7,10 +7,10 @@ import Colors from 'constants/colors';
 import { SpentBalanceChart } from './SpentBalanceChart';
 import { CumSumChart } from './CumSumChart';
 import { AssetsLiabilitiesChart } from './AssetsLiabilitiesChart';
-import AssetsDeprecationsChart from './AssetsDeprecationsChart';
+import AssetsdepreciationChart from './AssetsDepreciationsChart';
 
 const Test = () => {
-   const { weeklyExpense, fetchData, monthlyExpenses, assets, liabilities, deprecations } =
+   const { weeklyExpense, fetchData, monthlyExpenses, assets, liabilities, depreciation } =
       useContext(Context);
    const [loading, setLoading] = useState(true);
    const [error, setError] = useState();
@@ -49,7 +49,7 @@ const Test = () => {
                <WeeklyChart data={weeklyExpense} />
                <SpentBalanceChart data={monthlyExpenses} />
                <CumSumChart data={monthlyExpenses} />
-               <AssetsDeprecationsChart data={deprecations}/>
+               <AssetsdepreciationChart data={depreciation}/>
                <AssetsLiabilitiesChart data={assets} type={'assets'} />
                <AssetsLiabilitiesChart
                   data={liabilities}

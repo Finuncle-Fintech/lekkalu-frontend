@@ -6,22 +6,37 @@ export const ModalContainer = styled("div")({
   textAlign: "center",
   display:'flex',
   justifyContent:'center',
-  gap:'2vw'
+  flexDirection:'column',
+  alignItems:'center',
+  gap:'2vw',
+  paddingLeft:'6.5vw',
+  paddingRight:'6.5vw',
 });
 
 export const StyledHeaderRow = styled(TableRow)({
   backgroundColor: 'aliceblue',
 });
+
+//container left data of the layout on expenses
+export const ContainerDataChartExpenses = styled('div')({
+  display:'flex',
+  flexDirection:'column',
+  gap:'2vw',
+  justifyContent:'center',
+  alignItems:'center'
+})
+
 //container charts
 export const ContainerCharts = styled('div')({
-  display:'grid'
+  display:'grid',
+  gridTemplateColumns:'repeat(2,1fr)',
+  gap:'2vw'
 })
 
 //Container expenses
 export const ContainerExpenses = styled('div')({
-  width:'50vw',
+  width:'60vw',
   height:'20vw',
-  alignSelf:'end',
   overflow:'scroll',
   overflowX:'hidden',
   '&::-webkit-scrollbar': {
@@ -40,6 +55,9 @@ export const ContainerExpensesHeader = styled('div')({
   justifyContent:'space-between',
   backgroundColor:'#62D4E3',
   height:'2.5vw',
+  position:'sticky',
+  top:'0px',
+  zIndex:'5'
 })
 
 //Budget Container
@@ -49,16 +67,7 @@ export const ContainerCardsComponents=styled('div')({
   backgroundColor:'#D9D9D9',
   padding:'1vw'
 })
-  export const ContainerSingleCard = styled('div')({
-    width:'100%',
-    height:'13vw',
-    background:'white',
-    borderRadius:'.8rem'
-  })
-    export const ContainerTitle = styled('div')({
-      borderTopRightRadius:'.8rem',
-      borderTopLeftRadius:'.8rem'
-    })
+
 
 // Expense List Components
 export const ContainerDataList = styled('div')({

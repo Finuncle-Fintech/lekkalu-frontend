@@ -1,6 +1,7 @@
 import { LineChart, Line, Brush, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend} from "recharts"
 import Colors from "constants/colors"
 import { useEffect, useRef } from "react"
+import { BarLoader } from "react-spinners"
 
 const calculateDeprecationData = (purchaseValue, depreciation_frequency, deprecationPercent, sellDate, purchasedDate, active, sellValue) =>{
     const initalVal = parseFloat(purchaseValue)
@@ -48,10 +49,15 @@ function shortDate (date){
 
 
 
-export default function AssetsDeprecationsChart({data}){
+export default function AssetsdepreciationChart({data}){
     const brushRef = useRef(undefined)
-   
-    if(data[0] === undefined) return
+
+    if( data.length===0 || data[0] === undefined){
+        return(
+            <h4>No data for depreciation chart</h4>
+        )
+    }
+
     const { depreciation_frequency, depreciation_percent, sell_date, sell_value, name, purchase_value, purchase_date } = data[0]
     let dataToShow = calculateDeprecationData(purchase_value, depreciation_frequency, depreciation_percent, sell_date, purchase_date, name, sell_value)
 
@@ -84,7 +90,7 @@ export default function AssetsDeprecationsChart({data}){
     }
 
     return(
-        <div className='section-outer-wrapper col-md-8 mx-auto mb-5 mt-5'  style={{ backgroundColor: Colors.graphBG }}>
+        <div className='section-outer-wrapper col-md-8  bg-red-400'  style={{ backgroundColor: Colors.graphBG }}>
             <h3 className='section-title text-white text-center'>Assets depreciation</h3>
             <ResponsiveContainer width='100%' aspect={2}>
                 <LineChart  margin={{ top: 5, right: 0, bottom: 25, left: 10 }}  data={dataToShow} >

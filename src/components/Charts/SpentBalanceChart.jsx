@@ -39,7 +39,7 @@ const CustomTooltip = ({ active, payload, label }) => {
 export const SpentBalanceChart = (spentBalance) => {
    return (
       <div
-         className='section-outer-wrapper col-md-8 mx-auto '
+         className='section-outer-wrapper col-md-8 mx-auto'
          style={{ backgroundColor: Colors.graphBG }}
       >
          <h3 className='section-title text-white text-center'>Monthly</h3>

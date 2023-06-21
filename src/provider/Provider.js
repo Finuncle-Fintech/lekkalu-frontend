@@ -45,7 +45,7 @@ const Provider = ({ children }) => {
       assets,
       liabilities,
       incomeStatement,
-      deprecations
+      depreciation
    } = store;
 
    const handleErrors = (error) => {
@@ -347,7 +347,7 @@ const Provider = ({ children }) => {
                const data = res.data
                
                dispatch({
-                  type:Types.FETCH_DEPRECATIONS,
+                  type:Types.FETCH_depreciation,
                   payload:data
                })
             })
@@ -473,7 +473,7 @@ const Provider = ({ children }) => {
             liabilities,
             incomeStatement,
             statusFeedback,
-            deprecations,
+            depreciation,
             giveFeedback,
             fetchData,
             fetchExpenses,

@@ -42,7 +42,7 @@ export const Signin = ({ Context }) => {
                     timer: 3000
                 })
         }
-        catch (error) {
+        catch  (error) {
             Swal.fire({
                 position: 'top-end',
                 icon: 'error',
@@ -72,7 +72,7 @@ export const Signin = ({ Context }) => {
                     <Typography component="h1" variant="h4">
                         Sign in
                     </Typography>
-                    <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+                    <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
                         <TextField
                             autoComplete="username"
                             name="username"

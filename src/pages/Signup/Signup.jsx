@@ -19,11 +19,16 @@ import Swal from "sweetalert2";
 
 export const Signup = ({ Context }) => {
     const navigate = useNavigate()
+    const [errors, setErrors] = useState([])
+    const [loading, setLoading] = useState(false)
 
     const handleSubmit = async (event) => {
         event.preventDefault();
 
         const data = new FormData(event.currentTarget);
+
+        setErrors([])
+        setLoading(true)
 
         await axiosClient.post('users/api/users',
             JSON.stringify({
@@ -51,8 +56,12 @@ export const Signup = ({ Context }) => {
                 console.log(res?.data)
             })
             .catch(error => {
-                for (const key in error?.response?.data) {
-                    setErrors(curr => [...curr, `${key}: ${error?.response?.data[key]}`])
+                if (error.response.status === 500) {
+                    setErrors(curr => [...curr, "Server Error!!! Try again later"])
+                } else {
+                    for (const key in error?.response?.data) {
+                        setErrors(curr => [...curr, `${key}: ${error?.response?.data[key]}`])
+                    }
                 }
             });
 
@@ -77,6 +86,19 @@ export const Signup = ({ Context }) => {
                     <Typography component="h1" variant="h4">
                         Sign up
                     </Typography>
+                    <div className="my-3">
+                        {
+                            errors.length > 0
+                                ?
+                                errors.map((e, i) => {
+                                    return (
+                                        <p key={i} className="my-2 fw-bold text-danger">{e}</p>
+                                    )
+                                })
+                                :
+                                null
+                        }
+                    </div>
                     <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
@@ -127,6 +149,7 @@ export const Signup = ({ Context }) => {
                             fullWidth
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
+                            disabled={loading}
                         >
                             Sign Up
                         </Button>

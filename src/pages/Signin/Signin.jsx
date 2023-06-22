@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -19,9 +19,12 @@ import Swal from "sweetalert2";
 export const Signin = ({ Context }) => {
     const { fetchToken } = useContext(Context);
     const navigate = useNavigate();
+    const [loading, setIsLoading] = useState(false)
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+
+        setIsLoading(true)
 
         try {
             const data = new FormData(event.currentTarget);
@@ -42,7 +45,7 @@ export const Signin = ({ Context }) => {
                     timer: 3000
                 })
         }
-        catch  (error) {
+        catch (error) {
             Swal.fire({
                 position: 'top-end',
                 icon: 'error',
@@ -51,6 +54,9 @@ export const Signin = ({ Context }) => {
                 timer: 3000
             })
             console.log(error)
+        }
+        finally {
+            setIsLoading(false)
         }
     };
 
@@ -101,6 +107,7 @@ export const Signin = ({ Context }) => {
                             fullWidth
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
+                            disabled={loading}
                         >
                             Sign In
                         </Button>

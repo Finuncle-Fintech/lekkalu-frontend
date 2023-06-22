@@ -13,24 +13,19 @@ import { Link as ReactRouterLink } from 'react-router-dom';
 import Copyright from "../../components/Copyright/Copyright";
 import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import axios from "axios";
+import axiosClient from "components/Axios/Axios";
 import { useNavigate } from "react-router";
 import Swal from "sweetalert2";
 
 export const Signup = ({ Context }) => {
     const navigate = useNavigate()
-    const [acceptedTerms, setAcceptedTerms] = useState()
-    const [acceptedPrivacyPolicy, setAcceptPrivacyPolicy] = useState()
-    const [errors, setErrors] = useState([])
-    const [loading, setLoading] = useState(false)
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        setErrors([])
-        setLoading(true)
 
-        await axios.post(`${process.env.REACT_APP_BACKEND_URL}users/api/users`,
+        const data = new FormData(event.currentTarget);
+
+        await axiosClient.post('users/api/users',
             JSON.stringify({
                 "username": data.get('username'),
                 "email": data.get('email'),
@@ -82,26 +77,14 @@ export const Signup = ({ Context }) => {
                     <Typography component="h1" variant="h4">
                         Sign up
                     </Typography>
-                    <div className="my-3">
-                        {
-                            errors.length > 0
-                                ?
-                                errors.map((e, i) => {
-                                    return (
-                                        <p key={i} className="my-2 fw-bold text-danger">{e}</p>
-                                    )
-                                })
-                                :
-                                null
-                        }
-                    </div>
-                    <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+                    <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
                                 <TextField
                                     autoComplete="username"
                                     name="username"
                                     required
+                                    type="text"
                                     fullWidth
                                     id="username"
                                     label="Username"
@@ -112,6 +95,7 @@ export const Signup = ({ Context }) => {
                                 <TextField
                                     required
                                     fullWidth
+                                    type="email"
                                     id="email"
                                     label="Email Address"
                                     name="email"
@@ -130,13 +114,11 @@ export const Signup = ({ Context }) => {
                                 />
                             </Grid>
                             <Grid item xs={12} >
-                                <FormControlLabel required name="termsAndConditions" control={<Checkbox
-                                    onChange={(e) => setAcceptedTerms(e.target.checked)} color="success" />}
+                                <FormControlLabel required name="termsAndConditions" control={<Checkbox required color="success" />}
                                     label={"I have read, understood and agreed to EMI Calculator's Terms and Conditions"} />
                             </Grid>
                             <Grid item xs={12}>
-                                <FormControlLabel required name="privacyPolicy" control={<Checkbox
-                                    onChange={(e) => setAcceptPrivacyPolicy(e.target.checked)} color="success" />}
+                                <FormControlLabel required name="privacyPolicy" control={<Checkbox required color="success" />}
                                     label={"I have read, understood and agreed to EMI Calculator's Privacy Policy"} />
                             </Grid>
                         </Grid>
@@ -145,7 +127,6 @@ export const Signup = ({ Context }) => {
                             fullWidth
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
-                            disabled={!acceptedTerms || !acceptedPrivacyPolicy || loading}
                         >
                             Sign Up
                         </Button>

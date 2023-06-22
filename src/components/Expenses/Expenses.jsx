@@ -6,7 +6,7 @@ import {
 } from "@mui/material";
 import { SkipNext, SkipPrevious } from '@mui/icons-material';
 import ExpenseFormModal from "./ExpensesModal";
-import { ModalContainer } from "./styled";
+import { ModalContainer, modalSuccesCreated } from "./styled";
 import ExpensesList from "./ExpenseList";
 import { formatDate } from "./utils";
 import * as XLSX from "xlsx";
@@ -24,6 +24,8 @@ const Expenses = ({ Context }) => {
   } = useContext(Context);
   const [editIndex, setEditIndex] = useState(null);
   const [page, setPage] = useState(0);
+  const [ loadExcelStatus, setLoadExcelStatus ]  = useState(false)
+  const [newData, setNewData ] = useState([])
   const rowsPerPage = 10;
 
   useEffect(() => {
@@ -46,20 +48,22 @@ const Expenses = ({ Context }) => {
       .filter((tag) => tag !== undefined);
   };
 
-  const getTagNames = (tagValues) => {
-    return tagValues
+  const getTagNames =(tagValues) => {
+    const tagNames = tagValues&&tagValues
       .map((tagValue) => {
         const foundTag = tags.find((tag) => tag.id === tagValue);
         return foundTag ? foundTag.name : null;
       })
       .filter((tagName) => tagName !== null)
       .join(', ');
+
+    return tagNames
   };
 
   const handleFileUpload = (files) => {
     const file = files[0];
     const reader = new FileReader();
-    reader.onload = (event) => {
+    reader.onload = async(event) => {
       const data = event.target.result;
       const workbook = XLSX.read(data, { type: "binary" });
 
@@ -68,20 +72,35 @@ const Expenses = ({ Context }) => {
 
       const parsedData = XLSX.utils.sheet_to_json(sheet);
 
+      
       if (parsedData.length > 0) {
-        parsedData.forEach(entry => {
-          const dateFormatted = formatDate(new Date(entry.date));
-          const tagsIds = getTagNumbers(entry.tags.split(", "));
-          delete entry.date;
-          createExpenseRequest({ ...entry, tags: tagsIds, time: dateFormatted, user: 1 });
-          Swal.fire({
-            icon:'success',
-            title:'The expense was added correctly.',
-            timer:2300,
-            timerProgressBar:true 
-          })
-        });
+        setNewData([{excelLength:parsedData.length}])
+        
+        const loadExcel = ()=>{
+          setLoadExcelStatus(true)
+          const promise = parsedData.map(async entry => {
+            const dateFormatted = formatDate(new Date(entry.date));
+            const tagsIds = getTagNumbers(entry.tags.split(", "))
+            const {amount} = entry
+            delete entry.amount
+            delete entry.date
+            
+            const createStatus = await createExpenseRequest({ ...entry, amount:amount.toFixed(2).toString() , tags: tagsIds, time: dateFormatted, user: 1 });
+            
+            setNewData((prevData)=>[...prevData, createStatus])
+          });
+
+          return Promise.all(promise)
+        }
+        await loadExcel()
       }
+      setLoadExcelStatus(false)
+      Swal.fire({
+        icon:'success',
+        title:'The expense was added correctly.',
+        timer:2300,
+        timerProgressBar:true,
+      })
     };
 
     reader.readAsBinaryString(file);
@@ -115,7 +134,9 @@ const Expenses = ({ Context }) => {
         expenseToEdit={returnExpenseToEdit()}
         editIndex={editIndex}
         onCancelEdit={() => setEditIndex(null)}
+        loadExcelStatus = {loadExcelStatus}
         handleFileUpload={handleFileUpload}
+        createExpenseExcelStatus = {newData}
         Context={Context}
       />
       <Typography variant="h6">Expense List</Typography>

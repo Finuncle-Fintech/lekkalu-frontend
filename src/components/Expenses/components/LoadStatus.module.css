@@ -1,0 +1,38 @@
+.container{
+    z-index: 1;
+    background-color: #0289C8;
+    width: 12rem;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    height: 1.5rem;
+    border-radius: .3rem;
+    gap: 1vw;
+}
+.container > p{
+    font-size: 1rem;
+    color: white;
+}
+.container{
+    z-index: 1;
+    background-color: #0289C8;
+    width: 12rem;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    height: 1.5rem;
+    border-radius: .3rem;
+    gap: 1vw;
+}
+.container > p{
+    font-size: 1rem;
+    color: white;
+}
+
+@media (max-width:560px) {
+    .container{
+        width: 40vw;
+        height: 6vw;
+        padding: 1vw;
+    }
+}

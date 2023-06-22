@@ -56,7 +56,6 @@ const Reducer = (state, action) => {
       const newExpenses = state.expenses.filter(
         (expense) => expense.id != action.payload,
       );
-
       return {
         ...state,
         expenses: newExpenses,

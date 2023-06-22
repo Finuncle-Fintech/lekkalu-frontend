@@ -2,6 +2,7 @@
 import axios from 'axios';
 
 import useRefreshToken from '../hooks/useRefresh';
+import storageUtils from './storageUtils';
 
 const refresh = useRefreshToken();
 
@@ -13,7 +14,7 @@ const axiosConfig: any = {
 
 axios.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('TOKEN');
+    const token = storageUtils.getAuthToken();
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -29,12 +30,12 @@ axios.interceptors.response.use(
   // handle error incase accessToken is expired
   async (error) => {
     const prevRequest = error?.config;
-    if (error?.response.status === 403 && !prevRequest?.sent) {
+    if ((error?.response.status === 403 || 401) && !prevRequest?.sent) {
       prevRequest.sent = true;
 
       const newAccessToken = await refresh(); //get new access token using the useRefresh hook
 
-      localStorage.setItem('TOKEN', newAccessToken);
+      storageUtils.setAuthToken(newAccessToken);
 
       prevRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
 
@@ -62,6 +63,29 @@ const apiUtils = {
       const res = await axios.post(
         `${process.env.REACT_APP_BACKEND_URL}${url}`,
         payload,
+        axiosConfig,
+      );
+      return res;
+    } catch (error) {
+      throw error;
+    }
+  },
+  putRequest: async (url: string, payload: any) => {
+    try {
+      const res = await axios.put(
+        `${process.env.REACT_APP_BACKEND_URL}${url}`,
+        payload,
+        axiosConfig,
+      );
+      return res;
+    } catch (error) {
+      throw error;
+    }
+  },
+  deleteRequest: async (url: string, id: string) => {
+    try {
+      const res = await axios.delete(
+        `${process.env.REACT_APP_BACKEND_URL}${url}${id}`,
         axiosConfig,
       );
       return res;

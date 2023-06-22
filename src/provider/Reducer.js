@@ -93,14 +93,6 @@ const Reducer = (state, action) => {
         tags: action.payload,
       };
     }
-
-    case Types.SET_AUTH_TOKEN: {
-      return {
-        ...state,
-        authToken: action.payload,
-      };
-    }
-
     default: {
       return state;
     }

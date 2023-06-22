@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 import getCookie from '../components/Support/PopUp/utils/GetCookie';
+import storageUtils from '../utils/storageUtils';
 
 const useRefreshToken = () => {
   const refresh = async () => {
@@ -15,8 +16,7 @@ const useRefreshToken = () => {
         },
       },
     );
-
-    localStorage.setItem('TOKEN', response?.data?.access);
+    storageUtils.setAuthToken(response?.data?.access);
 
     return response.data?.access;
   };

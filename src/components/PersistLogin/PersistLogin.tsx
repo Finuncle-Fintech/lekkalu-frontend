@@ -1,10 +1,12 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 
 import useRefreshToken from '../../hooks/useRefresh';
+import storageUtils from '../../utils/storageUtils';
 
 const PersistLogin = () => {
-  const authToken = localStorage.getItem('TOKEN');
+  const authToken = storageUtils.getAuthToken();
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const refresh = useRefreshToken();

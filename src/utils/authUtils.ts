@@ -1,10 +1,13 @@
+import storageUtils from './storageUtils';
+
 const authUtils = {
   checkUserAuth: () => {
-    const token = localStorage.getItem('TOKEN');
+    const token = storageUtils.getAuthToken();
     return Boolean(token);
   },
   logoutUser: () => {
-    localStorage.removeItem('TOKEN');
+    storageUtils.removeAuthToken();
+    window.location.href = '/signin';
   },
 };
 

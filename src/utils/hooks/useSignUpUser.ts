@@ -4,35 +4,37 @@ import { AxiosResponse, AxiosError } from 'axios';
 import swal from 'sweetalert';
 
 import authService from '../authService';
-import storageUtils from '../storageUtils';
 
-export const useLogin = () => {
+export const useSignUp = () => {
   const navigate = useNavigate();
 
-  const loginMutate = useMutation(authService.loginUser, {
+  const signUpMutate = useMutation(authService.signUpUser, {
     onSuccess: async (res: AxiosResponse<any>) => {
-      console.log('login mutate response', res);
-      storageUtils.setAuthToken(res?.data?.access);
-      navigate('/');
-      console.log('user logged In');
+      console.log('sign-up mutate response', res);
+      console.log('account created!');
+      navigate('/signin');
       swal({
         title: 'success alert',
-        text: 'logged in successfully',
+        text: 'Your account has been created please login',
         icon: 'success',
       });
     },
     onError: (error: AxiosError<any>) => {
-      console.log('log in response error');
+      console.log('response error');
       console.log(error?.response?.data);
     },
   });
 
-  const handleSubmit = (payload: { username: string; password: string }) => {
-    loginMutate.mutate(payload);
+  const handleSubmit = (payload: {
+    username: string;
+    password: string;
+    email: string;
+  }) => {
+    signUpMutate.mutate(payload);
   };
 
   return {
     handleSubmit,
-    loading: loginMutate.isLoading,
+    loading: signUpMutate.isLoading,
   };
 };

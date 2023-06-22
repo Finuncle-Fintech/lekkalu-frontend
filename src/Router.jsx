@@ -1,4 +1,3 @@
-import { useContext } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import ProtectedRoutes from './components/ProtectedRoutes/ProtectedRoutes';
 import Charts from './components/Charts/Charts';
@@ -11,11 +10,9 @@ import SupportPopUp from './components/Support/PopUp/PopUp';
 import Footer from './components/Footer/Footer';
 import Signin from './pages/Signin/Signin';
 import Signup from './pages/Signup/Signup';
-import PersistLogin from './components/PersistLogin/PersistLogin';
+// import PersistLogin from './components/PersistLogin/PersistLogin';
 
 const RouterComponent = () => {
-  const { authToken } = useContext(Context);
-
   return (
     <Router>
       <Routes>
@@ -38,58 +35,56 @@ const RouterComponent = () => {
           }
         />
 
-        <Route element={<PersistLogin />}>
-          <Route
-            path="/"
-            element={
-              <ProtectedRoutes authToken={authToken}>
-                <>
-                  <Header />
-                  <Charts />
-                  <Footer />
-                  <SupportPopUp Context={Context} />
-                </>
-              </ProtectedRoutes>
-            }
-          />
-          <Route
-            path="/loan_emi_calculator"
-            element={
-              <ProtectedRoutes authToken={authToken}>
-                <>
-                  <Header />
-                  <EmiCalculator />
-                  <Footer />
-                  <SupportPopUp Context={Context} />
-                </>
-              </ProtectedRoutes>
-            }
-          />
-          <Route
-            path="/income-statement"
-            element={
-              <ProtectedRoutes authToken={authToken}>
-                <>
-                  <Header />
-                  <IncomeStatement Context={Context} />
-                </>
-              </ProtectedRoutes>
-            }
-          />
-          <Route
-            path="/expenses"
-            element={
-              <ProtectedRoutes authToken={authToken}>
-                <>
-                  <Header />
-                  <Expenses Context={Context} />
-                  <Footer />
-                  <SupportPopUp Context={Context} />
-                </>
-              </ProtectedRoutes>
-            }
-          />
-        </Route>
+        <Route
+          path="/"
+          element={
+            <ProtectedRoutes>
+              <>
+                <Header />
+                <Charts />
+                <Footer />
+                <SupportPopUp Context={Context} />
+              </>
+            </ProtectedRoutes>
+          }
+        />
+        <Route
+          path="/loan_emi_calculator"
+          element={
+            <ProtectedRoutes>
+              <>
+                <Header />
+                <EmiCalculator />
+                <Footer />
+                <SupportPopUp Context={Context} />
+              </>
+            </ProtectedRoutes>
+          }
+        />
+        <Route
+          path="/income-statement"
+          element={
+            <ProtectedRoutes>
+              <>
+                <Header />
+                <IncomeStatement Context={Context} />
+              </>
+            </ProtectedRoutes>
+          }
+        />
+        <Route
+          path="/expenses"
+          element={
+            <ProtectedRoutes>
+              <>
+                <Header />
+                <Expenses Context={Context} />
+                <Footer />
+                <SupportPopUp Context={Context} />
+              </>
+            </ProtectedRoutes>
+          }
+        />
       </Routes>
     </Router>
   );

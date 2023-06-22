@@ -8,4 +8,7 @@ export const api = {
   LOANS: 'loans/',
   MONTHLY_EXPENSES: 'monthly_expenses/',
   TOKEN: 'token/',
+  SIGN_UP: 'users/api/users/',
+  INCOME_SOURCES: 'income_source/',
+  INCOME_EXPENSE: 'income_expense/',
 };

@@ -1,11 +1,10 @@
 import { AppBar, Toolbar, Box } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { HeaderButton } from './styled';
-import { useContext } from 'react';
-import { Context } from '../../provider/Provider';
+import authUtils from '../../utils/authUtils';
 
 const Header = () => {
-  const { signOut, authToken } = useContext(Context);
+  const { checkUserAuth, logoutUser } = authUtils;
 
   return (
     <AppBar position="static">
@@ -29,7 +28,7 @@ const Header = () => {
 
         <Box sx={{ flexGrow: 1 }} />
 
-        {!authToken ? (
+        {!checkUserAuth() ? (
           <>
             <HeaderButton color="inherit" component={Link} to="/signin">
               Sign in
@@ -39,7 +38,7 @@ const Header = () => {
             </HeaderButton>
           </>
         ) : (
-          <HeaderButton color="inherit" onClick={() => signOut()}>
+          <HeaderButton color="inherit" onClick={() => logoutUser()}>
             Sign out
           </HeaderButton>
         )}

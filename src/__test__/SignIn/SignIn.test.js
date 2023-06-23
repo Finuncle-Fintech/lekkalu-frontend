@@ -13,6 +13,19 @@ jest.mock('react-router-dom', ()=>({
     useNavigate:jest.fn()
 }))
 
+jest.mock('@mui/material/Typography', () => {
+    return {
+      __esModule: true,
+      default: () => <></>, // Mock que devuelve un fragmento vacío
+    };
+});
+jest.mock('@mui/material/Link',()=>{
+    return{
+        __esModule:true,
+        default:()=><></>
+    }
+})
+
 const TestContext = createContext(mockState);
 
 describe('SignIn test funcionality', () => {

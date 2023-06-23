@@ -6,7 +6,6 @@ import {
 } from "@mui/material";
 import dayjs from 'dayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import Button from '@mui/material/Button';
@@ -37,6 +36,7 @@ const Expenses = ({ Context }) => {
   const [newData, setNewData] = useState([])
   const [fromDate, setFromDate] = useState(null)
   const [toDate, setToDate] = useState(null)
+  const [isLoading, setIsLoading] = useState(false)
   const rowsPerPage = 10;
 
   useEffect(() => {
@@ -137,11 +137,24 @@ const Expenses = ({ Context }) => {
     setPage(newPage);
   };
 
-  const handleFilterSubmit = (e) => {
+  const handleFilterSubmit = async (e) => {
     e.preventDefault()
-    const from = new Date(fromDate).toLocaleDateString('en-US')
-    const to = new Date(toDate).toLocaleDateString('en-US')
-    filterExpensesByDate(page, rowsPerPage, from.replace(/\//g, '-'), to.replace(/\//g, '-'))
+    setIsLoading(true)
+
+    if (fromDate === null && toDate === null) {
+      await fetchExpenses(page, rowsPerPage);
+    } else {
+      const from = new Date(fromDate).toLocaleDateString('en-US')
+      const to = new Date(toDate).toLocaleDateString('en-US')
+
+      const filterFromDate = dayjs(from).format('YYYY-MM-DD')
+      const filterToDate = dayjs(to).format('YYYY-MM-DD')
+
+      await filterExpensesByDate(page, rowsPerPage, filterFromDate, filterToDate)
+    }
+    setFromDate(null)
+    setToDate(null)
+    setIsLoading(false)
   }
 
   return (
@@ -188,26 +201,26 @@ const Expenses = ({ Context }) => {
 
         <Box component="form" onSubmit={handleFilterSubmit} sx={{ display: 'flex', alignItems: 'center' }}>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DemoContainer components={['DatePicker']}>
+            <div components={['DatePicker']}>
               <DatePicker
                 label="From"
                 value={fromDate}
-                maxDate={dayjs(getDate.toLocaleDateString().replace("/\//g", "-"))}
+                maxDate={dayjs(getDate.toLocaleDateString())}
                 onChange={(newValue) => setFromDate(newValue)}
               />
               <span className="d-flex justify-coontent-center align-items-center text-center">-</span>
               <DatePicker
                 label="To"
                 value={toDate}
-                maxDate={dayjs(getDate.toLocaleDateString().replace("/\//g", "-"))}
+                maxDate={dayjs(getDate.toLocaleDateString())}
                 onChange={(newValue) => setToDate(newValue)}
               />
-            </DemoContainer>
+            </div>
             <Button
               type="submit"
               variant="contained"
               sx={{ py: 2, px: 4, ml: 1, mt: 1 }}
-              disabled={fromDate === null || toDate === null}
+              disabled={isLoading}
             >
               Filter
             </Button>

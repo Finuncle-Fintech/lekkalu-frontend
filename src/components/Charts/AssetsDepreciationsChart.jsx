@@ -52,7 +52,7 @@ function shortDate (date){
 export default function AssetsdepreciationChart({data}){
     const brushRef = useRef(undefined)
 
-    if( data || data.length===0 || data[0] === undefined){
+    if( !data || data.length===0 || data[0] === undefined){
         return(
             <h4>No data for depreciation chart</h4>
         )

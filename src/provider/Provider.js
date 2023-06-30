@@ -6,7 +6,7 @@ import Reducer from './Reducer';
 import Types from './Types';
 import setCookie from 'components/Support/PopUp/utils/SetCookie';
 import deleteCookie from 'components/Support/PopUp/utils/DeleteCookie';
-
+import { goals } from 'components/Goals/data';
 const Context = createContext({
    ...InitialState,
 });
@@ -70,7 +70,7 @@ const Provider = ({ children }) => {
          };
 
          await axiosPrivate
-            .post(`${process.env.REACT_APP_BACKEND_API}feedback/`, data, {headers})
+            .post(`${process.env.REACT_APP_BACKEND_API}feedback/`, data, { headers })
             .then((res) => {
                statusFeedback.push(res.status)
             });
@@ -110,7 +110,7 @@ const Provider = ({ children }) => {
          };
 
          await axiosPrivate
-            .post(`${process.env.REACT_APP_BACKEND_API}tag/`, tag, {headers})
+            .post(`${process.env.REACT_APP_BACKEND_API}tag/`, tag, { headers })
       } catch (error) {
          handleErrors(error)
       }
@@ -137,7 +137,7 @@ const Provider = ({ children }) => {
                   payload: res.data,
                });
             });
-           
+
       } catch (error) {
          handleErrors(error);
       }
@@ -150,7 +150,7 @@ const Provider = ({ children }) => {
             'Authorization': `Bearer ${authToken}`,
             'Content-Type': 'application/json'
          };
-         
+
          await axiosPrivate
             .delete(`${process.env.REACT_APP_BACKEND_API}expenses/${id}`, { headers })
             .then((res) => {
@@ -175,7 +175,7 @@ const Provider = ({ children }) => {
          await axiosPrivate
             .post(`${process.env.REACT_APP_BACKEND_API}expenses/`, data, { headers })
             .then((res) => {
-               dispatch({                  
+               dispatch({
                   type: Types.CREATE_EXPENSE,
                   payload: { data, id: res.data.data.id },
                });
@@ -438,6 +438,25 @@ const Provider = ({ children }) => {
       setAuthToken(null)
       deleteCookie('refresh')
    };
+   const fetchGoals = async (page, rowsPerPage) => {
+      const startIndex = (page) * rowsPerPage;
+      const rows = [];
+      for (var i = startIndex; i <= startIndex + rowsPerPage && i < goals.length; i++) {
+         rows.push(goals[i]);
+      }
+      return rows;
+   };
+
+   const deleteGoalRequest = async (id) => {
+   };
+
+   const createGoalRequest = async (data) => {
+   };
+
+   const changeGoalRequest = async (index, goal) => {
+
+   };
+
 
    return (
       <Context.Provider
@@ -454,6 +473,11 @@ const Provider = ({ children }) => {
             liabilities,
             incomeStatement,
             statusFeedback,
+            goals,
+            fetchGoals,
+            createGoalRequest,
+            deleteGoalRequest,
+            changeGoalRequest,
             giveFeedback,
             fetchData,
             fetchExpenses,

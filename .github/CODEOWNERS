@@ -7,3 +7,13 @@
 # review when someone opens a pull request.
 
 *  @bharathkumarchowdary @mohitkhatri06
+
+# In this example, owns any files in the src/
+
+# directory at the root of the repository and any of its
+
+# subdirectories.
+
+/src/__test__/ @ivangarcilazo
+/src/components/Expenses @ivangarcilazo
+

@@ -15,5 +15,5 @@
 # subdirectories.
 
 /src/__test__/ @ivangarcilazo
-/src/components/Expenses @ivangarcilazo
+/src/components/Expenses/ @ivangarcilazo
 

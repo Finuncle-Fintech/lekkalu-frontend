@@ -72,6 +72,8 @@ const RouterComponent = () => {
                 <>
                   <Header />
                   <IncomeStatement Context={Context} />
+                  <Footer />
+                  <SupportPopUp Context={Context} />
                 </>
               </ProtectedRoutes>
             }

@@ -1,0 +1,19 @@
+# These owners will be the default owners for everything in
+
+# the repo. Unless a later match takes precedence,
+
+# following owners will be requested for
+
+# review when someone opens a pull request.
+
+*  @bharathkumarchowdary @mohitkhatri06
+
+# Following user, owns any files in the src/
+
+# directory at the root of the repository and any of its
+
+# subdirectories.
+
+/src/__test__/ @ivangarcilazo
+/src/components/Expenses/ @ivangarcilazo
+

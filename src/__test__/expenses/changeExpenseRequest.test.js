@@ -2,8 +2,9 @@
 import React, { createContext } from 'react';
 import { render, fireEvent, waitFor, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import Expenses from 'components/Expenses/Expenses';
-import { mockState } from '__test__/data/Expenses';
+// import Expenses from 'components/Expenses/Expenses';
+import Expenses from '../../components/Expenses/Expenses';
+import { mockState } from '../data/Expenses';
 
 const TestContext = createContext(mockState);
 

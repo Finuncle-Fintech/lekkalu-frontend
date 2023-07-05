@@ -1,8 +1,8 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import axios from 'axios';
-
 import useRefreshToken from '../hooks/useRefresh';
 import storageUtils from './storageUtils';
+
+import axios from 'axios';
 
 const refresh = useRefreshToken();
 

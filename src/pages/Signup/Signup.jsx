@@ -130,6 +130,7 @@ export const Signup = () => {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
               disabled={!acceptedTerms || !acceptedPrivacyPolicy}
+              data-testid="signup-button"
             >
               Sign Up
             </Button>

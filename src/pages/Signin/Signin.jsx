@@ -81,6 +81,7 @@ export const Signin = () => {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
+              data-testid="signin-button"
             >
               Sign In
             </Button>

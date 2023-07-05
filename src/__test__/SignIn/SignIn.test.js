@@ -1,86 +1,74 @@
-/* eslint-disable testing-library/no-node-access */
-import React, { createContext, useContext } from "react";
-import Signin from "pages/Signin/Signin";
-import '@testing-library/jest-dom/extend-expect'
-import { fireEvent, prettyDOM, render, screen, waitFor, act } from '@testing-library/react'
-import { BrowserRouter } from "react-router-dom";
-import swal from "sweetalert2";
+import React from 'react';
+import Signin from '../../pages/Signin/Signin';
+import '@testing-library/jest-dom/extend-expect';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { BrowserRouter } from 'react-router-dom';
+import swal from 'sweetalert2';
 
-const mockState = {
-  fetchToken: jest.fn()
-};
+const mockHandleSubmit = jest.fn();
 
-jest.mock('react-router-dom', ()=>({
-    ...jest.requireActual('react-router-dom'),
-    useNavigate:jest.fn()
-}))
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useNavigate: jest.fn(),
+}));
 
 jest.mock('@mui/material/Typography', () => {
-    return {
-      __esModule: true,
-      default: () => <></>, // Mock return fragment empty
-    };
+  return {
+    __esModule: true,
+    default: () => <></>, // Mock return fragment empty
+  };
 });
-jest.mock('@mui/material/Link',()=>{
-    return{
-        __esModule:true,
-        default:()=><></>
-    }
-})
 
-const TestContext = createContext(mockState);
+jest.mock('@mui/material/Link', () => {
+  return {
+    __esModule: true,
+    default: () => <></>,
+  };
+});
 
-describe('SignIn test funcionality', () => {
-   
-    test('Successfull button login funcionality when is clicked', async() => {
-        const view = render(
-            <BrowserRouter>
-                <TestContext.Provider value={mockState}>
-                    <Signin Context={TestContext} />
-                </TestContext.Provider>
-            </BrowserRouter>
-        ); 
-    
-        const buttonSignIn = screen.getByText('Sign In')
+describe('SignIn test functionality', () => {
+  test('Successful button login functionality when clicked', async () => {
+    render(
+      <BrowserRouter>
+        <Signin handleSubmit={mockHandleSubmit} />
+      </BrowserRouter>,
+    );
 
-        fireEvent.click(buttonSignIn)
+    const buttonSignIn = screen.getByTestId('signin-button');
 
-        await waitFor(()=>{
-            expect(mockState.fetchToken).toHaveBeenCalledTimes(1)
-        })
+    fireEvent.click(buttonSignIn);
+
+    await waitFor(() => {
+      expect(mockHandleSubmit).toHaveBeenCalledTimes(1);
     });
+  });
 
-    test('Show error when user doesn\'t exist',async()=>{
-        const view = render(
-            <BrowserRouter>
-                <TestContext.Provider value={mockState}>
-                    <Signin Context={TestContext} />
-                </TestContext.Provider>
-            </BrowserRouter>
-        );    
+  test("Show error when user doesn't exist", async () => {
+    render(
+      <BrowserRouter>
+        <Signin handleSubmit={mockHandleSubmit} />
+      </BrowserRouter>,
+    );
 
-        //Arrange
-        const errorText = 'User with provided details does not exist'
-        //SpyOn on jest is util for get methods of objects
-        const spySwal = jest.spyOn(swal, 'fire')
-        const buttonSignIn = screen.getByText('Sign In')
-        const form = buttonSignIn.parentNode
-        const usernameInput = form.firstChild.children[1].firstChild
-        const passwordInput = form.children[1].children[1].firstChild
-      
-        //Act
-        fireEvent.change(usernameInput, { target: { value: 'nameUser, this username does not exist' } });
-        fireEvent.change(passwordInput, { target: { value: 'badPasswordThis Passowrd does not exist.' } });
-        fireEvent.click(buttonSignIn);
+    const errorText = 'User with provided details does not exist';
+    const spySwal = jest.spyOn(swal, 'fire');
+    const buttonSignIn = screen.getByTestId('signin-button');
+    const usernameInput = screen.getByLabelText('Username');
+    const passwordInput = screen.getByLabelText('Password');
 
-        //Assert
-        await waitFor(()=>{
-            expect(spySwal).toBeCalledTimes(1)
-        })
-        await waitFor(()=>{
-            expect(swal.getHtmlContainer().textContent).toEqual(errorText)
-        })
+    fireEvent.change(usernameInput, {
+      target: { value: 'nameUser, this username does not exist' },
+    });
+    fireEvent.change(passwordInput, {
+      target: { value: 'badPasswordThis Password does not exist.' },
+    });
+    fireEvent.click(buttonSignIn);
 
-    })
-
+    await waitFor(() => {
+      expect(spySwal).toBeCalledTimes(1);
+    });
+    await waitFor(() => {
+      expect(swal.getHtmlContainer().textContent).toEqual(errorText);
+    });
+  });
 });

@@ -6,9 +6,13 @@ import {mockState} from "__test__/data/Expenses";
 import { useLocation } from "react-router";
 
 jest.mock('react-router',()=>({
-  ...jest.requireActual('react-router'),
-  useLocation:jest.fn()
-}))
+    ...jest.requireActual('react-router'),
+    useLocation:()=>{
+      return{
+          pathname:'testSTRINGexample'
+      }
+    }
+  }))
 
 
 const TestContext = createContext(mockState);

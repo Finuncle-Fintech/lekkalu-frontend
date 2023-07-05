@@ -7,9 +7,12 @@ import { useLocation } from "react-router";
 
 jest.mock('react-router',()=>({
   ...jest.requireActual('react-router'),
-  useLocation:jest.fn()
+  useLocation:()=>{
+    return{
+        pathname:'testSTRINGexample'
+    }
+  }
 }))
-
 const TestContext = createContext(mockState);
 
 describe("changeExpenseRequest", () => {

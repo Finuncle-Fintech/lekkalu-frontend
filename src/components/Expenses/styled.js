@@ -2,15 +2,8 @@ import { TableRow } from '@mui/material';
 import { styled } from '@mui/system';
 
 export const ModalContainer = styled("div")({
-  margin: "35px 0",
-  textAlign: "center",
-  display:'flex',
-  justifyContent:'center',
-  flexDirection:'column',
-  alignItems:'center',
-  gap:'2vw',
-  paddingLeft:'6.5vw',
-  paddingRight:'6.5vw',
+ display:'flex',
+ gap:'3vw'
 });
 
 export const StyledHeaderRow = styled(TableRow)({
@@ -18,7 +11,7 @@ export const StyledHeaderRow = styled(TableRow)({
 });
 
 //container left data of the layout on expenses
-export const ContainerDataChartExpenses = styled('div')({
+export const ContainerExpensesData = styled('div')({
   display:'flex',
   flexDirection:'column',
   gap:'2vw',
@@ -27,7 +20,7 @@ export const ContainerDataChartExpenses = styled('div')({
 })
 
 //container charts
-export const ContainerCharts = styled('div')({
+export const ContainerWidgets = styled('div')({
   display:'grid',
   gridTemplateColumns:'repeat(2,1fr)',
   gap:'2vw'

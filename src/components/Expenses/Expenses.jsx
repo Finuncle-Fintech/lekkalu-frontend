@@ -11,16 +11,12 @@ import { ModalContainer,
         ContainerExpenses,
         ContainerExpensesHeader,
         ContainerCardsComponents,
-        ContainerCharts,
-        ContainerDataChartExpenses} from "./styled";
+        ContainerWidgets,
+        ContainerExpensesData} from "./styled";
 import ExpensesList from "./ExpenseList";
 import { formatDate } from "./utils";
 import * as XLSX from "xlsx";
 import Swal from "sweetalert2";
-import { WeeklyChart } from "components/Charts/WeeklyChart";
-import { SpentBalanceChart } from "components/Charts/SpentBalanceChart";
-import { CumSumChart } from "components/Charts/CumSumChart";
-import { BarLoader } from "react-spinners";
 import SingleCardExpenses from "./components/SingleCardExpenses";
 
 
@@ -33,8 +29,7 @@ const Expenses = ({ Context }) => {
     createExpenseRequest,
     changeExpenseRequest,
     fetchTags,
-    weeklyExpense,
-    monthlyExpenses,
+    budget
   } = useContext(Context);
   const currentPath = useLocation().pathname.slice(1)
   const [editIndex, setEditIndex] = useState(null);
@@ -43,8 +38,6 @@ const Expenses = ({ Context }) => {
   const [newData, setNewData ] = useState([])
   const rowsPerPage = 10;
 
-
-  console.log(window.location.href.slice(0,))
 
   useEffect(() => {
     if (!tags.length) fetchTags();
@@ -144,34 +137,62 @@ const Expenses = ({ Context }) => {
     setPage(newPage);
   };
 
+
   return (
+    <div style={{ margin: "35px 0",
+    textAlign: "center",
+    display:'flex',
+    flexDirection:'column',
+    justifyContent:'center',
+    alignItems:'start',
+    gap:'2vw',
+    paddingLeft:'6.5vw',
+    paddingRight:'6.5vw',
+    }}>
+        <span style={{alignSelf:'start'}}>Home » {currentPath}</span>
     <ModalContainer>
-      <span style={{alignSelf:'start'}}>Home » {currentPath}</span>
+    
       {/* Modal */}
-      <div style={{display:'flex'}}>
+     
         <ContainerCardsComponents>
             {/* card */}
-            <SingleCardExpenses />
+            <SingleCardExpenses budgets={budget} />
 
         </ContainerCardsComponents>
 
-        <ContainerDataChartExpenses>
-          <ContainerCharts>
-            {
-              monthlyExpenses.length === 0 && weeklyExpense.length === 0 ?(
-                <BarLoader></BarLoader>
-              )
-              :
-              (
-                <>
-                  <WeeklyChart data={weeklyExpense} />
-                  <SpentBalanceChart data={monthlyExpenses} />
-                  <CumSumChart data={monthlyExpenses} />
-                </>
-              )
-            }
+        <ContainerExpensesData>
+          <ContainerWidgets>
+                <div style={{
+                    width:'25vw',
+                    height:'15vw',
+                    background:'gray'
+                  }}>
+                    WIDGET EXAMPLE
+                </div>
+                <div style={{
+                    width:'25vw',
+                    height:'15vw',
+                    background:'gray'
+                  }}>
+                    WIDGET EXAMPLE
+                </div>
+                <div style={{
+                    width:'25vw',
+                    height:'15vw',
+                    background:'gray'
+                  }}>
+                    WIDGET EXAMPLE
+                </div>
+                <div style={{
+                    width:'25vw',
+                    height:'15vw',
+                    background:'gray'
+                  }}>
+                    WIDGET EXAMPLE
+                </div>
             
-          </ContainerCharts>
+          </ContainerWidgets>
+
           <ContainerExpenses>
             
             <ContainerExpensesHeader>
@@ -254,10 +275,11 @@ const Expenses = ({ Context }) => {
             } */}
           </ContainerExpenses>
           
-        </ContainerDataChartExpenses>
+        </ContainerExpensesData>
       
-      </div>
     </ModalContainer>
+    </div>
+
   );
 };
 

@@ -26,6 +26,8 @@
     padding: 0px;
     display: flex;
     flex-direction: column;
+    overflow-y: scroll;
+    height: 76%;
 }
 .containerLi > li{
     list-style: none;

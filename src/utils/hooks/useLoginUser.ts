@@ -1,4 +1,3 @@
-// import { useNavigate } from 'react-router';
 import { useMutation } from 'react-query';
 import { AxiosResponse, AxiosError } from 'axios';
 import swal from 'sweetalert';
@@ -7,13 +6,10 @@ import authService from '../authService';
 import storageUtils from '../storageUtils';
 
 export const useLogin = () => {
-  // const navigate = useNavigate();
-
   const loginMutate = useMutation(authService.loginUser, {
     onSuccess: async (res: AxiosResponse<any>) => {
-      console.log('login mutate response', res);
       storageUtils.setAuthToken(res?.data?.access);
-      console.log('user logged In');
+      window.location.href = '/';
       swal({
         title: 'success alert',
         text: 'logged in successfully',

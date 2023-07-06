@@ -26,19 +26,14 @@ const Goals = ({ Context }) => {
 
   const deleteGoal = (id) => {
     deleteGoalRequest(id);
-    goals.splice(id, 1);
   };
 
   const createGoal = (goal) => {
     createGoalRequest({ ...goal });
-    goal.id = goals.length;
-    goals.push(goal);
   };
 
   const updateGoal = (index, goal) => {
     changeGoalRequest(index, goal);
-    goal.id = index;
-    goals[index] = goal;
   };
 
   const returnGoalToEdit = () => {

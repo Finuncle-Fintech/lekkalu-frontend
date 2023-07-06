@@ -6,10 +6,11 @@ import Reducer from './Reducer';
 import Types from './Types';
 import setCookie from 'components/Support/PopUp/utils/SetCookie';
 import deleteCookie from 'components/Support/PopUp/utils/DeleteCookie';
-import { goals } from 'components/Goals/data';
+import { goalsData } from 'components/Goals/data';
 const Context = createContext({
    ...InitialState,
 });
+let goals = goalsData;
 
 const Provider = ({ children }) => {
    const axiosPrivate = useAxiosPrivate()
@@ -35,9 +36,11 @@ const Provider = ({ children }) => {
 
    let weekData = [];
 
+
    const {
       statusFeedback,
       expenses,
+      goals,
       tags,
       weeklyExpense,
       budget,
@@ -441,20 +444,40 @@ const Provider = ({ children }) => {
    const fetchGoals = async (page, rowsPerPage) => {
       const startIndex = (page) * rowsPerPage;
       const rows = [];
-      for (var i = startIndex; i <= startIndex + rowsPerPage && i < goals.length; i++) {
-         rows.push(goals[i]);
+      for (var i = startIndex; i <= startIndex + rowsPerPage && i < goalsData.length; i++) {
+         rows.push(goalsData[i]);
       }
-      return rows;
+      dispatch({
+         type: Types.FETCH_GOAL,
+         payload: rows,
+      });
+
    };
 
    const deleteGoalRequest = async (id) => {
+      dispatch({
+         type: Types.DELETE_GOAL,
+         payload: id,
+      });
    };
 
    const createGoalRequest = async (data) => {
+      dispatch({
+         type: Types.CREATE_GOAL,
+         payload: {
+            data: data,
+         }
+      });
    };
 
    const changeGoalRequest = async (index, goal) => {
-
+      dispatch({
+         type: Types.EDIT_GOAL,
+         payload: {
+            index,
+            goal,
+         }
+      });
    };
 
 

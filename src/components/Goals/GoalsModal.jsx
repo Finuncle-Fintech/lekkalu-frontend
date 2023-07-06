@@ -34,9 +34,9 @@ const GoalFormModal = ({
   const [balance, setBalance] = useState('');
   const [reachablitiyInMonths, setReachablitiyInMonths] = useState('');
   const [reachabilityInYears, setReachabilityInYears] = useState('');
-  const [startedDate, setStartedDate] = useState(new Date());
-  const [finishedDate, setFinishedDate] = useState(new Date());
-  const [plannedStartDate, setPlannedStartDate] = useState(new Date());
+  const [started, setStarted] = useState(new Date());
+  const [finished, setFinished] = useState(new Date());
+  const [plannedStart, setPlannedStart] = useState(new Date());
   const [preferredQuantity, setPreferredQuantity] = React.useState('higher');
 
   const handleChange = (event, newPreferredQuantity) => {
@@ -52,9 +52,9 @@ const GoalFormModal = ({
       setBalance(goalToEdit.balance);
       setReachablitiyInMonths(goalToEdit.reachablitiyInMonths);
       setReachabilityInYears(goalToEdit.reachabilityInYears);
-      setStartedDate(goalToEdit.startedDate);
-      setFinishedDate(goalToEdit.finishedDate);
-      setPlannedStartDate(goalToEdit.plannedStartDate);
+      setStarted(goalToEdit.started);
+      setFinished(goalToEdit.finished);
+      setPlannedStart(goalToEdit.plannedStart);
       setPreferredQuantity(goalToEdit.preferredQuantity);
       setOpen(true);
     }
@@ -73,6 +73,7 @@ const GoalFormModal = ({
 
   const handleDateChange = async (date, setDate) => {
     setDate(date);
+    
   };
 
 
@@ -88,9 +89,9 @@ const GoalFormModal = ({
       reachablitiyInMonths,
       reachabilityInYears,
       user: 1,
-      startedDate: formatDate(new Date(startedDate)),
-      finishedDate: formatDate(new Date(finishedDate)),
-      plannedStartDate: formatDate(new Date(plannedStartDate)),
+      started: formatDate(new Date(started)),
+      finished: formatDate(new Date(finished)),
+      plannedStart: formatDate(new Date(plannedStart)),
       preferredQuantity
     };
 
@@ -113,9 +114,9 @@ const GoalFormModal = ({
     setBalance("");
     setReachablitiyInMonths("");
     setReachabilityInYears("");
-    setStartedDate("");
-    setFinishedDate("");
-    setPlannedStartDate("");
+    setStarted("");
+    setFinished("");
+    setPlannedStart("");
     handleClose();
   };
 
@@ -232,8 +233,8 @@ const GoalFormModal = ({
                 <LocalizationProvider dateAdapter={AdapterDayjs} >
                   <DatePicker
                     data-testid='start-date'
-                    defaultValue={dayjs(startedDate)}
-                    onChange={(date) => handleDateChange(date, setStartedDate)}
+                    defaultValue={dayjs(started)}
+                    onChange={(date) => handleDateChange(date, setStarted)}
                   />
                 </LocalizationProvider>
               </div>
@@ -242,8 +243,8 @@ const GoalFormModal = ({
                 <LocalizationProvider dateAdapter={AdapterDayjs} >
                   <DatePicker
                     data-testid='finished-date'
-                    defaultValue={dayjs(finishedDate)}
-                    onChange={(date) => handleDateChange(date, setFinishedDate)}
+                    defaultValue={dayjs(finished)}
+                    onChange={(date) => handleDateChange(date, setFinished)}
                   />
                 </LocalizationProvider>
               </div>
@@ -252,8 +253,8 @@ const GoalFormModal = ({
                 <LocalizationProvider dateAdapter={AdapterDayjs} >
                   <DatePicker
                     data-testid='planned-start-date'
-                    defaultValue={dayjs(plannedStartDate)}
-                    onChange={(date) => handleDateChange(date, setPlannedStartDate)}
+                    defaultValue={dayjs(plannedStart)}
+                    onChange={(date) => handleDateChange(date, setPlannedStart)}
                   />
                 </LocalizationProvider>
               </div>

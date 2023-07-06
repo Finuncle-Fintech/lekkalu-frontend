@@ -1,4 +1,4 @@
-export const goals = [
+export const goalsData = [
     createData(0, '', 'Get Gross Debt Free', 0, -2665931, -2665931, undefined, 0.0, undefined, undefined, undefined,'higher'),
     createData(1, '', 'Reach Equity of 6 months of your current total income', 1333800, 2665931, -1332131, -13, -1.1, undefined, undefined, undefined,'higher'),
     createData(2, '', 'Investment should be >25%', '25.0%', '12.7%', '12.3%', undefined, undefined, '2022-05-05', '2022-12-01', '2022-05-05','higher'),

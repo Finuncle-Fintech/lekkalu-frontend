@@ -104,6 +104,7 @@ const GoalsList = ({ goals, getTagNames, setEditIndex, deleteGoal }) => {
             }
         }
     }
+   
 
     return (
         <Table>
@@ -129,15 +130,15 @@ const GoalsList = ({ goals, getTagNames, setEditIndex, deleteGoal }) => {
                             <TableCell>{goal.goal}</TableCell>
                             <TableCell>{goal.subGoal}</TableCell>
                             {typeof goal.targetMetric === 'number' ?
-                                <TableCell>₹ {goal.targetMetric.toLocaleString('en-IN')}</TableCell> :
+                                <TableCell>&#8377; {goal.targetMetric.toLocaleString('en-IN')}</TableCell> :
                                 <TableCell>{goal.targetMetric}</TableCell>
                             }
                             {typeof goal.current === 'number' ?
-                                <TableCell>₹ {goal.current.toLocaleString('en-IN')}</TableCell> :
+                                <TableCell>&#8377; {goal.current.toLocaleString('en-IN')}</TableCell> :
                                 <TableCell>{goal.current}</TableCell>
                             }
                             {typeof goal.balance === 'number' ?
-                                <TableCell className={balanceCellStyle}>₹ {goal.balance.toLocaleString('en-IN')}</TableCell> :
+                                <TableCell className={balanceCellStyle}>&#8377; {goal.balance.toLocaleString('en-IN')}</TableCell> :
                                 <TableCell className={balanceCellStyle}>{goal.balance}</TableCell>
                             }
                             <TableCell>{goal.reachablitiyInMonths}</TableCell>

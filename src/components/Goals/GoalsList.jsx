@@ -147,7 +147,7 @@ const GoalsList = ({ goals, getTagNames, setEditIndex, deleteGoal }) => {
                             <TableCell>{goal.finished && new Date(goal.finished).toDateString(0)}</TableCell>
                             <TableCell>{goal.plannedStart && new Date(goal.plannedStart).toDateString(0)}</TableCell>
                             <TableCell>
-                                <IconButton placeholder="edit-goal" edge="end" onClick={() => setEditIndex(goal.id)}>
+                                <IconButton placeholder="edit-goal" edge="end" onClick={() => setEditIndex(index)}>
                                     <EditIcon />
                                 </IconButton>
                                 <IconButton placeholder="delete-goal" edge="end" onClick={() => {

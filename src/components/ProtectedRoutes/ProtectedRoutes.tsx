@@ -12,7 +12,7 @@ export const ProtectedRoutes = ({
   if (!authToken) {
     return <Navigate to="/signin" replace />;
   }
-  return children;
+  return <>{children}</>;
 };
 
 export default ProtectedRoutes;

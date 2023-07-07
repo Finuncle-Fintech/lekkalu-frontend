@@ -148,63 +148,6 @@ const Provider = ({ children }) => {
         });
 
       await axiosPrivate
-        .get(`${process.env.REACT_APP_BACKEND_API}weekly_expenses/`, {
-          headers,
-        })
-        .then((res) => {
-          weekData = res.data;
-          let totlamount = 0;
-          let i = 0;
-          weekData.map((da) => {
-            totlamount += weekData[i]?.total_amount;
-            if (finalDataWeekly.length >= 4) {
-              finalDataWeekly = [
-                ...finalDataWeekly,
-                {
-                  time: da.week.toString() + '_' + da.year.toString(),
-                  amount: da?.total_amount,
-                  roll_avg: parseFloat((totlamount / 5).toFixed(2)),
-                },
-              ];
-              totlamount = totlamount - weekData[i - 4].total_amount;
-            } else {
-              finalDataWeekly = [
-                ...finalDataWeekly,
-                {
-                  time: da.week.toString() + ' ' + da.year.toString(),
-                  amount: da?.total_amount,
-                },
-              ];
-            }
-            i += 1;
-          });
-          dispatch({
-            type: Types.FETCH_WEEKLY_EXPENSE,
-            payload: finalDataWeekly,
-          });
-        });
-
-      await axiosPrivate
-        .get(`${process.env.REACT_APP_BACKEND_API}assets/`, { headers })
-        .then((res) => {
-          let totalVal = 0.000000001;
-          res.data.map((da) => {
-            totalVal += da.market_value;
-            finalAssets = [
-              ...finalAssets,
-              {
-                name: da.name,
-                value: parseFloat(da.market_value),
-              },
-            ];
-          });
-          dispatch({
-            type: Types.FETCH_ASSETS,
-            payload: { finalAssets, totalVal },
-          });
-        });
-
-      await axiosPrivate
         .get(`${process.env.REACT_APP_BACKEND_API}loans/`, { headers })
         .then((res) => {
           let totalVal = 0.000000001;
@@ -221,30 +164,6 @@ const Provider = ({ children }) => {
           dispatch({
             type: Types.FETCH_LIABILITIES,
             payload: { finalLiabilities, totalVal },
-          });
-        });
-      await axiosPrivate
-        .get(`${process.env.REACT_APP_BACKEND_API}monthly_expenses/`, {
-          headers,
-        })
-        .then((res) => {
-          let finalMonthlyExp = [];
-          let response = res.data;
-          response.map((da) => {
-            finalMonthlyExp = [
-              ...finalMonthlyExp,
-              {
-                name: monthNames[da.month - 1],
-                Spent: da.spent,
-                Balance: da.balance,
-                CumSum: da.cum_sum,
-              },
-            ];
-          });
-
-          dispatch({
-            type: Types.FETCH_MONTHLY_EXPENSE,
-            payload: finalMonthlyExp,
           });
         });
     } catch (error) {

@@ -14,6 +14,18 @@ const services = {
   getIncomeExpense: async () => {
     return await apiUtils.getRequest(`${api.INCOME_EXPENSE}`);
   },
+  getMonthlyExpense: async () => {
+    return await apiUtils.getRequest(`${api.MONTHLY_EXPENSES}`);
+  },
+  getWeeklyExpense: async () => {
+    return await apiUtils.getRequest(`${api.WEEKLY_EXPENSES}`);
+  },
+  getLiabilities: async () => {
+    return await apiUtils.getRequest(`${api.LOANS}`);
+  },
+  getAssets: async () => {
+    return await apiUtils.getRequest(`${api.ASSETS}`);
+  },
   giveFeedback: async (payload: any) => {
     return await apiUtils.postRequest(`${api.FEEDBACK}`, payload);
   },

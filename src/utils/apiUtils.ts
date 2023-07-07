@@ -1,10 +1,8 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import useRefreshToken from '../hooks/useRefresh';
+// import useRefreshToken from '../hooks/useRefresh';
 import storageUtils from './storageUtils';
 
 import axios from 'axios';
-
-const refresh = useRefreshToken();
 
 const axiosConfig: any = {
   headers: {
@@ -33,7 +31,7 @@ axios.interceptors.response.use(
     if ((error?.response.status === 403 || 401) && !prevRequest?.sent) {
       prevRequest.sent = true;
 
-      const newAccessToken = await refresh(); //get new access token using the useRefresh hook
+      const newAccessToken = await refreshAccessToken(); //get new access token using the useRefresh hook
 
       storageUtils.setAuthToken(newAccessToken);
 
@@ -45,6 +43,17 @@ axios.interceptors.response.use(
     return Promise.reject(error);
   },
 );
+
+const refreshAccessToken = async () => {
+  const response = await apiUtils.postRequest(
+    'token/refresh/',
+    JSON.stringify({
+      refresh: storageUtils.getAuthToken(),
+    }),
+  );
+
+  return response?.data?.access;
+};
 
 const apiUtils = {
   getRequest: async (url: string) => {

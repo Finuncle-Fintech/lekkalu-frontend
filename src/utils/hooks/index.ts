@@ -6,6 +6,10 @@ import { useLogin } from './useLoginUser';
 import { useSignUp } from './useSignUpUser';
 import { useGiveFeedback } from './useGiveFeedback';
 import { useCreateExpense } from './useCreateExpense';
+import { useGetMonthlyExpense } from './useGetMonthlyExpense';
+import { useGetAssets } from './useGetAssets';
+import { useGetWeeklyExpense } from './useGetWeeklyExpense';
+import { useGetLiabilities } from './useGetLiabilities';
 
 export {
   useCreateTag,
@@ -16,4 +20,8 @@ export {
   useSignUp,
   useGiveFeedback,
   useCreateExpense,
+  useGetMonthlyExpense,
+  useGetAssets,
+  useGetWeeklyExpense,
+  useGetLiabilities,
 };

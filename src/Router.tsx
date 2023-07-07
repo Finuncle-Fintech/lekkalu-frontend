@@ -10,7 +10,7 @@ import SupportPopUp from './components/Support/PopUp/PopUp';
 import Footer from './components/Footer/Footer';
 import Signin from './pages/Signin/Signin';
 import Signup from './pages/Signup/Signup';
-// import PersistLogin from './components/PersistLogin/PersistLogin';
+import React from 'react';
 
 const RouterComponent = () => {
   return (
@@ -20,7 +20,7 @@ const RouterComponent = () => {
           path="/signin"
           element={
             <>
-              <Signin Context={Context} />
+              <Signin />
               <SupportPopUp Context={Context} />
             </>
           }
@@ -29,7 +29,7 @@ const RouterComponent = () => {
           path="/signup"
           element={
             <>
-              <Signup Context={Context} />
+              <Signup />
               <SupportPopUp Context={Context} />
             </>
           }
@@ -39,12 +39,10 @@ const RouterComponent = () => {
           path="/"
           element={
             <ProtectedRoutes>
-              <>
-                <Header />
-                <Charts />
-                <Footer />
-                <SupportPopUp Context={Context} />
-              </>
+              <Header />
+              <Charts />
+              <Footer />
+              <SupportPopUp Context={Context} />
             </ProtectedRoutes>
           }
         />
@@ -52,12 +50,10 @@ const RouterComponent = () => {
           path="/loan_emi_calculator"
           element={
             <ProtectedRoutes>
-              <>
-                <Header />
-                <EmiCalculator />
-                <Footer />
-                <SupportPopUp Context={Context} />
-              </>
+              <Header />
+              <EmiCalculator />
+              <Footer />
+              <SupportPopUp Context={Context} />
             </ProtectedRoutes>
           }
         />
@@ -65,10 +61,8 @@ const RouterComponent = () => {
           path="/income-statement"
           element={
             <ProtectedRoutes>
-              <>
-                <Header />
-                <IncomeStatement Context={Context} />
-              </>
+              <Header />
+              <IncomeStatement Context={Context} />
             </ProtectedRoutes>
           }
         />
@@ -76,12 +70,10 @@ const RouterComponent = () => {
           path="/expenses"
           element={
             <ProtectedRoutes>
-              <>
-                <Header />
-                <Expenses Context={Context} />
-                <Footer />
-                <SupportPopUp Context={Context} />
-              </>
+              <Header />
+              <Expenses Context={Context} />
+              <Footer />
+              <SupportPopUp Context={Context} />
             </ProtectedRoutes>
           }
         />

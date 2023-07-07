@@ -1,5 +1,5 @@
-import "bootstrap/dist/css/bootstrap.min.css";
-import React from "react";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import React from 'react';
 import {
   ResponsiveContainer,
   ComposedChart,
@@ -10,8 +10,8 @@ import {
   YAxis,
   Tooltip,
   Legend,
-} from "recharts";
-import Colors from "../../constants/colors";
+} from 'recharts';
+import Colors from '../../constants/colors';
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
@@ -77,7 +77,7 @@ export const SpentBalanceChart = (spentBalance) => {
               layout="horizontal"
               align="center"
               wrapperStyle={{
-                position: "relative",
+                position: 'relative',
               }}
             />
             <Bar dataKey="Spent" barSize={150} fill={Colors.orange} />

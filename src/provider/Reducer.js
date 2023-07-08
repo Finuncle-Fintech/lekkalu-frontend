@@ -112,6 +112,8 @@ const Reducer = (state, action) => {
          };
       }
       case Types.CREATE_GOAL: {
+         console.log(state.goals.length)
+
          const newState = state.goals.length
             ? [
                ...state.goals,

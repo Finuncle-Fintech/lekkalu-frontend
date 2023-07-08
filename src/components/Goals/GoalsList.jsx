@@ -81,16 +81,16 @@ const GoalsList = ({ goals, getTagNames, setEditIndex, deleteGoal }) => {
 
     const getBalanceCellStyle = (goal) => {
         if (typeof goal.balance === 'number') {
-            return getStyle(goal.preferredQuantity,goal.balance,goal.current);
+            return getStyle(goal.preferredQuantity,goal.balance,goal.currentMetric);
         } else if(typeof goal.balance === 'string' ) {
-            let current = Number(goal.current?.split('%')[0]);
+            let current = Number(goal.currentMetric?.split('%')[0]);
             let balance = Number(goal.balance?.split('%')[0]);
             return getStyle(goal.preferredQuantity,balance,current);
         }
     }
 
     const getStyle = (preferredQuantity, balance, current) => {
-        if (preferredQuantity === 'higher') {
+        if (preferredQuantity === 'lower') {
             if (balance > current) {
                 return 'green-opaque-bg';
             } else {
@@ -133,9 +133,9 @@ const GoalsList = ({ goals, getTagNames, setEditIndex, deleteGoal }) => {
                                 <TableCell>&#8377; {goal.targetMetric.toLocaleString('en-IN')}</TableCell> :
                                 <TableCell>{goal.targetMetric}</TableCell>
                             }
-                            {typeof goal.current === 'number' ?
-                                <TableCell>&#8377; {goal.current.toLocaleString('en-IN')}</TableCell> :
-                                <TableCell>{goal.current}</TableCell>
+                            {typeof goal.currentMetric === 'number' ?
+                                <TableCell>&#8377; {goal.currentMetric.toLocaleString('en-IN')}</TableCell> :
+                                <TableCell>{goal.currentMetric}</TableCell>
                             }
                             {typeof goal.balance === 'number' ?
                                 <TableCell className={balanceCellStyle}>&#8377; {goal.balance.toLocaleString('en-IN')}</TableCell> :

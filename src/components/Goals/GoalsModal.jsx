@@ -31,7 +31,6 @@ const GoalFormModal = ({
   const [subGoal, setSubGoal] = useState('');
   const [targetMetric, setTargetMetric] = useState('');
   const [currentMetric, setCurrentMetric] = useState('');
-  const [balance, setBalance] = useState('');
   const [reachablitiyInMonths, setReachablitiyInMonths] = useState('');
   const [reachabilityInYears, setReachabilityInYears] = useState('');
   const [started, setStarted] = useState(new Date());
@@ -45,11 +44,11 @@ const GoalFormModal = ({
 
   useEffect(() => {
     if (goalToEdit) {
+      console.log(goalToEdit)
       setGoal(goalToEdit.goal);
       setSubGoal(goalToEdit.subGoal);
       setTargetMetric(goalToEdit.targetMetric);
       setCurrentMetric(goalToEdit.currentMetric);
-      setBalance(goalToEdit.balance);
       setReachablitiyInMonths(goalToEdit.reachablitiyInMonths);
       setReachabilityInYears(goalToEdit.reachabilityInYears);
       setStarted(goalToEdit.started);
@@ -79,13 +78,13 @@ const GoalFormModal = ({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    const balance = currentMetric.includes('%') && targetMetric.includes('%') ? Number(targetMetric?.split('%')[0]) - Number(currentMetric?.split('%')[0]) + "%":targetMetric - currentMetric; 
     const newGoal = {
       goal,
       subGoal,
       targetMetric,
-      current: currentMetric,
-      balance,
+      currentMetric,
+      balance:balance,
       reachablitiyInMonths,
       reachabilityInYears,
       user: 1,
@@ -111,7 +110,6 @@ const GoalFormModal = ({
     setSubGoal("");
     setTargetMetric("");
     setCurrentMetric("");
-    setBalance("");
     setReachablitiyInMonths("");
     setReachabilityInYears("");
     setStarted("");
@@ -127,8 +125,7 @@ const GoalFormModal = ({
 
   const handleAmountChange = (event, setAmount) => {
     const newValue = event.target.value;
-
-    if (newValue.includes('%') || isAmountValid(newValue)) {
+    if (newValue.includes('%') || isAmountValid(newValue) || newValue === "") {
       setAmount(newValue);
     } else {
       return;
@@ -200,15 +197,6 @@ const GoalFormModal = ({
                 required
                 fullWidth
                 data-testid="current-metric"
-              />
-              <Typography variant="p">Provide the Balance:</Typography>
-              <TextField
-                value={balance}
-                onChange={(event) => handleAmountChange(event, setBalance)}
-                onKeyPress={preventPropagationOnEnter}
-                required
-                fullWidth
-                data-testid="balance"
               />
               <Typography variant="p">Provide the Reachability in Months:</Typography>
               <TextField

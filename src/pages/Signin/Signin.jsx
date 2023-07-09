@@ -61,6 +61,7 @@ export const Signin = () => {
               id="username"
               label="Username"
               autoFocus
+              data-testid='usernameSignin'
             />
             <TextField
               margin="normal"
@@ -71,6 +72,7 @@ export const Signin = () => {
               type="password"
               id="password"
               autoComplete="current-password"
+              data-testid='passwordSignin'
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}

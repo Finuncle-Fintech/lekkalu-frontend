@@ -70,6 +70,7 @@ export const Signup = () => {
                   id="username"
                   label="Username"
                   autoFocus
+                  data-testid='usernameSignup'
                 />
               </Grid>
               <Grid item xs={12}>
@@ -80,6 +81,7 @@ export const Signup = () => {
                   label="Email Address"
                   name="email"
                   autoComplete="email"
+                  data-testid='emailSignup'
                 />
               </Grid>
               <Grid item xs={12}>
@@ -91,6 +93,7 @@ export const Signup = () => {
                   type="password"
                   id="password"
                   autoComplete="new-password"
+                  data-testid='passwordSignup'
                 />
               </Grid>
               <Grid item xs={12}>
@@ -101,6 +104,7 @@ export const Signup = () => {
                     <Checkbox
                       onChange={(e) => setAcceptedTerms(e.target.checked)}
                       color="success"
+                      data-testid='checkTermSignup'
                     />
                   }
                   label={
@@ -116,6 +120,7 @@ export const Signup = () => {
                     <Checkbox
                       onChange={(e) => setAcceptPrivacyPolicy(e.target.checked)}
                       color="success"
+                      data-testid='checkPrivacySignup'
                     />
                   }
                   label={
@@ -130,7 +135,7 @@ export const Signup = () => {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
               disabled={!acceptedTerms || !acceptedPrivacyPolicy}
-              data-testid="signup-button"
+              data-testid="buttonSignup"
             >
               Sign Up
             </Button>

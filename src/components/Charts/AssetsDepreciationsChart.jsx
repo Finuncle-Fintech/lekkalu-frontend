@@ -3,52 +3,6 @@ import Colors from "constants/colors"
 import { useEffect, useRef } from "react"
 import { BarLoader } from "react-spinners"
 
-const calculateDeprecationData = (purchaseValue, depreciation_frequency, deprecationPercent, sellDate, purchasedDate, active, sellValue) =>{
-    const initalVal = parseFloat(purchaseValue)
-    const sellVal = parseFloat(sellValue)
-
-    const startDay = new Date(purchasedDate).getTime()
-    const sellDay = new Date(sellDate).getTime()
-    const usefulLifeoftheAssets = ( sellDay -startDay)/(1000*60*60*24)
-
-    const daysOfDeprecation = Math.round(depreciation_frequency / 86400)
-
-    const usefulLifePeriods = Math.round(usefulLifeoftheAssets/daysOfDeprecation)
-
-    const depreciationPerPeriods = Math.round((initalVal - sellVal) / usefulLifePeriods)
-
-    //Get points 
-    let depreciationData = []
-
-    let currentDate = new Date(startDay)
-    let currentValue = initalVal
-    for (let i = 0 ; i<=usefulLifePeriods ; i++){
-        const year = currentDate.getFullYear();
-        const month = ("0" + (currentDate.getMonth() + 1)).slice(-2);
-        const day = ("0" + currentDate.getDate()).slice(-2);
-        const formattedDate = `${year}-${month}-${day}`;
-
-        depreciationData.push({data:shortDate(formattedDate), value:shortNumbers(currentValue)})
-
-        currentValue -=depreciationPerPeriods
-        currentDate.setDate(currentDate.getDate() + daysOfDeprecation);
-    }
-    return depreciationData
-}
-
-function shortNumbers(n){
-    let x=(''+n).length;
-    const p=Math.pow;
-    const d=p(10,true);
-    x-=x%3;
-    return Math.round(n*d/p(10,x))/d+" kMGTPE"[x/3];
-}
-function shortDate (date){
-    return date.replace('-', '/').replace('-', '/')
-}
-
-
-
 export default function AssetsdepreciationChart({data}){
     const brushRef = useRef(undefined)
 
@@ -99,9 +53,9 @@ export default function AssetsdepreciationChart({data}){
                 
                     <XAxis tickMargin={10} dataKey="data"  tick={{ fill: Colors.white }} tickFormatter={handlerTicketFormatter} />
 
-                    <YAxis tickMargin={10} dataKey="value" type='category'  tickFormatter={(tick) => {
+                    <YAxis tickMargin={10} dataKey={"value"} type='category'  tickFormatter={(tick) => {
                         return `\u20B9${tick}`;
-                     }} tick={{ fill: Colors.white }} />
+                     }} tick={{ fill: Colors.white }} reversed={true} />
 
                     <Legend
                      layout='horizontal'
@@ -116,4 +70,49 @@ export default function AssetsdepreciationChart({data}){
 
         </div>
     )
+}
+
+const calculateDeprecationData = (purchaseValue, depreciation_frequency, deprecationPercent, sellDate, purchasedDate, active, sellValue) =>{
+    const initalVal = parseFloat(purchaseValue)
+    const sellVal = parseFloat(sellValue)
+
+    const startDay = new Date(purchasedDate).getTime()
+    const sellDay = new Date(sellDate).getTime()
+    const usefulLifeoftheAssets = ( sellDay -startDay)/(1000*60*60*24)
+
+    const daysOfDeprecation = Math.round(depreciation_frequency / 86400)
+
+    const usefulLifePeriods = Math.round(usefulLifeoftheAssets/daysOfDeprecation)
+
+    const depreciationPerPeriods = Math.round((initalVal - sellVal) / usefulLifePeriods)
+
+    //Get points 
+    let depreciationData = []
+
+    let currentDate = new Date(startDay)
+    let currentValue = initalVal
+    for (let i = 0 ; i<=usefulLifePeriods ; i++){
+        const year = currentDate.getFullYear();
+        const month = ("0" + (currentDate.getMonth() + 1)).slice(-2);
+        const day = ("0" + currentDate.getDate()).slice(-2);
+        const formattedDate = `${year}-${month}-${day}`;
+
+        depreciationData.push({data:shortDate(formattedDate), value:shortNumbers(currentValue)})
+
+        currentValue -=depreciationPerPeriods
+        currentDate.setDate(currentDate.getDate() + daysOfDeprecation);
+    }
+    console.log(depreciationData)
+    return depreciationData
+}
+
+function shortNumbers(n){
+    let x=(''+n).length;
+    const p=Math.pow;
+    const d=p(10,true);
+    x-=x%3;
+    return Math.round(n*d/p(10,x))/d+" kMGTPE"[x/3];
+}
+function shortDate (date){
+    return date.replace('-', '/').replace('-', '/')
 }

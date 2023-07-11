@@ -9,12 +9,12 @@ export const useLogin = () => {
   const loginMutate = useMutation(authService.loginUser, {
     onSuccess: async (res: AxiosResponse<any>) => {
       storageUtils.setAuthToken(res?.data?.access);
-      window.location.href = '/';
       swal({
         title: 'success alert',
         text: 'logged in successfully',
         icon: 'success',
       });
+      window.location.href = '/';
     },
     onError: (error: AxiosError<any>) => {
       console.log('log in response error');

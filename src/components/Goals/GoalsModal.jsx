@@ -33,18 +33,17 @@ const GoalFormModal = ({
   const [currentMetric, setCurrentMetric] = useState('');
   const [reachablitiyInMonths, setReachablitiyInMonths] = useState('');
   const [reachabilityInYears, setReachabilityInYears] = useState('');
-  const [started, setStarted] = useState(new Date());
-  const [finished, setFinished] = useState(new Date());
-  const [plannedStart, setPlannedStart] = useState(new Date());
+  const [started, setStarted] = useState(dayjs());
+  const [finished, setFinished] = useState(dayjs());
+  const [plannedStart, setPlannedStart] = useState(dayjs());
+  const [plannedFinish, setPlannedFinish] = useState(dayjs());
+  const [comments, setComments] = useState('');
   const [preferredQuantity, setPreferredQuantity] = React.useState('higher');
 
-  const handleChange = (event, newPreferredQuantity) => {
-    setPreferredQuantity(newPreferredQuantity);
-  };
+ 
 
   useEffect(() => {
     if (goalToEdit) {
-      console.log(goalToEdit)
       setGoal(goalToEdit.goal);
       setSubGoal(goalToEdit.subGoal);
       setTargetMetric(goalToEdit.targetMetric);
@@ -54,6 +53,8 @@ const GoalFormModal = ({
       setStarted(goalToEdit.started);
       setFinished(goalToEdit.finished);
       setPlannedStart(goalToEdit.plannedStart);
+      setPlannedFinish(goalToEdit.plannedFinish);
+      setComments(goalToEdit.comments);
       setPreferredQuantity(goalToEdit.preferredQuantity);
       setOpen(true);
     }
@@ -70,27 +71,25 @@ const GoalFormModal = ({
     }
   };
 
-  const handleDateChange = async (date, setDate) => {
-    setDate(date);
-    
-  };
-
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const balance = currentMetric.includes('%') && targetMetric.includes('%') ? Number(targetMetric?.split('%')[0]) - Number(currentMetric?.split('%')[0]) + "%":targetMetric - currentMetric; 
+    const balance = currentMetric.includes('%') && targetMetric.includes('%') ? Number(targetMetric?.split('%')[0]) - Number(currentMetric?.split('%')[0]) + "%" : targetMetric - currentMetric;
     const newGoal = {
       goal,
       subGoal,
       targetMetric,
       currentMetric,
-      balance:balance,
+      balance: balance,
       reachablitiyInMonths,
       reachabilityInYears,
       user: 1,
       started: formatDate(new Date(started)),
       finished: formatDate(new Date(finished)),
       plannedStart: formatDate(new Date(plannedStart)),
+      plannedFinish,
+      comments,
       preferredQuantity
     };
 
@@ -115,6 +114,8 @@ const GoalFormModal = ({
     setStarted("");
     setFinished("");
     setPlannedStart("");
+    setPlannedFinish("");
+    setComments("");
     handleClose();
   };
 
@@ -123,14 +124,50 @@ const GoalFormModal = ({
     return regex.test(value);
   }
 
+  const isPercentageValid = (value)=>{
+    const regex = /^100(\.0{0,2})? *%?$|^\d{1,2}(\.\d{1,2})? *%?$/;
+    return regex.test(value);
+  }
+
+  const isReachabilityValid = (value)=>{
+    const regex = /^(0|[1-9]\d*)?$/;
+    return regex.test(value);
+  }
   const handleAmountChange = (event, setAmount) => {
     const newValue = event.target.value;
-    if (newValue.includes('%') || isAmountValid(newValue) || newValue === "") {
+    if ( isPercentageValid(newValue) || isAmountValid(newValue) || newValue === "") {
       setAmount(newValue);
     } else {
       return;
     }
   };
+
+  const handleChange = (event, newPreferredQuantity) => {
+    setPreferredQuantity(newPreferredQuantity);
+  };
+
+  const handleReachabilityChange = (event, setReachability) => {
+    const newValue = event.target.value;
+    if (isReachabilityValid(newValue) ||  newValue === "") {
+      setReachability(newValue);
+    } else {
+      return;
+    }
+  }
+
+  const handleDateChange = async (date,setDate) => {
+    setDate(date);
+  };
+
+  const handleFinishedDateChange = async (date,setDate,startDate) => {
+    if(date.$d.getTime() < startDate.$d.getTime()){
+      alert("Finish date cannot be before start date")
+    }else{
+      setDate(date)
+    }
+  };
+  
+
 
   const handleGoalChange = (event) => {
     const newValue = event.target.value;
@@ -201,7 +238,7 @@ const GoalFormModal = ({
               <Typography variant="p">Provide the Reachability in Months:</Typography>
               <TextField
                 value={reachablitiyInMonths}
-                onChange={(event) => handleAmountChange(event, setReachablitiyInMonths)}
+                onChange={(event) => handleReachabilityChange(event, setReachablitiyInMonths)}
                 onKeyPress={preventPropagationOnEnter}
                 required
                 fullWidth
@@ -210,7 +247,7 @@ const GoalFormModal = ({
               <Typography variant="p">Provide the Reachability in Years:</Typography>
               <TextField
                 value={reachabilityInYears}
-                onChange={(event) => handleAmountChange(event, setReachabilityInYears)}
+                onChange={(event) => handleReachabilityChange(event, setReachabilityInYears)}
                 onKeyPress={preventPropagationOnEnter}
                 required
                 fullWidth
@@ -232,7 +269,7 @@ const GoalFormModal = ({
                   <DatePicker
                     data-testid='finished-date'
                     defaultValue={dayjs(finished)}
-                    onChange={(date) => handleDateChange(date, setFinished)}
+                    onChange={(date) => handleFinishedDateChange(date,setFinished,started)}
                   />
                 </LocalizationProvider>
               </div>
@@ -246,6 +283,25 @@ const GoalFormModal = ({
                   />
                 </LocalizationProvider>
               </div>
+              <Typography variant="p">Choose the Planned Finish Date:</Typography>
+              <div>
+                <LocalizationProvider dateAdapter={AdapterDayjs} >
+                  <DatePicker
+                    data-testid='planned-finish-date'
+                    defaultValue={dayjs(plannedFinish)}
+                    onChange={(date) => handleFinishedDateChange(date, setPlannedFinish,plannedStart)}
+                  />
+                </LocalizationProvider>
+              </div>
+              <Typography variant="p">Provide the Comments for the Goal:</Typography>
+              <TextField
+                value={comments}
+                onChange={(event) => setComments(event.target.value)}
+                onKeyPress={preventPropagationOnEnter}
+                required
+                fullWidth
+                data-testid="comments"
+              />
               <Typography variant="p">Choose preffered value of Balance:</Typography>
               <div>
                 <ToggleButtonGroup

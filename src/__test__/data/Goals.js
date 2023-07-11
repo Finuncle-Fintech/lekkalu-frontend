@@ -11,6 +11,8 @@ export const mockGoals = [
         started: '2022-05-02',
         finished: '2022-05-02',
         plannedStart: '2022-05-02',
+        plannedFinish: '2022-05-02',
+        comments:'Lent',
         preferedQuantity: 'higher',
     },
     {
@@ -25,6 +27,8 @@ export const mockGoals = [
         started: '2021-11-01',
         finished: '2021-11-01',
         plannedStart: '2022-05-01',
+        plannedFinish: '2022-05-02',
+        comments:'Lent',
         preferredQuantity: 'higher',
     }
 ]

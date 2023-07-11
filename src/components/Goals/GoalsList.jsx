@@ -50,6 +50,16 @@ const GoalsList = ({ goals, getTagNames, setEditIndex, deleteGoal }) => {
             align: 'right',
         },
         {
+            id: 'plannedFinish',
+            label: 'Planned Finish',
+            align: 'right',
+        },
+        {
+            id: 'comments',
+            label: 'Comments',
+            align: 'right',
+        },
+        {
             id: '',
             label: '',
             align: 'right'
@@ -146,6 +156,8 @@ const GoalsList = ({ goals, getTagNames, setEditIndex, deleteGoal }) => {
                             <TableCell>{goal.started && new Date(goal.started).toDateString(0)}</TableCell>
                             <TableCell>{goal.finished && new Date(goal.finished).toDateString(0)}</TableCell>
                             <TableCell>{goal.plannedStart && new Date(goal.plannedStart).toDateString(0)}</TableCell>
+                            <TableCell>{goal.plannedStart && new Date(goal.plannedFinish).toDateString(0)}</TableCell>
+                            <TableCell>{goal.plannedStart && goal.comments}</TableCell>
                             <TableCell>
                                 <IconButton placeholder="edit-goal" edge="end" onClick={() => setEditIndex(index)}>
                                     <EditIcon />

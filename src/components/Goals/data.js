@@ -16,7 +16,7 @@ export const goalsData = [
   
   ]
   
-  function createData(id, goal, subGoal, targetMetric, currentMetric, balance, reachablitiyInMonths, reachabilityInYears, started, finished, plannedStart,preferredQuantity) {
-    return { id, goal, subGoal, targetMetric, currentMetric, balance, reachablitiyInMonths, reachabilityInYears, started, finished, plannedStart,preferredQuantity };
+  function createData(id, goal, subGoal, targetMetric, currentMetric, balance, reachablitiyInMonths, reachabilityInYears, started, finished, plannedStart,plannedFinish,comments,preferredQuantity) {
+    return { id, goal, subGoal, targetMetric, currentMetric, balance, reachablitiyInMonths, reachabilityInYears, started, finished, plannedStart,plannedFinish,comments,preferredQuantity };
   }
   

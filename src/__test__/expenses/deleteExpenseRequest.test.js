@@ -6,6 +6,8 @@ import {mockState} from "__test__/data/Expenses";
 
 const TestContext = createContext(mockState);
 
+window.scrollTo = jest.fn()
+
 describe("deleteExpenseRequest", () => {
     test("successfully deletes an expense", async () => {
         render(

@@ -12,6 +12,7 @@ import Footer from "components/Footer/Footer";
 import Signin from "./pages/Signin/Signin";
 import Signup from "./pages/Signup/Signup";
 import PersistLogin from "components/PersistLogin/PersistLogin";
+import ErrorPage from "components/ErrorPage/ErrorPage";
 
 const RouterComponent = () => {
   const { authToken } = useContext(Context);
@@ -72,6 +73,8 @@ const RouterComponent = () => {
                 <>
                   <Header />
                   <IncomeStatement Context={Context} />
+                  <Footer />
+                  <SupportPopUp Context={Context} />
                 </>
               </ProtectedRoutes>
             }
@@ -88,6 +91,10 @@ const RouterComponent = () => {
                 </>
               </ProtectedRoutes>
             }
+          />
+          <Route
+            path="*"
+            element={<ErrorPage />}
           />
         </Route>
       </Routes>

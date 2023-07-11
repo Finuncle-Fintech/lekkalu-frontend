@@ -199,27 +199,29 @@ const Expenses = ({ Context }) => {
           {page * 10 + 1} - {page * 10 + 10} of 70
         </div>
 
-        <Box component="form" onSubmit={handleFilterSubmit} sx={{ display: 'flex', alignItems: 'center' }}>
+        <Box component="form" onSubmit={handleFilterSubmit} className="d-flex justify-ceontent-between">
           <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <div components={['DatePicker']}>
-              <DatePicker
-                label="From"
-                value={fromDate}
-                maxDate={dayjs(getDate.toLocaleDateString())}
-                onChange={(newValue) => setFromDate(newValue)}
-              />
-              <span className="d-flex justify-coontent-center align-items-center text-center">-</span>
-              <DatePicker
-                label="To"
-                value={toDate}
-                maxDate={dayjs(getDate.toLocaleDateString())}
-                onChange={(newValue) => setToDate(newValue)}
-              />
+            <div>
+              <div components={['DatePicker']} className="d-flex justify-content-center align-items-center">
+                <DatePicker
+                  label="From"
+                  value={fromDate}
+                  maxDate={dayjs(getDate.toLocaleDateString())}
+                  onChange={(newValue) => setFromDate(newValue)}
+                />
+                <div className="mx-2">-</div>
+                <DatePicker
+                  label="To"
+                  value={toDate}
+                  maxDate={dayjs(getDate.toLocaleDateString())}
+                  onChange={(newValue) => setToDate(newValue)}
+                />
+              </div>
             </div>
             <Button
               type="submit"
               variant="contained"
-              sx={{ py: 2, px: 4, ml: 1, mt: 1 }}
+              sx={{ py: 2, px: 4, ml: 1 }}
               disabled={isLoading}
             >
               Filter

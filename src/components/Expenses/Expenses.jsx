@@ -137,6 +137,14 @@ const Expenses = ({ Context }) => {
     setPage(newPage);
   };
 
+  const clearFilters = async () => {
+    setIsLoading(true)
+    setFromDate(null)
+    setToDate(null)
+    await fetchExpenses(page, rowsPerPage)
+    setIsLoading(false)
+  }
+
   const handleFilterSubmit = async (e) => {
     e.preventDefault()
     setIsLoading(true)
@@ -152,8 +160,6 @@ const Expenses = ({ Context }) => {
 
       await filterExpensesByDate(page, rowsPerPage, filterFromDate, filterToDate)
     }
-    setFromDate(null)
-    setToDate(null)
     setIsLoading(false)
   }
 
@@ -225,6 +231,16 @@ const Expenses = ({ Context }) => {
               disabled={isLoading}
             >
               Filter
+            </Button>
+            <Button
+              type="button"
+              variant="contained"
+              sx={{ py: 2, px: 4, ml: 1 }}
+              disabled={isLoading}
+              onClick={clearFilters}
+              className="bg-danger"
+            >
+              Clear
             </Button>
           </LocalizationProvider>
         </Box>

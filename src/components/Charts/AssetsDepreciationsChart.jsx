@@ -102,7 +102,7 @@ const calculateDeprecationData = (purchaseValue, depreciation_frequency, depreca
         currentValue -=depreciationPerPeriods
         currentDate.setDate(currentDate.getDate() + daysOfDeprecation);
     }
-    console.log(depreciationData)
+
     return depreciationData
 }
 

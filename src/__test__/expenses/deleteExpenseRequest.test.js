@@ -18,6 +18,7 @@ describe("deleteExpenseRequest", () => {
                 <Expenses Context={TestContext}/>
             </TestContext.Provider>
         );
+    })
     test("successfully deletes an expense", async () => {
         render(
             <TestContext.Provider value={mockState}>
@@ -37,4 +38,4 @@ describe("deleteExpenseRequest", () => {
             expect(mockState.deleteExpenseRequest).toHaveBeenCalled();
         });
     });
-});
+})

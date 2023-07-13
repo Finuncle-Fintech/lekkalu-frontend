@@ -92,6 +92,7 @@ const calculateDeprecationData = (purchaseValue, depreciation_frequency, depreca
     let currentDate = new Date(startDay)
     let currentValue = initalVal
     for (let i = 0 ; i<=usefulLifePeriods ; i++){
+        
         const year = currentDate.getFullYear();
         const month = ("0" + (currentDate.getMonth() + 1)).slice(-2);
         const day = ("0" + currentDate.getDate()).slice(-2);

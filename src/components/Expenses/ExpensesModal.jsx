@@ -123,7 +123,7 @@ const ExpenseFormModal = ({
       if(exist){
         handleClose()
         Swal.fire({
-          title:'This expense has already been charged.',
+          title:'This expense already exist.',
           background:'white',
           icon:'warning',
           timer:2000,

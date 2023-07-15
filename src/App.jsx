@@ -1,11 +1,12 @@
 import 'App.css';
 import { Provider } from 'provider/Provider';
-import Router from 'Router';
+import RouterComponent from 'Router';
+
 function App() {
    return (
       <div className='App'>
          <Provider>
-            <Router />
+            <RouterComponent />
          </Provider>
       </div>
    );

@@ -1,5 +1,4 @@
 import React, { useState, useContext, useEffect } from "react";
-import { useLocation } from "react-router";
 import {
   Typography,
   TablePagination,
@@ -11,14 +10,13 @@ import { ModalContainer,
         ContainerExpenses,
         ContainerExpensesHeader,
         ContainerCardsComponents,
-        ContainerWidgets,
         ContainerExpensesData} from "./styled";
 import ExpensesList from "./ExpenseList";
 import { formatDate } from "./utils";
 import * as XLSX from "xlsx";
 import Swal from "sweetalert2";
 import SingleCardExpenses from "./components/SingleCardExpenses";
-
+import ExpensesCharts from "components/Charts/Charts";
 
 const Expenses = ({ Context }) => {
   const {
@@ -31,7 +29,7 @@ const Expenses = ({ Context }) => {
     fetchTags,
     budget
   } = useContext(Context);
-  const currentPath = useLocation().pathname.slice(1)
+
   const [editIndex, setEditIndex] = useState(null);
   const [page, setPage] = useState(0);
   const [ loadExcelStatus, setLoadExcelStatus ]  = useState(false)
@@ -149,7 +147,7 @@ const Expenses = ({ Context }) => {
     paddingLeft:'6.5vw',
     paddingRight:'6.5vw',
     }}>
-        <span style={{alignSelf:'start'}}>Home » {currentPath}</span>
+        <span style={{alignSelf:'start'}}>Home » Expenses</span>
     <ModalContainer>
     
       {/* Modal */}
@@ -161,37 +159,8 @@ const Expenses = ({ Context }) => {
         </ContainerCardsComponents>
 
         <ContainerExpensesData>
-          <ContainerWidgets>
-                <div style={{
-                    width:'25vw',
-                    height:'15vw',
-                    background:'gray'
-                  }}>
-                    WIDGET EXAMPLE
-                </div>
-                <div style={{
-                    width:'25vw',
-                    height:'15vw',
-                    background:'gray'
-                  }}>
-                    WIDGET EXAMPLE
-                </div>
-                <div style={{
-                    width:'25vw',
-                    height:'15vw',
-                    background:'gray'
-                  }}>
-                    WIDGET EXAMPLE
-                </div>
-                <div style={{
-                    width:'25vw',
-                    height:'15vw',
-                    background:'gray'
-                  }}>
-                    WIDGET EXAMPLE
-                </div>
-            
-          </ContainerWidgets>
+
+          <ExpensesCharts />
 
           <ContainerExpenses>
             

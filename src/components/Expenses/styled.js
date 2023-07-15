@@ -19,13 +19,6 @@ export const ContainerExpensesData = styled('div')({
   alignItems:'center'
 })
 
-//container charts
-export const ContainerWidgets = styled('div')({
-  display:'grid',
-  gridTemplateColumns:'repeat(2,1fr)',
-  gap:'2vw'
-})
-
 //Container expenses
 export const ContainerExpenses = styled('div')({
   width:'60vw',

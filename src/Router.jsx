@@ -1,7 +1,6 @@
 import { useContext } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import ProtectedRoutes from "./components/ProtectedRoutes/ProtectedRoutes";
-import Charts from "components/Charts/Charts";
 import Expenses from "components/Expenses/Expenses";
 import Header from "components/Header/Header";
 import { Context } from "provider/Provider";
@@ -45,7 +44,6 @@ const RouterComponent = () => {
               <ProtectedRoutes authToken={authToken}>
                 <>
                   <Header />
-                  <Charts />
                   <Footer />
                   <SupportPopUp Context={Context} />
                 </>

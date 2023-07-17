@@ -28,6 +28,7 @@ const Expenses = ({ Context }) => {
     changeExpenseRequest,
     fetchTags,
     budget
+    authToken
   } = useContext(Context);
 
   const [editIndex, setEditIndex] = useState(null);

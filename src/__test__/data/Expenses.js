@@ -33,8 +33,13 @@ export const mockState = {
   expenses: mockExpenses,
   tags: mockTags,
   fetchTags: jest.fn(),
+  fetchData: ()=>{
+    return Promise.resolve({})
+  },
   fetchExpenses: jest.fn(),
   deleteExpenseRequest: jest.fn(),
   changeExpenseRequest: jest.fn(),
   createExpenseRequest: jest.fn(),
+  monthlyExpenses:[],
+  weeklyExpense:[]
 };

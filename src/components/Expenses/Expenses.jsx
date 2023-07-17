@@ -28,7 +28,6 @@ const Expenses = ({ Context }) => {
     changeExpenseRequest,
     fetchTags,
     budget
-    authToken
   } = useContext(Context);
 
   const [editIndex, setEditIndex] = useState(null);
@@ -161,7 +160,7 @@ const Expenses = ({ Context }) => {
 
         <ContainerExpensesData>
 
-          <ExpensesCharts />
+          <ExpensesCharts Context={Context} />
 
           <ContainerExpenses>
             

@@ -15,14 +15,6 @@ jest.mock('components/Axios/Axios', () => ({
     post: jest.fn(),
 }));
 
-jest.mock('react-router',()=>({
-  ...jest.requireActual('react-router'),
-  useLocation:()=>{
-    return{
-        pathname:'testSTRINGexample'
-    }
-  }
-}))
 const TestContext = createContext(mockState);
 
 describe("changeExpenseRequest", () => {

@@ -73,13 +73,19 @@ export const checkExpensesDoesNotRepeat = async(newExpense, axiosPrivate, authTo
     return response || false
 }
 
-export const checkTagsAndLoad = (newTags, tags, getNewId, myTags, createTag) =>{
+export const checkTagsAndLoad = (newTags, tags, tagsOfExpense, createTag) =>{
+  const getNewId = () =>{
+    const maxId = tags.map((tag)=>tag.id)
+    return (Math.max(...maxId)+1)
+  }
 
-  const promises = myTags.map(async (newTag) => {
-      const exist = tags.some((tag) => tag.name === newTag.name);
+  const promises = tagsOfExpense.map(async (newTag) => {
+    const newTagName = newTag.name || newTag
+      const exist = tags.some((tag) => tag.name === newTag);
+      console.log(exist)
       if (!exist) {
-
-        const newTagNameUpperCase = newTag.name.replace(newTag.name[0], newTag.name[0].toUpperCase())
+        
+        const newTagNameUpperCase = newTagName.replace(newTag[0], newTag[0].toUpperCase())
 
         const newTagElement = {
           id: getNewId(),

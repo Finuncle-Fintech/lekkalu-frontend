@@ -86,9 +86,11 @@ const Expenses = ({ Context }) => {
             delete entry.amount
             delete entry.date
             
-            const createStatus = await createExpenseRequest({ ...entry, amount:amount.toFixed(2).toString() , tags: tagsIds, time: dateFormatted, user: 1 });
+            console.log(entry)
+
+            // const createStatus = await createExpenseRequest({ ...entry, amount:amount.toFixed(2).toString() , tags: tagsIds, time: dateFormatted, user: 1 });
             
-            setNewData((prevData)=>[...prevData, createStatus])
+            // setNewData((prevData)=>[...prevData, createStatus])
           });
 
           return Promise.all(promise)

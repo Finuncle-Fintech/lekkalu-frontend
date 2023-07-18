@@ -21,6 +21,7 @@ import ButtonExcel from "./components/ButtonExcel";
 import ModalExcelClosed from "./components/ModalExcelClosed";
 import { checkExpensesDoesNotRepeat } from "./utils";
 import useAxiosPrivate from "hooks/useAxiosPrivate";
+import { checkTagsAndLoad } from "./utils";
 
 const ExpenseFormModal = ({
   onAddExpense,
@@ -72,29 +73,7 @@ const ExpenseFormModal = ({
     return (Math.max(...maxId)+1)
   }
 
-  const loadTags = (arr) =>{
-
-    const promises = myTags.map(async (newTag) => {
-        const exist = tags.some((tag) => tag.name === newTag.name);
-        if (!exist) {
-
-          const newTagNameUpperCase = newTag.name.replace(newTag.name[0], newTag.name[0].toUpperCase())
-
-          const newTagElement = {
-            id: getNewId(),
-            name: newTagNameUpperCase,
-          };
-          arr.push(newTagElement);
-          tags.push(newTagElement);
-          await createTag(newTagElement);
-          return newTagElement;
-      } else {
-        arr.push(newTag);
-        return newTag;
-      }
-    });
-    return Promise.all(promises);
-}
+  
 
   const handleSubmit = async(e) => {
     e.preventDefault();
@@ -107,7 +86,7 @@ const ExpenseFormModal = ({
     }
     
     const newMyTags = []
-    await Promise.resolve(loadTags(newMyTags))
+    await Promise.resolve(checkTagsAndLoad(newMyTags, tags, getNewId, myTags, createTag))
   
     const tagIDs = newMyTags.map(tag => tag.id);
 

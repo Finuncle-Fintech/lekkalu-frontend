@@ -68,12 +68,7 @@ const ExpenseFormModal = ({
     setSelectedDate(date);
   };
 
-  const getNewId = () =>{
-    const maxId = tags.map((tag)=>tag.id)
-    return (Math.max(...maxId)+1)
-  }
-
-  
+ 
 
   const handleSubmit = async(e) => {
     e.preventDefault();
@@ -85,8 +80,10 @@ const ExpenseFormModal = ({
       setErrorTag(false)
     }
     
+    console.log(tags)
+    console.log(myTags)
     const newMyTags = []
-    await Promise.resolve(checkTagsAndLoad(newMyTags, tags, getNewId, myTags, createTag))
+    await Promise.resolve(checkTagsAndLoad(newMyTags, tags, myTags, createTag))
   
     const tagIDs = newMyTags.map(tag => tag.id);
 

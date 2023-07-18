@@ -11,11 +11,13 @@ import ExpensesList from "./ExpenseList";
 import { formatDate } from "./utils";
 import * as XLSX from "xlsx";
 import Swal from "sweetalert2";
+import { checkTagsAndLoad } from "./utils";
 
 const Expenses = ({ Context }) => {
   const {
     expenses,
     tags,
+    createTag,
     fetchExpenses,
     deleteExpenseRequest,
     createExpenseRequest,
@@ -78,19 +80,23 @@ const Expenses = ({ Context }) => {
         setNewData([{excelLength:parsedData.length}])
         
         const loadExcel = ()=>{
-          setLoadExcelStatus(true)
+          setLoadExcelStatus(true) 
+
           const promise = parsedData.map(async entry => {
             const dateFormatted = formatDate(new Date(entry.date));
-            const tagsIds = getTagNumbers(entry.tags.split(", "))
+            const tagsOfExpenses = entry.tags.split(', ')
             const {amount} = entry
             delete entry.amount
             delete entry.date
             
-            console.log(entry)
+            const newTagsExpenses = []
+            await Promise.resolve(checkTagsAndLoad(newTagsExpenses, tags, tagsOfExpenses, createTag ))
+            console.log(tags)
+            const tagsIds = getTagNumbers(newTagsExpenses)
 
-            // const createStatus = await createExpenseRequest({ ...entry, amount:amount.toFixed(2).toString() , tags: tagsIds, time: dateFormatted, user: 1 });
+            const createStatus = await createExpenseRequest({ ...entry, amount:amount.toFixed(2).toString() , tags: tagsIds, time: dateFormatted, user: 1 });
             
-            // setNewData((prevData)=>[...prevData, createStatus])
+            setNewData((prevData)=>[...prevData, createStatus])
           });
 
           return Promise.all(promise)

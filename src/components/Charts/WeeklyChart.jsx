@@ -1,6 +1,6 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React from 'react';
-import './WeeklyChart.css';
+import './styles/WeeklyChart.css';
 import {
    ResponsiveContainer,
    LineChart,
@@ -16,7 +16,7 @@ import Colors from 'constants/colors';
 export const WeeklyChart = (WeekData) => {
    return (
       <div
-         className='section-outer-wrapper col-md-8 mx-auto'
+         className='section-outer-wrapper'
          style={{ backgroundColor: Colors.graphBG }}
       >
          <h3 className='section-title text-white text-center'>

@@ -6,8 +6,7 @@ import {
 } from "@mui/material";
 import { SkipNext, SkipPrevious } from '@mui/icons-material';
 import ExpenseFormModal from "./ExpensesModal";
-import { ModalContainer,
-        ContainerExpenses,
+import {ContainerExpenses,
         ContainerExpensesHeader,
         ContainerCardsComponents,
         ContainerExpensesData} from "./styled";
@@ -17,6 +16,7 @@ import * as XLSX from "xlsx";
 import Swal from "sweetalert2";
 import SingleCardExpenses from "./components/SingleCardExpenses";
 import ExpensesCharts from "components/Charts/Charts";
+import styles from './styles/Expenses.module.css'
 
 const Expenses = ({ Context }) => {
   const {
@@ -137,117 +137,108 @@ const Expenses = ({ Context }) => {
 
 
   return (
-    <div style={{ margin: "35px 0",
-    textAlign: "center",
-    display:'flex',
-    flexDirection:'column',
-    justifyContent:'center',
-    alignItems:'start',
-    gap:'2vw',
-    paddingLeft:'6.5vw',
-    paddingRight:'6.5vw',
-    }}>
+    <section className={styles.container}>
         <span style={{alignSelf:'start'}}>Home » Expenses</span>
-    <ModalContainer>
-    
-      {/* Modal */}
-     
-        <ContainerCardsComponents>
-            {/* card */}
-            <SingleCardExpenses budgets={budget} />
+        <div className={styles.modalContainer}>
+        
+          {/* Modal */}
+        
+            <div className={styles.containerCardsComponents}>
+                {/* card */}
+                <SingleCardExpenses data={budget} title={'Budget'} />
 
-        </ContainerCardsComponents>
+            </div>
 
-        <ContainerExpensesData>
+            <ContainerExpensesData>
 
-          <ExpensesCharts Context={Context} />
+              <ExpensesCharts Context={Context} />
 
-          <ContainerExpenses>
-            
-            <ContainerExpensesHeader>
-              <Typography style={{fontSize:'1.2rem'}}>Expenses</Typography>
+              <div className={styles.containerExpenses}>
+                
+                <div className={styles.containerExpensesHeader}>
+                  <Typography style={{fontSize:'1.2rem'}}>Expenses</Typography>
 
-              <ExpenseFormModal
-                onAddExpense={createExpense}
-                onUpdateExpense={updateExpense}
-                expenseToEdit={returnExpenseToEdit()}
-                editIndex={editIndex}
-                onCancelEdit={() => setEditIndex(null)}
-                loadExcelStatus = {loadExcelStatus}
-                handleFileUpload={handleFileUpload}
-                createExpenseExcelStatus = {newData}
-                Context={Context}
-              />
-            </ContainerExpensesHeader>
-            {/* Arrows fro change expense */}
-            {/* <div style={{ display: 'flex', alignItems: 'center' }}>
-              <IconButton
-                onClick={() => {
-                  setPage((prevPage) => Math.max(prevPage - 3, 0));
-                }}
-              >
-                <SkipPrevious />
-              </IconButton>
-              <TablePagination
-                component="div"
-                count={70}
-                page={page}
-                onPageChange={handleChangePage}
-                rowsPerPage={rowsPerPage}
-                rowsPerPageOptions={[]}
-                labelDisplayedRows={() => ''}
-              />
-              <IconButton
-                onClick={() => {
-                  setPage((prevPage) => Math.min(prevPage + 3, 6));
-                }}
-              >
-                <SkipNext />
-              </IconButton>
-              {page * 10 + 1} - {page * 10 + 10} of 70
-            </div> */}
+                  <ExpenseFormModal
+                    onAddExpense={createExpense}
+                    onUpdateExpense={updateExpense}
+                    expenseToEdit={returnExpenseToEdit()}
+                    editIndex={editIndex}
+                    onCancelEdit={() => setEditIndex(null)}
+                    loadExcelStatus = {loadExcelStatus}
+                    handleFileUpload={handleFileUpload}
+                    createExpenseExcelStatus = {newData}
+                    Context={Context}
+                  />
+                </div>
+                {/* Arrows fro change expense */}
+                {/* <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <IconButton
+                    onClick={() => {
+                      setPage((prevPage) => Math.max(prevPage - 3, 0));
+                    }}
+                  >
+                    <SkipPrevious />
+                  </IconButton>
+                  <TablePagination
+                    component="div"
+                    count={70}
+                    page={page}
+                    onPageChange={handleChangePage}
+                    rowsPerPage={rowsPerPage}
+                    rowsPerPageOptions={[]}
+                    labelDisplayedRows={() => ''}
+                  />
+                  <IconButton
+                    onClick={() => {
+                      setPage((prevPage) => Math.min(prevPage + 3, 6));
+                    }}
+                  >
+                    <SkipNext />
+                  </IconButton>
+                  {page * 10 + 1} - {page * 10 + 10} of 70
+                </div> */}
 
-            <ExpensesList
-              expenses={expenses}
-              getTagNames={getTagNames}
-              setEditIndex={setEditIndex}
-              deleteExpense={deleteExpense}
-            />
-            {/* Arrows for change the expenses view */}
-            {/* {!!expenses.length &&
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <IconButton
-                  onClick={() => {
-                    setPage((prevPage) => Math.max(prevPage - 3, 0));
-                  }}
-                >
-                  <SkipPrevious />
-                </IconButton>
-                <TablePagination
-                  component="div"
-                  count={70}
-                  page={page}
-                  onPageChange={handleChangePage}
-                  rowsPerPage={10}
-                  rowsPerPageOptions={[]}
-                  labelDisplayedRows={() => ''}
+                <ExpensesList
+                  expenses={expenses}
+                  getTagNames={getTagNames}
+                  setEditIndex={setEditIndex}
+                  deleteExpense={deleteExpense}
                 />
-                <IconButton
-                  onClick={() => {
-                    setPage((prevPage) => Math.min(prevPage + 3, 6));
-                  }}
-                >
-                  <SkipNext />
-                </IconButton>
-                {page * 10 + 1} - {page * 10 + 10} of 70
+                {/* Arrows for change the expenses view */}
+                {/* {!!expenses.length &&
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <IconButton
+                      onClick={() => {
+                        setPage((prevPage) => Math.max(prevPage - 3, 0));
+                      }}
+                    >
+                      <SkipPrevious />
+                    </IconButton>
+                    <TablePagination
+                      component="div"
+                      count={70}
+                      page={page}
+                      onPageChange={handleChangePage}
+                      rowsPerPage={10}
+                      rowsPerPageOptions={[]}
+                      labelDisplayedRows={() => ''}
+                    />
+                    <IconButton
+                      onClick={() => {
+                        setPage((prevPage) => Math.min(prevPage + 3, 6));
+                      }}
+                    >
+                      <SkipNext />
+                    </IconButton>
+                    {page * 10 + 1} - {page * 10 + 10} of 70
+                  </div>
+                } */}
               </div>
-            } */}
-          </ContainerExpenses>
+              
+            </ContainerExpensesData>
           
-        </ContainerExpensesData>
-      
-    </ModalContainer>
-    </div>
+        </div>
+    </section>
 
   );
 };

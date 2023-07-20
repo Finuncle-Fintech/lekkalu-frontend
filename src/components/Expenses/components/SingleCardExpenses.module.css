@@ -38,3 +38,11 @@
     padding-top:.2vw;
     padding-bottom:.2vw;
 }
+    @media (max-width:768px) {
+        .container{
+            height: 40vw;
+        }
+        .containerTitle{
+            height: fit-content;
+        }
+    }

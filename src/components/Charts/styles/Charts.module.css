@@ -1,0 +1,15 @@
+.container{
+    gap: 3vw;
+    display: flex;
+    width: 100%;
+    overflow-x: scroll;
+    scroll-snap-type: x proximity;
+    scroll-snap-align: center;
+}
+@media (min-width:768px) {
+    .container{
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        overflow: hidden;
+    }
+}

@@ -9,7 +9,7 @@ import {
   Surface,
   Symbols,
 } from "recharts";
-import styles from "./IncomeStatementChart.module.css";
+import styles from "./styles/IncomeStatementChart.module.css";
 import useWindowDimensions from "hooks/useWindowDimensions";
 export const IncomeStatementChart = (props) => {
   const size = useWindowDimensions();

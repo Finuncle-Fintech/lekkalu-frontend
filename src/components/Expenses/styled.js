@@ -19,32 +19,6 @@ export const ContainerExpensesData = styled('div')({
   alignItems:'center'
 })
 
-//Container expenses
-export const ContainerExpenses = styled('div')({
-  width:'60vw',
-  height:'20vw',
-  overflow:'scroll',
-  overflowX:'hidden',
-  '&::-webkit-scrollbar': {
-      backgroundColor:'transparent',
-      position:'absolute',
-      width:'.4vw',
-    },
-  '&::-webkit-scrollbar-thumb': {
-    background: '#C1C1C1', 
-    borderRadius: '1rem',
-  },
-})
-export const ContainerExpensesHeader = styled('div')({
-  display:'flex',
-  alignItems:'center',
-  justifyContent:'space-between',
-  backgroundColor:'#62D4E3',
-  height:'2.5vw',
-  position:'sticky',
-  top:'0px',
-  zIndex:'5'
-})
 
 //Budget Container
 export const ContainerCardsComponents=styled('div')({

@@ -2,17 +2,16 @@
 import React, { createContext } from 'react';
 import { render, fireEvent, waitFor, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import Expenses from 'components/Expenses/Expenses';
-import { mockState } from '__test__/data/Expenses';
-import useAxiosPrivate from 'hooks/useAxiosPrivate';
+import Expenses from '../../components/Expenses/Expenses';
+import { mockState } from '../data/Expenses';
 
 jest.mock('axios', () => ({
   post: jest.fn(),
   get: jest.fn(),
   create: jest.fn(),
 }));
-jest.mock('hooks/useAxiosPrivate', () => jest.fn());
-jest.mock('components/Axios/Axios', () => ({
+jest.mock('../../hooks/useAxiosPrivate', () => jest.fn());
+jest.mock('../../components/Axios/Axios', () => ({
   post: jest.fn(),
 }));
 

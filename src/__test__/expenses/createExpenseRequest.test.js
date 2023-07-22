@@ -12,8 +12,8 @@ jest.mock('axios', () => ({
   get: jest.fn(),
   create: jest.fn(),
 }));
-jest.mock('hooks/useAxiosPrivate', () => jest.fn());
-jest.mock('components/Axios/Axios', () => ({
+jest.mock('../../hooks/useAxiosPrivate', () => jest.fn());
+jest.mock('../../components/Axios/Axios', () => ({
   post: jest.fn(),
 }));
 

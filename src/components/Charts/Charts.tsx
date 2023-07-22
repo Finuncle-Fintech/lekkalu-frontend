@@ -190,6 +190,11 @@ const Charts = () => {
     setTotalLiabilitiesValue(totalData);
   }, [liabilities]);
 
+  console.log('final Monthly expense', finalMonthlyExp);
+  console.log('final weekly expense', finalWeeklyExp);
+  console.log('assets', finalAssets);
+  console.log('liabilities', finalLiabilities);
+
   if (
     errorAssets ||
     errorLiabilities ||

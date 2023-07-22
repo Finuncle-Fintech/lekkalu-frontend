@@ -28,6 +28,7 @@ const Expenses = ({ Context }) => {
     createExpenseRequest,
     changeExpenseRequest,
     fetchTags,
+    authToken
   } = useContext(Context);
   const getDate = new Date()
   const [editIndex, setEditIndex] = useState(null);
@@ -173,8 +174,10 @@ const Expenses = ({ Context }) => {
         onCancelEdit={() => setEditIndex(null)}
         loadExcelStatus={loadExcelStatus}
         handleFileUpload={handleFileUpload}
-        createExpenseExcelStatus={newData}
+        createExpenseExcelStatus = {newData}
+        expenses = {expenses}
         Context={Context}
+        authToken = {authToken}
       />
       <Typography variant="h6">Expense List</Typography>
       <div className="d-flex justify-content-between align-items-center my-3">

@@ -80,20 +80,18 @@ const ExpenseFormModal = ({
       setErrorTag(false)
     }
     
-    console.log(tags)
-    console.log(myTags)
     const newMyTags = []
     await Promise.resolve(checkTagsAndLoad(newMyTags, tags, myTags, createTag))
-  
     const tagIDs = newMyTags.map(tag => tag.id);
 
+  
     const newExpense = {
       amount,
       tags: tagIDs,
       user: 1,
       time: formatDate(new Date(selectedDate))
     };
-
+    
     if (editIndex !== null) {
       onUpdateExpense(editIndex, { ...expenseToEdit, ...newExpense });
     } else {
@@ -110,6 +108,7 @@ const ExpenseFormModal = ({
         }).then(()=>{handleClickOpen(); setDefaultLoadStatus(false)})
         return
       }
+  
       onAddExpense({ ...newExpense });
     }
 

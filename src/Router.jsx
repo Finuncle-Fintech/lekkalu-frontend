@@ -12,6 +12,8 @@ import Footer from "components/Footer/Footer";
 import Signin from "./pages/Signin/Signin";
 import Signup from "./pages/Signup/Signup";
 import PersistLogin from "components/PersistLogin/PersistLogin";
+import ErrorPage from "components/ErrorPage/ErrorPage";
+import SIPCalculator from "pages/SIPCalculator/SIPCalculator";
 
 const RouterComponent = () => {
   const { authToken } = useContext(Context);
@@ -88,6 +90,23 @@ const RouterComponent = () => {
                 </>
               </ProtectedRoutes>
             }
+          />
+          <Route
+            path="/SIPCalculator"
+            element={
+              <ProtectedRoutes authToken={authToken}>
+                <>
+                  <Header />
+                  <SIPCalculator />
+                  <Footer />
+                  <SupportPopUp Context={Context} />
+                </>
+              </ProtectedRoutes>
+            }
+          />
+          <Route
+            path="*"
+            element={<ErrorPage />}
           />
         </Route>
       </Routes>

@@ -1,5 +1,12 @@
+.tableWrapper{
+  min-width: fit-content;  
+  height: 75%;
+  overflow: auto;
+}
+
 .table{
-  background-color: transparent;    
+  background-color: transparent; 
+
 }
 
 .tableRow th{    
@@ -34,4 +41,12 @@
   background-color: transparent;
   border: none;
   color: rgba(0, 0, 0, 0.5);  
+}
+
+.totalAmountRow{
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  background: white;  
+  margin-top: 2px;
 }

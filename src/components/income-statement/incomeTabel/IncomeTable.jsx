@@ -6,12 +6,14 @@ import TableCell from "@mui/material/TableCell";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";  
-import styles from './SingleTable.module.css';
+import styles from './IncomeTable.module.css';
 import AddIcon from '@mui/icons-material/Add';
 
+import Swal from 'sweetalert2'
 
 
-const SingleTable = ({header, headerColor}) => {
+
+const IncomeTable = ({header, headerColor}) => {
 
   const [total, setTotal] = useState(0);
 
@@ -20,13 +22,12 @@ const SingleTable = ({header, headerColor}) => {
   }
 
   const rows = [
-    createData("Item 1", 159),
-    createData("Item 2", 237),
-    createData("Item 3", 262),
-    createData("Item 4", 305),
-    createData("Item 5", 500),
+    createData("Salary", 224.24),
+   
     createData("Total", total),
   ];
+
+  const [initalState, setInitialState] = useState(rows)
 
   const setTotalValue = () => {
     const totalValue = Object.values(rows).reduce((r, { plus }) => r + plus, 0);
@@ -37,14 +38,32 @@ const SingleTable = ({header, headerColor}) => {
     setTotalValue();
   }, []);
 
-  const addNewRecord = () => {
-    alert(`add new record to table ${header}`)
+  const updateState = (name, plus) => {    
+    setInitialState(...initalState, `createData(${name}, ${plus})`)
+    console.log(initalState)    
   }
 
+  const addNewRecord = () => {        
+    Swal.fire({
+      title: 'New Record',
+      html:
+        '<label>Record Name:</label><input id="swal-input1" class="swal2-input">' +
+        '<label>Record Value:</label><input id="swal-input2" type="number" class="swal2-input">',
+      focusConfirm: false,
+      preConfirm: () => {
+       
+        return [    
+          updateState(document.getElementById('swal-input1').value, document.getElementById('swal-input2').value)                    
+        ]
+      }
+    })    
+  }
+
+
   return (
-    <div>
+    <div className={styles.tableWrapper}>
         <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 400 }} className={styles.table} aria-label="simple table">
+            <Table sx={{ minWidth: 300 }} className={styles.table} aria-label="simple table">
               <TableHead  className={styles.tableRow}>
                 <TableRow >
                   <TableCell sx={{ bgcolor: `${headerColor}` }}>{header}</TableCell>
@@ -67,6 +86,7 @@ const SingleTable = ({header, headerColor}) => {
                     <TableCell align="right">{row.plus}</TableCell>
                   </TableRow>
                 ))}
+              
               </TableBody>
             </Table>
           </TableContainer>
@@ -74,4 +94,4 @@ const SingleTable = ({header, headerColor}) => {
   )
 }
 
-export default SingleTable
+export default IncomeTable

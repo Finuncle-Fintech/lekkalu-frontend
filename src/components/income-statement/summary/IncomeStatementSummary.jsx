@@ -1,8 +1,9 @@
 import React from "react";
 import { IncomeStatementChart } from "components/Charts/IncomeStatementChart";
 import styles from "./IncomeStatementSummary.module.css";
-
-import SingleTable from "../table/SingleTable";
+import IncomeTable from "../incomeTabel/IncomeTable";
+import ExpensesTable from "../expensesTable/ExpensesTable";
+import SummaryTable from "../SummaryTable/SummaryTable";
 import Footer from "components/Footer/Footer";
 const IncomeStatementSummary = ({
   incomeStatement,
@@ -53,7 +54,7 @@ const IncomeStatementSummary = ({
         <div className={styles.sideLeft}></div>
         <div className={styles.sideRight}>
           <div className={styles.innerCol}>
-            <SingleTable header="Assets" headerColor="#62D4E3" />
+            <IncomeTable header="Income Sources" headerColor="#62D4E3" />
             <IncomeStatementChart
               type="income-overview"
               data={incomeStatement}
@@ -61,10 +62,10 @@ const IncomeStatementSummary = ({
               incomeOverviewData={incomeOverviewData}
               details={true}
             />
-            <SingleTable header="Summary Statistics" headerColor="#E362BF" />
+            <SummaryTable header="Summary Statistics" headerColor="#E362BF" />
           </div>
           <div className={styles.innerCol}>
-            <SingleTable header="Liabilities" headerColor="#E362BF" />
+            <ExpensesTable header="Expenses" headerColor="#E362BF" />
             <IncomeStatementChart
               type="expense-overview"
               data={incomeStatement}
@@ -72,7 +73,7 @@ const IncomeStatementSummary = ({
               expenseOverviewData={expenseOverviewData}
               details={true}
             />
-            <SingleTable header="Summary Statistics" headerColor="#E362BF" />
+            <SummaryTable header="Summary Statistics" headerColor="#E362BF" />
           </div>
         </div>
       </div>

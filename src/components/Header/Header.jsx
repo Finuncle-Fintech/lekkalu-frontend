@@ -34,6 +34,14 @@ const Header = () => {
           SIP Calculator
         </HeaderButton>
 
+        <HeaderButton
+          color="inherit"
+          component={Link}
+          to="/CAGRCalculator"
+        >
+          CAGR Calculator
+        </HeaderButton>
+
         <Box sx={{ flexGrow: 1 }} />
 
         {

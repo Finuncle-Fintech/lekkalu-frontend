@@ -23,9 +23,9 @@ const SummaryTable = ({header, headerColor}) => {
 
   const rows = [
     createData("Item 1", 159),
-    createData("Item 2", 237),
+    createData("Item 2", -237),
     createData("Item 3", 262),
-    createData("Item 4", 305),
+    createData("Item 4", -50),
     createData("Item 5", 500),
     createData("Total", total),
   ];
@@ -86,7 +86,7 @@ const SummaryTable = ({header, headerColor}) => {
                     >
                       {row.name}
                     </TableCell>
-                    <TableCell align="right">{row.plus}</TableCell>
+                    {Number(row.plus) > 0? <TableCell sx={{color: 'green'}} align="right">{row.plus}</TableCell> : <TableCell sx={{color: 'red'}} align="right">{row.plus}</TableCell>}
                   </TableRow>
                 ))}
               

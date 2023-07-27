@@ -2,6 +2,8 @@
   min-width: fit-content;  
   height: 75%;
   overflow: auto;
+  margin-bottom: 10px;
+  background-color: white;
 }
 
 .table{
@@ -16,6 +18,8 @@
   padding: 0.5rem 1.5rem;    
   font-size: 1.1rem;
   font-weight: 600;
+  position: sticky;
+  top: 0;  
 }
 
 .tableRow th:nth-child(1){
@@ -49,4 +53,5 @@
   left: 0;
   background: white;  
   margin-top: 2px;
+  border-bottom: 2px solid black;
 }

@@ -25,6 +25,13 @@ const Header = () => {
         >
           EMI Calculator
         </HeaderButton>
+        <HeaderButton
+          color="inherit"
+          component={Link}
+          to="/SIPCalculator"
+        >
+          SIP Calculator
+        </HeaderButton>
 
         <Box sx={{ flexGrow: 1 }} />
 

@@ -58,76 +58,6 @@ const Provider = ({ children }) => {
     }
   };
 
-  const fetchExpenses = async (page, rowsPerPage) => {
-    try {
-      const headers = {
-        Authorization: `Bearer ${authToken}`,
-        'Content-Type': 'application/json',
-      };
-      await axiosPrivate
-        .get(`${process.env.REACT_APP_BACKEND_API}expenses/`, {
-          headers,
-          params: {
-            page: page + 1,
-            per_page: rowsPerPage,
-          },
-        })
-        .then((res) => {
-          dispatch({
-            type: Types.FETCH_EXPENSE,
-            payload: res.data,
-          });
-        });
-    } catch (error) {
-      handleErrors(error);
-    }
-  };
-
-  const deleteExpenseRequest = async (id) => {
-    try {
-      const headers = {
-        Authorization: `Bearer ${authToken}`,
-        'Content-Type': 'application/json',
-      };
-
-      await axiosPrivate
-        .delete(`${process.env.REACT_APP_BACKEND_API}expenses/${id}`, {
-          headers,
-        })
-        .then((res) => {
-          dispatch({
-            type: Types.DELETE_EXPENSE,
-            payload: id,
-          });
-        });
-    } catch (error) {
-      handleErrors(error);
-    }
-  };
-
-  const changeExpenseRequest = async (index, expense) => {
-    try {
-      const headers = {
-        Authorization: `Bearer ${authToken}`,
-        'Content-Type': 'application/json',
-      };
-      await axiosPrivate
-        .put(
-          `${process.env.REACT_APP_BACKEND_API}expenses/${expense.id}`,
-          expense,
-          { headers },
-        )
-        .then((res) => {
-          dispatch({
-            type: Types.EDIT_EXPENSE,
-            payload: { index, expense },
-          });
-        });
-    } catch (error) {
-      handleErrors(error);
-    }
-  };
-
   const fetchData = async () => {
     try {
       console.log(`CURRENT TOKEN ${authToken}`);
@@ -236,9 +166,6 @@ const Provider = ({ children }) => {
         incomeStatement,
         statusFeedback,
         fetchData,
-        fetchExpenses,
-        deleteExpenseRequest,
-        changeExpenseRequest,
         fetchIncomeStatement,
       }}
     >

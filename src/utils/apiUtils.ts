@@ -23,38 +23,6 @@ axios.interceptors.request.use(
   },
 );
 
-axios.interceptors.response.use(
-  (response) => response,
-  // handle error incase accessToken is expired
-  async (error) => {
-    const prevRequest = error?.config;
-    if ((error?.response.status === 403 || 401) && !prevRequest?.sent) {
-      prevRequest.sent = true;
-
-      const newAccessToken = await refreshAccessToken(); //get new access token using the useRefresh hook
-
-      storageUtils.setAuthToken(newAccessToken);
-
-      prevRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
-
-      return axios(prevRequest);
-    }
-
-    return Promise.reject(error);
-  },
-);
-
-const refreshAccessToken = async () => {
-  const response = await apiUtils.postRequest(
-    'token/refresh/',
-    JSON.stringify({
-      refresh: storageUtils.getAuthToken(),
-    }),
-  );
-
-  return response?.data?.access;
-};
-
 const apiUtils = {
   getRequest: async (url: string) => {
     try {
@@ -91,10 +59,10 @@ const apiUtils = {
       throw error;
     }
   },
-  deleteRequest: async (url: string, id: string) => {
+  deleteRequest: async (url: string) => {
     try {
       const res = await axios.delete(
-        `${process.env.REACT_APP_BACKEND_URL}${url}${id}`,
+        `${process.env.REACT_APP_BACKEND_URL}${url}`,
         axiosConfig,
       );
       return res;

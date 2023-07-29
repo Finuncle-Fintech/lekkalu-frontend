@@ -21,6 +21,7 @@ import ButtonExcel from './components/ButtonExcel';
 import ModalExcelClosed from './components/ModalExcelClosed';
 import { checkExpensesDoesNotRepeat } from './utils';
 import useAxiosPrivate from '../../hooks/useAxiosPrivate';
+import { useCreateTag } from '../../utils/hooks';
 
 const ExpenseFormModal = ({
   onAddExpense,
@@ -31,8 +32,8 @@ const ExpenseFormModal = ({
   handleFileUpload,
   loadExcelStatus,
   createExpenseExcelStatus,
-  Context,
   authToken,
+  tags,
 }) => {
   const [open, setOpen] = useState(false);
   const [amount, setAmount] = useState('');
@@ -40,8 +41,10 @@ const ExpenseFormModal = ({
   const [errorTag, setErrorTag] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [defaultLoadStatus, setDefaultLoadStatus] = useState(false);
-  const { tags, createTag } = useContext(Context);
+  // const { tags, createTag } = useContext(Context);
   const axiosPrivate = useAxiosPrivate();
+
+  const { handleRequest } = useCreateTag();
 
   useEffect(() => {
     if (expenseToEdit) {
@@ -87,7 +90,7 @@ const ExpenseFormModal = ({
         };
         arr.push(newTagElement);
         tags.push(newTagElement);
-        await createTag(newTagElement);
+        await handleRequest(newTagElement);
         return newTagElement;
       } else {
         arr.push(newTag);
@@ -216,7 +219,7 @@ const ExpenseFormModal = ({
               <TagInput
                 myTags={myTags}
                 setTags={setMyTags}
-                Context={Context}
+                tags={tags}
                 errorTag={errorTag}
               />
               <Typography variant="p">Choose the date:</Typography>

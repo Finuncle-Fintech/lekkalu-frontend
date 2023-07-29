@@ -14,6 +14,7 @@ import Container from '@mui/material/Container';
 import { useLogin } from '../../utils/hooks/useLoginUser';
 import { Link as ReactRouterLink } from 'react-router-dom';
 import Copyright from '../../components/Copyright/Copyright';
+import swal from 'sweetalert';
 
 export const Signin = () => {
   const { handleSubmit: handleSignInSubmit } = useLogin();
@@ -26,7 +27,15 @@ export const Signin = () => {
       password: data.get('password'),
     });
 
-    handleSignInSubmit(regsiteredData);
+    if (Object.values(JSON.parse(regsiteredData)).every(Boolean)) {
+      handleSignInSubmit(regsiteredData);
+    } else {
+      swal({
+        title: 'error alert',
+        text: 'username and passord required',
+        icon: 'error',
+      });
+    }
   };
 
   return (

@@ -10,6 +10,9 @@ import { useGetMonthlyExpense } from './useGetMonthlyExpense';
 import { useGetAssets } from './useGetAssets';
 import { useGetWeeklyExpense } from './useGetWeeklyExpense';
 import { useGetLiabilities } from './useGetLiabilities';
+import { useGetExpenses } from './useGetExpenses';
+import { useDeleteExpenseRequest } from './useDeleteExpenseRequest';
+import { useChangeExpenseRequest } from './useChangeExpenseRequest';
 
 export {
   useCreateTag,
@@ -24,4 +27,7 @@ export {
   useGetAssets,
   useGetWeeklyExpense,
   useGetLiabilities,
+  useGetExpenses,
+  useDeleteExpenseRequest,
+  useChangeExpenseRequest,
 };

@@ -32,6 +32,15 @@ const services = {
   createExpense: async (payload: any) => {
     return await apiUtils.postRequest(`${api.EXPENSES}`, payload);
   },
+  getExpenses: async (params?: string) => {
+    return await apiUtils.getRequest(`${api.EXPENSES}?${params}`);
+  },
+  deleteExpenseRequest: async (id: string | number) => {
+    return await apiUtils.deleteRequest(`${api.EXPENSES}${id}`);
+  },
+  changeExpenseRequest: async (expense: any) => {
+    return await apiUtils.putRequest(`${api.EXPENSES}${expense.id}`, expense);
+  },
 };
 
 export default services;

@@ -17,8 +17,11 @@ export const useLogin = () => {
       window.location.href = '/';
     },
     onError: (error: AxiosError<any>) => {
-      console.log('log in response error');
-      console.log(error?.response?.data);
+      swal({
+        title: 'error alert',
+        text: 'An error ocurred , confirm sign in credentials',
+        icon: 'error',
+      });
     },
   });
 

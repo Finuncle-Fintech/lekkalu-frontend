@@ -1,5 +1,6 @@
 import CalculatorCAGR from "components/CAGRCalculator/CalculatorCAGR"
 import PieCAGR from "components/CAGRCalculator/PieCAGR"
+import SummaryCAGR from "components/CAGRCalculator/SummaryCAGR"
 import { useState } from "react"
 
 export default function CAGRCalculator(){
@@ -18,9 +19,7 @@ export default function CAGRCalculator(){
                 </div>
                 {
                 summary.length!==0&&(
-                    <>
-                    <PieCAGR data={summary} />
-                    </>
+                    <SummaryCAGR summary={summary} />
                 )
             }
             </article>

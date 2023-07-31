@@ -6,7 +6,6 @@ export default function CalculatorCAGR({setSummary}){
     const [ finalVal, setFinalVal ] = useState(false)
     const [ durationInvestment, setDurationInvestment ] = useState(false)
     const [ error, setError ] = useState(false)
-    const [ CAGR, setCAGR ] = useState(NaN)
 
     const handleCalculate = (e) =>{
         e.preventDefault()
@@ -20,7 +19,7 @@ export default function CalculatorCAGR({setSummary}){
             return
         }
         const { initialValNum, finalValNum, durationInvestmentNum, CAGRPercentage } = getCAGR(initialVal, finalVal, durationInvestment)
-        setSummary([
+        setSummary([[
           {
             name: 'Inital Value',
             value: initialValNum,
@@ -29,8 +28,7 @@ export default function CalculatorCAGR({setSummary}){
             name: 'Final Value',
             value: finalValNum,
           },
-        ]);
-        setCAGR(CAGRPercentage)
+        ], CAGRPercentage] );
         setError(false)
     }
 
@@ -46,7 +44,7 @@ export default function CalculatorCAGR({setSummary}){
             <TextField error={error.finalVal} type='number' onChange={(e)=>setFinalVal(e.target.value)} label='Final Value Costs (₹)' />
             <TextField error={error.durationInvestment} type='number' onChange={(e)=>setDurationInvestment(e.target.value)} label='Duration of Investment (Years)' />
             <Button variant="contained" type="submit" color="primary">
-                {!isNaN(CAGR)?`${CAGR}%`:'Calculate'}
+                Calculate
             </Button>
         </form>
     )

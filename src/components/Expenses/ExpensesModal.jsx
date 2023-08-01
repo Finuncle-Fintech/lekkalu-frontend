@@ -85,10 +85,10 @@ const ExpenseFormModal = ({
     const tagIDs = newMyTags.map(tag => tag.id);
 
   
-    const newExpense = {
+    let newExpense = {
       amount,
       tags: tagIDs,
-      user: 1,
+      userID: 1,
       time: formatDate(new Date(selectedDate))
     };
     

@@ -3,8 +3,8 @@ import { useState } from "react";
 
 export default function CalculatorCAGR({setSummary}){
     const [ initialVal, setInitialVal ] = useState('')
-    const [ finalVal, setFinalVal ] = useState(false)
-    const [ durationInvestment, setDurationInvestment ] = useState(false)
+    const [ finalVal, setFinalVal ] = useState('')
+    const [ durationInvestment, setDurationInvestment ] = useState('')
     const [ error, setError ] = useState(false)
 
     const handleCalculate = (e) =>{
@@ -42,8 +42,8 @@ export default function CalculatorCAGR({setSummary}){
         onSubmit={(e)=>handleCalculate(e)}
         >
             <TextField value={initialVal} error={error.initialVal} onChange={(e)=>minusChecker(e, setInitialVal)} label='Initial value (₹)' />
-            <TextField error={error.finalVal}  onChange={(e)=>minusChecker(e, setFinalVal)} label='Final Value Costs (₹)' />
-            <TextField error={error.durationInvestment} onChange={(e)=>minusChecker(e, setDurationInvestment)} label='Duration of Investment (Years)' />
+            <TextField value={finalVal} error={error.finalVal}  onChange={(e)=>minusChecker(e, setFinalVal)} label='Final Value Costs (₹)' />
+            <TextField value={durationInvestment} error={error.durationInvestment} onChange={(e)=>minusChecker(e, setDurationInvestment)} label='Duration of Investment (Years)' />
             <Button variant="contained" type="submit" color="primary">
                 Calculate
             </Button>
@@ -53,7 +53,7 @@ export default function CalculatorCAGR({setSummary}){
 
 const minusChecker = (e,setState) =>{
     const value = e.target.value
-    if(value.includes('-')) return
+    if(value.includes('-') || isNaN(value) ) return
     setState(value)
 }
 

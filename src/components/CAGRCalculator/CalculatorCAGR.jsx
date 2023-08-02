@@ -2,7 +2,7 @@ import { Button, TextField } from "@mui/material";
 import { useState } from "react";
 
 export default function CalculatorCAGR({setSummary}){
-    const [ initialVal, setInitialVal ] = useState(false)
+    const [ initialVal, setInitialVal ] = useState('')
     const [ finalVal, setFinalVal ] = useState(false)
     const [ durationInvestment, setDurationInvestment ] = useState(false)
     const [ error, setError ] = useState(false)
@@ -18,7 +18,8 @@ export default function CalculatorCAGR({setSummary}){
             setSummary([])
             return
         }
-        const { initialValNum, finalValNum, durationInvestmentNum, CAGRPercentage } = getCAGR(initialVal, finalVal, durationInvestment)
+
+        const { initialValNum, finalValNum, CAGRPercentage } = getCAGR(initialVal, finalVal, durationInvestment)
         setSummary([[
           {
             name: 'Inital Value',
@@ -40,14 +41,20 @@ export default function CalculatorCAGR({setSummary}){
         }}
         onSubmit={(e)=>handleCalculate(e)}
         >
-            <TextField error={error.initialVal} type='number' onChange={(e)=>setInitialVal(e.target.value)} label='Initial value (₹)' />
-            <TextField error={error.finalVal} type='number' onChange={(e)=>setFinalVal(e.target.value)} label='Final Value Costs (₹)' />
-            <TextField error={error.durationInvestment} type='number' onChange={(e)=>setDurationInvestment(e.target.value)} label='Duration of Investment (Years)' />
+            <TextField value={initialVal} error={error.initialVal} onChange={(e)=>minusChecker(e, setInitialVal)} label='Initial value (₹)' />
+            <TextField error={error.finalVal}  onChange={(e)=>minusChecker(e, setFinalVal)} label='Final Value Costs (₹)' />
+            <TextField error={error.durationInvestment} onChange={(e)=>minusChecker(e, setDurationInvestment)} label='Duration of Investment (Years)' />
             <Button variant="contained" type="submit" color="primary">
                 Calculate
             </Button>
         </form>
     )
+}
+
+const minusChecker = (e,setState) =>{
+    const value = e.target.value
+    if(value.includes('-')) return
+    setState(value)
 }
 
 const getCAGR = (initialVal, finalVal, durationInvestment) =>{

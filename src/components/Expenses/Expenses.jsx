@@ -27,7 +27,8 @@ const Expenses = ({ Context }) => {
     createExpenseRequest,
     changeExpenseRequest,
     fetchTags,
-    budget
+    budget,
+    authToken
   } = useContext(Context);
 
   const [editIndex, setEditIndex] = useState(null);
@@ -168,6 +169,7 @@ const Expenses = ({ Context }) => {
                     handleFileUpload={handleFileUpload}
                     createExpenseExcelStatus = {newData}
                     Context={Context}
+                    authToken={authToken}
                   />
                 </div>
                 {/* Arrows fro change expense */}

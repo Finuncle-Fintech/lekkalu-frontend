@@ -123,7 +123,9 @@ const ExpenseFormModal = ({
       onUpdateExpense(editIndex, { ...expenseToEdit, ...newExpense });
     } else {
       setDefaultLoadStatus(true)
+      
       const exist = await checkExpensesDoesNotRepeat(newExpense, axiosPrivate, authToken)
+
       if(exist){
         handleClose()
         Swal.fire({
@@ -135,6 +137,7 @@ const ExpenseFormModal = ({
         }).then(()=>{handleClickOpen(); setDefaultLoadStatus(false)})
         return
       }
+      
       onAddExpense({ ...newExpense });
     }
 

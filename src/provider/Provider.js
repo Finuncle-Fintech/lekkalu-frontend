@@ -438,7 +438,7 @@ const Provider = ({ children }) => {
       setAuthToken(null)
       deleteCookie('refresh')
    };
-
+   
    return (
       <Context.Provider
          value={{

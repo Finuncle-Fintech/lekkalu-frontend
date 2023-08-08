@@ -136,7 +136,6 @@ const Expenses = ({ Context }) => {
     setPage(newPage);
   };
 
-
   return (
     <section className={styles.container}>
         <span style={{alignSelf:'start'}}>Home » Expenses</span>

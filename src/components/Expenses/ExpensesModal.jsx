@@ -79,19 +79,18 @@ const ExpenseFormModal = ({
     }else{
       setErrorTag(false)
     }
-    
+
     const newMyTags = []
     await Promise.resolve(checkTagsAndLoad(newMyTags, tags, myTags, createTag))
     const tagIDs = newMyTags.map(tag => tag.id);
-
-  
+ 
     let newExpense = {
       amount,
       tags: tagIDs,
       userID: 1,
       time: formatDate(new Date(selectedDate))
     };
-    
+     
     if (editIndex !== null) {
       onUpdateExpense(editIndex, { ...expenseToEdit, ...newExpense });
     } else {

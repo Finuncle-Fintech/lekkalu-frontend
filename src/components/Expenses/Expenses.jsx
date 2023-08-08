@@ -42,14 +42,7 @@ const Expenses = ({ Context }) => {
       .filter((tag) => tag !== undefined);
   };
 
-  const getTagNumbers = (tagValues) => {
-    return tagValues
-      .map((tagValue) => {
-        const foundTag = tags.find((tag) => tag.name === tagValue);
-        return foundTag ? foundTag.id : null;
-      })
-      .filter((tag) => tag !== undefined);
-  };
+
 
   const getTagNames =(tagValues) => {
     const tagNames = tagValues&&tagValues
@@ -80,18 +73,28 @@ const Expenses = ({ Context }) => {
         setNewData([{excelLength:parsedData.length}])
         
         const loadExcel = ()=>{
-          setLoadExcelStatus(true) 
+          setLoadExcelStatus(true)
+
+          const getTagNumbers = (tagValues) => {
+            return tagValues
+              .map((tagValue) => {
+                const foundTag = tags.find((tag) => tag.name === tagValue.name);
+                return foundTag ? foundTag.id : null;
+              })
+              .filter((tag) => tag !== undefined);
+          };
 
           const promise = parsedData.map(async entry => {
             const dateFormatted = formatDate(new Date(entry.date));
-            const tagsOfExpenses = entry.tags.split(', ')
+            
+            const tagsOfExpenses = entry.tags.split(',').map((expense)=>({name:expense.trim()}))
             const {amount} = entry
             delete entry.amount
             delete entry.date
-            
+
             const newTagsExpenses = []
             await Promise.resolve(checkTagsAndLoad(newTagsExpenses, tags, tagsOfExpenses, createTag ))
-            console.log(tags)
+
             const tagsIds = getTagNumbers(newTagsExpenses)
 
             const createStatus = await createExpenseRequest({ ...entry, amount:amount.toFixed(2).toString() , tags: tagsIds, time: dateFormatted, user: 1 });

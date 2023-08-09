@@ -1,0 +1,114 @@
+.dropDownButton{
+    border-radius: 0px;
+    color: white;
+    outline-style: none;
+    border: none;
+    background-color: transparent;
+    padding:6px 12px;
+    &:hover{
+        color: white;
+        border-bottom:.1px solid rgba(188, 188, 188, 0.515);
+    }
+    &:active{
+        color: white;
+    }
+}
+.linkStyled{
+    text-decoration: none;
+    color: white;
+    padding:6px 12px;
+    &:hover{
+        color: white;
+        border-bottom:.1px solid rgba(188, 188, 188, 0.515);
+
+    }
+}
+
+
+.containerDropDown{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.dropDown{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+
+    position: absolute;
+    width: 10vw;
+    height: fit-content;
+    border-radius: 1rem;
+
+    padding: 1.3rem 1rem;
+    top:4rem;
+    margin: 1rem;
+    gap: .4rem;
+
+}.lineGapper{
+    width: 100%;
+    height: .3px;
+    background-color: black;
+    border-radius: 1rem;
+}
+
+.actionUserButton{
+    background-color: white;
+    color: black;
+    text-decoration: none;
+    border-radius: 2rem;
+    padding: .3rem;
+    padding-left: 1.3rem;
+    padding-right: 1.3rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@media (max-width:764px) {
+    .header{
+        position: relative;
+    }
+    .dropDownButton{
+        border-bottom:.1px solid rgba(188, 188, 188, 0.515);
+        font-size: 1.3rem;
+        width: 100%;
+
+    }.linkStyled{
+        border-bottom:.1px solid rgba(188, 188, 188, 0.515);
+        font-size: 1.3rem;
+        width: 100%;
+
+    }
+
+    .containerDropDown{
+        flex-direction: column;
+        width: 100%;
+
+    }.dropDown{
+        position: relative;
+        width: 100%;
+        padding: 0px;
+        background-color: transparent;
+        color: white;
+        border-radius: 0px;
+        top:0px;
+        margin: 0rem;
+        font-size: 1.1rem;
+        gap: .4rem;
+        border-bottom: 1px solid rgba(188, 188, 188, 0.515);
+
+    }.lineGapper{
+        width: 100%;
+        height: .3px;
+        background-color: rgba(188, 188, 188, 0.515);
+        border-radius: 1rem;
+    }
+
+    .actionUserButton{
+        font-size: 1.3rem;
+    }
+    
+}

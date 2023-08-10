@@ -36,7 +36,7 @@
     justify-content: center;
     align-items: center;
     background-color: white;
-
+    box-shadow: 2px 2px 5px #aaaaaa;
     position: absolute;
     width: 10vw;
     height: fit-content;
@@ -98,6 +98,7 @@
         margin: 0rem;
         font-size: 1.1rem;
         gap: .4rem;
+        box-shadow: none;
         border-bottom: 1px solid rgba(188, 188, 188, 0.515);
 
     }.lineGapper{

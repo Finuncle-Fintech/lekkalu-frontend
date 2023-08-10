@@ -123,9 +123,10 @@ const IncomeStatementSummary = ({
               <div style={{ display: "flex", gap: "10px" }}>
                 <Add label="Add Source" />
                 <div className={styles.horizontalScroll}>
-                  {expenseOverviewData.map((each) => {
+                  {expenseOverviewData.map((each,index) => {
                     return (
                       <SourceCard
+                        key={`${each.name}_${index}`}
                         label={each.name}
                         value={`${numDifferentiation(each.value)}₹`}
                         bg="#fa4646"

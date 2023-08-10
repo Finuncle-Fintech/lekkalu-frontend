@@ -16,7 +16,8 @@ const Header = () => {
   return (
     <header className={`container-fluid shadow bg-primary rounded-bottom z-3 d-flex justify-content-between align-items-center py-3 flex-column flex-md-row ${styles.header}`} >
 
-      <div className="container-fluid d-flex justify-content-between align-items-center" >
+      <div className="container-sm d-flex justify-content-between align-items-center" >
+
         <HeaderButton color="inherit" component={Link} to="/">
           Home
         </HeaderButton>
@@ -33,13 +34,20 @@ const Header = () => {
         
           
         <div className={styles.containerDropDown}>
+            <Link className={styles.linkStyled} to={'/expenses'}>
+              Expenses
+            </Link>
+
+            <Link className={styles.linkStyled} to={'/income-statement'}>
+              Income Statement
+            </Link>
 
             <button className={`${styles.dropDownButton} d-flex justify-content-between align-items-center`} 
                     onClick={()=>setDropDownActive(!dropDownActive)}
                     data-testid='buttonDropwDown'
             >
               <span>Calculate</span>
-              <img src={iconArrow} width={20} style={{transform:dropDownActive?'rotate(0deg)':'rotate(-90deg)'}} alt="" />
+              <img src={iconArrow} width={20} style={{transform:dropDownActive?'rotate(0deg)':'rotate(-90deg)', transition:'all .3s'}} alt="" />
 
             </button>
             {
@@ -75,19 +83,20 @@ const Header = () => {
               Contact us
             </Link>
 
+      
         </div>
       
         {
           !authToken
             ?
-            <>
+            <div className="container-fluid d-flex justify-content-around align-items-center">
               <Link to="/signin" className={styles.actionUserButton}>
                 Sign in
               </Link>
               <Link to="/signup" className={styles.actionUserButton}>
                 Sign up
               </Link>
-            </>
+            </div>
             :
             <Link className={styles.actionUserButton} color="inherit" to={'/'} onClick={() => signOut()}>
               Sign out

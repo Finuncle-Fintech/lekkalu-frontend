@@ -48,22 +48,26 @@ export default function CalculatorSIP({setSummary}){
             {
                 inputs.map((input, i)=>{
                     const conditionalMonthly = input.label.includes('Monthly investment amount')
+                    const key = `${input.label}_${i}`
                     return(
-                        <>
+                        <div key={key}>
                         {
                         input.label.includes('Duration of the investment')?(
-                            <div className="d-flex" key={i}>
-                                <TextField error={error.durationInvestment} value={durationInvestment|| null } onChange={(e)=>setDurationInvestment(e.target.value)} fullWidth={true} key={i} label={input.label} type={input.type} />
+                            <div className="d-flex">
+
+                                <TextField error={error.durationInvestment} value={durationInvestment|| undefined } onChange={(e)=>setDurationInvestment(e.target.value)} fullWidth={true} key={i} label={input.label} type={input.type} />
+
                                 <div className="rounded-end p-2 d-flex justify-content-center align-items-center border bg-secondary-subtle">
                                     <span className="fs-6 fw-semibold">Years</span>
                                 </div>
+                                
                             </div>
 
                         ):(
-                            <TextField error={conditionalMonthly?error.monthlyAmount:error.rateReturn} value={(conditionalMonthly?monthlyAmount:rateReturn) || null} onChange={(e)=>{conditionalMonthly?setMonthlyAmout(e.target.value):setRateReturn(e.target.value)}} fullWidth={true} key={i} label={input.label} type={input.type} />
+                            <TextField error={conditionalMonthly?error.monthlyAmount:error.rateReturn} value={(conditionalMonthly?monthlyAmount:rateReturn) || undefined} onChange={(e)=>{conditionalMonthly?setMonthlyAmout(e.target.value):setRateReturn(e.target.value)}} fullWidth={true} label={input.label} type={input.type} />
                         )
                         }
-                        </>
+                        </div>
                         )
                 })
             }

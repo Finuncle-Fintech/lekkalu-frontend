@@ -43,20 +43,19 @@ const ExpensesList = ({expenses, getTagNames, setEditIndex, deleteExpense}) => {
     }
 
     return (
-        <Table style={{backgroundColor:'#D8FDFF'}}>
-            <TableBody>
+        <article style={{backgroundColor:'#D8FDFF'}}>
                 {expenses &&
                     Boolean(expenses.length) &&
                     expenses.map((expense, index) =>{
                         const expenseOfExpenses = expense?.data||expense
-                        console.log(expenseOfExpenses)
+
                         const date = new Date(expenseOfExpenses.time).toDateString(0)
                         const day = date.slice(8,10)
                         const month = date.slice(4,7)
                         const year = date.slice(13,15)
-
+                        
                         return(
-                            <ContainerDataList key={expenseOfExpenses.id}>
+                            <ContainerDataList key={expenseOfExpenses.id || index}>
                                 <span>{day} {month} '{year}</span>
                                 <span> #{getTagNames(expenseOfExpenses.tags)} </span>
                                 <span>{convertNumberToShortFormat(expenseOfExpenses.amount)}₹</span> 
@@ -73,8 +72,7 @@ const ExpensesList = ({expenses, getTagNames, setEditIndex, deleteExpense}) => {
                             </ContainerDataList>
                         )
                     })}
-            </TableBody>
-        </Table>
+        </article>
     );
 };
 

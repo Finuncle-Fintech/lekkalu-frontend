@@ -16,7 +16,8 @@ export const ContainerExpensesData = styled('div')({
   flexDirection:'column',
   gap:'2vw',
   justifyContent:'center',
-  alignItems:'center'
+  alignItems:'center',
+  width:'100%'
 })
 
 
@@ -34,5 +35,5 @@ export const ContainerDataList = styled('div')({
   display:'grid',
   gridTemplateColumns:'repeat(4,1fr)',
   borderBottom:'1px solid black',
-  placeItems:'center'
+  placeItems:'center',
 })

@@ -1,4 +1,5 @@
-import { Pie, PieChart, Cell, Tooltip } from 'recharts';
+import { Pie, PieChart, Cell, Tooltip, Legend } from 'recharts';
+import { CustomLabelPie } from 'components/shared/CustomLabelPie/CustomLabelPie';
 import 'animate.css'
 
 export default function Summary({ summary }) {
@@ -9,15 +10,15 @@ export default function Summary({ summary }) {
 
   const labels = [
     {
-      title: 'Total invested: ',
+      title: 'Total invested:',
       value: summary.totalInvested,
     },
     {
-      title: 'Final value: ',
+      title: 'Final value:',
       value: summary.finalValue,
     },
     {
-      title: 'Wealth gained: ',
+      title: 'Wealth gained:',
       value: summary.wealthGained,
     },
   ];
@@ -27,11 +28,9 @@ export default function Summary({ summary }) {
       {
        summary.length!==0&&(
         <article
-        style={{
-            width: '30vw',
-        }}
         className="border rounded-3 d-flex align-items-center justify-content-center p-1 py-md-4 animate__animated animate__fadeIn"
-        >   
+        >
+
         <div style={{
             display:'flex',
             flexDirection:"column",
@@ -41,30 +40,30 @@ export default function Summary({ summary }) {
             <h4>Summary</h4>
         
             <div
-            style={{
-            width: '100%',
-            padding: '1vw',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '.6rem',
-            }}
-        >
+              style={{
+              width: '100%',
+              padding: '1vw',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '.6rem',
+              }}
+            >
             {labels.map((data, index) => (
             <div
                 key={index}
                 className="d-flex"
                 style={{
                 borderBottom: '1px solid #EAEAEA',
-                gap: '.4rem',
                 }}
             >
-                <span>{data.title}</span>
+                <span>{data.title} </span>
                 <span>{data.value} ₹</span>
             </div>
             ))}
             </div>
         </div>
-            <PieChart width={200} height={200}>
+
+        <PieChart width={200} height={220}>
                 <Pie
                 dataKey="value"
                 data={data}
@@ -75,8 +74,9 @@ export default function Summary({ summary }) {
                     <Cell key={index} fill={entry.name.includes('Total Invested')?'#099fea':'#09ea49'} />
                 ))}
                 </Pie>
-                <Tooltip/>
-            </PieChart>
+                <Legend/>
+                <Tooltip content={<CustomLabelPie />} />
+        </PieChart>
         </article>
        )
       }

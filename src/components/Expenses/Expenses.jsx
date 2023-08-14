@@ -8,7 +8,7 @@ import { SkipNext, SkipPrevious } from '@mui/icons-material';
 import ExpenseFormModal from "./ExpensesModal";
 import { ModalContainer, modalSuccesCreated } from "./styled";
 import ExpensesList from "./ExpenseList";
-import { formatDate } from "./utils";
+import { formatDate, getTagNumbers } from "./utils";
 import * as XLSX from "xlsx";
 import Swal from "sweetalert2";
 import { checkTagsAndLoad } from "./utils";
@@ -25,6 +25,7 @@ const Expenses = ({ Context }) => {
     fetchTags,
     authToken
   } = useContext(Context);
+
   const [editIndex, setEditIndex] = useState(null);
   const [page, setPage] = useState(0);
   const [ loadExcelStatus, setLoadExcelStatus ]  = useState(false)
@@ -42,8 +43,6 @@ const Expenses = ({ Context }) => {
       .filter((tag) => tag !== undefined);
   };
 
-
-
   const getTagNames =(tagValues) => {
     const tagNames = tagValues&&tagValues
       .map((tagValue) => {
@@ -57,6 +56,7 @@ const Expenses = ({ Context }) => {
   };
 
   const handleFileUpload = (files) => {
+
     const file = files[0];
     const reader = new FileReader();
     reader.onload = async(event) => {
@@ -75,15 +75,6 @@ const Expenses = ({ Context }) => {
         const loadExcel = ()=>{
           setLoadExcelStatus(true)
 
-          const getTagNumbers = (tagValues) => {
-            return tagValues
-              .map((tagValue) => {
-                const foundTag = tags.find((tag) => tag.name === tagValue.name);
-                return foundTag ? foundTag.id : null;
-              })
-              .filter((tag) => tag !== undefined);
-          };
-
           const promise = parsedData.map(async entry => {
             const dateFormatted = formatDate(new Date(entry.date));
             
@@ -93,9 +84,10 @@ const Expenses = ({ Context }) => {
             delete entry.date
 
             const newTagsExpenses = []
+
             await Promise.resolve(checkTagsAndLoad(newTagsExpenses, tags, tagsOfExpenses, createTag ))
 
-            const tagsIds = getTagNumbers(newTagsExpenses)
+            const tagsIds = getTagNumbers(newTagsExpenses, tags)
 
             const createStatus = await createExpenseRequest({ ...entry, amount:amount.toFixed(2).toString() , tags: tagsIds, time: dateFormatted, user: 1 });
             

@@ -34,11 +34,14 @@ const ExpensesList = ({expenses, getTagNames, setEditIndex, deleteExpense}) => {
             <TableBody>
                 {expenses &&
                     Boolean(expenses.length) &&
-                    expenses.map((expense, index) => (
-                        <TableRow key={expense.id}>
-                            <TableCell>{expense.amount} ₹</TableCell>
-                            <TableCell>{getTagNames(expense.tags)}</TableCell>
-                            <TableCell>{new Date(expense.time).toDateString(0)}</TableCell>
+                    expenses.map((expense, index) =>{
+                        const expenseOfExpenses = expense?.data||expense
+                        
+                        return(
+                        <TableRow key={`${expenseOfExpenses.id}_${index}`}>
+                            <TableCell>{expenseOfExpenses.amount} ₹</TableCell>
+                            <TableCell>{getTagNames(expenseOfExpenses.tags)}</TableCell>
+                            <TableCell>{new Date(expenseOfExpenses.time).toDateString(0)}</TableCell>
                             <TableCell>
                                 <IconButton placeholder="edit-expense" edge="end" onClick={() => setEditIndex(index)}>
                                     <EditIcon/>
@@ -50,7 +53,7 @@ const ExpensesList = ({expenses, getTagNames, setEditIndex, deleteExpense}) => {
                                 </IconButton>
                             </TableCell>
                         </TableRow>
-                    ))}
+                    )})}
             </TableBody>
         </Table>
     );

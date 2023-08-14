@@ -84,12 +84,11 @@ export const checkTagsAndLoad = (newMyTags, tags, nameOfTagsExpenses, createTag)
 
   const promises = copyTagsOfExpense.map(async (newTag) => {
       const newTagName = newTag.name
-      
-      const exist = tags.some((tag) => tag.name === newTagName);
+      const newTagNameUpperCase = newTagName.replace(newTagName[0], newTagName[0].toUpperCase())
+
+      const exist = tags.some((tag) => tag.name === newTagNameUpperCase);
 
       if (!exist) {
-
-        const newTagNameUpperCase = newTagName.replace(newTagName[0], newTagName[0].toUpperCase())
 
         const newTagElement = {
           id: getNewId(),
@@ -104,9 +103,19 @@ export const checkTagsAndLoad = (newMyTags, tags, nameOfTagsExpenses, createTag)
         
         return newTagElement;
     } else {
-      newMyTags.push(newTag);
-      return newTag;
+      newMyTags.push({name:newTagNameUpperCase});
+      return {name:newTagNameUpperCase};
     }
   });
   return Promise.all(promises);
 }
+
+export  const getTagNumbers = (tagValues, tags) => {
+  return tagValues
+    .map((tagValue) => {
+      const foundTag = tags.find((tag) => tag.name === tagValue.name);
+
+      return foundTag ? foundTag.id : null;
+    })
+    .filter((tag) => tag !== undefined);
+};

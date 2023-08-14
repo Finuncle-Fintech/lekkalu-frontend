@@ -12,7 +12,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { ModalContainer } from "./styled";
-import { formatDate, preventPropagationOnEnter } from "./utils";
+import { formatDate, getTagNumbers, preventPropagationOnEnter } from "./utils";
 import TagInput from "./TagInput";
 import dayjs from "dayjs";
 import ReactFileReader from "react-file-reader";
@@ -36,19 +36,25 @@ const ExpenseFormModal = ({
   authToken
 }) => {
   const [open, setOpen] = useState(false);
+
   const [amount, setAmount] = useState('');
   const [myTags, setMyTags] = useState([]);
-  const [errorTag, setErrorTag] = useState(false)
   const [selectedDate, setSelectedDate] = useState(new Date());
+
+  const [errorTag, setErrorTag] = useState(false)
   const [ defaultLoadStatus, setDefaultLoadStatus ] = useState(false)
+
   const { tags, createTag } = useContext(Context)
+
   const axiosPrivate = useAxiosPrivate()
 
   useEffect(() => {
     if (expenseToEdit) {
-      setAmount(expenseToEdit.amount);
-      setMyTags(expenseToEdit.tags);
-      setSelectedDate(new Date(expenseToEdit.time));
+      const { amount, tags, time } = expenseToEdit
+      setAmount(amount);
+      setMyTags(tags);
+      setSelectedDate(new Date(time));
+
       setOpen(true);
     }
   }, [expenseToEdit]);
@@ -59,6 +65,7 @@ const ExpenseFormModal = ({
 
   const handleClose = () => {
     setOpen(false);
+
     if (editIndex !== null) {
       onCancelEdit();
     }
@@ -82,7 +89,7 @@ const ExpenseFormModal = ({
 
     const newMyTags = []
     await Promise.resolve(checkTagsAndLoad(newMyTags, tags, myTags, createTag))
-    const tagIDs = newMyTags.map(tag => tag.id);
+    const tagIDs = getTagNumbers(newMyTags, tags)
  
     let newExpense = {
       amount,
@@ -90,7 +97,7 @@ const ExpenseFormModal = ({
       userID: 1,
       time: formatDate(new Date(selectedDate))
     };
-     
+ 
     if (editIndex !== null) {
       onUpdateExpense(editIndex, { ...expenseToEdit, ...newExpense });
     } else {
@@ -107,8 +114,9 @@ const ExpenseFormModal = ({
         }).then(()=>{handleClickOpen(); setDefaultLoadStatus(false)})
         return
       }
-  
+      
       onAddExpense({ ...newExpense });
+
     }
 
     Swal.fire({
@@ -138,6 +146,7 @@ const ExpenseFormModal = ({
     }
   };
 
+  
   return (
     <>
     {
@@ -155,8 +164,7 @@ const ExpenseFormModal = ({
       <Dialog open={open} onClose={()=>{
         handleClose()}}
       >
-        
-        
+
         <DialogTitle>{editIndex !== null ? "Edit Expense" : "Add Expense"}</DialogTitle>
         <DialogContent>
           <form onSubmit={handleSubmit}>
@@ -188,7 +196,7 @@ const ExpenseFormModal = ({
             <DialogActions  >
               <ReactFileReader
                 fileTypes={[".xls", ".xlsx"]}
-                handleFiles={!loadExcelStatus&&!loadExcelStatus&&handleFileUpload}
+                handleFiles={handleFileUpload}
                 disabled={loadExcelStatus}
               >
                 <ButtonExcel loadExcelStatus={loadExcelStatus} />

@@ -26,6 +26,13 @@ describe("deleteExpenseRequest", () => {
                 <Expenses Context={TestContext}/>
             </TestContext.Provider>
         );
+    })
+    test("successfully deletes an expense", async () => {
+        render(
+            <TestContext.Provider value={mockState}>
+                <Expenses Context={TestContext}/>
+            </TestContext.Provider>
+        );
 
         fireEvent.click(screen.getAllByPlaceholderText("delete-expense")[0]);
         await waitFor(() => {
@@ -40,3 +47,4 @@ describe("deleteExpenseRequest", () => {
         });
     });
 });
+

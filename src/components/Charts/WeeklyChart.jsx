@@ -16,7 +16,7 @@ import Colors from 'constants/colors';
 export const WeeklyChart = (WeekData) => {
    return (
       <div
-         className='section-outer-wrapper'
+         className='section-outer-wrapper col-md-8 mx-auto'
          style={{ backgroundColor: Colors.graphBG }}
       >
          <h3 className='section-title text-white text-center'>

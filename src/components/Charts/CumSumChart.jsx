@@ -34,7 +34,7 @@ const CustomTooltip = ({ active, payload, label }) => {
 export const CumSumChart = (cumSumData) => {
    return (
       <div
-      className='section-outer-wrapper'
+         className='section-outer-wrapper col-md-8 mx-auto'
          style={{ backgroundColor: Colors.graphBG }}
       >
          <h3 className='section-title text-white text-center'>Monthly</h3>

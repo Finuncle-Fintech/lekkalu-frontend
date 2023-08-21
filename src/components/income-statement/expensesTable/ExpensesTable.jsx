@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Table from "@mui/material/Table";
 import TableContainer from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -9,22 +9,23 @@ import Paper from "@mui/material/Paper";
 import styles from "./ExpensesTable.module.css";
 import AddIcon from "@mui/icons-material/Add";
 import Swal from "sweetalert2";
-import axios from "axios";
+import useAxiosPrivate from 'hooks/useAxiosPrivate';
+
+
 
 const ExpensesTable = ({ header, headerColor }) => {
   const [total, setTotal] = useState(0);
   const [data, setData] = useState([]);
- 
+  const axiosPrivate = useAxiosPrivate();
+  
+
+
+
 
   async function getData() {
-    try {
+    try {       
       const apiURL = `${process.env.REACT_APP_BACKEND_URL}/api/income_expense`;
-      const response = await axios.get(apiURL, {
-        auth: {
-          username: process.env.REACT_APP_USER,
-          password: process.env.REACT_APP_PASSWORD,
-        },
-      });
+      const response = await axiosPrivate.get(apiURL)
       setData(response.data);
       
     } catch (err) {
@@ -33,7 +34,7 @@ const ExpensesTable = ({ header, headerColor }) => {
   }
 
   useEffect(() => {
-    getData();
+    getData()
   }, []);
 
   useEffect(() => {

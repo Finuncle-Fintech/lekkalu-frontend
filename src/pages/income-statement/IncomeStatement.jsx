@@ -30,6 +30,8 @@ const IncomeStatement = ({ Context }) => {
     console.log({ incomeStatement });
   }, [JSON.stringify(incomeStatement)]);
 
+  
+
   const loadCurrentTab = () => {
     switch (currentab) {
       default:
@@ -60,6 +62,8 @@ const IncomeStatement = ({ Context }) => {
     }
   };
 
+  
+
   const totalIncome = incomeStatement.income.reduce(
     (total, item) => total + item.value,
     0
@@ -69,31 +73,12 @@ const IncomeStatement = ({ Context }) => {
     (total, item) => total + item.value,
     0
   );
+ 
+
   const difference = totalIncome - totalExpense;
-  return (
-    <div>
-      {/* <GenericTabs
-        tabs={tabsList}
-        handleChange={handleTabChange}
-        value={currentab}
-      /> */}
-      {incomeStatement.income.length === 0 &&
-      incomeStatement.expenses.length === 0 ? (
-        <div
-          className="section col-md-8 mx-auto pb-5 pt-5 mt-5"
-          style={{
-            backgroundColor: Colors.graphBG,
-            display: "flex",
-            justifyContent: "center",
-          }}
-        >
-          <BeatLoader stylecolor={Colors.loaderColor} />
-        </div>
-      ) : (
-        <div>{loadCurrentTab()}</div>
-      )}
-    </div>
-  );
+
+
+  return <div>{loadCurrentTab()}</div>;
 };
 
 export default IncomeStatement;

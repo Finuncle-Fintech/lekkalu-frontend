@@ -42,6 +42,10 @@ const Header = () => {
               Income Statement
             </Link>
 
+            <Link className={styles.linkStyled} to={'/balance'}>
+              Balance
+            </Link>
+
             <button className={`${styles.dropDownButton} d-flex justify-content-between align-items-center`} 
                     onClick={()=>setDropDownActive(!dropDownActive)}
                     data-testid='buttonDropwDown'

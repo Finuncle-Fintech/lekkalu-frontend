@@ -84,7 +84,7 @@ export const AssetsLiabilitiesChart = (props) => {
    return (
       <>
          {pieData && pieData.length !== 0 ? (
-            <ResponsiveContainer width={'100%'} height={300}>
+            <ResponsiveContainer width={'100%'} height={350}>
                   <PieChart>
                      <defs>
                         {pieData.map((entry, index) => (

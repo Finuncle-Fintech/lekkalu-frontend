@@ -1,4 +1,7 @@
 .container{
     width: 37vw;
     height: fit-content;
+    @media (max-width:992px) {
+        width: 100%;
+    }
 }

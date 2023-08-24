@@ -20,7 +20,7 @@ export default function BalanceSheet(){
             </div>
         </div>
 
-        <div className='d-flex justify-content-between container-fluid'>
+        <div className='d-flex justify-content-between container-fluid  flex-column flex-lg-row gap-2 gap-lg-0'>
             <AssetsCard title={'Assets'} component={<AssetsLiabilitiesChart data={assets} type={'assets'} />} />
             <AssetsCard title={'Liabilities'} component={<AssetsLiabilitiesChart data={liabilities} type={'liabilities'} />} />
         </div>

@@ -2,11 +2,7 @@ import { useEffect } from 'react';
 import 'App.css';
 import { Provider } from 'provider/Provider';
 import Router from 'Router';
-function App() {
-   useEffect(() => {
-      document.title = 'Finuncle'
-    }, []);
-    
+function App() {   
    return (
       <div className='App'>
          <Provider>

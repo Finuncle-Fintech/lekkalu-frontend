@@ -91,6 +91,7 @@ export const AssetsLiabilitiesChart = (props) => {
                            <linearGradient
                               id={`myGradient${index}`}
                               key={`myGradient${index}`}
+
                            >
                               <stop
                                  offset='0%'
@@ -136,12 +137,13 @@ export const AssetsLiabilitiesChart = (props) => {
                      <Tooltip content={<CustomTooltip />} />
                      <Legend
                         width={'100%'}
+
                         layout='horizontal'
                         verticalAlign='bottom'
                         align='center'
                         payload={pieData.map((item, index) => ({
                            id: item.name,
-                           type: 'square',
+                           type: 'circle',
                            value:
                               item.name +
                               ` : ` +
@@ -150,6 +152,7 @@ export const AssetsLiabilitiesChart = (props) => {
                            color: `url(#myGradient${index})`,
                         }))}
                      />
+                     
                   </PieChart>
             </ResponsiveContainer>
          ) : (

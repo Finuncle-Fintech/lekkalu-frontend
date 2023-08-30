@@ -19,7 +19,7 @@ export default function TableBalance({title, data}){
                 <tbody>
                 {
                 bodyData?.map((item, index)=>(
-                    <tr key={`${item.name}_${index}`} style={{backgroundColor:Colors.PIE[index%Colors.PIE.length].start}} className='d-flex'>
+                    <tr key={`${item.name}_${index}`} style={{backgroundColor:'#d8fdff'}} className='d-flex'>
                         <td className='d-flex align-items-center justify-content-center container-fluid border border-end-0'>{item.name}</td>
                         <td className='d-flex align-items-center justify-content-center container-fluid border border-start-0'>{item.value}</td>
                     </tr>

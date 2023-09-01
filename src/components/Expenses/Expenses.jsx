@@ -11,8 +11,9 @@ import ExpensesList from "./ExpenseList";
 import { formatDate } from "./utils";
 import * as XLSX from "xlsx";
 import Swal from "sweetalert2";
+import { Context } from "provider/Provider";
 
-const Expenses = ({ Context }) => {
+const Expenses = () => {
   const {
     expenses,
     tags,

@@ -6,7 +6,7 @@ import {
 } from "@mui/material";
 import { SkipNext, SkipPrevious } from '@mui/icons-material';
 import ExpenseFormModal from "./ExpensesModal";
-import { ModalContainer, modalSuccesCreated } from "./styled";
+import { ModalContainer } from "./styled";
 import ExpensesList from "./ExpenseList";
 import { formatDate } from "./utils";
 import * as XLSX from "xlsx";

@@ -1,9 +1,9 @@
-import React, { createContext } from "react";
+import React from "react";
 import { render, fireEvent, waitFor, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import Expenses from "components/Expenses/Expenses";
 import { mockState } from "__test__/data/Expenses";
-import useAxiosPrivate from "hooks/useAxiosPrivate";
+import { Context } from "provider/Provider";
 
 jest.mock('axios', () => ({
   post: jest.fn(),
@@ -15,15 +15,14 @@ jest.mock('components/Axios/Axios', () => ({
     post: jest.fn(),
 }));
 
-const TestContext = createContext(mockState);
 
 describe("changeExpenseRequest", () => {
   test("successfully deletes an expense", async () => {
   
     render(
-      <TestContext.Provider value={mockState}>
-        <Expenses Context={TestContext}/>
-      </TestContext.Provider>
+      <Context.Provider value={mockState}>
+        <Expenses />
+      </Context.Provider>
     );
 
     fireEvent.click(screen.getAllByPlaceholderText("edit-expense")[0]);

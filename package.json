@@ -62,5 +62,10 @@
     "@testing-library/user-event": "^14.4.3",
     "jest": "^29.6.2",
     "jest-environment-jsdom": "^29.6.2"
+  },
+  "jest": {
+    "moduleNameMapper": {
+      "axios": "axios/dist/node/axios.cjs"
+    }
   }
 }

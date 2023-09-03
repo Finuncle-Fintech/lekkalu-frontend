@@ -58,14 +58,12 @@ const RouterComponent = () => {
           <Route
             path="/loan_emi_calculator"
             element={
-              <ProtectedRoutes authToken={authToken}>
-                <>
-                  <Header />
-                  <EmiCalculator />
-                  <Footer />
-                  <SupportPopUp Context={Context} />
-                </>
-              </ProtectedRoutes>
+              <>
+                <Header />
+                <EmiCalculator />
+                <Footer />
+                <SupportPopUp Context={Context} />
+              </>
             }
           />
           <Route
@@ -97,17 +95,15 @@ const RouterComponent = () => {
           <Route
             path="/SIPCalculator"
             element={
-              <ProtectedRoutes authToken={authToken}>
-                <>
-                  <Header />
-                  <SIPCalculator />
-                  <Footer />
-                  <SupportPopUp Context={Context} />
-                </>
-              </ProtectedRoutes>
+              <>
+                <Header />
+                <SIPCalculator />
+                <Footer />
+                <SupportPopUp Context={Context} />
+              </>
             }
           />
-           <Route
+          <Route
             path="/CAGRCalculator"
             element={
               <ProtectedRoutes authToken={authToken}>

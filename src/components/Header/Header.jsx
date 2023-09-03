@@ -89,7 +89,7 @@ const Header = () => {
         {
           !authToken
             ?
-            <div className="container-fluid d-flex justify-content-around align-items-center">
+            <div className="d-flex align-items-center">
               <Link to="/signin" className={styles.actionUserButton}>
                 Sign in
               </Link>

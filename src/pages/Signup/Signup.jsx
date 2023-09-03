@@ -16,6 +16,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import axiosClient from "components/Axios/Axios";
 import { useNavigate } from "react-router";
 import Swal from "sweetalert2";
+import Header from "components/Header/Header";
 
 export const Signup = ({ Context }) => {
     const navigate = useNavigate()
@@ -70,6 +71,7 @@ export const Signup = ({ Context }) => {
 
     return (
         <div>
+            <Header />
             <Container component="main" maxWidth="xs">
                 <CssBaseline />
                 <Box

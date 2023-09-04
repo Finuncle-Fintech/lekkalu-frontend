@@ -8,15 +8,17 @@ import { SkipNext, SkipPrevious } from '@mui/icons-material';
 import ExpenseFormModal from "./ExpensesModal";
 import { ModalContainer } from "./styled";
 import ExpensesList from "./ExpenseList";
-import { formatDate } from "./utils";
+import { formatDate, getTagNumbers } from "./utils";
 import * as XLSX from "xlsx";
 import Swal from "sweetalert2";
 import { Context } from "provider/Provider";
+import { checkTagsAndLoad } from "./utils";
 
 const Expenses = () => {
   const {
     expenses,
     tags,
+    createTag,
     fetchExpenses,
     deleteExpenseRequest,
     createExpenseRequest,
@@ -24,6 +26,7 @@ const Expenses = () => {
     fetchTags,
     authToken
   } = useContext(Context);
+
   const [editIndex, setEditIndex] = useState(null);
   const [page, setPage] = useState(0);
   const [ loadExcelStatus, setLoadExcelStatus ]  = useState(false)
@@ -41,15 +44,6 @@ const Expenses = () => {
       .filter((tag) => tag !== undefined);
   };
 
-  const getTagNumbers = (tagValues) => {
-    return tagValues
-      .map((tagValue) => {
-        const foundTag = tags.find((tag) => tag.name === tagValue);
-        return foundTag ? foundTag.id : null;
-      })
-      .filter((tag) => tag !== undefined);
-  };
-
   const getTagNames =(tagValues) => {
     const tagNames = tagValues&&tagValues
       .map((tagValue) => {
@@ -63,6 +57,7 @@ const Expenses = () => {
   };
 
   const handleFileUpload = (files) => {
+
     const file = files[0];
     const reader = new FileReader();
     reader.onload = async(event) => {
@@ -80,13 +75,21 @@ const Expenses = () => {
         
         const loadExcel = ()=>{
           setLoadExcelStatus(true)
+
           const promise = parsedData.map(async entry => {
             const dateFormatted = formatDate(new Date(entry.date));
-            const tagsIds = getTagNumbers(entry.tags.split(", "))
+            
+            const tagsOfExpenses = entry.tags.split(',').map((expense)=>({name:expense.trim()}))
             const {amount} = entry
             delete entry.amount
             delete entry.date
-            
+
+            const newTagsExpenses = []
+
+            await Promise.resolve(checkTagsAndLoad(newTagsExpenses, tags, tagsOfExpenses, createTag ))
+
+            const tagsIds = getTagNumbers(newTagsExpenses, tags)
+
             const createStatus = await createExpenseRequest({ ...entry, amount:amount.toFixed(2).toString() , tags: tagsIds, time: dateFormatted, user: 1 });
             
             setNewData((prevData)=>[...prevData, createStatus])

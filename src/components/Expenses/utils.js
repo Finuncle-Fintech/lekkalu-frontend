@@ -72,3 +72,50 @@ export const checkExpensesDoesNotRepeat = async(newExpense, axiosPrivate, authTo
 
     return response || false
 }
+
+export const checkTagsAndLoad = (newMyTags, tags, nameOfTagsExpenses, createTag) =>{
+  
+  const getNewId = () =>{
+    const maxId = tags.map((tag)=>tag.id)
+    return (Math.max(...maxId)+1)
+  }
+
+  const copyTagsOfExpense = Array.from(nameOfTagsExpenses)
+
+  const promises = copyTagsOfExpense.map(async (newTag) => {
+      const newTagName = newTag.name
+      const newTagNameUpperCase = newTagName.replace(newTagName[0], newTagName[0].toUpperCase())
+
+      const exist = tags.some((tag) => tag.name === newTagNameUpperCase);
+
+      if (!exist) {
+
+        const newTagElement = {
+          id: getNewId(),
+          name: newTagNameUpperCase,
+        };
+
+        newMyTags.push(newTagElement);
+
+        tags.push(newTagElement);
+
+        await createTag(newTagElement);
+        
+        return newTagElement;
+    } else {
+      newMyTags.push({name:newTagNameUpperCase});
+      return {name:newTagNameUpperCase};
+    }
+  });
+  return Promise.all(promises);
+}
+
+export  const getTagNumbers = (tagValues, tags) => {
+  return tagValues
+    .map((tagValue) => {
+      const foundTag = tags.find((tag) => tag.name === tagValue.name);
+
+      return foundTag ? foundTag.id : null;
+    })
+    .filter((tag) => tag !== undefined);
+};

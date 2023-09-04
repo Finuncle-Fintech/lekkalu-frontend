@@ -8,7 +8,8 @@ import Signin from "./pages/Signin/Signin";
 import Signup from "./pages/Signup/Signup";
 import PersistLogin from "components/PersistLogin/PersistLogin";
 import ErrorPage from "components/ErrorPage/ErrorPage";
-import Layout from "components/Layout/Layout";
+import SIPCalculator from "pages/SIPCalculator/SIPCalculator";
+import CAGRCalculator from "pages/CAGRCalculator/CAGRCalculator";
 
 const RouterComponent = () => {
 

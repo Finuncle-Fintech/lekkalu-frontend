@@ -10,3 +10,10 @@ export const HeaderButton = styled(Button)({
     justifyContent: "space-between",
   },
 });
+
+export const DropDownButton = styled('button')({
+  border:'none', 
+  backgroundColor:'transparent',
+  color:'white',
+  fontSize:'bold',
+})

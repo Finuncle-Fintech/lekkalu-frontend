@@ -4,6 +4,7 @@ import "@testing-library/jest-dom";
 import Expenses from "components/Expenses/Expenses";
 import { mockState } from "__test__/data/Expenses";
 import { Context } from "provider/Provider";
+import { checkTagsAndLoad } from "components/Expenses/utils";
 
 
 jest.mock('axios', () => ({

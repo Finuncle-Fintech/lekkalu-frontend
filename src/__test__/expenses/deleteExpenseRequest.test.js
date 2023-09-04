@@ -19,18 +19,12 @@ jest.mock('components/Axios/Axios', () => ({
 window.scrollTo = jest.fn()
 
 describe("deleteExpenseRequest", () => {
+    
     test("successfully deletes an expense", async () => {
         render(
             <Context.Provider value={mockState}>
                 <Expenses />
             </Context.Provider>
-        );
-    })
-    test("successfully deletes an expense", async () => {
-        render(
-            <TestContext.Provider value={mockState}>
-                <Expenses Context={TestContext}/>
-            </TestContext.Provider>
         );
 
         fireEvent.click(screen.getAllByPlaceholderText("delete-expense")[0]);
@@ -45,4 +39,5 @@ describe("deleteExpenseRequest", () => {
             expect(mockState.deleteExpenseRequest).toHaveBeenCalled();
         });
     });
+    
 })

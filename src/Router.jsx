@@ -8,6 +8,7 @@ import Signin from "./pages/Signin/Signin";
 import Signup from "./pages/Signup/Signup";
 import PersistLogin from "components/PersistLogin/PersistLogin";
 import ErrorPage from "components/ErrorPage/ErrorPage";
+import Layout from "components/Layout/Layout";
 import SIPCalculator from "pages/SIPCalculator/SIPCalculator";
 import CAGRCalculator from "pages/CAGRCalculator/CAGRCalculator";
 
@@ -34,6 +35,10 @@ const RouterComponent = () => {
                   <Route path="/income-statement" element={<ProtectedRoutes component={<IncomeStatement />} /> } />
 
                   <Route path="/expenses" element={<ProtectedRoutes component={<Expenses />} />} />
+
+                  <Route path="/SIPCalculator" element={<ProtectedRoutes component={<SIPCalculator />} />} />
+
+                  <Route path="/CAGRCalculator" element={<ProtectedRoutes component={<CAGRCalculator />} />} />
 
             </Route>
             

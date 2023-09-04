@@ -1,4 +1,3 @@
-import Colors from 'constants/colors'
 import addIcon from '../../assets/add-icon.svg'
 
 export default function TableBalance({title, data}){

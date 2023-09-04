@@ -2,6 +2,7 @@ import ContainerBalanceCard from "./ContainerBalanceCard";
 import TableBalance from "./TableBalance";
 
 export default function BalanceCardLong({assets, liabilities}){
+    
     return(
         <ContainerBalanceCard>
             <article style={{width:"100%"}} >

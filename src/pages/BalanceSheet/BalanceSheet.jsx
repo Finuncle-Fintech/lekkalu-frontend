@@ -1,14 +1,18 @@
 import AssetsCard from 'components/BalanceSheet/BalanceCard'
 import styles from './BalanceSheet.module.css'
 import { AssetsLiabilitiesChart } from 'components/Charts/AssetsLiabilitiesChart'
-import { useContext } from 'react'
+import { useContext, useEffect } from 'react'
 import { Context } from 'provider/Provider'
 import BalanceCardLong from 'components/BalanceSheet/BalanceCardLong'
 import searchIcon from 'assets/search-icon.svg'
 
 export default function BalanceSheet(){
 
-    const { assets, liabilities } = useContext(Context)
+    const { assets, liabilities, fetchData } = useContext(Context)
+
+    useEffect(()=>{
+        fetchData()
+    }, [])
 
     return( 
     <main className={styles.main}>

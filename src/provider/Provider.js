@@ -45,6 +45,7 @@ const Provider = ({ children }) => {
       assets,
       liabilities,
       incomeStatement,
+      depreciation
    } = store;
 
    const handleErrors = (error) => {
@@ -242,6 +243,7 @@ const Provider = ({ children }) => {
    const fetchData = async () => {
 
       try {
+         console.log(`CURRENT TOKEN ${authToken}`)
          const headers = {
             'Authorization': `Bearer ${authToken}`,
             'Content-Type': 'application/json'
@@ -360,6 +362,23 @@ const Provider = ({ children }) => {
                   payload: finalMonthlyExp,
                });
             });
+            
+         await axiosPrivate
+         //get assets depreciation
+            .get(`${process.env.REACT_APP_BACKEND_API}physical_assets/`, {
+               auth: {
+                  username: process.env.REACT_APP_USER,
+                  password: process.env.REACT_APP_PASSWORD,
+               },
+            }).then((res)=>{
+               const data = res.data
+               
+               dispatch({
+                  type:Types.FETCH_depreciation,
+                  payload:data
+               })
+            })
+
       } catch (error) {
          // Handle errors
          handleErrors(error);
@@ -481,6 +500,7 @@ const Provider = ({ children }) => {
             liabilities,
             incomeStatement,
             statusFeedback,
+            depreciation,
             giveFeedback,
             fetchData,
             fetchExpenses,

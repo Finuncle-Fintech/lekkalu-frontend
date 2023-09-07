@@ -14,14 +14,16 @@ import { SkipNext, SkipPrevious } from '@mui/icons-material';
 import ExpenseFormModal from "./ExpensesModal";
 import { ModalContainer, modalSuccesCreated } from "./styled";
 import ExpensesList from "./ExpenseList";
-import { formatDate } from "./utils";
+import { formatDate, getTagNumbers } from "./utils";
 import * as XLSX from "xlsx";
 import Swal from "sweetalert2";
+import { checkTagsAndLoad } from "./utils";
 
 const Expenses = ({ Context }) => {
   const {
     expenses,
     tags,
+    createTag,
     fetchExpenses,
     filterExpensesByDate,
     deleteExpenseRequest,
@@ -51,15 +53,6 @@ const Expenses = ({ Context }) => {
       .filter((tag) => tag !== undefined);
   };
 
-  const getTagNumbers = (tagValues) => {
-    return tagValues
-      .map((tagValue) => {
-        const foundTag = tags.find((tag) => tag.name === tagValue);
-        return foundTag ? foundTag.id : null;
-      })
-      .filter((tag) => tag !== undefined);
-  };
-
   const getTagNames = (tagValues) => {
     const tagNames = tagValues && tagValues
       .map((tagValue) => {
@@ -73,6 +66,7 @@ const Expenses = ({ Context }) => {
   };
 
   const handleFileUpload = (files) => {
+
     const file = files[0];
     const reader = new FileReader();
     reader.onload = async (event) => {
@@ -90,16 +84,24 @@ const Expenses = ({ Context }) => {
 
         const loadExcel = () => {
           setLoadExcelStatus(true)
+
           const promise = parsedData.map(async entry => {
             const dateFormatted = formatDate(new Date(entry.date));
-            const tagsIds = getTagNumbers(entry.tags.split(", "))
-            const { amount } = entry
+            
+            const tagsOfExpenses = entry.tags.split(',').map((expense)=>({name:expense.trim()}))
+            const {amount} = entry
             delete entry.amount
             delete entry.date
 
-            const createStatus = await createExpenseRequest({ ...entry, amount: amount.toFixed(2).toString(), tags: tagsIds, time: dateFormatted, user: 1 });
+            const newTagsExpenses = []
 
-            setNewData((prevData) => [...prevData, createStatus])
+            await Promise.resolve(checkTagsAndLoad(newTagsExpenses, tags, tagsOfExpenses, createTag ))
+
+            const tagsIds = getTagNumbers(newTagsExpenses, tags)
+
+            const createStatus = await createExpenseRequest({ ...entry, amount:amount.toFixed(2).toString() , tags: tagsIds, time: dateFormatted, user: 1 });
+            
+            setNewData((prevData)=>[...prevData, createStatus])
           });
 
           return Promise.all(promise)

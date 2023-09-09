@@ -4,6 +4,12 @@ import {
   TablePagination,
   IconButton
 } from "@mui/material";
+import dayjs from 'dayjs';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
 import { SkipNext, SkipPrevious } from '@mui/icons-material';
 import ExpenseFormModal from "./ExpensesModal";
 import {ContainerExpenses,
@@ -25,6 +31,7 @@ const Expenses = ({ Context }) => {
     tags,
     createTag,
     fetchExpenses,
+    filterExpensesByDate,
     deleteExpenseRequest,
     createExpenseRequest,
     changeExpenseRequest,
@@ -32,11 +39,14 @@ const Expenses = ({ Context }) => {
     budget,
     authToken
   } = useContext(Context);
-
+  const getDate = new Date()
   const [editIndex, setEditIndex] = useState(null);
   const [page, setPage] = useState(0);
-  const [ loadExcelStatus, setLoadExcelStatus ]  = useState(false)
-  const [newData, setNewData ] = useState([])
+  const [loadExcelStatus, setLoadExcelStatus] = useState(false)
+  const [newData, setNewData] = useState([])
+  const [fromDate, setFromDate] = useState(null)
+  const [toDate, setToDate] = useState(null)
+  const [isLoading, setIsLoading] = useState(false)
   const rowsPerPage = 10;
 
 
@@ -51,8 +61,8 @@ const Expenses = ({ Context }) => {
       .filter((tag) => tag !== undefined);
   };
 
-  const getTagNames =(tagValues) => {
-    const tagNames = tagValues&&tagValues
+  const getTagNames = (tagValues) => {
+    const tagNames = tagValues && tagValues
       .map((tagValue) => {
         const foundTag = tags.find((tag) => tag.id === tagValue);
         return foundTag ? foundTag.name : null;
@@ -67,7 +77,7 @@ const Expenses = ({ Context }) => {
 
     const file = files[0];
     const reader = new FileReader();
-    reader.onload = async(event) => {
+    reader.onload = async (event) => {
       const data = event.target.result;
       const workbook = XLSX.read(data, { type: "binary" });
 
@@ -76,11 +86,11 @@ const Expenses = ({ Context }) => {
 
       const parsedData = XLSX.utils.sheet_to_json(sheet);
 
-      
+
       if (parsedData.length > 0) {
-        setNewData([{excelLength:parsedData.length}])
-        
-        const loadExcel = ()=>{
+        setNewData([{ excelLength: parsedData.length }])
+
+        const loadExcel = () => {
           setLoadExcelStatus(true)
 
           const promise = parsedData.map(async entry => {
@@ -108,10 +118,10 @@ const Expenses = ({ Context }) => {
       }
       setLoadExcelStatus(false)
       Swal.fire({
-        icon:'success',
-        title:'The expense was added correctly.',
-        timer:2300,
-        timerProgressBar:true,
+        icon: 'success',
+        title: 'The expense was added correctly.',
+        timer: 2300,
+        timerProgressBar: true,
       })
     };
 
@@ -131,12 +141,38 @@ const Expenses = ({ Context }) => {
   };
 
   const returnExpenseToEdit = () => {
-    return editIndex !== null ? { ... expenses[editIndex], tags: getTagObjects(expenses[editIndex].tags) } : null
+    return editIndex !== null ? { ...expenses[editIndex], tags: getTagObjects(expenses[editIndex].tags) } : null
   };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
+
+  const clearFilters = async () => {
+    setIsLoading(true)
+    setFromDate(null)
+    setToDate(null)
+    await fetchExpenses(page, rowsPerPage)
+    setIsLoading(false)
+  }
+
+  const handleFilterSubmit = async (e) => {
+    e.preventDefault()
+    setIsLoading(true)
+
+    if (fromDate === null && toDate === null) {
+      await fetchExpenses(page, rowsPerPage);
+    } else {
+      const from = new Date(fromDate).toLocaleDateString('en-US')
+      const to = new Date(toDate).toLocaleDateString('en-US')
+
+      const filterFromDate = dayjs(from).format('YYYY-MM-DD')
+      const filterToDate = dayjs(to).format('YYYY-MM-DD')
+
+      await filterExpensesByDate(page, rowsPerPage, filterFromDate, filterToDate)
+    }
+    setIsLoading(false)
+  }
 
   return (
     <section className={styles.container}>
@@ -240,6 +276,7 @@ const Expenses = ({ Context }) => {
               
             </ContainerExpensesData>
           
+
         </div>
     </section>
 

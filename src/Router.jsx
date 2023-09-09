@@ -42,6 +42,8 @@ const RouterComponent = () => {
 
                   <Route path="/CAGRCalculator" element={<ProtectedRoutes component={<CAGRCalculator />} />} />
 
+                  <Route path="/balance" element={<ProtectedRoutes component={<BalanceSheet />} />} />
+
             </Route>
             
           </Routes>

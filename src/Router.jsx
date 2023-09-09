@@ -11,11 +11,13 @@ import ErrorPage from "components/ErrorPage/ErrorPage";
 import Layout from "components/Layout/Layout";
 import SIPCalculator from "pages/SIPCalculator/SIPCalculator";
 import CAGRCalculator from "pages/CAGRCalculator/CAGRCalculator";
+import BalanceSheet from 'pages/BalanceSheet/BalanceSheet'
 
 const RouterComponent = () => {
 
   return (
     <Router>
+    
       <Layout>
 
           <Routes>

@@ -1,5 +1,5 @@
-import { styled } from '@mui/system';
-import { Button } from '@mui/material';
+import { styled } from "@mui/system";
+import { Button } from "@mui/material";
 
 export const HeaderButton = styled(Button)({
   color: "white",
@@ -11,9 +11,9 @@ export const HeaderButton = styled(Button)({
   },
 });
 
-export const DropDownButton = styled('button')({
-  border:'none', 
-  backgroundColor:'transparent',
-  color:'white',
-  fontSize:'bold',
-})
+export const DropDownButton = styled("button")({
+  border: "none",
+  backgroundColor: "transparent",
+  color: "white",
+  fontSize: "bold",
+});

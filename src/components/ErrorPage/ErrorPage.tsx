@@ -1,0 +1,18 @@
+import React from "react";
+
+import { Link } from "react-router-dom";
+import { ErrorPageContainer } from "./styled";
+import PageNotFound from "./static/404.png";
+
+const ErrorPage = () => {
+  return (
+    <ErrorPageContainer>
+      <img src={PageNotFound} alt="404 page not found" />
+      <h3>Ohh! Page Not Found</h3>
+      <p>We can't seem to find the page you're looking for</p>
+      <Link to="/">back home</Link>
+    </ErrorPageContainer>
+  );
+};
+
+export default ErrorPage;

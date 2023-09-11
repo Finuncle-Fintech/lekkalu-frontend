@@ -1,115 +1,130 @@
-import { Link } from "react-router-dom";
-import { HeaderButton } from "./styled";
-import { useContext, useState } from "react";
+import React, { useContext, useState } from "react";
+import {Box,CssBaseline,IconButton,List,ListItem,ListItemText,Drawer,Hidden,} from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
+import Logo from "./HeaderComponents/Logo";
+import BasicMenu from "./HeaderComponents/BasicMenu";
 import { Context } from "provider/Provider";
-import styles from './Header.module.css'
-import iconClose from '../../assets/close-icon.svg'
-import iconMenu from '../../assets/menu-icon.svg'
-import iconArrow from '../../assets/arrow-icon-.svg'
+
+const styles = {
+  appBar: {
+    width: "100%",
+    minHeight: "25vh",
+    color: "white",
+    backgroundColor: "primary.main",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  iconButton: {
+    backgroundColor: "white",
+    color: "black",
+    width: "49px",
+    height: "51px",
+  },
+  responsiveIconButton: {
+    backgroundColor: "white",
+    color: "black",
+    marginRight: "15px",
+  },
+  menuDrawer: {
+    marginTop: "15vh",
+  },
+};
 
 const Header = () => {
-  const { signOut, authToken } = useContext(Context)
+  const { signOut, authToken } = useContext(Context);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const [ dropDownActive, setDropDownActive ] = useState(false)
-  const [ menuStatus, setMenuStatus ] = useState(false)
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
 
   return (
-    <header className={`container-fluid shadow bg-primary rounded-bottom z-3 d-flex justify-content-between align-items-center py-3 flex-column flex-md-row ${styles.header}`} >
+    <Box sx={styles.appBar}>
+      <CssBaseline />
+      <Logo />
+      <Box
+        sx={{
+          width: "32vw",
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
+        <Box
+          sx={{
+            width: "21vw",
+            display: "flex",
+            justifyContent: "space-between",
+          }}
+        >
+          {/* List of pages depicted by icons */}
+          <Hidden smDown>
+            <IconButton sx={styles.iconButton}>
+              <img
+                width="25"
+                height="30"
+                src="https://img.icons8.com/sf-regular-filled/48/1A1A1A/home-page.png"
+                alt="home-page"
+              />
+            </IconButton>
+            <IconButton sx={styles.iconButton}>
+              <img
+                width="28"
+                height="28"
+                src="https://img.icons8.com/windows/32/1A1A1A/balance-scale-right.png"
+                alt="balance-scale-right"
+              />
+            </IconButton>
+            <IconButton sx={styles.iconButton}>
+              <img
+                width="28"
+                height="28"
+                src="https://img.icons8.com/material-outlined/24/goal.png"
+                alt="goal"
+              />
+            </IconButton>
+            <IconButton sx={styles.iconButton}>
+              <img
+                width="28"
+                height="28"
+                src="https://img.icons8.com/ios-filled/50/1A1A1A/request-money.png"
+                alt="request-money"
+              />
+            </IconButton>
+          </Hidden>
+        </Box>
+      </Box>
 
-      <div className="container-sm d-flex justify-content-between align-items-center" >
+      <Hidden smDown>
+        <BasicMenu />
+      </Hidden>
 
-        <HeaderButton color="inherit" component={Link} to="/">
-          Home
-        </HeaderButton>
-
-        <div className="d-md-none d-flex">
-          <button onClick={()=>setMenuStatus(!menuStatus)} className="btn " type="button">
-            <img width={30} src={menuStatus?iconClose:iconMenu} alt="" />
-          </button>
-        </div>
-
-      </div>
-
-      <div className={`${menuStatus?'d-flex bg-primary rounded-bottom ':'d-none'} d-md-flex justify-content-center align-items-center gap-4 flex-column flex-md-row container-fluid`}>
-        
-          
-        <div className={styles.containerDropDown}>
-            <Link className={styles.linkStyled} to={'/expenses'}>
-              Expenses
-            </Link>
-
-            <Link className={styles.linkStyled} to={'/income-statement'}>
-              Income Statement
-            </Link>
-
-            <Link className={styles.linkStyled} to={'/balance'}>
-              Balance
-            </Link>
-
-            <button className={`${styles.dropDownButton} d-flex justify-content-between align-items-center`} 
-                    onClick={()=>setDropDownActive(!dropDownActive)}
-                    data-testid='buttonDropwDown'
-            >
-              <span>Calculate</span>
-              <img src={iconArrow} width={20} style={{transform:dropDownActive?'rotate(0deg)':'rotate(-90deg)', transition:'all .3s'}} alt="" />
-
-            </button>
-            {
-              dropDownActive&&
-              <div className={styles.dropDown} data-testid='menuDropDown'>
-                
-                  <Link
-                    className="link-underline link-underline-opacity-0"
-                    to="/SIPCalculator"
-                    style={{color:'inherit'}}
-                  >
-                    SIP
-                  </Link>
-                  <div className={styles.lineGapper}></div>
-                  <Link
-                    className="link-underline link-underline-opacity-0"
-                    to="/CAGRCalculator"
-                    style={{color:'inherit'}}
-                  >
-                    CAGR
-                  </Link>
-                  <div className={styles.lineGapper}></div>
-                  <Link
-                    className="link-underline link-underline-opacity-0"
-                    to="/loan_emi_calculator"
-                    style={{color:'inherit'}}
-                  >
-                    EMI
-                  </Link>
-              </div>
-            }
-            <Link className={styles.linkStyled}>
-              Contact us
-            </Link>
-
-      
-        </div>
-      
-        {
-          !authToken
-            ?
-            <div className="container-fluid d-flex justify-content-around align-items-center">
-              <Link to="/signin" className={styles.actionUserButton}>
-                Sign in
-              </Link>
-              <Link to="/signup" className={styles.actionUserButton}>
-                Sign up
-              </Link>
-            </div>
-            :
-            <Link className={styles.actionUserButton} color="inherit" to={'/'} onClick={() => signOut()}>
-              Sign out
-            </Link>
-        }
-        
-      </div>
-
-    </header>
+      {/* Responsive menu button */}
+      <Hidden mdUp>
+        <IconButton onClick={toggleMenu} sx={styles.responsiveIconButton}>
+          <MenuIcon />
+        </IconButton>
+      </Hidden>
+      {/* Responsive menu */}
+      <Drawer
+        anchor="left"
+        open={isMenuOpen}
+        onClose={toggleMenu}
+        sx={styles.menuDrawer}
+      >
+        <List>
+          <ListItem button onClick={toggleMenu}>
+            <ListItemText primary="Profile" />
+          </ListItem>
+          <ListItem button onClick={toggleMenu}>
+            <ListItemText primary="My account" />
+          </ListItem>
+          <ListItem button onClick={toggleMenu}>
+            <ListItemText primary="Logout" />
+          </ListItem>
+        </List>
+      </Drawer>
+    </Box>
   );
 };
 

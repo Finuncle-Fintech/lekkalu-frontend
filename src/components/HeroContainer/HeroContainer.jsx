@@ -1,5 +1,5 @@
 import styles from './HeroContainer.module.css';
-import heroImage from '../../assets/Hero.svg';
+import heroImage from '../../assets/HeroImages/Hero.svg';
 
 const HeroContainer = () => {
     return (

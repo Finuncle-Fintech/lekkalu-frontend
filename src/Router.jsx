@@ -15,11 +15,8 @@ import PersistLogin from "components/PersistLogin/PersistLogin";
 import ErrorPage from "components/ErrorPage/ErrorPage";
 import SIPCalculator from "pages/SIPCalculator/SIPCalculator";
 import CAGRCalculator from "pages/CAGRCalculator/CAGRCalculator";
-<<<<<<< HEAD
+import BalanceSheet from 'pages/BalanceSheet/BalanceSheet';
 import Hero from "pages/Hero/Hero";
-=======
-import BalanceSheet from 'pages/BalanceSheet/BalanceSheet'
->>>>>>> 0fb5429adde1b22a785a7fd0659ec49b304d409b
 
 const RouterComponent = () => {
   const { authToken } = useContext(Context);
@@ -139,7 +136,6 @@ const RouterComponent = () => {
               </ProtectedRoutes>
             }
           />
-          
           <Route
           path="/hero"
           element={
@@ -147,7 +143,7 @@ const RouterComponent = () => {
               <Hero />
             </>
           }
-        />
+          />
           <Route
             path="*"
             element={<ErrorPage />}

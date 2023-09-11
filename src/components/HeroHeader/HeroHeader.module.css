@@ -10,20 +10,22 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Poppins';
 }
 
 .logoText {
-    font-size: 2rem;
-    font-weight: 500;
     color: #FFFFFF;
     text-align: right;
-    padding-top: 0.5rem;
+    font-family: "Poppins";
+    font-size: 32px;
+    font-weight: 600;
+    line-height: 25px;
+    letter-spacing: 0em;
 }
 
 .logo {
     position: relative;
-    width: 9.8125rem;
+    padding: 1rem 2rem;
 }
 
 .logoCircle {
@@ -42,11 +44,15 @@
 }
 
 .link {
-    font-family: 'Urbanist', sans-serif;
+    font-family: 'Urbanist';
     color: #FFFFFF;
     text-decoration: none;
-    font-weight: 600;
     margin-right: 2rem;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 60px;
+    letter-spacing: -0.03em;
+    text-align: left;
 }
 
 .button {
@@ -54,5 +60,35 @@
     width: 12.5rem;
     height: 3.8125rem;
     border-radius: 25px;
-    font-family: 'Open+Sans', sans-serif;
+    font-family: 'Open+Sans';
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 14px;
+    letter-spacing: 0em;
+}
+
+@media (max-width: 980px) {
+    .logoText {
+        font-size: 1.25rem;
+        text-align: center;
+        margin: 0;
+    }
+
+    .logoCircle {
+        height: 0.75rem;
+        width: 0.75rem;
+    }
+
+    .link {
+        font-size: 1rem;
+        margin-right: 1rem;
+    }
+
+    .logo {
+        padding: 0.25rem 0.75rem;
+    }
+
+    .nav {
+        padding: 0rem;
+    }
 }

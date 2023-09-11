@@ -1,0 +1,24 @@
+@import url('https://fonts.googleapis.com/css2?family=Urbanist&display=swap');
+
+.heroContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3rem;
+    margin-top: 12rem;
+}
+
+.heroImage {
+    width: 38.25rem;
+    height: 33rem;
+}
+
+.heroTitle {
+    font-family: 'Urbanist', sans-serif;
+    font-size: 4rem;
+    color: #FFFFFF;
+}
+
+.heroTitle span {
+    font-weight: 600;
+}

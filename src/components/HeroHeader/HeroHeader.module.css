@@ -1,0 +1,58 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Urbanist&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+
+.header {
+    max-width: 90rem;
+    width: 95vw;
+    margin: auto;
+    margin-top: 2.815rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'Poppins', sans-serif;
+}
+
+.logoText {
+    font-size: 2rem;
+    font-weight: 500;
+    color: #FFFFFF;
+    text-align: right;
+    padding-top: 0.5rem;
+}
+
+.logo {
+    position: relative;
+    width: 9.8125rem;
+}
+
+.logoCircle {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: #FFFFFF;
+    border-radius: 50%;
+    height: 1.5625rem;
+    width: 1.5625rem;
+    z-index: 1;
+}
+
+.nav {
+    padding-right: 5rem;
+}
+
+.link {
+    font-family: 'Urbanist', sans-serif;
+    color: #FFFFFF;
+    text-decoration: none;
+    font-weight: 600;
+    margin-right: 2rem;
+}
+
+.button {
+    color: #070808;
+    width: 12.5rem;
+    height: 3.8125rem;
+    border-radius: 25px;
+    font-family: 'Open+Sans', sans-serif;
+}

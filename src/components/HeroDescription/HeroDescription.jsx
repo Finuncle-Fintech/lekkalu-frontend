@@ -4,6 +4,24 @@ import secondIcon from '../../assets/HeroImages/hero-icon-2.svg';
 import thirdIcon from '../../assets/HeroImages/hero-icon-3.svg';
 import arrowIcon from '../../assets/HeroImages/arrow-right.svg';
 
+const assistanceItems = [
+    {
+        icon: firstIcon,
+        title: 'Saving more money easily',
+        text: 'We can help you save more money and keep you on your toes. By investing your funds, the money you have today can be more useful.'
+    },
+    {
+        icon: secondIcon,
+        title: 'Get your dream target',
+        text: 'We can help you save more money and keep you on your toes. By investing your funds, the money you have today can be more useful.'
+    },
+    {
+        icon: thirdIcon,
+        title: 'Effective and efficient',
+        text: 'We can help you save more money and keep you on your toes. By investing your funds, the money you have today can be more useful.'
+    }
+]
+
 const HeroDescription = () => {
     return (
         <div className={styles.heroDescription}>
@@ -25,23 +43,13 @@ paves the way for unprecedented customer support.</p>
             </div>
 
             <div className={styles.userAassistance}>
-                <div className={styles.userAssistanceElement}>
-                    <img className={styles.userAssistanceImage} src={firstIcon} alt="Saving more money easily" />
-                    <p className={styles.userAssistanceTitle}>Saving more money easily</p>
-                    <p className={styles.userAssistanceText}>we can help you save more money and<br />keep you on your toes. by investing your<br />funds, the money you have today can be<br />more useful.</p>
-                </div>
-
-                <div className={styles.userAssistanceElement}>
-                    <img className={styles.userAssistanceImage} src={secondIcon} alt="Get your dream target" />
-                    <p className={styles.userAssistanceTitle}>Get your dream target</p>
-                    <p className={styles.userAssistanceText}>we can help you save more money and<br />keep you on your toes. by investing your<br />funds, the money you have today can be<br />more useful.</p>
-                </div>
-
-                <div className={styles.userAssistanceElement}>
-                    <img className={styles.userAssistanceImage} src={thirdIcon} alt="Effective and efficient" />
-                    <p className={styles.userAssistanceTitle}>Effective and efficient</p>
-                    <p className={styles.userAssistanceText}>we can help you save more money and<br />keep you on your toes. by investing your<br />funds, the money you have today can be<br />more useful.</p>
-                </div>
+                {assistanceItems.map((item, index) => (
+                    <div key={index} className={styles.userAssistanceElement}>
+                        <img className={styles.userAssistanceImage} src={item.icon} alt={item.title} />
+                        <p className={styles.userAssistanceTitle}>{item.title}</p>
+                        <p className={styles.userAssistanceText}>{item.text}</p>
+                    </div>
+                ))}
             </div>
         </div>
     )

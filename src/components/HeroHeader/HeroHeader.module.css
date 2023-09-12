@@ -1,6 +1,13 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Urbanist&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins&family=Urbanist&family=Open+Sans&display=swap');
+
+:root {
+    --primary-font: 'Poppins', sans-serif;
+    --secondary-font: 'Urbanist', sans-serif;
+    --tertiary-font: 'Open Sans', sans-serif;
+    --primary-color: #FFFFFF;
+    --link-color: #FFFFFF;
+    --button-bg-color: #070808;
+}
 
 .header {
     max-width: 90rem;
@@ -10,17 +17,17 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-family: 'Poppins';
+    font-family: var(--primary-font);
 }
 
 .logoText {
-    color: #FFFFFF;
+    color: var(--primary-color);
     text-align: right;
-    font-family: "Poppins";
-    font-size: 32px;
+    font-family: var(--primary-font);
+    font-size: 2rem;
     font-weight: 600;
-    line-height: 25px;
-    letter-spacing: 0em;
+    line-height: 1.25;
+    letter-spacing: 0;
 }
 
 .logo {
@@ -32,7 +39,7 @@
     position: absolute;
     top: 0;
     left: 0;
-    background-color: #FFFFFF;
+    background-color: var(--primary-color);
     border-radius: 50%;
     height: 1.5625rem;
     width: 1.5625rem;
@@ -41,30 +48,31 @@
 
 .nav {
     padding-right: 5rem;
+    display: flex;
 }
 
 .link {
-    font-family: 'Urbanist';
-    color: #FFFFFF;
+    font-family: var(--secondary-font);
+    color: var(--link-color);
     text-decoration: none;
     margin-right: 2rem;
-    font-size: 24px;
+    font-size: 1.5rem;
     font-weight: 700;
-    line-height: 60px;
+    line-height: 3.75;
     letter-spacing: -0.03em;
     text-align: left;
 }
 
 .button {
-    color: #070808;
-    width: 12.5rem;
-    height: 3.8125rem;
+    color: var(--button-bg-color);
+    width: 12rem;
+    height: 3.5rem;
     border-radius: 25px;
-    font-family: 'Open+Sans';
-    font-size: 24px;
+    font-family: var(--tertiary-font);
+    font-size: 1.5rem;
     font-weight: 400;
-    line-height: 14px;
-    letter-spacing: 0em;
+    line-height: 0.875;
+    letter-spacing: 0;
 }
 
 @media (max-width: 980px) {
@@ -89,6 +97,6 @@
     }
 
     .nav {
-        padding: 0rem;
+        padding: 0;
     }
 }

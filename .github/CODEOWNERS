@@ -6,13 +6,15 @@
 
 # review when someone opens a pull request.
 
-*  @bharathkumarchowdary @mohitkhatri06 @ivangarcilazo
+*  @bharathkumarchowdary 
 
 # Following user, owns any files in the src/
 
 # directory at the root of the repository and any of its
 
 # subdirectories.
+
+/src/ @mohitkhatri06 @ivangarcilazo
 
 /src/__test__/ @ivangarcilazo
 /src/components/Expenses/ @ivangarcilazo

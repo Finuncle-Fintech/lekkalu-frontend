@@ -8,6 +8,7 @@ import Heading from "components/shared/heading/Heading";
 import Add from "../add-card/AddCard";
 import StatsAccordion from "../stats-accordion/StatsAccordion";
 import { numDifferentiation } from "utils/AppUtils";
+import { DEFAULT_CURRENCY } from "utils/Constants";
 const IncomeStatementSummary = ({
   incomeStatement,
   totalIncome,
@@ -71,7 +72,8 @@ const IncomeStatementSummary = ({
                   color: "#00b208",
                 }}
               >
-                {numDifferentiation(totalIncome)}₹
+                {numDifferentiation(totalIncome)}
+                {DEFAULT_CURRENCY}
               </span>
             </div>
             <div style={{ width: "100%" }}>
@@ -86,7 +88,9 @@ const IncomeStatementSummary = ({
                       <SourceCard
                         key={each.name + each.value + idx}
                         label={each.name}
-                        value={`${numDifferentiation(each.value)}₹`}
+                        value={`${numDifferentiation(
+                          each.value
+                        )}${DEFAULT_CURRENCY}`}
                         bg="#00b208"
                       />
                     );
@@ -113,7 +117,8 @@ const IncomeStatementSummary = ({
                   color: "#fa4646",
                 }}
               >
-                {numDifferentiation(totalExpense)}₹
+                {numDifferentiation(totalExpense)}
+                {DEFAULT_CURRENCY}
               </span>
             </div>
             <div>
@@ -123,12 +128,14 @@ const IncomeStatementSummary = ({
               <div style={{ display: "flex", gap: "10px" }}>
                 <Add label="Add Source" />
                 <div className={styles.horizontalScroll}>
-                  {expenseOverviewData.map((each,index) => {
+                  {expenseOverviewData.map((each, index) => {
                     return (
                       <SourceCard
                         key={`${each.name}_${index}`}
                         label={each.name}
-                        value={`${numDifferentiation(each.value)}₹`}
+                        value={`${numDifferentiation(
+                          each.value
+                        )}${DEFAULT_CURRENCY}`}
                         bg="#fa4646"
                       />
                     );

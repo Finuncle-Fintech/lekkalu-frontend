@@ -8,7 +8,7 @@ import { SpentBalanceChart } from "./SpentBalanceChart";
 import { CumSumChart } from "./CumSumChart";
 import { AssetsLiabilitiesChart } from "./AssetsLiabilitiesChart";
 import AssetsdepreciationChart from "./AssetsDepreciationsChart";
-import { Line } from "@ant-design/charts";
+import { Line } from "@ant-design/plots";
 
 const Test = () => {
   const {

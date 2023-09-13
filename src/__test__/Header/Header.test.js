@@ -28,7 +28,7 @@ describe('Proper functionality of the header component.', ()=>{
             </TestContextHeader.Provider>
         )
         
-        const button = screen.getByTestId('buttonDropwDown')
+        const button = screen.getByTestId('buttonDropDown')
 
         fireEvent.click(button)
 

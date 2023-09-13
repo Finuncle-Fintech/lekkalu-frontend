@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import ProtectedRoutes from "./components/ProtectedRoutes/ProtectedRoutes";
 import Charts from "components/Charts/Charts";
 import Expenses from "components/Expenses/Expenses";
@@ -42,10 +42,22 @@ const RouterComponent = () => {
             </>
           }
         />
+        <Route
+          path="/"
+          element={
+            <>
+              {authToken ? (
+                <Navigate to="/home" />
+              ) : (
+                <Hero />
+              )}
+            </>
+          }
+        />
 
         <Route element={<PersistLogin />}>
           <Route
-            path="/"
+            path="/home"
             element={
               <ProtectedRoutes authToken={authToken}>
                 <>
@@ -135,14 +147,6 @@ const RouterComponent = () => {
                 </>
               </ProtectedRoutes>
             }
-          />
-          <Route
-          path="/hero"
-          element={
-            <>
-              <Hero />
-            </>
-          }
           />
           <Route
             path="*"

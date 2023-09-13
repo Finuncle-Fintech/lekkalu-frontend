@@ -5,18 +5,6 @@ import styles from './HeroHeader.module.css';
 const HeroHeader = () => {
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
-    useEffect(() => {
-        const handleResize = () => {
-            setWindowWidth(window.innerWidth);
-        };
-
-        window.addEventListener("resize", handleResize);
-
-        return () => {
-            window.removeEventListener("resize", handleResize);
-        };
-    }, []);
-
     return (
         <header className={styles.header}>
             <div className={styles.logo}>
@@ -30,9 +18,7 @@ const HeroHeader = () => {
                 <Link className={styles.link}>Products</Link>
             </nav>
 
-            {windowWidth > 768 && (
-                <button className={styles.button}>Get Started</button>
-            )}
+            <button className={styles.button}><Link to="/signup" className={styles.buttonLink}>Get Started</Link></button>
         </header>
     )
 }

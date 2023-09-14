@@ -20,7 +20,7 @@ import Hero from "pages/Hero/Hero";
 
 const RouterComponent = () => {
   const { authToken } = useContext(Context);
-
+  
   return (
     <Router>
       <Routes>
@@ -42,20 +42,20 @@ const RouterComponent = () => {
             </>
           }
         />
-        <Route
-          path="/"
-          element={
-            <>
-              {authToken ? (
-                <Navigate to="/home" />
-              ) : (
-                <Hero />
-              )}
-            </>
-          }
-        />
 
         <Route element={<PersistLogin />}>
+          <Route
+            path="/"
+            element={
+              authToken ? (
+                <Navigate to="/home" />
+              ) : (
+                <>
+                  <Hero />
+                </>
+              )
+            }
+          />
           <Route
             path="/home"
             element={

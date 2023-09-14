@@ -3,7 +3,7 @@ import HeroHeader from "components/HeroHeader/HeroHeader";
 import HeroContainer from 'components/HeroContainer/HeroContainer';
 import HeroDescription from 'components/HeroDescription/HeroDescription';
 
-const Hero = ({}) => {
+const Hero = () => {
     return (
         <div className={styles.heroContainer}>
             <HeroHeader/>

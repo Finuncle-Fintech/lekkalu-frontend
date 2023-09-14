@@ -6,7 +6,7 @@
 
 # review when someone opens a pull request.
 
-*  @bharathkumarchowdary @mohitkhatri06
+*  @bharathkumarchowdary 
 
 # Following user, owns any files in the src/
 
@@ -14,6 +14,10 @@
 
 # subdirectories.
 
+/src/ @mohitkhatri06 @ivangarcilazo
+
 /src/__test__/ @ivangarcilazo
 /src/components/Expenses/ @ivangarcilazo
+/src/components/CAGRCalculator/ @ivangarcilazo
+/src/components/CalculatorSIP/ @ivangarcilazo
 

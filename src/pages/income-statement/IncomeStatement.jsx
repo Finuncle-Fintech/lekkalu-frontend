@@ -9,6 +9,7 @@ import Income from "components/income-statement/income/Income";
 import { Expenses } from "components/income-statement/expenses/Expenses";
 import { BeatLoader } from "react-spinners";
 import Colors from "constants/colors";
+import { Context } from "provider/Provider";
 
 const tabsList = [
   { label: "Summary", icon: <SummarizeIcon /> },
@@ -16,7 +17,7 @@ const tabsList = [
   { label: "Expenses", icon: <MoneyOffIcon /> },
 ];
 
-const IncomeStatement = ({ Context }) => {
+const IncomeStatement = () => {
   const { fetchIncomeStatement, incomeStatement } = useContext(Context);
   const [currentab, setCurrentTab] = React.useState(0);
 

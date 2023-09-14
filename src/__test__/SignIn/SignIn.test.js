@@ -5,6 +5,7 @@ import '@testing-library/jest-dom'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { BrowserRouter } from "react-router-dom";
 import swal from "sweetalert2";
+import { Context } from "provider/Provider";
 
 const mockState = {
   fetchToken: jest.fn()
@@ -28,16 +29,21 @@ jest.mock('@mui/material/Link',()=>{
     }
 })
 
-const TestContext = createContext(mockState);
+jest.mock('axios', () => ({
+    post: jest.fn(),
+    get: jest.fn(),
+    create:jest.fn()
+  }))
+
 
 describe('SignIn test funcionality', () => {
    
     test('Successfull button login funcionality when is clicked', async() => {
         const view = render(
             <BrowserRouter>
-                <TestContext.Provider value={mockState}>
-                    <Signin Context={TestContext} />
-                </TestContext.Provider>
+                <Context.Provider value={mockState}>
+                    <Signin />
+                </Context.Provider>
             </BrowserRouter>
         ); 
     
@@ -53,10 +59,11 @@ describe('SignIn test funcionality', () => {
     test('Show error when user doesn\'t exist',async()=>{
         const view = render(
             <BrowserRouter>
-                <TestContext.Provider value={mockState}>
-                    <Signin Context={TestContext} />
-                </TestContext.Provider>
+                <Context.Provider value={mockState}>
+                    <Signin />
+                </Context.Provider>
             </BrowserRouter>
+            
         );    
 
         //Arrange

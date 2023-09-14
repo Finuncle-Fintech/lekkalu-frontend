@@ -191,7 +191,7 @@ const Header = () => {
       {/* Responsive menu button */}
       <Hidden mdUp>
         <Tooltip title="Menu">
-          <IconButton onClick={toggleMenu} sx={styles.responsiveIconButton}>
+          <IconButton onClick={toggleMenu} sx={styles.responsiveIconButton} data-testid="buttonDropwDown">
             <MenuIcon />
           </IconButton>
         </Tooltip>

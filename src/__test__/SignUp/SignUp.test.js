@@ -1,6 +1,6 @@
 /* eslint-disable testing-library/no-node-access */
-import '@testing-library/jest-dom/extend-expect'
-import { fireEvent, prettyDOM, render, screen, waitFor, act } from '@testing-library/react'
+import '@testing-library/jest-dom'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import Signup from 'pages/Signup/Signup'
 import { createContext } from 'react'
 import { BrowserRouter } from 'react-router-dom'

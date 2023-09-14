@@ -1,8 +1,8 @@
 /* eslint-disable testing-library/no-node-access */
-import React, { createContext, useContext } from "react";
+import React, { createContext } from "react";
 import Signin from "pages/Signin/Signin";
-import '@testing-library/jest-dom/extend-expect'
-import { fireEvent, prettyDOM, render, screen, waitFor, act } from '@testing-library/react'
+import '@testing-library/jest-dom'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { BrowserRouter } from "react-router-dom";
 import swal from "sweetalert2";
 

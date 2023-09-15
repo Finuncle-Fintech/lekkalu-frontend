@@ -6,7 +6,7 @@ import { MenuItem, Tooltip } from "@mui/material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import LogoutIcon from "@mui/icons-material/Logout";
 
-function BasicMenu() {
+function BasicMenu(props) {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
@@ -17,7 +17,6 @@ function BasicMenu() {
   const handleClose = () => {
     setAnchorEl(null);
   };
-
   return (
     <Box
       sx={{
@@ -66,7 +65,7 @@ function BasicMenu() {
           Profile
           <AccountCircleIcon sx={{ marginLeft: "20px" }} />
         </MenuItem>
-        <MenuItem onClick={handleClose}>
+        <MenuItem onClick={() => props.signOut()}>
           Logout
           <LogoutIcon sx={{ marginLeft: "20px" }} />
         </MenuItem>

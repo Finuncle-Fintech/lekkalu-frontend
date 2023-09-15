@@ -27,7 +27,7 @@ const styles = {
     justifyContent: "space-between",
   },
   iconButton: {
-    width: "49px",
+    width: "51px",
     height: "51px",
     margin: "10px",
   },
@@ -51,7 +51,7 @@ const styles = {
 
 const Header = () => {
   const { signOut, authToken } = useContext(Context);
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = React.useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
 
@@ -181,7 +181,7 @@ const Header = () => {
         </Box>
       </Box>
 
-      <BasicMenu />
+      <BasicMenu signOut={signOut} />
 
       {/* Responsive menu button */}
 
@@ -373,11 +373,12 @@ const Header = () => {
                     backgroundColor: "#1976D2",
                     color: "white",
                   }}
+                  onClick={() => signOut()}
                 >
                   <ListItemIcon>
                     <LogoutIcon sx={{ color: "white" }} />
                   </ListItemIcon>
-                  <ListItemText primary="Logout" />
+                  <ListItemText primary="Logout"  />
                 </ListItemButton>
               </List>
             </Collapse>

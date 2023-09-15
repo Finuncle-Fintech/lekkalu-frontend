@@ -3,8 +3,6 @@ import React, { useState, useEffect } from "react";
 import styles from './HeroHeader.module.css';
 
 const HeroHeader = () => {
-    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-
     return (
         <header className={styles.header}>
             <div className={styles.logo}>

@@ -1,9 +1,11 @@
 import { Pie, PieChart, Cell, Tooltip, Legend } from "recharts";
 import { CustomLabelPie } from "components/shared/CustomLabelPie/CustomLabelPie";
 import "animate.css";
-import { DEFAULT_CURRENCY } from "utils/Constants";
+import { useUserPreferences } from "hooks/useUserPreferences";
 
 export default function Summary({ summary }) {
+  const { preferences } = useUserPreferences();
+
   const data = [
     { name: "Total Invested", value: summary.totalInvested },
     { name: "Wealth Gained", value: summary.wealthGained },
@@ -56,7 +58,7 @@ export default function Summary({ summary }) {
                 >
                   <span>{data.title} </span>
                   <span>
-                    {data.value} {DEFAULT_CURRENCY}
+                    {data.value} {preferences?.currencyUnit}
                   </span>
                 </div>
               ))}

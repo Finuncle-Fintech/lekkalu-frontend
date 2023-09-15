@@ -1,6 +1,8 @@
-import { DEFAULT_CURRENCY } from "utils/Constants";
+import { useUserPreferences } from "hooks/useUserPreferences";
 
 export const CustomLabelPie = ({ active, payload }) => {
+  const { preferences } = useUserPreferences();
+
   if (active && payload && payload.length) {
     const data = payload[0].payload;
     return (
@@ -8,7 +10,7 @@ export const CustomLabelPie = ({ active, payload }) => {
         <p
           style={{ background: "white" }}
           className="border rounded"
-        >{`${data.name}: ${DEFAULT_CURRENCY}${data.value}`}</p>
+        >{`${data.name}: ${preferences?.currencyUnit}${data.value}`}</p>
       </div>
     );
   }

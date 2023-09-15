@@ -8,13 +8,15 @@ import Heading from "components/shared/heading/Heading";
 import Add from "../add-card/AddCard";
 import StatsAccordion from "../stats-accordion/StatsAccordion";
 import { numDifferentiation } from "utils/AppUtils";
-import { DEFAULT_CURRENCY } from "utils/Constants";
+import { useUserPreferences } from "hooks/useUserPreferences";
 const IncomeStatementSummary = ({
   incomeStatement,
   totalIncome,
   totalExpense,
   difference,
 }) => {
+  const { preferences } = useUserPreferences();
+
   console.log({ totalIncome, totalExpense });
   const [expanded, setExpanded] = React.useState(false);
   const handleChange = (panel) => (event, isExpanded) => {
@@ -73,7 +75,7 @@ const IncomeStatementSummary = ({
                 }}
               >
                 {numDifferentiation(totalIncome)}
-                {DEFAULT_CURRENCY}
+                {preferences?.currencyUnit}
               </span>
             </div>
             <div style={{ width: "100%" }}>
@@ -88,9 +90,9 @@ const IncomeStatementSummary = ({
                       <SourceCard
                         key={each.name + each.value + idx}
                         label={each.name}
-                        value={`${numDifferentiation(
-                          each.value
-                        )}${DEFAULT_CURRENCY}`}
+                        value={`${numDifferentiation(each.value)}${
+                          preferences?.currencyUnit
+                        }`}
                         bg="#00b208"
                       />
                     );
@@ -118,7 +120,7 @@ const IncomeStatementSummary = ({
                 }}
               >
                 {numDifferentiation(totalExpense)}
-                {DEFAULT_CURRENCY}
+                {preferences?.currencyUnit}
               </span>
             </div>
             <div>
@@ -133,9 +135,9 @@ const IncomeStatementSummary = ({
                       <SourceCard
                         key={`${each.name}_${index}`}
                         label={each.name}
-                        value={`${numDifferentiation(
-                          each.value
-                        )}${DEFAULT_CURRENCY}`}
+                        value={`${numDifferentiation(each.value)}${
+                          preferences?.currencyUnit
+                        }`}
                         bg="#fa4646"
                       />
                     );

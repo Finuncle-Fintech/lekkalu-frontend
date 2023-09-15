@@ -9,7 +9,7 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import Swal from "sweetalert2";
-import { DEFAULT_CURRENCY } from "utils/Constants";
+import { useUserPreferences } from "hooks/useUserPreferences";
 
 const ExpensesList = ({
   expenses,
@@ -17,6 +17,7 @@ const ExpensesList = ({
   setEditIndex,
   deleteExpense,
 }) => {
+  const { preferences } = useUserPreferences();
   const deleteHandler = (expense) => {
     Swal.fire({
       title: "Are you sure?",
@@ -45,7 +46,7 @@ const ExpensesList = ({
             return (
               <TableRow key={`${expenseOfExpenses.id}_${index}`}>
                 <TableCell>
-                  {expenseOfExpenses.amount} {DEFAULT_CURRENCY}
+                  {expenseOfExpenses.amount} {preferences?.currencyUnit}
                 </TableCell>
                 <TableCell>{getTagNames(expenseOfExpenses.tags)}</TableCell>
                 <TableCell>

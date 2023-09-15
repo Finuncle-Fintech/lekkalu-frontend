@@ -1,15 +1,17 @@
 import { Button, TextField } from "@mui/material";
+import { useUserPreferences } from "hooks/useUserPreferences";
 import { useState } from "react";
-import { DEFAULT_CURRENCY } from "utils/Constants";
 
 export default function CalculatorSIP({ setSummary }) {
   const [monthlyAmount, setMonthlyAmout] = useState(false);
   const [durationInvestment, setDurationInvestment] = useState(false);
   const [rateReturn, setRateReturn] = useState(false);
   const [error, setError] = useState(false);
+  const { preferences } = useUserPreferences();
+
   const inputs = [
     {
-      label: `Monthly investment amount (${DEFAULT_CURRENCY}):`,
+      label: `Monthly investment amount (${preferences?.currencyUnit}):`,
       type: "number",
     },
     {

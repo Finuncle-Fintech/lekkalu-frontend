@@ -1,12 +1,13 @@
 import { Button, TextField } from "@mui/material";
+import { useUserPreferences } from "hooks/useUserPreferences";
 import { useState } from "react";
-import { DEFAULT_CURRENCY } from "utils/Constants";
 
 export default function CalculatorCAGR({ setSummary }) {
   const [initialVal, setInitialVal] = useState("");
   const [finalVal, setFinalVal] = useState("");
   const [durationInvestment, setDurationInvestment] = useState("");
   const [error, setError] = useState(false);
+  const { preferences } = useUserPreferences();
 
   const handleCalculate = (e) => {
     e.preventDefault();
@@ -55,13 +56,13 @@ export default function CalculatorCAGR({ setSummary }) {
         value={initialVal}
         error={error.initialVal}
         onChange={(e) => minusChecker(e, setInitialVal)}
-        label={`Initial value (${DEFAULT_CURRENCY})`}
+        label={`Initial value (${preferences?.currencyUnit})`}
       />
       <TextField
         value={finalVal}
         error={error.finalVal}
         onChange={(e) => minusChecker(e, setFinalVal)}
-        label={`Final Value Costs (${DEFAULT_CURRENCY})`}
+        label={`Final Value Costs (${preferences?.currencyUnit})`}
       />
       <TextField
         value={durationInvestment}

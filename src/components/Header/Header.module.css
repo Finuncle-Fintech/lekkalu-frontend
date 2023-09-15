@@ -46,6 +46,8 @@
     top:4rem;
     margin: 1rem;
     gap: .4rem;
+    
+    z-index: 999999;
 
 }.lineGapper{
     width: 100%;

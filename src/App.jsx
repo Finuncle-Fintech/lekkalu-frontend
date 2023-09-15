@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import 'App.css';
 import { Provider } from 'provider/Provider';
 import Router from 'Router';

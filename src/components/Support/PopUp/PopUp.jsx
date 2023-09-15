@@ -4,8 +4,9 @@ import { useState, useRef, useContext } from 'react'
 import checkEmail from './utils/checkEmail'
 import SendForm from './Components/SendForm/SendForm'
 import Background from './Components/Background/Background'
+import { Context } from 'provider/Provider'
 
-export default function SupportPopUp({Context}){
+export default function SupportPopUp(){
     const [close, setClose] = useState(false)
     const handleClose = () =>{
         setClose(close?false:true)

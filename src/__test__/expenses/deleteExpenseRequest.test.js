@@ -1,10 +1,10 @@
-import React, {createContext} from "react";
+import React from "react";
 import {render, fireEvent, waitFor, screen} from "@testing-library/react";
 import "@testing-library/jest-dom";
 import Expenses from "components/Expenses/Expenses";
 import {mockState} from "__test__/data/Expenses";
+import { Context } from "provider/Provider";
 
-const TestContext = createContext(mockState);
 
 jest.mock('axios', () => ({
   post: jest.fn(),
@@ -19,18 +19,12 @@ jest.mock('components/Axios/Axios', () => ({
 window.scrollTo = jest.fn()
 
 describe("deleteExpenseRequest", () => {
+    
     test("successfully deletes an expense", async () => {
         render(
-            <TestContext.Provider value={mockState}>
-                <Expenses Context={TestContext}/>
-            </TestContext.Provider>
-        );
-    })
-    test("successfully deletes an expense", async () => {
-        render(
-            <TestContext.Provider value={mockState}>
-                <Expenses Context={TestContext}/>
-            </TestContext.Provider>
+            <Context.Provider value={mockState}>
+                <Expenses />
+            </Context.Provider>
         );
 
         fireEvent.click(screen.getAllByPlaceholderText("delete-expense")[0]);
@@ -45,4 +39,5 @@ describe("deleteExpenseRequest", () => {
             expect(mockState.deleteExpenseRequest).toHaveBeenCalled();
         });
     });
+    
 })

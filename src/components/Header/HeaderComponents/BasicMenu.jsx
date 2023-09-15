@@ -24,6 +24,9 @@ function BasicMenu() {
         width: "34vw",
         display: "flex",
         justifyContent: "flex-end",
+        '@media (max-width: 900px)': {
+          display: 'none', // Hide for screens smaller than 768px
+        },
       }}
     >
       <Tooltip title="User setting">

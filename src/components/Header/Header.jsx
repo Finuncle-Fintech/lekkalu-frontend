@@ -1,14 +1,6 @@
 import React, { useContext, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import {
-  Box,
-  CssBaseline,
-  IconButton,
-  Drawer,
-  Hidden,
-  Button,
-  Tooltip,
-} from "@mui/material";
+import { Box, CssBaseline, IconButton, Drawer, Tooltip } from "@mui/material";
 import ListSubheader from "@mui/material/ListSubheader";
 import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -17,7 +9,7 @@ import ListItemText from "@mui/material/ListItemText";
 import Collapse from "@mui/material/Collapse";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
-import LogoutIcon from '@mui/icons-material/Logout';
+import LogoutIcon from "@mui/icons-material/Logout";
 import MenuIcon from "@mui/icons-material/Menu";
 import Logo from "./HeaderComponents/Logo";
 import BasicMenu from "./HeaderComponents/BasicMenu";
@@ -38,7 +30,6 @@ const styles = {
     width: "49px",
     height: "51px",
     margin: "10px",
-  
   },
   responsiveIconButton: {
     backgroundColor: "white",
@@ -46,6 +37,9 @@ const styles = {
     marginRight: "15px",
     width: "49px",
     height: "49px",
+    "@media (min-width: 900px)": {
+      display: "none", // Hide for screens smaller than 768px
+    },
   },
   menuDrawer: {
     backgroundColor: "primary.main",
@@ -92,6 +86,10 @@ const Header = () => {
           width: "32vw",
           display: "flex",
           justifyContent: "center",
+          "@media (max-width: 900px)": {
+            // Hide for screens smaller than 768px
+            display: "none",
+          },
         }}
       >
         <Box
@@ -102,100 +100,101 @@ const Header = () => {
           }}
         >
           {/* List of pages depicted by icons */}
-          <Hidden mdDown>
-            <Tooltip title="Home">
-              <IconButton
-                sx={{
-                  ...styles.iconButton,
-                  backgroundColor: isActive("/") ? "#0F4C91" : "white",
+
+          <Tooltip title="Home">
+            <IconButton
+              sx={{
+                ...styles.iconButton,
+                backgroundColor: isActive("/") ? "#0F4C91" : "white",
+              }}
+              component={Link}
+              to={"/"}
+            >
+              <img
+                width="25"
+                height="30"
+                src="https://img.icons8.com/sf-regular-filled/48/000000/home-page.png"
+                alt="home-page"
+                style={{ filter: isActive("/") ? "invert(1)" : "none" }}
+              />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Balance">
+            <IconButton
+              sx={{
+                ...styles.iconButton,
+                backgroundColor: isActive("/balance") ? "#0F4C91" : "white",
+                color: isActive("/balance") ? "white" : "black",
+              }}
+              component={Link}
+              to={"/balance"}
+            >
+              <img
+                width="28"
+                height="28"
+                src="https://img.icons8.com/windows/32/1A1A1A/balance-scale-right.png"
+                alt="balance-scale-right"
+                style={{
+                  filter: isActive("/balance") ? "invert(1)" : "none",
                 }}
-                component={Link}
-                to={"/"}
-              >
-                <img
-                  width="25"
-                  height="30"
-                  src="https://img.icons8.com/sf-regular-filled/48/000000/home-page.png"
-                  alt="home-page"
-                  style={{ filter: isActive("/") ? "invert(1)" : "none" }}
-                />
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="Balance">
-              <IconButton
-                sx={{
-                  ...styles.iconButton,
-                  backgroundColor: isActive("/balance") ? "#0F4C91" : "white",
-                  color: isActive("/balance") ? "white" : "black",
+              />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Goals">
+            <IconButton
+              sx={{
+                ...styles.iconButton,
+                backgroundColor: isActive("/goal") ? "#0F4C91" : "white",
+                color: isActive("/goal") ? "white" : "black",
+              }}
+            >
+              <img
+                width="28"
+                height="28"
+                src="https://img.icons8.com/material-outlined/24/goal.png"
+                alt="goal"
+                style={{ filter: isActive("/goal") ? "invert(1)" : "none" }}
+              />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Expenses">
+            <IconButton
+              sx={{
+                ...styles.iconButton,
+                backgroundColor: isActive("/expenses") ? "#0F4C91" : "white",
+                color: isActive("/expenses") ? "white" : "black",
+              }}
+              component={Link}
+              to={"/expenses"}
+            >
+              <img
+                width="28"
+                height="28"
+                src="https://img.icons8.com/ios-filled/50/1A1A1A/request-money.png"
+                alt="request-money"
+                style={{
+                  filter: isActive("/expenses") ? "invert(1)" : "none",
                 }}
-                component={Link}
-                to={"/balance"}
-              >
-                <img
-                  width="28"
-                  height="28"
-                  src="https://img.icons8.com/windows/32/1A1A1A/balance-scale-right.png"
-                  alt="balance-scale-right"
-                  style={{
-                    filter: isActive("/balance") ? "invert(1)" : "none",
-                  }}
-                />
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="Goals">
-              <IconButton
-                sx={{
-                  ...styles.iconButton,
-                  backgroundColor: isActive("/goal") ? "#0F4C91" : "white",
-                  color: isActive("/goal") ? "white" : "black",
-                }}
-              >
-                <img
-                  width="28"
-                  height="28"
-                  src="https://img.icons8.com/material-outlined/24/goal.png"
-                  alt="goal"
-                  style={{ filter: isActive("/goal") ? "invert(1)" : "none" }}
-                />
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="Expenses">
-              <IconButton
-                sx={{
-                  ...styles.iconButton,
-                  backgroundColor: isActive("/expenses") ? "#0F4C91" : "white",
-                  color: isActive("/expenses") ? "white" : "black",
-                }}
-                component={Link}
-                to={"/expenses"}
-              >
-                <img
-                  width="28"
-                  height="28"
-                  src="https://img.icons8.com/ios-filled/50/1A1A1A/request-money.png"
-                  alt="request-money"
-                  style={{
-                    filter: isActive("/expenses") ? "invert(1)" : "none",
-                  }}
-                />
-              </IconButton>
-            </Tooltip>
-          </Hidden>
+              />
+            </IconButton>
+          </Tooltip>
         </Box>
       </Box>
 
-      <Hidden mdDown>
-        <BasicMenu />
-      </Hidden>
+      <BasicMenu />
 
       {/* Responsive menu button */}
-      <Hidden mdUp>
-        <Tooltip title="Menu">
-          <IconButton onClick={toggleMenu} sx={styles.responsiveIconButton} data-testid="buttonDropwDown">
-            <MenuIcon />
-          </IconButton>
-        </Tooltip>
-      </Hidden>
+
+      <Tooltip title="Menu">
+        <IconButton
+          onClick={toggleMenu}
+          sx={styles.responsiveIconButton}
+          data-testid="buttonDropwDown"
+        >
+          <MenuIcon />
+        </IconButton>
+      </Tooltip>
+
       {/* Responsive menu */}
       <Drawer
         anchor="left"
@@ -210,7 +209,7 @@ const Header = () => {
             alignItems: "center",
           },
         }}
-        data-testid="menuDropDown" 
+        data-testid="menuDropDown"
       >
         <Box margin="20%">
           <Logo />
@@ -228,7 +227,11 @@ const Header = () => {
             component="nav"
             aria-labelledby="nested-list-subheader"
             subheader={
-              <ListSubheader component="div" id="nested-list-subheader" sx={{ bgcolor: 'primary.main', color: '#D9D9D9' }}>
+              <ListSubheader
+                component="div"
+                id="nested-list-subheader"
+                sx={{ bgcolor: "primary.main", color: "#D9D9D9" }}
+              >
                 Navigation
               </ListSubheader>
             }
@@ -239,7 +242,7 @@ const Header = () => {
               sx={{
                 backgroundColor: isActive("/") ? "white" : "#1976D2",
                 color: isActive("/") ? "black" : "white",
-               
+
                 margin: "10px 0",
               }}
             >
@@ -357,7 +360,6 @@ const Header = () => {
                     pl: 4,
                     backgroundColor: "#1976D2",
                     color: "white",
-              
                   }}
                 >
                   <ListItemIcon>
@@ -369,11 +371,11 @@ const Header = () => {
                   sx={{
                     pl: 4,
                     backgroundColor: "#1976D2",
-                    color:  "white",
+                    color: "white",
                   }}
                 >
                   <ListItemIcon>
-                    <LogoutIcon  sx={{ color: "white" }} />
+                    <LogoutIcon sx={{ color: "white" }} />
                   </ListItemIcon>
                   <ListItemText primary="Logout" />
                 </ListItemButton>

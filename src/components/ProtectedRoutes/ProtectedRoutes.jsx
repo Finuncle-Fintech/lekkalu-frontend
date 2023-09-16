@@ -6,7 +6,7 @@ import { Context } from 'provider/Provider';
 // High order component
 export const ProtectedRoutes = ({ component }) => {
     const { authToken } = useContext(Context);
-
+    
     if (!authToken) {
         return <Navigate to="/signin" replace />
     }

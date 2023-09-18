@@ -7,11 +7,13 @@ import EmiCalculator from "pages/EmiCalculator";
 import Signin from "./pages/Signin/Signin";
 import Signup from "./pages/Signup/Signup";
 import PersistLogin from "components/PersistLogin/PersistLogin";
+import GuestRoutes from "components/GuestRoutes/GuestRoutes";
 import ErrorPage from "components/ErrorPage/ErrorPage";
 import Layout from "components/Layout/Layout";
 import SIPCalculator from "pages/SIPCalculator/SIPCalculator";
 import CAGRCalculator from "pages/CAGRCalculator/CAGRCalculator";
-import BalanceSheet from 'pages/BalanceSheet/BalanceSheet';
+import BalanceSheet from 'pages/BalanceSheet/BalanceSheet'
+import PersistGuest from "components/GuestRoutes/PersistGuest";
 import Hero from "pages/Hero/Hero";
 import HeroRoute from "components/HeroRoute/HeroRoute";
 
@@ -20,38 +22,41 @@ const RouterComponent = () => {
 
   return (
     <Router>
-    
+
       <Layout>
 
-          <Routes>
+        <Routes>
+          
+          <Route path="*" element={<ErrorPage />} />
 
-            <Route path="/signin" element={ <Signin /> } />
+          <Route element={<PersistGuest />}>
 
-            <Route path="/signup" element={ <Signup /> } />
+            <Route path="/signin" element={<GuestRoutes component={<Signin />} />} />
 
-            <Route path="*" element={<ErrorPage />}/>
+            <Route path="/signup" element={<GuestRoutes component={<Signup />} />} />
 
-            <Route element={<PersistLogin />}>
+          </Route>
 
-                  <Route path="/" element={<HeroRoute component={<Hero />} />}/>
+          <Route element={<PersistLogin />}>
+            <Route path="/" element={<HeroRoute component={<Hero />} />}/>
 
-                  <Route path="/home" element={<ProtectedRoutes component={<Charts />} />}/>
-                    
-                  <Route path="/loan_emi_calculator" element={<ProtectedRoutes component={<EmiCalculator />}/>}/>
+            <Route path="/home" element={<ProtectedRoutes component={<Charts />} />} />
 
-                  <Route path="/income-statement" element={<ProtectedRoutes component={<IncomeStatement />} /> } />
+            <Route path="/loan_emi_calculator" element={<ProtectedRoutes component={<EmiCalculator />} />} />
 
-                  <Route path="/expenses" element={<ProtectedRoutes component={<Expenses />} />} />
+            <Route path="/income-statement" element={<ProtectedRoutes component={<IncomeStatement />} />} />
 
-                  <Route path="/SIPCalculator" element={<ProtectedRoutes component={<SIPCalculator />} />} />
+            <Route path="/expenses" element={<ProtectedRoutes component={<Expenses />} />} />
 
-                  <Route path="/CAGRCalculator" element={<ProtectedRoutes component={<CAGRCalculator />} />} />
+            <Route path="/SIPCalculator" element={<ProtectedRoutes component={<SIPCalculator />} />} />
 
-                  <Route path="/balance" element={<ProtectedRoutes component={<BalanceSheet />} />} />
+            <Route path="/CAGRCalculator" element={<ProtectedRoutes component={<CAGRCalculator />} />} />
 
-            </Route>
-            
-          </Routes>
+            <Route path="/balance" element={<ProtectedRoutes component={<BalanceSheet />} />} />
+
+          </Route>
+
+        </Routes>
 
       </Layout>
     </Router>

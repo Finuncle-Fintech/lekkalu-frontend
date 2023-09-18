@@ -7,20 +7,27 @@ const useRefreshToken = () => {
     const { setAuthToken } = useContext(Context)
 
     const refresh = async () => {
-        const response = await axiosClient.post('token/refresh/',
-            JSON.stringify({
-                "refresh": getCookie("refresh")
-            }),
-            {
-                headers:{
-                    "Content-Type": "application/json"
+        try {
+            const response = await axiosClient.post('token/refresh/',
+                JSON.stringify({
+                    "refresh": getCookie("refresh")
+                }),
+                {
+                    headers:{
+                        "Content-Type": "application/json"
+                    }
                 }
-            }
-        )
+            )
 
-        setAuthToken(response?.data?.access)
-
-        return response.data?.access
+            setAuthToken(response?.data?.access)
+    
+            return response.data?.access
+    
+        } catch (error) {
+            
+            setAuthToken(null)
+            
+        }
     }
 
     return refresh

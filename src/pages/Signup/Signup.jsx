@@ -17,7 +17,7 @@ import axiosClient from "components/Axios/Axios";
 import { useNavigate } from "react-router";
 import Swal from "sweetalert2";
 
-export const Signup = ({ Context }) => {
+export const Signup = () => {
     const navigate = useNavigate()
     const [errors, setErrors] = useState([])
     const [loading, setLoading] = useState(false)

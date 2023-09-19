@@ -12,14 +12,15 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import { SkipNext, SkipPrevious } from '@mui/icons-material';
 import ExpenseFormModal from "./ExpensesModal";
-import { ModalContainer, modalSuccesCreated } from "./styled";
+import { ModalContainer } from "./styled";
 import ExpensesList from "./ExpenseList";
 import { formatDate, getTagNumbers } from "./utils";
 import * as XLSX from "xlsx";
 import Swal from "sweetalert2";
+import { Context } from "provider/Provider";
 import { checkTagsAndLoad } from "./utils";
 
-const Expenses = ({ Context }) => {
+const Expenses = () => {
   const {
     expenses,
     tags,

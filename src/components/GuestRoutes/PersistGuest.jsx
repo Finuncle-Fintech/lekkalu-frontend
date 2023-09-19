@@ -1,18 +1,16 @@
 import useRefreshToken from "hooks/useRefresh";
 import { useContext, useEffect, useState } from "react";
 import { Context } from "provider/Provider";
-
 import React from 'react'
 import { Outlet } from "react-router-dom";
 
-const PersistLogin = () => {
+export default function PersistGuest() {
     const { authToken } = useContext(Context)
     const [isLoading, setIsLoading] = useState(true)
 
     const refresh = useRefreshToken()
 
     useEffect(() => {
-        
         const verifyIfHasToken = async () => {
             try {
                 await refresh()
@@ -35,5 +33,3 @@ const PersistLogin = () => {
         </>
     )
 }
-
-export default PersistLogin

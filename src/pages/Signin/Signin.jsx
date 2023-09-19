@@ -14,9 +14,10 @@ import Container from '@mui/material/Container';
 import { Link as ReactRouterLink, useNavigate } from 'react-router-dom';
 import Copyright from "../../components/Copyright/Copyright";
 import Swal from "sweetalert2";
+import { Context } from "provider/Provider";
 
 
-export const Signin = ({ Context }) => {
+export const Signin = () => {
     const { fetchToken } = useContext(Context);
     const navigate = useNavigate();
     const [loading, setIsLoading] = useState(false)

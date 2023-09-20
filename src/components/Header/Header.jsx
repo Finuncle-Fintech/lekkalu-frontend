@@ -356,6 +356,8 @@ const Header = () => {
             <Collapse in={open} timeout="auto" unmountOnExit>
               <List component="div" disablePadding>
                 <ListItemButton
+                  component={Link}
+                  to="/settings"
                   sx={{
                     pl: 4,
                     backgroundColor: "#1976D2",
@@ -378,7 +380,7 @@ const Header = () => {
                   <ListItemIcon>
                     <LogoutIcon sx={{ color: "white" }} />
                   </ListItemIcon>
-                  <ListItemText primary="Logout"  />
+                  <ListItemText primary="Logout" />
                 </ListItemButton>
               </List>
             </Collapse>

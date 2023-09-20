@@ -5,10 +5,12 @@ import Menu from "@mui/material/Menu";
 import { MenuItem, Tooltip } from "@mui/material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import LogoutIcon from "@mui/icons-material/Logout";
+import { useNavigate } from "react-router";
 
 function BasicMenu(props) {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
+  const navigate = useNavigate();
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -23,8 +25,8 @@ function BasicMenu(props) {
         width: "34vw",
         display: "flex",
         justifyContent: "flex-end",
-        '@media (max-width: 900px)': {
-          display: 'none', // Hide for screens smaller than 768px
+        "@media (max-width: 900px)": {
+          display: "none", // Hide for screens smaller than 768px
         },
       }}
     >
@@ -53,15 +55,20 @@ function BasicMenu(props) {
         open={open}
         onClose={handleClose}
         anchorOrigin={{
-          vertical: 'bottom', 
-          horizontal: 'right', 
+          vertical: "bottom",
+          horizontal: "right",
         }}
         transformOrigin={{
-          vertical: 'top', 
-          horizontal: 'right', 
+          vertical: "top",
+          horizontal: "right",
         }}
       >
-        <MenuItem onClick={handleClose}>
+        <MenuItem
+          onClick={() => {
+            navigate("/settings");
+            handleClose();
+          }}
+        >
           Profile
           <AccountCircleIcon sx={{ marginLeft: "20px" }} />
         </MenuItem>

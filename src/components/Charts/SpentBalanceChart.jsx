@@ -49,7 +49,7 @@ export const SpentBalanceChart = (spentBalance) => {
     >
       <h3 className="section-title text-white text-center">Monthly</h3>
       <div className="section-inner-wrapper">
-        <ResponsiveContainer width="100%" aspect={2} className="p-4">
+        <ResponsiveContainer width="100%" aspect={2}>
           <ComposedChart
             width={500}
             height={400}

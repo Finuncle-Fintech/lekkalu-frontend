@@ -26,7 +26,7 @@ export const WeeklyChart = (WeekData) => {
         Weekly Spend Analysis
       </h3>
       <div className="section-inner-wrapper">
-        <ResponsiveContainer width="100%" aspect={2} className="p-4">
+        <ResponsiveContainer width="100%" aspect={2}>
           <LineChart
             data={WeekData.data}
             margin={{ top: 5, right: 0, bottom: 25, left: 10 }}

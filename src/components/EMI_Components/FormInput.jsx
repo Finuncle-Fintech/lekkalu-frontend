@@ -1,3 +1,4 @@
+import { useContext, useState } from "react";
 import {
   FormGroup,
   InputGroup,
@@ -5,7 +6,12 @@ import {
   Label,
   InputGroupText,
   Container,
+  ButtonDropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem
 } from "reactstrap";
+import { Context } from "provider/Provider";
 
 const FormInput = ({
   handleChange,
@@ -19,8 +25,21 @@ const FormInput = ({
   step,
   showSlider,
   tooltip,
+  visible
+  
 }) => {
+
+  const [isOpen, setIsOpen] = useState(false);  
+  const units = ['Months', 'Years']
+const {unit, handleUnitChange} = useContext(Context)
+  const toggle = () => {
+    setIsOpen(prevState => !prevState)
+  }
+
+
+  
   return (
+    
     <Container>
       <FormGroup>
         {label && (
@@ -39,7 +58,20 @@ const FormInput = ({
             onChange={handleChange}
             id={name}
           />
-          <InputGroupText>{symbol}</InputGroupText>
+          {!visible && <InputGroupText>{symbol}</InputGroupText> }
+          { visible &&
+          
+          <ButtonDropdown isOpen={isOpen} toggle={toggle}>                  
+          <DropdownToggle caret>
+              {unit}
+            </DropdownToggle>
+            <DropdownMenu>
+             {units.map((val) => {
+              return <DropdownItem onClick={() => handleUnitChange(val)}>{val}</DropdownItem>
+             })}
+            </DropdownMenu>
+          </ButtonDropdown>
+          }
         </InputGroup>
       </FormGroup>
       {showSlider && (
@@ -55,6 +87,7 @@ const FormInput = ({
         />
       )}
     </Container>
+ 
   );
 };
 

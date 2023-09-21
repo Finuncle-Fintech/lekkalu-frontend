@@ -1,5 +1,4 @@
-/* eslint-disable testing-library/no-node-access */
-import React, { createContext } from "react";
+import React from "react";
 import Signin from "pages/Signin/Signin";
 import '@testing-library/jest-dom/extend-expect'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
@@ -36,9 +35,9 @@ jest.mock('axios', () => ({
   }))
 
 
-describe('SignIn test funcionality', () => {
-   
-    test('Successfull button login funcionality when is clicked', async() => {
+  describe('SignIn test functionality', () => {
+     
+    test('Successful button login functionality when is clicked', async () => {
         const view = render(
             <BrowserRouter>
                 <Context.Provider value={mockState}>
@@ -47,47 +46,42 @@ describe('SignIn test funcionality', () => {
             </BrowserRouter>
         ); 
     
-        const buttonSignIn = screen.getByText('Sign In')
+        const buttonSignIn = screen.getByText('Continue')
 
         fireEvent.click(buttonSignIn)
 
-        await waitFor(()=>{
+        await waitFor(() => {
             expect(mockState.fetchToken).toHaveBeenCalledTimes(1)
         })
     });
 
-    test('Show error when user doesn\'t exist',async()=>{
+    test('Show error when user doesn\'t exist', async () => {
         const view = render(
             <BrowserRouter>
                 <Context.Provider value={mockState}>
                     <Signin />
                 </Context.Provider>
             </BrowserRouter>
-            
         );    
 
-        //Arrange
-        const errorText = 'User with provided details does not exist'
-        //SpyOn on jest is util for get methods of objects
-        const spySwal = jest.spyOn(swal, 'fire')
-        const buttonSignIn = screen.getByText('Sign In')
-        const form = buttonSignIn.parentNode
-        const usernameInput = form.firstChild.children[1].firstChild
-        const passwordInput = form.children[1].children[1].firstChild
+        // Arrange
+        const errorText = 'User with provided details does not exist';
+        const spySwal = jest.spyOn(swal, 'fire');
+        
+        // Use getByLabelText to find input fields by their associated labels
+        const usernameInput = screen.getByLabelText('Username');
+        const passwordInput = screen.getByLabelText('Password');
       
-        //Act
+        // Act
         fireEvent.change(usernameInput, { target: { value: 'nameUser, this username does not exist' } });
         fireEvent.change(passwordInput, { target: { value: 'badPasswordThis Passowrd does not exist.' } });
-        fireEvent.click(buttonSignIn);
+        fireEvent.click(screen.getByText('Continue'));
 
-        //Assert
-        await waitFor(()=>{
-            expect(spySwal).toBeCalledTimes(1)
-        })
-        await waitFor(()=>{
-            expect(swal.getHtmlContainer().textContent).toEqual(errorText)
-        })
-
-    })
+        // Assert
+        await waitFor(() => {
+            expect(spySwal).toBeCalledTimes(1);
+            expect(swal.getHtmlContainer().textContent).toEqual(errorText);
+        });
+    });
 
 });

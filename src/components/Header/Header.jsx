@@ -40,7 +40,7 @@ const styles = {
     width: "49px",
     height: "49px",
     "@media (min-width: 900px)": {
-      display: "none", // Hide for screens smaller than 768px
+      display: "none",
     },
   },
   menuDrawer: {
@@ -52,15 +52,51 @@ const styles = {
 };
 
 const Header = () => {
-  const { signOut } = useContext(Context);
-  const [open, setOpen] = React.useState(false);
+  const { signOut, authToken } = useContext(Context);
+  const [openCalculator, setOpenCalculator] = React.useState(false);
+  const [openSettings, setOpenSettings] = React.useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isCalculatorOpen, setIsCalculatorOpen] = useState(false);
   const location = useLocation();
-
-  const handleClick = () => {
-    setOpen(!open);
+  const userSetting = {
+    submenu: {
+      1: {
+        name: "profile",
+        icon: <AccountCircleIcon />,
+        path: "/profile",
+      },
+      2: {
+        name: "Logout",
+        icon: <LogoutIcon />,
+        onClick: signOut,
+      },
+    },
+    title: "User setting",
+    img: "https://img.icons8.com/material-outlined/24/menu-2.png",
   };
+
+  const calculatorOption = {
+    submenu: {
+      1: {
+        name: "SIP",
+        icon: null,
+        path: "/SIPCalculator",
+      },
+      2: {
+        name: "CAGR",
+        icon: null,
+        path: "/CAGRCalculator",
+      },
+      3: {
+        name: "EMI",
+        icon: null,
+        path: "/loan_emi_calculator",
+      },
+    },
+    title: "Calculator",
+    img: "https://img.icons8.com/external-glyph-zulfa-mahendra/48/external-calculator-business-training-glyph-zulfa-mahendra.png",
+  };
+
   const isActive = (pathname) => {
     return location.pathname === pathname;
   };
@@ -181,13 +217,17 @@ const Header = () => {
               />
             </IconButton>
           </Tooltip>
-          <Tooltip title="Calculate">
-            <CalculatorMenu />
-          </Tooltip>
+
+          <BasicMenu Menu={calculatorOption} />
         </Box>
       </Box>
 
-      <BasicMenu signOut={signOut} />
+      <BasicMenu
+        sx={{
+          ...styles.iconButton,
+        }}
+        Menu={userSetting}
+      />
 
       {/* Responsive menu button */}
 
@@ -339,7 +379,7 @@ const Header = () => {
 
             <ListItemButton
               onClick={() => {
-                setIsCalculatorOpen(!isCalculatorOpen);
+                setOpenCalculator(!openCalculator);
               }}
               sx={{
                 backgroundColor: "#1976D2",
@@ -351,65 +391,68 @@ const Header = () => {
                 <img
                   width="21"
                   height="20"
-                  src="https://img.icons8.com/material-outlined/24/calculator--v2.png"
-                  alt="calculator--v2"
+                  src="https://img.icons8.com/external-glyph-zulfa-mahendra/48/external-calculator-business-training-glyph-zulfa-mahendra.png"
+                  alt="menu-2"
                   style={{
                     marginRight: "10px",
                     filter: "invert(1)",
                   }}
                 />
               </ListItemIcon>
-              <ListItemText primary="Calculate" />
-              {open ? <ExpandLess /> : <ExpandMore />}
+
+              <ListItemText primary="Calculator" />
+              {openCalculator ? <ExpandLess /> : <ExpandMore />}
             </ListItemButton>
-            <Collapse in={isCalculatorOpen} timeout="auto" unmountOnExit>
+            <Collapse in={openCalculator} timeout="auto" unmountOnExit>
               <List component="div" disablePadding>
                 <ListItemButton
+                  component={Link}
                   to="/SIPCalculator"
                   sx={{
                     pl: 4,
-                    backgroundColor: "#1976D2",
-                    color: "white",
+                    backgroundColor: isActive("/SIPCalculator")
+                      ? "white"
+                      : "#1976D2",
+                    color: isActive("/SIPCalculator") ? "black" : "white",
                   }}
                 >
-                  <ListItemIcon>
-                    <CalculateOutlinedIcon sx={{ color: "white" }} />
-                  </ListItemIcon>
+                  <ListItemIcon></ListItemIcon>
                   <ListItemText primary="SIP" />
                 </ListItemButton>
-
                 <ListItemButton
+                  component={Link}
                   to="/CAGRCalculator"
                   sx={{
                     pl: 4,
-                    backgroundColor: "#1976D2",
-                    color: "white",
+                    backgroundColor: isActive("/CAGRCalculator")
+                      ? "white"
+                      : "#1976D2",
+                    color: isActive("/CAGRCalculator") ? "black" : "white",
                   }}
                 >
-                  <ListItemIcon>
-                    <CalculateOutlinedIcon sx={{ color: "white" }} />
-                  </ListItemIcon>
+                  <ListItemIcon></ListItemIcon>
                   <ListItemText primary="CAGR" />
                 </ListItemButton>
-
                 <ListItemButton
+                  component={Link}
                   to="/loan_emi_calculator"
                   sx={{
-                    pl: 4,
-                    backgroundColor: "#1976D2",
-                    color: "white",
+                    pl: 4,   backgroundColor: isActive("/loan_emi_calculator")
+                    ? "white"
+                    : "#1976D2",
+                  color: isActive("/loan_emi_calculator") ? "black" : "white",
                   }}
                 >
-                  <ListItemIcon>
-                    <CalculateOutlinedIcon sx={{ color: "white" }} />
-                  </ListItemIcon>
+                  <ListItemIcon></ListItemIcon>
                   <ListItemText primary="EMI" />
                 </ListItemButton>
               </List>
             </Collapse>
 
             <ListItemButton
-              onClick={handleClick}
+              onClick={() => {
+                setOpenSettings(!openSettings);
+              }}
               sx={{
                 backgroundColor: "#1976D2",
                 color: "white",
@@ -428,10 +471,11 @@ const Header = () => {
                   }}
                 />
               </ListItemIcon>
+
               <ListItemText primary="User settings" />
-              {open ? <ExpandLess /> : <ExpandMore />}
+              {openSettings ? <ExpandLess /> : <ExpandMore />}
             </ListItemButton>
-            <Collapse in={open} timeout="auto" unmountOnExit>
+            <Collapse in={openSettings} timeout="auto" unmountOnExit>
               <List component="div" disablePadding>
                 <ListItemButton
                   sx={{

@@ -15,6 +15,8 @@ import Logo from "./HeaderComponents/Logo";
 import BasicMenu from "./HeaderComponents/BasicMenu";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { Context } from "provider/Provider";
+import CalculateOutlinedIcon from "@mui/icons-material/CalculateOutlined";
+import CalculatorMenu from "./HeaderComponents/CalculatorMenu";
 
 const styles = {
   appBar: {
@@ -50,9 +52,10 @@ const styles = {
 };
 
 const Header = () => {
-  const { signOut, authToken } = useContext(Context);
+  const { signOut } = useContext(Context);
   const [open, setOpen] = React.useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isCalculatorOpen, setIsCalculatorOpen] = useState(false);
   const location = useLocation();
 
   const handleClick = () => {
@@ -177,6 +180,9 @@ const Header = () => {
                 }}
               />
             </IconButton>
+          </Tooltip>
+          <Tooltip title="Calculate">
+            <CalculatorMenu />
           </Tooltip>
         </Box>
       </Box>
@@ -330,6 +336,78 @@ const Header = () => {
               </ListItemIcon>
               <ListItemText primary="Expense" />
             </ListItemButton>
+
+            <ListItemButton
+              onClick={() => {
+                setIsCalculatorOpen(!isCalculatorOpen);
+              }}
+              sx={{
+                backgroundColor: "#1976D2",
+                color: "white",
+                margin: "10px 0",
+              }}
+            >
+              <ListItemIcon>
+                <img
+                  width="21"
+                  height="20"
+                  src="https://img.icons8.com/material-outlined/24/calculator--v2.png"
+                  alt="calculator--v2"
+                  style={{
+                    marginRight: "10px",
+                    filter: "invert(1)",
+                  }}
+                />
+              </ListItemIcon>
+              <ListItemText primary="Calculate" />
+              {open ? <ExpandLess /> : <ExpandMore />}
+            </ListItemButton>
+            <Collapse in={isCalculatorOpen} timeout="auto" unmountOnExit>
+              <List component="div" disablePadding>
+                <ListItemButton
+                  to="/SIPCalculator"
+                  sx={{
+                    pl: 4,
+                    backgroundColor: "#1976D2",
+                    color: "white",
+                  }}
+                >
+                  <ListItemIcon>
+                    <CalculateOutlinedIcon sx={{ color: "white" }} />
+                  </ListItemIcon>
+                  <ListItemText primary="SIP" />
+                </ListItemButton>
+
+                <ListItemButton
+                  to="/CAGRCalculator"
+                  sx={{
+                    pl: 4,
+                    backgroundColor: "#1976D2",
+                    color: "white",
+                  }}
+                >
+                  <ListItemIcon>
+                    <CalculateOutlinedIcon sx={{ color: "white" }} />
+                  </ListItemIcon>
+                  <ListItemText primary="CAGR" />
+                </ListItemButton>
+
+                <ListItemButton
+                  to="/loan_emi_calculator"
+                  sx={{
+                    pl: 4,
+                    backgroundColor: "#1976D2",
+                    color: "white",
+                  }}
+                >
+                  <ListItemIcon>
+                    <CalculateOutlinedIcon sx={{ color: "white" }} />
+                  </ListItemIcon>
+                  <ListItemText primary="EMI" />
+                </ListItemButton>
+              </List>
+            </Collapse>
+
             <ListItemButton
               onClick={handleClick}
               sx={{
@@ -378,7 +456,7 @@ const Header = () => {
                   <ListItemIcon>
                     <LogoutIcon sx={{ color: "white" }} />
                   </ListItemIcon>
-                  <ListItemText primary="Logout"  />
+                  <ListItemText primary="Logout" />
                 </ListItemButton>
               </List>
             </Collapse>

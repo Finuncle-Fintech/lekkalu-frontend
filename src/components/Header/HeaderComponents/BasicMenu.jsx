@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
@@ -18,7 +19,7 @@ const styles = {
 function BasicMenu(props) {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
-
+  const location = useLocation();
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -26,6 +27,11 @@ function BasicMenu(props) {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const isActive = (pathname) => {
+    return location.pathname === pathname;
+  };
+
   return (
     <Box
       sx={{
@@ -75,14 +81,23 @@ function BasicMenu(props) {
           const onClickHandler = submenu.onClick || handleClose;
           return (
             <MenuItem
-              sx={{ width: "10vw" }}
+              sx={{
+                width: "10vw",
+                backgroundColor: isActive(submenu.path) ? "#0F4C91" : "white",
+                color: isActive(submenu.path) ? "white" : "black",
+                "&:hover": {
+                  backgroundColor: isActive(submenu.path) ? "#0F4C91" : "primary.main", // Change the hover background color
+                  color: isActive(submenu.path) ? "white" : "white", // Change the hover text color
+                },
+              }}
               key={index}
-              onClick={onClickHandler}
+              component={Link}
+              to={submenu.path}
             >
               <Typography
-                variant="body1" 
+                variant="body1"
                 sx={{
-                  fontSize: "1rem", 
+                  fontSize: "1rem",
                   fontWeight: 500,
                   letterSpacing: "0.5px",
                   width: "80%",

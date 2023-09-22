@@ -77,17 +77,17 @@ const Header = () => {
       1: {
         name: "SIP",
         icon: null,
-        path: "/sip",
+        path: "/SIPCalculator",
       },
       2: {
         name: "CAGR",
         icon: null,
-        path: "/cagr",
+        path: "/CAGRCalculator",
       },
       3: {
         name: "EMI",
         icon: null,
-        path: "/emi",
+        path: "/loan_emi_calculator",
       },
     },
     title: "Calculator",
@@ -403,6 +403,8 @@ const Header = () => {
             <Collapse in={openCalculator} timeout="auto" unmountOnExit>
               <List component="div" disablePadding>
                 <ListItemButton
+                 component={Link}
+                 to="/SIPCalculator"
                   sx={{
                     pl: 4,
                     backgroundColor: "#1976D2",
@@ -413,16 +415,21 @@ const Header = () => {
                   <ListItemText primary="SIP" />
                 </ListItemButton>
                 <ListItemButton
+                 component={Link}
+                 to="/CAGRCalculator"
                   sx={{
                     pl: 4,
                     backgroundColor: "#1976D2",
                     color: "white",
                   }}
+                  
                 >
                   <ListItemIcon></ListItemIcon>
                   <ListItemText primary="CAGR" />
                 </ListItemButton>
                 <ListItemButton
+                  component={Link}
+                  to="/loan_emi_calculator"
                   sx={{
                     pl: 4,
                     backgroundColor: "#1976D2",

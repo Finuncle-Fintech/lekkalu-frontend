@@ -169,6 +169,7 @@ export const Signup = () => {
             component={ReactRouterLink}
             to="/signin"
             variant="body2"
+            className={styles.link}
           >
             {"Already have an account? Sign in"}
           </ReactRouterLink>

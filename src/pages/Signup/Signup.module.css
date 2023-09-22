@@ -40,7 +40,7 @@
 .authenticationContainer {
     background-color: #FFFFFF;
     width: 528px;
-    padding: 2rem;
+    padding: 1.75rem;
     border-radius: 24px;
 }
 
@@ -87,6 +87,7 @@
     border-radius: 12px;
     border: 1px solid;
     border-color: #66666659;
+    margin-bottom: 0.75rem;
 }
 
 .loginInput:focus {
@@ -94,7 +95,7 @@
 }
 
 .CheckBox {
-    margin-top: 0.75rem;
+    margin-top: 0.5rem;
 }
 
 .CheckBox>div>span {
@@ -102,7 +103,7 @@
 }
 
 .loginButton {
-    margin: 0.75rem 0;
+    margin: 0.5rem 0;
     width: auto;
     height: 3rem;
     border: 0;

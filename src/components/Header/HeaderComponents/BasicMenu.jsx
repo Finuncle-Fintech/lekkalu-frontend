@@ -86,13 +86,16 @@ function BasicMenu(props) {
                 backgroundColor: isActive(submenu.path) ? "#0F4C91" : "white",
                 color: isActive(submenu.path) ? "white" : "black",
                 "&:hover": {
-                  backgroundColor: isActive(submenu.path) ? "#0F4C91" : "primary.main", // Change the hover background color
+                  backgroundColor: isActive(submenu.path)
+                    ? "#0F4C91"
+                    : "primary.main", // Change the hover background color
                   color: isActive(submenu.path) ? "white" : "white", // Change the hover text color
                 },
               }}
               key={index}
               component={Link}
               to={submenu.path}
+              onClick={onClickHandler}
             >
               <Typography
                 variant="body1"

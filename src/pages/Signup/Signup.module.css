@@ -83,6 +83,10 @@
     border-color: #66666659;
 }
 
+.CheckBox {
+    margin-top: 1rem;
+}
+
 .loginInput:focus {
     outline: none;
 }

@@ -1,25 +1,17 @@
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation,  useNavigate  } from "react-router-dom";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import { MenuItem, Tooltip } from "@mui/material";
 import Typography from "@mui/material/Typography";
 
-const styles = {
-  iconButton: {
-    backgroundColor: "white",
-    color: "black",
-    margin: "10px",
-    width: "51px",
-    height: "51px",
-  },
-};
 
 function BasicMenu(props) {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const location = useLocation();
+  const navigate =  useNavigate (); 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -28,6 +20,15 @@ function BasicMenu(props) {
     setAnchorEl(null);
   };
 
+  const handleItemClick = (submenu) => {
+    if (submenu.path) {
+      navigate(submenu.path);
+    } else {
+      if (submenu.onClick) {
+       submenu.onClick();
+      }
+    }
+  };
   const isActive = (pathname) => {
     return location.pathname === pathname;
   };
@@ -78,11 +79,11 @@ function BasicMenu(props) {
       >
         {Object.keys(props.Menu.submenu).map((key, index) => {
           const submenu = props.Menu.submenu[key];
-          const onClickHandler = submenu.onClick || handleClose;
+          const onClickHandler = () => handleItemClick(submenu);
           return (
             <MenuItem
               sx={{
-                width: "10vw",
+                width: "150px",
                 backgroundColor: isActive(submenu.path) ? "#0F4C91" : "white",
                 color: isActive(submenu.path) ? "white" : "black",
                 "&:hover": {
@@ -90,9 +91,10 @@ function BasicMenu(props) {
                   color: isActive(submenu.path) ? "white" : "white", // Change the hover text color
                 },
               }}
+              onClick={onClickHandler}
               key={index}
-              component={Link}
-              to={submenu.path}
+              // component={Link}
+              // to={submenu.path}
             >
               <Typography
                 variant="body1"

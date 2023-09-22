@@ -95,7 +95,7 @@ export const Signin = () => {
                             Continue
                         </button>
                     </form>
-                    <ReactRouterLink component={ReactRouterLink} to="/signup" variant="body2">
+                    <ReactRouterLink component={ReactRouterLink} to="/signup" variant="body2" className={styles.link}>
                         {"Don't have an account? Sign Up"}
                     </ReactRouterLink>
                 </div>

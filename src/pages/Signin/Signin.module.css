@@ -3,9 +3,8 @@
 .authentication {
     width: 100%;
     height: 100vh;
-    min-height: 70rem;
+    min-height: 44rem;
     background-color: #1976D2;
-    padding: 1rem;
     display: flex;
     align-items: center;
     justify-content: space-around;
@@ -40,44 +39,41 @@
 
 .authenticationContainer {
     background-color: #FFFFFF;
-    width: 711px;
+    width: 528px;
+    padding: 2rem;
     border-radius: 24px;
 }
 
 .loginContainer {
-    width: 528px;
     margin: auto;
 }
 
 .title {
     color: #333333;
-    font-size: 32px;
+    font-size: 1.5rem;
     font-weight: 500;
-    line-height: 48px;
     letter-spacing: 0em;
     text-align: center;
-    margin-top: 75px;
-    margin-bottom: 48px;
 }
 
 .loginForm {
     display: flex;
     flex-direction: column;
-    margin-bottom: 1rem;
+    margin-bottom: ёrem;
 }
 
 .loginLabel {
     color: #666666;
-    font-size: 16px;
+    font-size: 0.75rem;
     font-weight: 400;
-    line-height: 24px;
+    line-height: 1rem;
     letter-spacing: 0em;
     text-align: left;
 }
 
 .loginInput {
-    width: 528px;
-    height: 56px;
+    width: auto;
+    height: 2rem;
     border-radius: 12px;
     border: 1px solid;
     border-color: #66666659;
@@ -88,33 +84,31 @@
 }
 
 .loginButton {
-    margin-top: 1rem;
-    width: 528px;
-    height: 64px;
-    padding: 15px 0px 16px 0px;
+    margin: 1rem 0;
+    width: auto;
+    height: 3rem;
     border: 0;
     border-radius: 32px;
     opacity: 0.25px;
     color: #FFFFFF;
-    font-size: 22px;
+    font-size: 1rem;
     font-weight: 500;
-    line-height: 33px;
+    line-height: 2rem;
     letter-spacing: 0em;
     text-align: center;
 }
 
 .orBlock {
-    margin: auto;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 528px;
-    margin: 3rem auto;
+    width: 90%;
+    margin: 1rem auto;
 }
 
 .orText {
     font-family: 'Avenir';
-    font-size: 20px;
+    font-size: 1rem;
     font-weight: 400;
     line-height: 27px;
     letter-spacing: 0em;
@@ -127,17 +121,16 @@
 }
 
 .authenticationButtons {
-    width: 528px;
+    width: auto;
     margin: auto;
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    margin-bottom: 2rem;
 }
 
 .authButton {
     width: 100%;
-    height: 64px;
+    height: 3rem;
     border-radius: 40px;
     border: 1px solid;
     border-color: #333333;
@@ -150,21 +143,26 @@
 
 .authText {
     font-family: 'Avenir';
-    font-size: 22px;
+    font-size: 1rem;
     font-weight: 400;
-    line-height: 30px;
+    line-height: 2rem;
     letter-spacing: 0em;
     color: #333333;
     margin: 0;
 }
 
+.link {
+    font-size: 0.75rem;
+}
+
 @media screen and (max-width: 1000px) {
     .authentication {
         display: flex;
+        min-height: 60rem;
         justify-content: flex-start;
         flex-direction: column;
         align-items: center;
-        padding: 20px;
+        padding: 1rem;
     }
 
     .logo {
@@ -188,6 +186,7 @@
         width: 100%;
         max-width: 600px;
         margin-bottom: 10rem;
+        padding: 1.5rem;
     }
 
     .title {
@@ -210,13 +209,21 @@
         width: 100%;
     }
 
-    .orBlock {
-        width: 90%;
-        margin: 20px auto;
-    }
-
     .authenticationButtons {
         width: 90%;
         margin-bottom: 2rem;
+    }
+
+    .authText {
+        font-size: 0.75rem;
+    }
+
+    .authIcon {
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+
+    .authButton {
+        gap: 0.75rem;
     }
 }

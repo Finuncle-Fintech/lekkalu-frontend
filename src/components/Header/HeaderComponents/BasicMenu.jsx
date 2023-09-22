@@ -93,8 +93,6 @@ function BasicMenu(props) {
               }}
               onClick={onClickHandler}
               key={index}
-              // component={Link}
-              // to={submenu.path}
             >
               <Typography
                 variant="body1"

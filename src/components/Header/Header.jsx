@@ -403,26 +403,29 @@ const Header = () => {
             <Collapse in={openCalculator} timeout="auto" unmountOnExit>
               <List component="div" disablePadding>
                 <ListItemButton
-                 component={Link}
-                 to="/SIPCalculator"
+                  component={Link}
+                  to="/SIPCalculator"
                   sx={{
                     pl: 4,
-                    backgroundColor: "#1976D2",
-                    color: "white",
+                    backgroundColor: isActive("/SIPCalculator")
+                      ? "white"
+                      : "#1976D2",
+                    color: isActive("/SIPCalculator") ? "black" : "white",
                   }}
                 >
                   <ListItemIcon></ListItemIcon>
                   <ListItemText primary="SIP" />
                 </ListItemButton>
                 <ListItemButton
-                 component={Link}
-                 to="/CAGRCalculator"
+                  component={Link}
+                  to="/CAGRCalculator"
                   sx={{
                     pl: 4,
-                    backgroundColor: "#1976D2",
-                    color: "white",
+                    backgroundColor: isActive("/CAGRCalculator")
+                      ? "white"
+                      : "#1976D2",
+                    color: isActive("/CAGRCalculator") ? "black" : "white",
                   }}
-                  
                 >
                   <ListItemIcon></ListItemIcon>
                   <ListItemText primary="CAGR" />
@@ -431,9 +434,10 @@ const Header = () => {
                   component={Link}
                   to="/loan_emi_calculator"
                   sx={{
-                    pl: 4,
-                    backgroundColor: "#1976D2",
-                    color: "white",
+                    pl: 4,   backgroundColor: isActive("/loan_emi_calculator")
+                    ? "white"
+                    : "#1976D2",
+                  color: isActive("/loan_emi_calculator") ? "black" : "white",
                   }}
                 >
                   <ListItemIcon></ListItemIcon>

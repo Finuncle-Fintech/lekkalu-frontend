@@ -220,8 +220,52 @@ const Header = () => {
               </Tooltip>
             </>
           ) : null}
-
           <BasicMenu Menu={calculatorOption} />
+
+          {!authToken ? (
+            <>
+              <Tooltip title="Signin">
+                <IconButton
+                  sx={{
+                    ...styles.iconButton,
+                    backgroundColor: isActive("/signin") ? "#0F4C91" : "white",
+                  }}
+                  component={Link}
+                  to="/signin"
+                >
+                  <img
+                    width="30"
+                    height="30"
+                    src="https://img.icons8.com/ios/50/login-rounded-right--v1.png"
+                    alt="signin"
+                    style={{
+                      filter: isActive("/signin") ? "invert(1)" : "none",
+                    }}
+                  />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Signup">
+                <IconButton
+                  sx={{
+                    ...styles.iconButton,
+                    backgroundColor: isActive("/signup") ? "#0F4C91" : "white",
+                  }}
+                  component={Link}
+                  to="/signup"
+                >
+                  <img
+                    width="25"
+                    height="25"
+                    src="https://img.icons8.com/external-bearicons-detailed-outline-bearicons/64/external-signup-call-to-action-bearicons-detailed-outline-bearicons.png"
+                    alt="signup"
+                    style={{
+                      filter: isActive("/signup") ? "invert(1)" : "none",
+                    }}
+                  />
+                </IconButton>
+              </Tooltip>
+            </>
+          ) : null}
         </Box>
       </Box>
 
@@ -386,7 +430,56 @@ const Header = () => {
                   <ListItemText primary="Expense" />
                 </ListItemButton>
               </>
-            ) : null}
+            ) : (
+              <>
+                <ListItemButton
+                  component={Link}
+                  to="/signin"
+                  sx={{
+                    backgroundColor: isActive("/signin") ? "white" : "#1976D2",
+                    color: isActive("/signin") ? "black" : "white",
+                    margin: "10px 0",
+                  }}
+                >
+                  <ListItemIcon>
+                    <img
+                      width="30"
+                      height="30"
+                      src="https://img.icons8.com/ios/50/login-rounded-right--v1.png"
+                      alt="signin"
+                      style={{
+                        marginRight: "10px",
+                        filter: isActive("/signin") ? "none" : "invert(1)",
+                      }}
+                    />
+                  </ListItemIcon>
+                  <ListItemText primary="Signin" />
+                </ListItemButton>
+                <ListItemButton
+                  component={Link}
+                  to="/signup"
+                  sx={{
+                    backgroundColor: isActive("/signup") ? "white" : "#1976D2",
+                    color: isActive("/signup") ? "black" : "white",
+                    margin: "10px 0",
+                  }}
+                >
+                  <ListItemIcon>
+                    <img
+                      width="30"
+                      height="30"
+                      src="https://img.icons8.com/external-bearicons-detailed-outline-bearicons/64/external-signup-call-to-action-bearicons-detailed-outline-bearicons.png"
+                      alt="signup"
+                      style={{
+                        marginRight: "10px",
+                        filter: isActive("/signup") ? "none" : "invert(1)",
+                      }}
+                    />
+                  </ListItemIcon>
+                  <ListItemText primary="Signup" />
+                </ListItemButton>
+              </>
+            )}
 
             <ListItemButton
               onClick={() => {

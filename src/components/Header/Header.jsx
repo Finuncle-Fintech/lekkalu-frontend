@@ -58,9 +58,9 @@ const Header = () => {
   const userSetting = {
     submenu: {
       1: {
-        name: "profile",
+        name: "Profile",
         icon: <AccountCircleIcon />,
-        path: "/profile",
+        path: "/settings",
       },
       2: {
         name: "Logout",
@@ -137,94 +137,146 @@ const Header = () => {
         >
           {/* List of pages depicted by icons */}
 
-          <Tooltip title="Home">
-            <IconButton
-              sx={{
-                ...styles.iconButton,
-                backgroundColor: isActive("/") ? "#0F4C91" : "white",
-              }}
-              component={Link}
-              to={"/"}
-            >
-              <img
-                width="25"
-                height="30"
-                src="https://img.icons8.com/sf-regular-filled/48/000000/home-page.png"
-                alt="home-page"
-                style={{ filter: isActive("/") ? "invert(1)" : "none" }}
-              />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Balance">
-            <IconButton
-              sx={{
-                ...styles.iconButton,
-                backgroundColor: isActive("/balance") ? "#0F4C91" : "white",
-                color: isActive("/balance") ? "white" : "black",
-              }}
-              component={Link}
-              to={"/balance"}
-            >
-              <img
-                width="28"
-                height="28"
-                src="https://img.icons8.com/windows/32/1A1A1A/balance-scale-right.png"
-                alt="balance-scale-right"
-                style={{
-                  filter: isActive("/balance") ? "invert(1)" : "none",
-                }}
-              />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Goals">
-            <IconButton
-              sx={{
-                ...styles.iconButton,
-                backgroundColor: isActive("/goal") ? "#0F4C91" : "white",
-                color: isActive("/goal") ? "white" : "black",
-              }}
-            >
-              <img
-                width="28"
-                height="28"
-                src="https://img.icons8.com/material-outlined/24/goal.png"
-                alt="goal"
-                style={{ filter: isActive("/goal") ? "invert(1)" : "none" }}
-              />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Expenses">
-            <IconButton
-              sx={{
-                ...styles.iconButton,
-                backgroundColor: isActive("/expenses") ? "#0F4C91" : "white",
-                color: isActive("/expenses") ? "white" : "black",
-              }}
-              component={Link}
-              to={"/expenses"}
-            >
-              <img
-                width="28"
-                height="28"
-                src="https://img.icons8.com/ios-filled/50/1A1A1A/request-money.png"
-                alt="request-money"
-                style={{
-                  filter: isActive("/expenses") ? "invert(1)" : "none",
-                }}
-              />
-            </IconButton>
-          </Tooltip>
-
+          {authToken ? (
+            <>
+              <Tooltip title="Home">
+                <IconButton
+                  sx={{
+                    ...styles.iconButton,
+                    backgroundColor: isActive("/") ? "#0F4C91" : "white",
+                  }}
+                  component={Link}
+                  to={"/"}
+                >
+                  <img
+                    width="25"
+                    height="30"
+                    src="https://img.icons8.com/sf-regular-filled/48/000000/home-page.png"
+                    alt="home-page"
+                    style={{ filter: isActive("/") ? "invert(1)" : "none" }}
+                  />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Balance">
+                <IconButton
+                  sx={{
+                    ...styles.iconButton,
+                    backgroundColor: isActive("/balance") ? "#0F4C91" : "white",
+                    color: isActive("/balance") ? "white" : "black",
+                  }}
+                  component={Link}
+                  to={"/balance"}
+                >
+                  <img
+                    width="28"
+                    height="28"
+                    src="https://img.icons8.com/windows/32/1A1A1A/balance-scale-right.png"
+                    alt="balance-scale-right"
+                    style={{
+                      filter: isActive("/balance") ? "invert(1)" : "none",
+                    }}
+                  />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Goals">
+                <IconButton
+                  sx={{
+                    ...styles.iconButton,
+                    backgroundColor: isActive("/goal") ? "#0F4C91" : "white",
+                    color: isActive("/goal") ? "white" : "black",
+                  }}
+                >
+                  <img
+                    width="28"
+                    height="28"
+                    src="https://img.icons8.com/material-outlined/24/goal.png"
+                    alt="goal"
+                    style={{ filter: isActive("/goal") ? "invert(1)" : "none" }}
+                  />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Expenses">
+                <IconButton
+                  sx={{
+                    ...styles.iconButton,
+                    backgroundColor: isActive("/expenses")
+                      ? "#0F4C91"
+                      : "white",
+                    color: isActive("/expenses") ? "white" : "black",
+                  }}
+                  component={Link}
+                  to={"/expenses"}
+                >
+                  <img
+                    width="28"
+                    height="28"
+                    src="https://img.icons8.com/ios-filled/50/1A1A1A/request-money.png"
+                    alt="request-money"
+                    style={{
+                      filter: isActive("/expenses") ? "invert(1)" : "none",
+                    }}
+                  />
+                </IconButton>
+              </Tooltip>
+            </>
+          ) : null}
           <BasicMenu Menu={calculatorOption} />
+
+          {!authToken ? (
+            <>
+              <Tooltip title="Signin">
+                <IconButton
+                  sx={{
+                    ...styles.iconButton,
+                    backgroundColor: isActive("/signin") ? "#0F4C91" : "white",
+                  }}
+                  component={Link}
+                  to="/signin"
+                >
+                  <img
+                    width="30"
+                    height="30"
+                    src="https://img.icons8.com/ios/50/login-rounded-right--v1.png"
+                    alt="signin"
+                    style={{
+                      filter: isActive("/signin") ? "invert(1)" : "none",
+                    }}
+                  />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Signup">
+                <IconButton
+                  sx={{
+                    ...styles.iconButton,
+                    backgroundColor: isActive("/signup") ? "#0F4C91" : "white",
+                  }}
+                  component={Link}
+                  to="/signup"
+                >
+                  <img
+                    width="25"
+                    height="25"
+                    src="https://img.icons8.com/external-bearicons-detailed-outline-bearicons/64/external-signup-call-to-action-bearicons-detailed-outline-bearicons.png"
+                    alt="signup"
+                    style={{
+                      filter: isActive("/signup") ? "invert(1)" : "none",
+                    }}
+                  />
+                </IconButton>
+              </Tooltip>
+            </>
+          ) : null}
         </Box>
       </Box>
 
-      <BasicMenu
-        sx={{
-          ...styles.iconButton,
-        }}
-        Menu={userSetting}
-      />
+      {authToken ? (
+        <BasicMenu
+          sx={{
+            ...styles.iconButton,
+          }}
+          Menu={userSetting}
+        />
+      ) : null}
 
       {/* Responsive menu button */}
 
@@ -279,100 +331,155 @@ const Header = () => {
               </ListSubheader>
             }
           >
-            <ListItemButton
-              component={Link}
-              to="/"
-              sx={{
-                backgroundColor: isActive("/") ? "white" : "#1976D2",
-                color: isActive("/") ? "black" : "white",
+            {authToken ? (
+              <>
+                <ListItemButton
+                  component={Link}
+                  to="/"
+                  sx={{
+                    backgroundColor: isActive("/") ? "white" : "#1976D2",
+                    color: isActive("/") ? "black" : "white",
 
-                margin: "10px 0",
-              }}
-            >
-              <ListItemIcon>
-                <img
-                  width="25"
-                  height="30"
-                  src="https://img.icons8.com/sf-regular-filled/48/000000/home-page.png"
-                  alt="home-page"
-                  style={{
-                    marginRight: "10px",
-                    filter: isActive("/") ? "none" : "invert(1)",
+                    margin: "10px 0",
                   }}
-                />
-              </ListItemIcon>
-              <ListItemText primary="Home" />
-            </ListItemButton>
-            <ListItemButton
-              component={Link}
-              to="/balance"
-              sx={{
-                backgroundColor: isActive("/balance") ? "white" : "#1976D2",
-                color: isActive("/balance") ? "black" : "white",
-                margin: "10px 0",
-              }}
-            >
-              <ListItemIcon>
-                <img
-                  width="28"
-                  height="28"
-                  src="https://img.icons8.com/windows/32/1A1A1A/balance-scale-right.png"
-                  alt="balance-scale-right"
-                  style={{
-                    marginRight: "10px",
-                    filter: isActive("/balance") ? "none" : "invert(1)",
+                >
+                  <ListItemIcon>
+                    <img
+                      width="25"
+                      height="30"
+                      src="https://img.icons8.com/sf-regular-filled/48/000000/home-page.png"
+                      alt="home-page"
+                      style={{
+                        marginRight: "10px",
+                        filter: isActive("/") ? "none" : "invert(1)",
+                      }}
+                    />
+                  </ListItemIcon>
+                  <ListItemText primary="Home" />
+                </ListItemButton>
+                <ListItemButton
+                  component={Link}
+                  to="/balance"
+                  sx={{
+                    backgroundColor: isActive("/balance") ? "white" : "#1976D2",
+                    color: isActive("/balance") ? "black" : "white",
+                    margin: "10px 0",
                   }}
-                />
-              </ListItemIcon>
-              <ListItemText primary="Balance" />
-            </ListItemButton>
-            <ListItemButton
-              // component={Link}
-              // to="/goal"
-              sx={{
-                backgroundColor: isActive("/goal") ? "white" : "#1976D2",
-                color: isActive("/goal") ? "black" : "white",
-                margin: "10px 0",
-              }}
-            >
-              <ListItemIcon>
-                <img
-                  width="28"
-                  height="28"
-                  src="https://img.icons8.com/material-outlined/24/goal.png"
-                  alt="goal"
-                  style={{
-                    marginRight: "10px",
-                    color: "white",
-                    filter: isActive("/goal") ? "none" : "invert(1)",
+                >
+                  <ListItemIcon>
+                    <img
+                      width="28"
+                      height="28"
+                      src="https://img.icons8.com/windows/32/1A1A1A/balance-scale-right.png"
+                      alt="balance-scale-right"
+                      style={{
+                        marginRight: "10px",
+                        filter: isActive("/balance") ? "none" : "invert(1)",
+                      }}
+                    />
+                  </ListItemIcon>
+                  <ListItemText primary="Balance" />
+                </ListItemButton>
+                <ListItemButton
+                  // component={Link}
+                  // to="/goal"
+                  sx={{
+                    backgroundColor: isActive("/goal") ? "white" : "#1976D2",
+                    color: isActive("/goal") ? "black" : "white",
+                    margin: "10px 0",
                   }}
-                />
-              </ListItemIcon>
-              <ListItemText primary="Goal" />
-            </ListItemButton>
-            <ListItemButton
-              component={Link}
-              to="/expenses"
-              sx={{
-                backgroundColor: isActive("/expenses") ? "white" : "#1976D2",
-                color: isActive("/expenses") ? "black" : "white",
-                margin: "10px 0",
-              }}
-            >
-              <ListItemIcon>
-                <img
-                  width="28"
-                  height="28"
-                  src="https://img.icons8.com/ios-filled/50/1A1A1A/request-money.png"
-                  alt="request-money"
-                  style={{
-                    marginRight: "10px",
-                    filter: isActive("/expenses") ? "none" : "invert(1)",
+                >
+                  <ListItemIcon>
+                    <img
+                      width="28"
+                      height="28"
+                      src="https://img.icons8.com/material-outlined/24/goal.png"
+                      alt="goal"
+                      style={{
+                        marginRight: "10px",
+                        color: "white",
+                        filter: isActive("/goal") ? "none" : "invert(1)",
+                      }}
+                    />
+                  </ListItemIcon>
+                  <ListItemText primary="Goal" />
+                </ListItemButton>
+                <ListItemButton
+                  component={Link}
+                  to="/expenses"
+                  sx={{
+                    backgroundColor: isActive("/expenses")
+                      ? "white"
+                      : "#1976D2",
+                    color: isActive("/expenses") ? "black" : "white",
+                    margin: "10px 0",
                   }}
-                />
-              </ListItemIcon>
-              <ListItemText primary="Expense" />
-            </ListItemButton>
+                >
+                  <ListItemIcon>
+                    <img
+                      width="28"
+                      height="28"
+                      src="https://img.icons8.com/ios-filled/50/1A1A1A/request-money.png"
+                      alt="request-money"
+                      style={{
+                        marginRight: "10px",
+                        filter: isActive("/expenses") ? "none" : "invert(1)",
+                      }}
+                    />
+                  </ListItemIcon>
+                  <ListItemText primary="Expense" />
+                </ListItemButton>
+              </>
+            ) : (
+              <>
+                <ListItemButton
+                  component={Link}
+                  to="/signin"
+                  sx={{
+                    backgroundColor: isActive("/signin") ? "white" : "#1976D2",
+                    color: isActive("/signin") ? "black" : "white",
+                    margin: "10px 0",
+                  }}
+                >
+                  <ListItemIcon>
+                    <img
+                      width="30"
+                      height="30"
+                      src="https://img.icons8.com/ios/50/login-rounded-right--v1.png"
+                      alt="signin"
+                      style={{
+                        marginRight: "10px",
+                        filter: isActive("/signin") ? "none" : "invert(1)",
+                      }}
+                    />
+                  </ListItemIcon>
+                  <ListItemText primary="Signin" />
+                </ListItemButton>
+                <ListItemButton
+                  component={Link}
+                  to="/signup"
+                  sx={{
+                    backgroundColor: isActive("/signup") ? "white" : "#1976D2",
+                    color: isActive("/signup") ? "black" : "white",
+                    margin: "10px 0",
+                  }}
+                >
+                  <ListItemIcon>
+                    <img
+                      width="30"
+                      height="30"
+                      src="https://img.icons8.com/external-bearicons-detailed-outline-bearicons/64/external-signup-call-to-action-bearicons-detailed-outline-bearicons.png"
+                      alt="signup"
+                      style={{
+                        marginRight: "10px",
+                        filter: isActive("/signup") ? "none" : "invert(1)",
+                      }}
+                    />
+                  </ListItemIcon>
+                  <ListItemText primary="Signup" />
+                </ListItemButton>
+              </>
+            )}
 
             <ListItemButton
               onClick={() => {
@@ -434,10 +541,11 @@ const Header = () => {
                   component={Link}
                   to="/loan_emi_calculator"
                   sx={{
-                    pl: 4,   backgroundColor: isActive("/loan_emi_calculator")
-                    ? "white"
-                    : "#1976D2",
-                  color: isActive("/loan_emi_calculator") ? "black" : "white",
+                    pl: 4,
+                    backgroundColor: isActive("/loan_emi_calculator")
+                      ? "white"
+                      : "#1976D2",
+                    color: isActive("/loan_emi_calculator") ? "black" : "white",
                   }}
                 >
                   <ListItemIcon></ListItemIcon>
@@ -446,63 +554,65 @@ const Header = () => {
               </List>
             </Collapse>
 
-            <ListItemButton
-              onClick={() => {
-                setOpenSettings(!openSettings);
-              }}
-              sx={{
-                backgroundColor: "#1976D2",
-                color: "white",
-                margin: "10px 0",
-              }}
-            >
-              <ListItemIcon>
-                <img
-                  width="21"
-                  height="20"
-                  src="https://img.icons8.com/material-outlined/24/menu-2.png"
-                  alt="menu-2"
-                  style={{
-                    marginRight: "10px",
-                    filter: "invert(1)",
+            {authToken ? (
+              <>
+                <ListItemButton
+                  onClick={() => {
+                    setOpenSettings(!openSettings);
                   }}
-                />
-              </ListItemIcon>
+                  sx={{
+                    backgroundColor: "#1976D2",
+                    color: "white",
+                    margin: "10px 0",
+                  }}
+                >
+                  <ListItemIcon>
+                    <img
+                      width="21"
+                      height="20"
+                      src="https://img.icons8.com/material-outlined/24/menu-2.png"
+                      alt="menu-2"
+                      style={{
+                        marginRight: "10px",
+                        filter: "invert(1)",
+                      }}
+                    />
+                  </ListItemIcon>
 
-              <ListItemText primary="User settings" />
-              {openSettings ? <ExpandLess /> : <ExpandMore />}
-            </ListItemButton>
-            <Collapse in={openSettings} timeout="auto" unmountOnExit>
-              <List component="div" disablePadding>
-                <ListItemButton
-                  component={Link}
-                  to="/settings"
-                  sx={{
-                    pl: 4,
-                    backgroundColor: "#1976D2",
-                    color: "white",
-                  }}
-                >
-                  <ListItemIcon>
-                    <AccountCircleIcon sx={{ color: "white" }} />
-                  </ListItemIcon>
-                  <ListItemText primary="Profile" />
+                  <ListItemText primary="User settings" />
+                  {openSettings ? <ExpandLess /> : <ExpandMore />}
                 </ListItemButton>
-                <ListItemButton
-                  sx={{
-                    pl: 4,
-                    backgroundColor: "#1976D2",
-                    color: "white",
-                  }}
-                  onClick={() => signOut()}
-                >
-                  <ListItemIcon>
-                    <LogoutIcon sx={{ color: "white" }} />
-                  </ListItemIcon>
-                  <ListItemText primary="Logout" />
-                </ListItemButton>
-              </List>
-            </Collapse>
+                <Collapse in={openSettings} timeout="auto" unmountOnExit>
+                  <List component="div" disablePadding>
+                    <ListItemButton
+                      sx={{
+                        pl: 4,
+                        backgroundColor: "#1976D2",
+                        color: "white",
+                      }}
+                    >
+                      <ListItemIcon>
+                        <AccountCircleIcon sx={{ color: "white" }} />
+                      </ListItemIcon>
+                      <ListItemText primary="Profile" />
+                    </ListItemButton>
+                    <ListItemButton
+                      sx={{
+                        pl: 4,
+                        backgroundColor: "#1976D2",
+                        color: "white",
+                      }}
+                      onClick={() => signOut()}
+                    >
+                      <ListItemIcon>
+                        <LogoutIcon sx={{ color: "white" }} />
+                      </ListItemIcon>
+                      <ListItemText primary="Logout" />
+                    </ListItemButton>
+                  </List>
+                </Collapse>
+              </>
+            ) : null}
           </List>
         </Box>
       </Drawer>

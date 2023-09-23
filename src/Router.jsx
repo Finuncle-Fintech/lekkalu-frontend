@@ -22,16 +22,26 @@ const RouterComponent = () => {
       <Layout>
         <Routes>
           <Route path="*" element={<ErrorPage />} />
-
           <Route element={<PersistGuest />}>
             <Route
               path="/signin"
               element={<GuestRoutes component={<Signin />} />}
             />
-
             <Route
               path="/signup"
               element={<GuestRoutes component={<Signup />} />}
+            />
+            <Route
+              path="/SIPCalculator"
+              element={<GuestRoutes component={<SIPCalculator />} />}
+            />
+            <Route
+              path="/CAGRCalculator"
+              element={<GuestRoutes component={<CAGRCalculator />} />}
+            />
+            <Route
+              path="/loan_emi_calculator"
+              element={<GuestRoutes component={<EmiCalculator />} />}
             />
           </Route>
 
@@ -40,32 +50,14 @@ const RouterComponent = () => {
               path="/"
               element={<ProtectedRoutes component={<Charts />} />}
             />
-
-            <Route
-              path="/loan_emi_calculator"
-              element={<ProtectedRoutes component={<EmiCalculator />} />}
-            />
-
             <Route
               path="/income-statement"
               element={<ProtectedRoutes component={<IncomeStatement />} />}
             />
-
             <Route
               path="/expenses"
               element={<ProtectedRoutes component={<Expenses />} />}
             />
-
-            <Route
-              path="/SIPCalculator"
-              element={<ProtectedRoutes component={<SIPCalculator />} />}
-            />
-
-            <Route
-              path="/CAGRCalculator"
-              element={<ProtectedRoutes component={<CAGRCalculator />} />}
-            />
-
             <Route
               path="/balance"
               element={<ProtectedRoutes component={<BalanceSheet />} />}

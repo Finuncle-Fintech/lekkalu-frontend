@@ -1,10 +1,8 @@
 import React from "react";
 import { IncomeStatementChart } from "components/Charts/IncomeStatementChart";
 import styles from "./IncomeStatementSummary.module.css";
-import StatsCard from "../stats-card/StatsCard";
 import SourceCard from "../sources-card/SourceCard";
 
-import Heading from "components/shared/heading/Heading";
 import Add from "../add-card/AddCard";
 import StatsAccordion from "../stats-accordion/StatsAccordion";
 import { numDifferentiation } from "utils/AppUtils";
@@ -123,7 +121,7 @@ const IncomeStatementSummary = ({
               <div style={{ display: "flex", gap: "10px" }}>
                 <Add label="Add Source" />
                 <div className={styles.horizontalScroll}>
-                  {expenseOverviewData.map((each,index) => {
+                  {expenseOverviewData.map((each, index) => {
                     return (
                       <SourceCard
                         key={`${each.name}_${index}`}
@@ -160,6 +158,7 @@ const IncomeStatementSummary = ({
           />
         </div>
       </div>
+
     </div>
   );
 };

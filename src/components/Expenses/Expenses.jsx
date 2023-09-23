@@ -54,6 +54,7 @@ const Expenses = () => {
       .filter((tag) => tag !== undefined);
   };
 
+
   const getTagNames = (tagValues) => {
     const tagNames = tagValues && tagValues
       .map((tagValue) => {
@@ -88,21 +89,21 @@ const Expenses = () => {
 
           const promise = parsedData.map(async entry => {
             const dateFormatted = formatDate(new Date(entry.date));
-            
-            const tagsOfExpenses = entry.tags.split(',').map((expense)=>({name:expense.trim()}))
-            const {amount} = entry
+
+            const tagsOfExpenses = entry.tags.split(',').map((expense) => ({ name: expense.trim() }))
+            const { amount } = entry
             delete entry.amount
             delete entry.date
 
             const newTagsExpenses = []
 
-            await Promise.resolve(checkTagsAndLoad(newTagsExpenses, tags, tagsOfExpenses, createTag ))
+            await Promise.resolve(checkTagsAndLoad(newTagsExpenses, tags, tagsOfExpenses, createTag))
 
             const tagsIds = getTagNumbers(newTagsExpenses, tags)
 
-            const createStatus = await createExpenseRequest({ ...entry, amount:amount.toFixed(2).toString() , tags: tagsIds, time: dateFormatted, user: 1 });
-            
-            setNewData((prevData)=>[...prevData, createStatus])
+            const createStatus = await createExpenseRequest({ ...entry, amount: amount.toFixed(2).toString(), tags: tagsIds, time: dateFormatted, user: 1 });
+
+            setNewData((prevData) => [...prevData, createStatus])
           });
 
           return Promise.all(promise)
@@ -177,10 +178,10 @@ const Expenses = () => {
         onCancelEdit={() => setEditIndex(null)}
         loadExcelStatus={loadExcelStatus}
         handleFileUpload={handleFileUpload}
-        createExpenseExcelStatus = {newData}
-        expenses = {expenses}
+        createExpenseExcelStatus={newData}
+        expenses={expenses}
         Context={Context}
-        authToken = {authToken}
+        authToken={authToken}
       />
       <Typography variant="h6">Expense List</Typography>
       <div className="d-flex justify-content-between align-items-center my-3">

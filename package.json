@@ -13,6 +13,8 @@
     "bootstrap": "^5.3.1",
     "dayjs": "^1.11.9",
     "env-cmd": "^10.1.0",
+    "exceljs": "^4.3.0",
+    "file-saver": "^2.0.5",
     "font-awesome": "^4.7.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -25,7 +27,8 @@
     "recharts": "^2.7.3",
     "sweetalert": "^2.1.2",
     "sweetalert2": "^11.7.27",
-    "xlsx": "^0.18.5"
+    "xlsx": "^0.18.5",
+    "xlsx-style": "^0.8.13"
   },
   "scripts": {
     "test": "react-scripts test",

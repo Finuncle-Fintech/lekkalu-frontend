@@ -1,10 +1,10 @@
 import React from 'react';
-import {Table, TableBody, TableRow, TableCell, IconButton} from '@mui/material';
+import { Table, TableBody, TableRow, TableCell, IconButton } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import Swal from 'sweetalert2';
 
-const ExpensesList = ({expenses, getTagNames, setEditIndex, deleteExpense}) => {
+const ExpensesList = ({ expenses, getTagNames, setEditIndex, deleteExpense }) => {
 
     const deleteHandler = (expense) => {
 
@@ -34,26 +34,27 @@ const ExpensesList = ({expenses, getTagNames, setEditIndex, deleteExpense}) => {
             <TableBody>
                 {expenses &&
                     Boolean(expenses.length) &&
-                    expenses.map((expense, index) =>{
-                        const expenseOfExpenses = expense?.data||expense
-                        
-                        return(
-                        <TableRow key={`${expenseOfExpenses.id}_${index}`}>
-                            <TableCell>{expenseOfExpenses.amount} ₹</TableCell>
-                            <TableCell>{getTagNames(expenseOfExpenses.tags)}</TableCell>
-                            <TableCell>{new Date(expenseOfExpenses.time).toDateString(0)}</TableCell>
-                            <TableCell>
-                                <IconButton placeholder="edit-expense" edge="end" onClick={() => setEditIndex(index)}>
-                                    <EditIcon/>
-                                </IconButton>
-                                <IconButton placeholder="delete-expense" edge="end" onClick={() => {
-                                    deleteHandler(expense)
-                                }}>
-                                    <DeleteIcon/>
-                                </IconButton>
-                            </TableCell>
-                        </TableRow>
-                    )})}
+                    expenses.map((expense, index) => {
+                        const expenseOfExpenses = expense?.data || expense
+                        console.log(getTagNames(expenseOfExpenses.tags));
+                        return (
+                            <TableRow key={`${expenseOfExpenses.id}_${index}`}>
+                                <TableCell>{expenseOfExpenses.amount} ₹</TableCell>
+                                <TableCell>{getTagNames(expenseOfExpenses.tags)}</TableCell>
+                                <TableCell>{new Date(expenseOfExpenses.time).toDateString(0)}</TableCell>
+                                <TableCell>
+                                    <IconButton placeholder="edit-expense" edge="end" onClick={() => setEditIndex(index)}>
+                                        <EditIcon />
+                                    </IconButton>
+                                    <IconButton placeholder="delete-expense" edge="end" onClick={() => {
+                                        deleteHandler(expense)
+                                    }}>
+                                        <DeleteIcon />
+                                    </IconButton>
+                                </TableCell>
+                            </TableRow>
+                        )
+                    })}
             </TableBody>
         </Table>
     );

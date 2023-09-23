@@ -1,17 +1,16 @@
 import { useState } from "react";
-import { useLocation,  useNavigate  } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import { MenuItem, Tooltip } from "@mui/material";
 import Typography from "@mui/material/Typography";
 
-
 function BasicMenu(props) {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const location = useLocation();
-  const navigate =  useNavigate (); 
+  const navigate = useNavigate();
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -25,7 +24,7 @@ function BasicMenu(props) {
       navigate(submenu.path);
     } else {
       if (submenu.onClick) {
-       submenu.onClick();
+        submenu.onClick();
       }
     }
   };
@@ -87,12 +86,16 @@ function BasicMenu(props) {
                 backgroundColor: isActive(submenu.path) ? "#0F4C91" : "white",
                 color: isActive(submenu.path) ? "white" : "black",
                 "&:hover": {
-                  backgroundColor: isActive(submenu.path) ? "#0F4C91" : "primary.main", // Change the hover background color
+                  backgroundColor: isActive(submenu.path)
+                    ? "#0F4C91"
+                    : "primary.main", // Change the hover background color
                   color: isActive(submenu.path) ? "white" : "white", // Change the hover text color
                 },
               }}
               onClick={onClickHandler}
               key={index}
+              component={Link}
+              to={submenu.path}
             >
               <Typography
                 variant="body1"

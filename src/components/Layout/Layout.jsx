@@ -4,19 +4,25 @@ import SupportPopUp from "components/Support/PopUp/PopUp";
 import { Context } from "provider/Provider";
 import { useContext } from "react";
 
-export default function Layout({children}){
-    const { authToken } = useContext(Context)
+export default function Layout({ children }) {
+  const { authToken } = useContext(Context);
 
-    if(!authToken){
-        return children
-    }
+  if (!authToken) {
+    return (
+      <>
+        <Header />
+        {children}
+        <div></div>
+      </>
+    );
+  }
 
-    return(
-        <div>
-            <Header  />
-            {children}
-            <Footer />
-            <SupportPopUp />
-        </div>
-    )
+  return (
+    <div>
+      <Header />
+      {children}
+      <Footer />
+      <SupportPopUp />
+    </div>
+  );
 }

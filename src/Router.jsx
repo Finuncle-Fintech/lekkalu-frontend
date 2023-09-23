@@ -52,7 +52,7 @@ const RouterComponent = () => {
 
           <Route element={<PersistLogin />}>
             <Route
-              path="/"
+              path="/home"
               element={<ProtectedRoutes component={<Charts />} />}
             />
             <Route

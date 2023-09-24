@@ -1,0 +1,53 @@
+.download-button {
+    padding: 0.6rem 1rem;
+    border: none;
+    font-size: 1.5rem;
+    position: fixed;
+    bottom: 1rem;
+    left: 0.5rem;
+    border-radius: 50%;
+    animation: wiggle 2s linear infinite;
+    color: #ff0860;
+    background-color: white;
+    border: 1px solid #08ff;
+    transition: 0.5s ease-in-out;
+}
+
+.download-button:hover {
+    background-color: #08ff;
+    color: white;
+    border: 1px solid #fff;
+}
+
+@keyframes wiggle {
+
+    0%,
+    7% {
+        transform: rotateZ(0);
+    }
+
+    15% {
+        transform: rotateZ(-15deg);
+    }
+
+    20% {
+        transform: rotateZ(10deg);
+    }
+
+    25% {
+        transform: rotateZ(-10deg);
+    }
+
+    30% {
+        transform: rotateZ(6deg);
+    }
+
+    35% {
+        transform: rotateZ(-4deg);
+    }
+
+    40%,
+    100% {
+        transform: rotateZ(0);
+    }
+}

@@ -1,7 +1,7 @@
 import 'App.css';
 import { Provider } from 'provider/Provider';
 import Router from 'Router';
-function App() {
+function App() {   
    return (
       <div className='App'>
          <Provider>

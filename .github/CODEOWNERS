@@ -6,4 +6,24 @@
 
 # review when someone opens a pull request.
 
-*  @bharathkumarchowdary @mohitkhatri06
+*  @bharathkumarchowdary 
+
+# Following user, owns any files in the src/
+
+# directory at the root of the repository and any of its
+
+# subdirectories.
+
+/src/ @mohitkhatri06 @ivangarcilazo
+package.json @mohitkhatri06
+package-lock.json @mohitkhatri06
+
+/src/pages/Signin 
+/src/pages/Signin 
+/src/Router.jsx
+
+/src/__test__/ @ivangarcilazo
+/src/components/Expenses/ @ivangarcilazo
+/src/components/CAGRCalculator/ @ivangarcilazo
+/src/components/CalculatorSIP/ @ivangarcilazo
+

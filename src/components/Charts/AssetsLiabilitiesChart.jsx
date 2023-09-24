@@ -18,48 +18,7 @@ export const AssetsLiabilitiesChart = (props) => {
    } else if (props.type === 'liabilities') {
       pieData = props.data.finalLiabilities;
    }
-   // const pieData = [
-   //    {
-   //       name: 'Thar',
-   //       value: 1093719,
-   //    },
-   //    {
-   //       name: 'Home Security',
-   //       value: 55000,
-   //    },
-   //    {
-   //       name: 'PF',
-   //       value: 1000454,
-   //    },
-   //    {
-   //       name: 'Pension',
-   //       value: 45000,
-   //    },
-   //    {
-   //       name: 'ELSS',
-   //       value: 233000,
-   //    },
-   //    {
-   //       name: 'Equity',
-   //       value: 15000,
-   //    },
-   //    {
-   //       name: 'Cash',
-   //       value: 106000,
-   //    },
-   //    {
-   //       name: 'Gold',
-   //       value: 286664,
-   //    },
-   //    {
-   //       name: 'Liquid Funds',
-   //       value: 10000,
-   //    },
-   //    {
-   //       name: 'Lent',
-   //       value: 1105013,
-   //    },
-   // ];
+
 
    const RADIAN = Math.PI / 180;
    const renderCustomizedLabel = ({
@@ -125,14 +84,14 @@ export const AssetsLiabilitiesChart = (props) => {
    return (
       <>
          {pieData && pieData.length !== 0 ? (
-            <div className='section-outer-wrapper col-md-8 mx-auto mb-5 mt-5'>
-               <ResponsiveContainer width={'100%'} height={300}>
+            <ResponsiveContainer width={'100%'} height={350}>
                   <PieChart>
                      <defs>
                         {pieData.map((entry, index) => (
                            <linearGradient
                               id={`myGradient${index}`}
                               key={`myGradient${index}`}
+
                            >
                               <stop
                                  offset='0%'
@@ -177,12 +136,14 @@ export const AssetsLiabilitiesChart = (props) => {
                      </Pie>
                      <Tooltip content={<CustomTooltip />} />
                      <Legend
-                        layout='vertical'
-                        verticalAlign='top'
-                        align='right'
+                        width={'100%'}
+
+                        layout='horizontal'
+                        verticalAlign='bottom'
+                        align='center'
                         payload={pieData.map((item, index) => ({
                            id: item.name,
-                           type: 'square',
+                           type: 'circle',
                            value:
                               item.name +
                               ` : ` +
@@ -191,9 +152,9 @@ export const AssetsLiabilitiesChart = (props) => {
                            color: `url(#myGradient${index})`,
                         }))}
                      />
+                     
                   </PieChart>
-               </ResponsiveContainer>
-            </div>
+            </ResponsiveContainer>
          ) : (
             <h4>No data for {props.type} chart</h4>
          )}

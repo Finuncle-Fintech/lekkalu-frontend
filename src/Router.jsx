@@ -1,110 +1,69 @@
-import { useContext } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import ProtectedRoutes from "./components/ProtectedRoutes/ProtectedRoutes";
 import Charts from "components/Charts/Charts";
 import Expenses from "components/Expenses/Expenses";
-import Header from "components/Header/Header";
-import { Context } from "provider/Provider";
 import IncomeStatement from "pages/income-statement/IncomeStatement";
 import EmiCalculator from "pages/EmiCalculator";
-import SupportPopUp from "components/Support/PopUp/PopUp";
-import Footer from "components/Footer/Footer";
 import Signin from "./pages/Signin/Signin";
 import Signup from "./pages/Signup/Signup";
 import PersistLogin from "components/PersistLogin/PersistLogin";
-import Goals from "components/Goals/Goals";
+import GuestRoutes from "components/GuestRoutes/GuestRoutes";
+import ErrorPage from "components/ErrorPage/ErrorPage";
+import Layout from "components/Layout/Layout";
+import SIPCalculator from "pages/SIPCalculator/SIPCalculator";
+import CAGRCalculator from "pages/CAGRCalculator/CAGRCalculator";
+import BalanceSheet from "pages/BalanceSheet/BalanceSheet";
+import PersistGuest from "components/GuestRoutes/PersistGuest";
 
 const RouterComponent = () => {
-  const { authToken } = useContext(Context);
-
   return (
     <Router>
-      <Routes>
-        <Route
-          path="/signin"
-          element={
-            <>
-              <Signin Context={Context} />
-              <SupportPopUp Context={Context} />
-            </>
-          }
-        />
-        <Route
-          path="/signup"
-          element={
-            <>
-              <Signup Context={Context} />
-              <SupportPopUp Context={Context} />
-            </>
-          }
-        />
+      <Layout>
+        <Routes>
+          <Route path="*" element={<ErrorPage />} />
+          <Route element={<PersistGuest />}>
+            <Route
+              path="/signin"
+              element={<GuestRoutes component={<Signin />} />}
+            />
+            <Route
+              path="/signup"
+              element={<GuestRoutes component={<Signup />} />}
+            />
+            <Route
+              path="/SIPCalculator"
+              element={<GuestRoutes component={<SIPCalculator />} />}
+            />
+            <Route
+              path="/CAGRCalculator"
+              element={<GuestRoutes component={<CAGRCalculator />} />}
+            />
+            <Route
+              path="/loan_emi_calculator"
+              element={<GuestRoutes component={<EmiCalculator />} />}
+            />
+          </Route>
 
-        <Route element={<PersistLogin />}>
-          <Route
-            path="/"
-            element={
-              <ProtectedRoutes authToken={authToken}>
-                <>
-                  <Header />
-                  <Charts />
-                  <Footer />
-                  <SupportPopUp Context={Context} />
-                </>
-              </ProtectedRoutes>
-            }
-          />
-          <Route
-            path="/loan_emi_calculator"
-            element={
-              <ProtectedRoutes authToken={authToken}>
-                <>
-                  <Header />
-                  <EmiCalculator />
-                  <Footer />
-                  <SupportPopUp Context={Context} />
-                </>
-              </ProtectedRoutes>
-            }
-          />
-          <Route
-            path="/income-statement"
-            element={
-              <ProtectedRoutes authToken={authToken}>
-                <>
-                  <Header />
-                  <IncomeStatement Context={Context} />
-                </>
-              </ProtectedRoutes>
-            }
-          />
-          <Route
-            path="/expenses"
-            element={
-              <ProtectedRoutes authToken={authToken}>
-                <>
-                  <Header />
-                  <Expenses Context={Context} />
-                  <Footer />
-                  <SupportPopUp Context={Context} />
-                </>
-              </ProtectedRoutes>
-            }
-          />
-          <Route
-            path="/goals"
-            element={
-              <ProtectedRoutes authToken={authToken}>
-                <>
-                  <Header />
-                  <Goals Context={Context}/>
-                  <Footer />
-                  <SupportPopUp Context={Context} />
-                </>
-              </ProtectedRoutes>
-            }
-          />
-        </Route>
-      </Routes>
+          <Route element={<PersistLogin />}>
+            <Route
+              path="/"
+              element={<ProtectedRoutes component={<Charts />} />}
+            />
+            <Route
+              path="/income-statement"
+              element={<ProtectedRoutes component={<IncomeStatement />} />}
+            />
+            <Route
+              path="/expenses"
+              element={<ProtectedRoutes component={<Expenses />} />}
+            />
+            <Route
+              path="/balance"
+              element={<ProtectedRoutes component={<BalanceSheet />} />}
+            />
+          </Route>
+        </Routes>
+      </Layout>
     </Router>
   );
 };

@@ -12,13 +12,16 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { ModalContainer } from "./styled";
-import { formatDate, preventPropagationOnEnter } from "./utils";
+import { formatDate, getTagNumbers, preventPropagationOnEnter } from "./utils";
 import TagInput from "./TagInput";
 import dayjs from "dayjs";
 import ReactFileReader from "react-file-reader";
 import Swal from "sweetalert2";
 import ButtonExcel from "./components/ButtonExcel";
 import ModalExcelClosed from "./components/ModalExcelClosed";
+import { checkExpensesDoesNotRepeat } from "./utils";
+import useAxiosPrivate from "hooks/useAxiosPrivate";
+import { checkTagsAndLoad } from "./utils";
 
 const ExpenseFormModal = ({
   onAddExpense,
@@ -30,19 +33,28 @@ const ExpenseFormModal = ({
   loadExcelStatus,
   createExpenseExcelStatus,
   Context,
+  authToken
 }) => {
   const [open, setOpen] = useState(false);
+
   const [amount, setAmount] = useState('');
   const [myTags, setMyTags] = useState([]);
-  const [errorTag, setErrorTag] = useState(false)
   const [selectedDate, setSelectedDate] = useState(new Date());
+
+  const [errorTag, setErrorTag] = useState(false)
+  const [ defaultLoadStatus, setDefaultLoadStatus ] = useState(false)
+
   const { tags, createTag } = useContext(Context)
+
+  const axiosPrivate = useAxiosPrivate()
 
   useEffect(() => {
     if (expenseToEdit) {
-      setAmount(expenseToEdit.amount);
-      setMyTags(expenseToEdit.tags);
-      setSelectedDate(new Date(expenseToEdit.time));
+      const { amount, tags, time } = expenseToEdit
+      setAmount(amount);
+      setMyTags(tags);
+      setSelectedDate(new Date(time));
+
       setOpen(true);
     }
   }, [expenseToEdit]);
@@ -53,6 +65,7 @@ const ExpenseFormModal = ({
 
   const handleClose = () => {
     setOpen(false);
+
     if (editIndex !== null) {
       onCancelEdit();
     }
@@ -62,31 +75,7 @@ const ExpenseFormModal = ({
     setSelectedDate(date);
   };
 
-  const getNewId = () =>{
-    const maxId = tags.map((tag)=>tag.id)
-    return (Math.max(...maxId)+1)
-  }
-
-  const loadTags = (arr) =>{
-    
-    const promises = myTags.map(async (newTag) => {
-        const exist = tags.some((tag) => tag.name === newTag.name);
-        if (!exist) {
-          const newTagElement = {
-            id: getNewId(),
-            name: newTag.name,
-          };
-          arr.push(newTagElement);
-          tags.push(newTagElement);
-          await createTag(newTagElement);
-          return newTagElement;
-      } else {
-        arr.push(newTag);
-        return newTag;
-      }
-    });
-    return Promise.all(promises);
-}
+ 
 
   const handleSubmit = async(e) => {
     e.preventDefault();
@@ -97,23 +86,37 @@ const ExpenseFormModal = ({
     }else{
       setErrorTag(false)
     }
-    
-    const newMyTags = []
-    await Promise.resolve(loadTags(newMyTags))
-  
-    const tagIDs = newMyTags.map(tag => tag.id);
 
-    const newExpense = {
+    const newMyTags = []
+    await Promise.resolve(checkTagsAndLoad(newMyTags, tags, myTags, createTag))
+    const tagIDs = getTagNumbers(newMyTags, tags)
+ 
+    let newExpense = {
       amount,
       tags: tagIDs,
-      user: 1,
+      userID: 1,
       time: formatDate(new Date(selectedDate))
     };
-
+ 
     if (editIndex !== null) {
       onUpdateExpense(editIndex, { ...expenseToEdit, ...newExpense });
     } else {
+      setDefaultLoadStatus(true)
+      const exist = await checkExpensesDoesNotRepeat(newExpense, axiosPrivate, authToken)
+      if(exist){
+        handleClose()
+        Swal.fire({
+          title:'This expense already exist.',
+          background:'white',
+          icon:'warning',
+          timer:2000,
+          showConfirmButton:false,
+        }).then(()=>{handleClickOpen(); setDefaultLoadStatus(false)})
+        return
+      }
+      
       onAddExpense({ ...newExpense });
+
     }
 
     Swal.fire({
@@ -124,6 +127,7 @@ const ExpenseFormModal = ({
     })
     setAmount("");
     setMyTags("");
+    setDefaultLoadStatus(false)
     handleClose();
   };
 
@@ -142,6 +146,7 @@ const ExpenseFormModal = ({
     }
   };
 
+  
   return (
     <>
     {
@@ -159,8 +164,7 @@ const ExpenseFormModal = ({
       <Dialog open={open} onClose={()=>{
         handleClose()}}
       >
-        
-        
+
         <DialogTitle>{editIndex !== null ? "Edit Expense" : "Add Expense"}</DialogTitle>
         <DialogContent>
           <form onSubmit={handleSubmit}>
@@ -192,13 +196,13 @@ const ExpenseFormModal = ({
             <DialogActions  >
               <ReactFileReader
                 fileTypes={[".xls", ".xlsx"]}
-                handleFiles={!loadExcelStatus&&!loadExcelStatus&&handleFileUpload}
+                handleFiles={handleFileUpload}
                 disabled={loadExcelStatus}
               >
                 <ButtonExcel loadExcelStatus={loadExcelStatus} />
               </ReactFileReader>
               <Button onClick={handleClose}>Cancel</Button>
-              <Button disabled={loadExcelStatus} type="submit" color="primary" data-testid="submit-expense">
+              <Button disabled={loadExcelStatus || defaultLoadStatus} type="submit" color="primary" data-testid="submit-expense">
                 {editIndex !== null ? "Update" : "Add"}
               </Button>
             </DialogActions>

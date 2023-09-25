@@ -14,12 +14,16 @@ import Layout from "components/Layout/Layout";
 import SIPCalculator from "pages/SIPCalculator/SIPCalculator";
 import CAGRCalculator from "pages/CAGRCalculator/CAGRCalculator";
 import BalanceSheet from "pages/BalanceSheet/BalanceSheet";
+import Settings from "pages/Settings/Settings";
 import PersistGuest from "components/GuestRoutes/PersistGuest";
 
 const RouterComponent = () => {
+
   return (
     <Router>
+
       <Layout>
+
         <Routes>
           <Route path="*" element={<ErrorPage />} />
           <Route element={<PersistGuest />}>
@@ -62,9 +66,16 @@ const RouterComponent = () => {
               path="/balance"
               element={<ProtectedRoutes component={<BalanceSheet />} />}
             />
+            <Route
+                path="/settings"
+                element={<ProtectedRoutes component={<Settings />} />}
+            />
           </Route>
+
         </Routes>
+
       </Layout>
+
     </Router>
   );
 };

@@ -63,7 +63,7 @@ describe('Sign Up success funtionality', ()=>{
         jest.spyOn(axiosClient, 'post').mockRejectedValue(errorResponse)
 
         //Arrange
-        const buttonSubmit = screen.getByText('Sign Up')
+        const buttonSubmit = screen.getByText('Continue')
         
         //Act
         fireEvent.click(buttonSubmit)
@@ -93,7 +93,7 @@ describe('Sign Up success funtionality', ()=>{
         jest.spyOn(axiosClient, 'post').mockRejectedValue(errorResponse)
 
         //Arrange the values don't really matter.
-        const buttonSubmit = screen.getByText('Sign Up')
+        const buttonSubmit = screen.getByText('Continue')
 
         //ACT
         fireEvent.click(buttonSubmit)

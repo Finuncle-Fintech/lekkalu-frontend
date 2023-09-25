@@ -67,6 +67,7 @@ jest.mock('axios', () => ({
         // Arrange
         const errorText = 'User with provided details does not exist';
         const spySwal = jest.spyOn(swal, 'fire');
+        console.log('spySwal: ', spySwal);
         
         // Use getByLabelText to find input fields by their associated labels
         const usernameInput = screen.getByLabelText('Username');

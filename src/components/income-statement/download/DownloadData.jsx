@@ -1,8 +1,9 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import * as ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
 import { Context } from 'provider/Provider';
 import { FiDownloadCloud } from 'react-icons/fi';
+import { FcBrokenLink } from 'react-icons/fc';
 import './index.css'
 
 const DownloadData = () => {
@@ -11,27 +12,31 @@ const DownloadData = () => {
     const assetsValue = assets.totalVal;
     const liabilitiesData = liabilities.finalLiabilities;
     const liabilitiesValue = liabilities.totalVal;
-    const { fetchIncomeStatement, incomeStatement } = useContext(Context);
-    const {
-        expenses,
-        tags,
-        createTag,
-        fetchExpenses,
-        filterExpensesByDate,
-        deleteExpenseRequest,
-        createExpenseRequest,
-        changeExpenseRequest,
-        fetchTags,
-        authToken
-    } = useContext(Context);
+    const { fetchIncomeStatement, fetchAllExpenses, incomeStatement, tags, fetchTags } = useContext(Context);
+    const [allexpensess, setAllexpensess] = useState([]);
+    const [loading, setLoading] = useState(false)
+    console.log(allexpensess);
+    const fetchAndLogExpenses = () => {
+        setLoading(true)
+        fetchAllExpenses()
+            .then((resp) => {
+                setAllexpensess(resp);
+                setLoading(false)
+            })
+            .catch((error) => {
+                console.error(error);
+                setLoading(false)
+            });
+    };
+
 
     useEffect(() => {
+        fetchAndLogExpenses();
         fetchIncomeStatement();
-        fetchData()
+        fetchData();
+        fetchTags();
     }, []);
-    useEffect(() => {
-        // console.log({ incomeStatement });
-    }, [JSON.stringify(incomeStatement)]);
+
 
     const incomeData = incomeStatement.income;
     const expenseData = incomeStatement.expenses;
@@ -43,6 +48,13 @@ const DownloadData = () => {
         (total, item) => total + item.value,
         0
     );
+
+    const getTagObjects = (tagValues) => {
+        return tagValues
+            .map((tagValue) => tags.find((tag) => tag.id === tagValue))
+            .filter((tag) => tag !== undefined);
+    };
+
 
     const getTagNames = (tagValues) => {
         const tagNames = tagValues && tagValues
@@ -66,7 +78,7 @@ const DownloadData = () => {
 
         // Expense List
         expenselistWorksheet.addRow(["Tags", "Amount", "Date"])
-        expenses.forEach((item) => {
+        allexpensess?.forEach((item) => {
             expenselistWorksheet.addRow([getTagNames(item.tags), item.amount, item.time])
         })
         // Income Statement
@@ -105,9 +117,13 @@ const DownloadData = () => {
 
     return (
         <div>
-            <button className='download-button' onClick={handleExportToExcel}>
-                <FiDownloadCloud />
-            </button>
+            {
+                loading ? <button className='download-button' style={{ borderRadius: "10px", height: "45px" }}>
+                    <p style={{ fontSize: "15px" }}>Loading...</p>
+                </button> : <button className='download-button' onClick={handleExportToExcel}>
+                    <FiDownloadCloud />
+                </button>
+            }
         </div>
     )
 }

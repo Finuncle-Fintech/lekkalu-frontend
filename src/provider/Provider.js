@@ -1,4 +1,4 @@
-import React, { createContext, useReducer, useState } from "react";
+import React, { createContext, useEffect, useReducer, useState } from "react";
 import axiosClient from "components/Axios/Axios";
 import useAxiosPrivate from "hooks/useAxiosPrivate";
 import { InitialState } from "./Reducer";
@@ -143,6 +143,7 @@ const Provider = ({ children }) => {
       handleErrors(error);
     }
   };
+
 
   const filterExpensesByDate = async (page, rowsPerPage, fromDate, toDate) => {
     try {
@@ -494,10 +495,29 @@ const Provider = ({ children }) => {
     }
   };
 
+  const fetchAllExpenses = async () => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+      const response = await axiosPrivate.get(`${process.env.REACT_APP_BACKEND_API}expenses/`, {
+        headers,
+      });
+      console.log({ "fetchallexpense": response.data });
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching expenses:", error);
+    }
+  };
+
+
   const signOut = () => {
     setAuthToken(null);
     deleteCookie("refresh");
   };
+
+
 
   return (
     <Context.Provider
@@ -528,6 +548,7 @@ const Provider = ({ children }) => {
         fetchIncomeExpenses,
         fetchIncomeStatement,
         filterExpensesByDate,
+        fetchAllExpenses
       }}
     >
       {children}

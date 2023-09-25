@@ -1,31 +1,60 @@
-import { Button, TextField } from "@mui/material";
+import { Button, Slider, TextField } from "@mui/material";
 import { useUserPreferences } from "hooks/useUserPreferences";
 import { useState } from "react";
 
 export default function CalculatorSIP({ setSummary }) {
-  const [monthlyAmount, setMonthlyAmout] = useState(false);
-  const [durationInvestment, setDurationInvestment] = useState(false);
-  const [rateReturn, setRateReturn] = useState(false);
-  const [error, setError] = useState(false);
+  const [values, setValues] = useState({
+    monthlyAmount: 500,
+    durationInvestment: 1,
+    rateReturn: 1,
+  });
+  const [errors, setError] = useState(false);
   const { preferences } = useUserPreferences();
 
   const inputs = [
     {
-      label: `Monthly investment amount (${preferences?.currencyUnit}):`,
+      id: "monthlyAmount",
+      label: `Monthly investment amount (${preferences?.currencyUnit})`,
       type: "number",
+      range: {
+        min: 500,
+        max: 100_000,
+      },
+      step: 500,
     },
     {
-      label: "Duration of the investment:",
+      id: "durationInvestment",
+      label: "Duration of the investment (Yr)",
       type: "number",
+      range: {
+        min: 1,
+        max: 40,
+      },
+      step: 1,
     },
     {
+      id: "rateReturn",
       label: "Expected annual return (%)",
       type: "number",
+      range: {
+        min: 1,
+        max: 30,
+      },
+      step: 0.1,
     },
   ];
 
-  const handlerCalculate = (e) => {
+  const handleValueChange = (e) => {
+    setValues((prevValues) => ({
+      ...prevValues,
+      [e.target.name]: Number(e.target.value),
+    }));
+  };
+
+  const calculateSIP = (e) => {
     e.preventDefault();
+    const { monthlyAmount, durationInvestment, rateReturn } = values;
+
     if (!monthlyAmount || !durationInvestment || !rateReturn) {
       setError({
         monthlyAmount: !monthlyAmount,
@@ -41,59 +70,35 @@ export default function CalculatorSIP({ setSummary }) {
   };
 
   return (
-    <form
-      action=""
-      style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(2,1fr)",
-        gap: "3vw",
-      }}
-      onSubmit={handlerCalculate}
-    >
-      {inputs.map((input, i) => {
-        const conditionalMonthly = input.label.includes(
-          "Monthly investment amount"
-        );
-        const key = `${input.label}_${i}`;
-        return (
-          <div key={key}>
-            {input.label.includes("Duration of the investment") ? (
-              <div className="d-flex">
-                <TextField
-                  error={error.durationInvestment}
-                  value={durationInvestment || undefined}
-                  onChange={(e) => setDurationInvestment(e.target.value)}
-                  fullWidth={true}
-                  key={i}
-                  label={input.label}
-                  type={input.type}
-                />
+    <form onSubmit={calculateSIP}>
+      <div
+        className="d-grid gap-4 w-100"
+        style={{ gridTemplateColumns: "repeat(2, 1fr)" }}
+      >
+        {inputs.map((input) => (
+          <div>
+            <TextField
+              name={input.id}
+              error={errors[input.id]}
+              value={values[input.id]}
+              onChange={handleValueChange}
+              label={input.label}
+              type={input.type}
+              fullWidth
+            />
 
-                <div className="rounded-end p-2 d-flex justify-content-center align-items-center border bg-secondary-subtle">
-                  <span className="fs-6 fw-semibold">Years</span>
-                </div>
-              </div>
-            ) : (
-              <TextField
-                error={
-                  conditionalMonthly ? error.monthlyAmount : error.rateReturn
-                }
-                value={
-                  (conditionalMonthly ? monthlyAmount : rateReturn) || undefined
-                }
-                onChange={(e) => {
-                  conditionalMonthly
-                    ? setMonthlyAmout(e.target.value)
-                    : setRateReturn(e.target.value);
-                }}
-                fullWidth={true}
-                label={input.label}
-                type={input.type}
-              />
-            )}
+            <Slider
+              min={input.range.min}
+              max={input.range.max}
+              step={input.step}
+              value={values[input.id]}
+              name={input.id}
+              onChange={handleValueChange}
+            />
           </div>
-        );
-      })}
+        ))}
+      </div>
+
       <Button variant="contained" type="submit" color="primary">
         Calculate
       </Button>

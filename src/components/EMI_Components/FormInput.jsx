@@ -67,7 +67,7 @@ const {unit, handleUnitChange} = useContext(Context)
             </DropdownToggle>
             <DropdownMenu>
              {units.map((val) => {
-              return <DropdownItem onClick={() => handleUnitChange(val)}>{val}</DropdownItem>
+              return <DropdownItem key={val} onClick={() => handleUnitChange(val)}>{val}</DropdownItem>
              })}
             </DropdownMenu>
           </ButtonDropdown>

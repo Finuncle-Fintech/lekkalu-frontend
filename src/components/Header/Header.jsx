@@ -123,7 +123,6 @@ const Header = () => {
           display: "flex",
           justifyContent: "center",
           "@media (max-width: 900px)": {
-            // Hide for screens smaller than 768px
             display: "none",
           },
         }}
@@ -132,7 +131,7 @@ const Header = () => {
           sx={{
             width: "21vw",
             display: "flex",
-            justifyContent: "space-between",
+            justifyContent: "center",
           }}
         >
           {/* List of pages depicted by icons */}
@@ -220,6 +219,7 @@ const Header = () => {
               </Tooltip>
             </>
           ) : null}
+
           <BasicMenu Menu={calculatorOption} />
 
           {!authToken ? (

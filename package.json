@@ -30,7 +30,7 @@
     "react-scripts": "^5.0.1",
     "react-spinners": "^0.13.8",
     "reactstrap": "^9.1.10",
-    "recharts": "^2.7.3",
+    "recharts": "^2.8.0",
     "sweetalert": "^2.1.2",
     "sweetalert2": "^11.7.27",
     "xlsx": "^0.18.5"

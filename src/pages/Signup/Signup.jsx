@@ -1,24 +1,13 @@
 import React, { useState } from "react";
-import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import Link from "@mui/material/Link";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
-import Button from "@mui/material/Button";
 import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import Avatar from "@mui/material/Avatar";
 import { Link as ReactRouterLink, useNavigate } from "react-router-dom";
 import axiosClient from "components/Axios/Axios";
 import Swal from "sweetalert2";
-import divider from '../../assets/loginImages/Divider.svg';
-import facebookIcon from '../../assets/loginImages/facebook-icon.jpg';
-import googleIcon from '../../assets/loginImages/google-icon.svg';
-import appleIcon from '../../assets/loginImages/apple-icon.svg';
-
+import divider from "../../assets/loginImages/Divider.svg";
+import facebookIcon from "../../assets/loginImages/facebook-icon.jpg";
+import googleIcon from "../../assets/loginImages/google-icon.svg";
+import appleIcon from "../../assets/loginImages/apple-icon.svg";
 import styles from "./Signup.module.css";
 
 export const Signup = () => {
@@ -58,7 +47,6 @@ export const Signup = () => {
               showConfirmButton: false,
               timer: 3000,
             });
-        console.log(res?.data);
       })
       .catch((error) => {
         if (error.response.status === 500) {
@@ -85,19 +73,17 @@ export const Signup = () => {
 
       <div className={styles.authenticationContainer}>
         <h1 className={styles.title}>Sign up</h1>
-              <div className="my-3">
-                  {
-                      errors.length > 0
-                          ?
-                          errors.map((e, i) => {
-                              return (
-                                  <p key={i} className={styles.error}>{e}</p>
-                              )
-                          })
-                          :
-                          null
-                  }
-              </div>
+        <div className="my-3">
+          {errors.length > 0
+            ? errors.map((e, i) => {
+                return (
+                  <p key={i} className={styles.error}>
+                    {e}
+                  </p>
+                );
+              })
+            : null}
+        </div>
 
         <div className={styles.loginContainer}>
           <form onSubmit={handleSubmit} className={styles.loginForm}>
@@ -176,22 +162,18 @@ export const Signup = () => {
         </div>
 
         <div className={styles.orBlock}>
-          <img
-            className={styles.orImage}
-            src={divider}
-            alt=""
-          />
+          <img className={styles.orImage} src={divider} alt="" />
           <p className={styles.orText}>OR</p>
-          <img
-            className={styles.orImage}
-            src={divider}
-            alt=""
-          />
+          <img className={styles.orImage} src={divider} alt="" />
         </div>
 
         <div className={styles.authenticationButtons}>
           <button className={styles.authButton}>
-            <img src={facebookIcon} alt="facebook" className={styles.authIcon} />
+            <img
+              src={facebookIcon}
+              alt="facebook"
+              className={styles.authIcon}
+            />
             <p className={styles.authText}>Continue with Facebook</p>
           </button>
 

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import { Link as ReactRouterLink, useNavigate } from "react-router-dom";
+import { Link, Link as ReactRouterLink, useNavigate } from "react-router-dom";
 import axiosClient from "components/Axios/Axios";
 import Swal from "sweetalert2";
 import divider from "../../assets/loginImages/Divider.svg";
@@ -127,7 +127,12 @@ export const Signup = () => {
               className={styles.CheckBox}
               control={<Checkbox required color="success" />}
               label={
-                "I have read, understood and agreed to EMI Calculator's Terms and Conditions"
+                <div>
+                  I have read, understood and agreed to{" "}
+                  <Link to="/terms-and-conditions">
+                    Finuncle's Terms and Conditions
+                  </Link>
+                </div>
               }
             />
             <FormControlLabel
@@ -136,7 +141,10 @@ export const Signup = () => {
               className={styles.CheckBox}
               control={<Checkbox required color="success" />}
               label={
-                "I have read, understood and agreed to EMI Calculator's Privacy Policy"
+                <div>
+                  I have read, understood and agreed to{" "}
+                  <Link to="/privacy-policies">Finuncle's Privacy Policy</Link>
+                </div>
               }
             />
             <button

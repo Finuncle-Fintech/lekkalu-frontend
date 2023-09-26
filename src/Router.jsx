@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import ProtectedRoutes from "./components/ProtectedRoutes/ProtectedRoutes";
 import Charts from "components/Charts/Charts";
 import Expenses from "components/Expenses/Expenses";
@@ -17,6 +17,8 @@ import Settings from "pages/Settings/Settings";
 import PersistGuest from "components/GuestRoutes/PersistGuest";
 import Hero from "pages/Hero/Hero";
 import HeroRoute from "components/HeroRoute/HeroRoute";
+import TermsAndConditions from "pages/TermsAndConditions/TermsAndConditions";
+import PrivacyPolicies from "pages/PrivacyPolicies/PrivacyPolicies";
 
 const RouterComponent = () => {
   return (
@@ -25,10 +27,7 @@ const RouterComponent = () => {
         <Routes>
           <Route path="*" element={<ErrorPage />} />
           <Route element={<PersistGuest />}>
-            <Route
-              path="/" 
-              element={<HeroRoute component={<Hero />} />}
-            />
+            <Route path="/" element={<HeroRoute component={<Hero />} />} />
             <Route
               path="/signin"
               element={<GuestRoutes component={<Signin />} />}
@@ -48,6 +47,14 @@ const RouterComponent = () => {
             <Route
               path="/loan_emi_calculator"
               element={<GuestRoutes component={<EmiCalculator />} />}
+            />
+            <Route
+              path="/terms-and-conditions"
+              element={<GuestRoutes component={<TermsAndConditions />} />}
+            />
+            <Route
+              path="/privacy-policies"
+              element={<GuestRoutes component={<PrivacyPolicies />} />}
             />
           </Route>
 

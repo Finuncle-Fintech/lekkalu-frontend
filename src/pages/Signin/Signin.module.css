@@ -156,6 +156,36 @@
   font-size: 0.825rem;
 }
 
+.passwordInputBox {
+  display: flex;
+  align-items: center;
+  gap: 2;
+  height: 3rem;
+  border: 1px solid;
+  border-radius: 12px;
+  border-color: #66666659;
+  margin-bottom: 1rem;
+  padding-inline: 15px;
+}
+
+.passwordInput {
+  height: 100%;
+  width: 100%;
+  border: none;
+  outline: none;
+}
+
+.visibilityButton {
+  height: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
 @media screen and (max-width: 1000px) {
   .authentication {
     display: flex;

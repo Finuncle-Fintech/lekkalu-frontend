@@ -7,8 +7,13 @@ import divider from "../../assets/loginImages/Divider.svg";
 import facebookIcon from "../../assets/loginImages/facebook-icon.jpg";
 import googleIcon from "../../assets/loginImages/google-icon.svg";
 import appleIcon from "../../assets/loginImages/apple-icon.svg";
+import { Checkbox, FormControlLabel } from "@mui/material";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
 export const Signin = () => {
+  const [showPassword, setShowPassword] = useState(false);
+
   const { fetchToken } = useContext(Context);
   const navigate = useNavigate();
 
@@ -72,16 +77,35 @@ export const Signin = () => {
               required
               autoFocus
             />
+
             <label htmlFor="password" className={styles.loginLabel}>
               Password
             </label>
-            <input
-              type="password"
-              name="password"
-              id="password"
-              className={styles.loginInput}
-              autoComplete="current-password"
-              required
+
+            <div className={styles.passwordInputBox}>
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                id="password"
+                className={styles.passwordInput}
+                autoComplete="current-password"
+                required
+              />
+              <div
+                className={styles.visibilityButton}
+                onClick={() => {
+                  setShowPassword((prev) => !prev);
+                }}
+              >
+                {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+              </div>
+            </div>
+
+            <FormControlLabel
+              name="rememberMe"
+              className={styles.CheckBox}
+              control={<Checkbox required color="success" />}
+              label="Remember me"
             />
             <button
               type="submit"

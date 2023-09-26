@@ -9,8 +9,12 @@ import facebookIcon from "../../assets/loginImages/facebook-icon.jpg";
 import googleIcon from "../../assets/loginImages/google-icon.svg";
 import appleIcon from "../../assets/loginImages/apple-icon.svg";
 import styles from "./Signup.module.css";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
 export const Signup = () => {
+  const [showPassword, setShowPassword] = useState(false);
+
   const navigate = useNavigate();
   const [errors, setErrors] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -113,14 +117,25 @@ export const Signup = () => {
             <label htmlFor="password" className={styles.loginLabel}>
               Password
             </label>
-            <input
-              type="password"
-              name="password"
-              id="password"
-              className={styles.loginInput}
-              autoComplete="new-password"
-              required
-            />
+            <div className={styles.passwordInputBox}>
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                id="password"
+                className={styles.passwordInput}
+                autoComplete="current-password"
+                required
+              />
+              <div
+                className={styles.visibilityButton}
+                onClick={() => {
+                  setShowPassword((prev) => !prev);
+                }}
+              >
+                {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+              </div>
+            </div>
+
             <FormControlLabel
               required
               name="termsAndConditions"

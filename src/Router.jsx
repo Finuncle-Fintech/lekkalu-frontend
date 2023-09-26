@@ -13,6 +13,7 @@ import Layout from "components/Layout/Layout";
 import SIPCalculator from "pages/SIPCalculator/SIPCalculator";
 import CAGRCalculator from "pages/CAGRCalculator/CAGRCalculator";
 import BalanceSheet from "pages/BalanceSheet/BalanceSheet";
+import Settings from "pages/Settings/Settings";
 import PersistGuest from "components/GuestRoutes/PersistGuest";
 import Hero from "pages/Hero/Hero";
 import HeroRoute from "components/HeroRoute/HeroRoute";
@@ -66,6 +67,10 @@ const RouterComponent = () => {
             <Route
               path="/balance"
               element={<ProtectedRoutes component={<BalanceSheet />} />}
+            />
+            <Route
+              path="/settings"
+              element={<ProtectedRoutes component={<Settings />} />}
             />
           </Route>
         </Routes>

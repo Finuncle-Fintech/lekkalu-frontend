@@ -10,25 +10,26 @@ import appleIcon from "../../assets/loginImages/apple-icon.svg";
 import { Checkbox, FormControlLabel } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import { useForm } from "react-hook-form";
 
 export const Signin = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const { fetchToken } = useContext(Context);
   const navigate = useNavigate();
 
-  const [loading, setLoading] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  const handleSignin = async (values) => {
     setLoading(true);
 
     try {
-      const data = new FormData(event.currentTarget);
-      const username = data.get("username");
-      const password = data.get("password");
-
-      const loginUser = await fetchToken(username, password);
+      const loginUser = await fetchToken(values.username, values.password);
 
       loginUser === 200
         ? navigate("/")
@@ -64,32 +65,46 @@ export const Signin = () => {
         <h1 className={styles.title}>Log in</h1>
 
         <div className={styles.loginContainer}>
-          <form onSubmit={handleSubmit} className={styles.loginForm}>
+          <form
+            onSubmit={handleSubmit(handleSignin)}
+            className={styles.loginForm}
+          >
             <label htmlFor="username" className={styles.loginLabel}>
               Username
             </label>
             <input
-              type="text"
-              name="username"
-              id="username"
+              {...register("username", {
+                required: "Username is required!",
+                minLength: {
+                  value: 6,
+                  message: "Please enter at least 6 characters",
+                },
+              })}
               className={styles.loginInput}
               autoComplete="username"
-              required
               autoFocus
             />
+            <p className="errorMessage">{errors?.username?.message}</p>
 
             <label htmlFor="password" className={styles.loginLabel}>
               Password
             </label>
-
             <div className={styles.passwordInputBox}>
               <input
+                {...register("password", {
+                  required: "Password is required!",
+                  minLength: {
+                    value: 6,
+                    message: "Please enter at least 6 characters",
+                  },
+                  maxLength: {
+                    value: 20,
+                    message: "Please enter at most 20 characters",
+                  },
+                })}
                 type={showPassword ? "text" : "password"}
-                name="password"
-                id="password"
                 className={styles.passwordInput}
                 autoComplete="current-password"
-                required
               />
               <div
                 className={styles.visibilityButton}
@@ -100,13 +115,14 @@ export const Signin = () => {
                 {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
               </div>
             </div>
+            <p className="errorMessage">{errors?.password?.message}</p>
 
             <FormControlLabel
-              name="rememberMe"
               className={styles.CheckBox}
-              control={<Checkbox required color="success" />}
+              control={<Checkbox {...register("rememberMe")} color="success" />}
               label="Remember me"
             />
+
             <button
               type="submit"
               className={styles.loginButton}

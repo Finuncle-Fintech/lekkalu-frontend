@@ -111,9 +111,13 @@ const Provider = ({ children }) => {
         "Content-Type": "application/json",
       };
 
-      await axiosPrivate.post(`${process.env.REACT_APP_BACKEND_API}expense-tag/`, tag, {
-        headers,
-      });
+      await axiosPrivate.post(
+        `${process.env.REACT_APP_BACKEND_API}expense-tag/`,
+        tag,
+        {
+          headers,
+        }
+      );
     } catch (error) {
       handleErrors(error);
     }
@@ -246,7 +250,6 @@ const Provider = ({ children }) => {
 
   const fetchData = async () => {
     try {
-      console.log(`CURRENT TOKEN ${authToken}`);
       const headers = {
         Authorization: `Bearer ${authToken}`,
         "Content-Type": "application/json",

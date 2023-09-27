@@ -11,6 +11,8 @@ import appleIcon from "../../assets/loginImages/apple-icon.svg";
 import styles from "./Signup.module.css";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import { useForm } from "react-hook-form";
+import { EMAIL_REGEX } from "utils/Constants";
 
 export const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -19,12 +21,13 @@ export const Signup = () => {
   const [errors, setErrors] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors: clientErrors },
+  } = useForm();
 
-    const data = new FormData(event.currentTarget);
-
-    setErrors([]);
+  const handleSignup = async (data) => {
     setLoading(true);
 
     await axiosClient
@@ -90,41 +93,64 @@ export const Signup = () => {
         </div>
 
         <div className={styles.loginContainer}>
-          <form onSubmit={handleSubmit} className={styles.loginForm}>
+          <form
+            onSubmit={handleSubmit(handleSignup)}
+            className={styles.loginForm}
+          >
             <label htmlFor="username" className={styles.loginLabel}>
               Username
             </label>
             <input
               type="text"
-              name="username"
-              id="username"
               className={styles.loginInput}
               autoComplete="username"
-              required
               autoFocus
+              {...register("username", {
+                required: "Username is required!",
+                minLength: {
+                  value: 6,
+                  message: "Enter at least 6 characters",
+                },
+              })}
             />
+            <p className="errorMessage">{clientErrors?.username?.message}</p>
+
             <label htmlFor="email" className={styles.loginLabel}>
               Email Address
             </label>
             <input
               type="email"
-              name="email"
-              id="email"
               className={styles.loginInput}
               autoComplete="email"
-              required
+              {...register("email", {
+                required: "Email is required!",
+                pattern: {
+                  value: EMAIL_REGEX,
+                  message: "Please enter a valid email!",
+                },
+              })}
             />
+            <p className="errorMessage">{clientErrors?.email?.message}</p>
+
             <label htmlFor="password" className={styles.loginLabel}>
               Password
             </label>
             <div className={styles.passwordInputBox}>
               <input
                 type={showPassword ? "text" : "password"}
-                name="password"
-                id="password"
                 className={styles.passwordInput}
                 autoComplete="current-password"
-                required
+                {...register("password", {
+                  required: "Password is required!",
+                  minLength: {
+                    value: 6,
+                    message: "Please enter at least 6 characters",
+                  },
+                  maxLength: {
+                    value: 20,
+                    message: "Please enter at most 20 characters",
+                  },
+                })}
               />
               <div
                 className={styles.visibilityButton}
@@ -135,12 +161,18 @@ export const Signup = () => {
                 {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
               </div>
             </div>
+            <p className="errorMessage">{clientErrors?.password?.message}</p>
 
             <FormControlLabel
-              required
-              name="termsAndConditions"
               className={styles.CheckBox}
-              control={<Checkbox required color="success" />}
+              control={
+                <Checkbox
+                  color="success"
+                  {...register("termsAndConditions", {
+                    required: "Please accept terms and conditions!",
+                  })}
+                />
+              }
               label={
                 <div>
                   I have read, understood and agreed to{" "}
@@ -150,11 +182,20 @@ export const Signup = () => {
                 </div>
               }
             />
+            <p className="errorMessage">
+              {clientErrors?.termsAndConditions?.message}
+            </p>
+
             <FormControlLabel
-              required
-              name="privacyPolicy"
               className={styles.CheckBox}
-              control={<Checkbox required color="success" />}
+              control={
+                <Checkbox
+                  color="success"
+                  {...register("privacyPolicy", {
+                    required: "Please agree to the privacy policies!",
+                  })}
+                />
+              }
               label={
                 <div>
                   I have read, understood and agreed to{" "}
@@ -162,6 +203,10 @@ export const Signup = () => {
                 </div>
               }
             />
+            <p className="errorMessage">
+              {clientErrors?.privacyPolicy?.message}
+            </p>
+
             <button
               type="submit"
               className={styles.loginButton}

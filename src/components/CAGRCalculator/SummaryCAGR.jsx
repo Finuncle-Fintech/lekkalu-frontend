@@ -1,12 +1,24 @@
-import PieCAGR from "./PieCAGR"
+import { useUserPreferences } from "hooks/useUserPreferences";
+import PieCAGR from "./PieCAGR";
 
+export default function SummaryCAGR({ summary }) {
+  const { preferences } = useUserPreferences();
 
-export default function SummaryCAGR({summary}){
-    return(
-        <article className="border rounded p-2 d-flex justify-content-center align-items-center flex-column">
-            <h2>Summary</h2>
-            <PieCAGR data={summary[0]} />
-            <span className="m-3">Your CAGR is: {summary[1]}%</span>
-        </article>
-    )
+  return (
+    <article className="border rounded p-2 d-flex justify-content-center align-items-center flex-column w-100">
+      <h2>Summary</h2>
+      <PieCAGR data={summary.pieChartData} />
+
+      <div className="my-2">
+        You absolute returns: {preferences.currencyUnit}{" "}
+        {summary.absoluteReturns}
+      </div>
+      <div className="my-2">
+        You absolute CAGR: {preferences.currencyUnit} {summary.absoluteCAGR}
+      </div>
+      <div className="my-2">
+        You CAGR percentage: {summary.percentageCAGR} %
+      </div>
+    </article>
+  );
 }

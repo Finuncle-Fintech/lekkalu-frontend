@@ -3,7 +3,16 @@ import SummaryCAGR from "components/CAGRCalculator/SummaryCAGR";
 import { useState } from "react";
 
 export default function CAGRCalculator() {
-  const [summary, setSummary] = useState([]);
+  const [summary, setSummary] = useState({
+    pieChartData: [],
+    absoluteCAGR: undefined,
+    percentageCAGR: undefined,
+    absoluteReturns: undefined,
+    durationInvestment: undefined,
+    finalValNum: undefined,
+    initialValNum: undefined,
+  });
+
   return (
     <section className="container md-p-5 d-flex flex-column flex-md-row gap-4">
       <div className="d-flex flex-column">
@@ -14,7 +23,7 @@ export default function CAGRCalculator() {
         <CalculatorCAGR setSummary={setSummary} />
       </div>
 
-      {summary.length !== 0 && <SummaryCAGR summary={summary} />}
+      {summary ? <SummaryCAGR summary={summary} /> : null}
     </section>
   );
 }

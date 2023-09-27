@@ -62,28 +62,24 @@ export default function CalculatorCAGR({ setSummary }) {
         finalVal: !finalVal,
         durationInvestment: !durationInvestment,
       });
-      setSummary([]);
       return;
     }
 
-    const { initialValNum, finalValNum, CAGRPercentage } = getCAGR(
-      initialVal,
-      finalVal,
-      durationInvestment
-    );
-    setSummary([
-      [
+    const calculatedCAGR = getCAGR(initialVal, finalVal, durationInvestment);
+
+    setSummary({
+      pieChartData: [
         {
-          name: "Inital Value",
-          value: initialValNum,
+          name: "Initial Value",
+          value: calculatedCAGR.initialValNum,
         },
         {
           name: "Final Value",
-          value: finalValNum,
+          value: calculatedCAGR.finalValNum,
         },
       ],
-      CAGRPercentage,
-    ]);
+      ...calculatedCAGR,
+    });
     setErrors(false);
   };
 
@@ -135,10 +131,20 @@ const getCAGR = (initialVal, finalVal, durationInvestment) => {
   const finalValNum = parseFloat(finalVal);
   const durationInvestmentNum = parseInt(durationInvestment);
 
-  const CAGRPercentage = (
-    (Math.pow(finalValNum / initialValNum, 1 / durationInvestmentNum) - 1) *
-    100
-  ).toFixed(2);
+  /** Calculating absolute CAGR and %age */
+  const absoluteCAGR =
+    Math.pow(finalValNum / initialValNum, 1 / durationInvestmentNum) - 1;
+  const percentageCAGR = (absoluteCAGR * 100).toFixed(2);
 
-  return { CAGRPercentage, durationInvestment, finalValNum, initialValNum };
+  /** Calculating absolute returns */
+  const absoluteReturns = (finalValNum / initialValNum - 1) * 100;
+
+  return {
+    absoluteCAGR: absoluteCAGR.toFixed(2),
+    absoluteReturns,
+    percentageCAGR,
+    durationInvestment: durationInvestmentNum,
+    finalValNum,
+    initialValNum,
+  };
 };

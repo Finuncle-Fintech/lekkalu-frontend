@@ -1,18 +1,63 @@
-import { Button, TextField } from "@mui/material";
+import { Button, Slider, TextField } from "@mui/material";
 import { useUserPreferences } from "hooks/useUserPreferences";
 import { useState } from "react";
 
 export default function CalculatorCAGR({ setSummary }) {
-  const [initialVal, setInitialVal] = useState("");
-  const [finalVal, setFinalVal] = useState("");
-  const [durationInvestment, setDurationInvestment] = useState("");
-  const [error, setError] = useState(false);
+  const [values, setValues] = useState({
+    initialVal: 5000,
+    finalVal: 25000,
+    durationInvestment: 5,
+  });
+
+  const [errors, setErrors] = useState(false);
   const { preferences } = useUserPreferences();
+
+  const inputs = [
+    {
+      id: "initialVal",
+      label: `Initial value (${preferences?.currencyUnit})`,
+      type: "number",
+      range: {
+        min: 1000,
+        max: 100_000_00,
+      },
+      step: 500,
+    },
+    {
+      id: "finalVal",
+      label: `Final Value Costs (${preferences?.currencyUnit})`,
+      type: "number",
+      range: {
+        min: 1000,
+        max: 100_000_00,
+      },
+      step: 500,
+    },
+    {
+      id: "durationInvestment",
+      label: "Duration of Investment (Years)",
+      type: "number",
+      range: {
+        min: 1,
+        max: 40,
+      },
+      step: 1,
+    },
+  ];
+
+  const handleValueChange = (e) => {
+    setValues((prev) => ({
+      ...prev,
+      [e.target.name]: Number(e.target.value),
+    }));
+  };
 
   const handleCalculate = (e) => {
     e.preventDefault();
+
+    const { initialVal, finalVal, durationInvestment } = values;
     if (!initialVal || !finalVal || !durationInvestment) {
-      setError({
+      setErrors({
         initialVal: !initialVal,
         finalVal: !finalVal,
         durationInvestment: !durationInvestment,
@@ -39,37 +84,39 @@ export default function CalculatorCAGR({ setSummary }) {
       ],
       CAGRPercentage,
     ]);
-    setError(false);
+    setErrors(false);
   };
 
   return (
-    <form
-      action=""
-      style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(2,1fr)",
-        gap: ".7rem",
-      }}
-      onSubmit={(e) => handleCalculate(e)}
-    >
-      <TextField
-        value={initialVal}
-        error={error.initialVal}
-        onChange={(e) => minusChecker(e, setInitialVal)}
-        label={`Initial value (${preferences?.currencyUnit})`}
-      />
-      <TextField
-        value={finalVal}
-        error={error.finalVal}
-        onChange={(e) => minusChecker(e, setFinalVal)}
-        label={`Final Value Costs (${preferences?.currencyUnit})`}
-      />
-      <TextField
-        value={durationInvestment}
-        error={error.durationInvestment}
-        onChange={(e) => minusChecker(e, setDurationInvestment)}
-        label="Duration of Investment (Years)"
-      />
+    <form onSubmit={handleCalculate}>
+      <div
+        className="d-grid gap-4 w-100"
+        style={{ gridTemplateColumns: "repeat(2, 1fr)" }}
+      >
+        {inputs.map((input) => (
+          <div>
+            <TextField
+              name={input.id}
+              error={errors[input.id]}
+              value={values[input.id]}
+              onChange={handleValueChange}
+              label={input.label}
+              type={input.type}
+              fullWidth
+            />
+
+            <Slider
+              min={input.range.min}
+              max={input.range.max}
+              step={input.step}
+              value={values[input.id]}
+              name={input.id}
+              onChange={handleValueChange}
+            />
+          </div>
+        ))}
+      </div>
+
       <Button variant="contained" type="submit" color="primary">
         Calculate
       </Button>

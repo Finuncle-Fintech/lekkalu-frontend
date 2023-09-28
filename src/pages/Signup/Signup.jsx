@@ -21,6 +21,8 @@ export const Signup = () => {
   const [errors, setErrors] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  const isUnderDevelopment = true;
+
   const {
     register,
     handleSubmit,
@@ -229,32 +231,42 @@ export const Signup = () => {
           </ReactRouterLink>
         </div>
 
-        {/* <div className={styles.orBlock}>
-          <img className={styles.orImage} src={divider} alt="" />
-          <p className={styles.orText}>OR</p>
-          <img className={styles.orImage} src={divider} alt="" />
-        </div>
+        {isUnderDevelopment ? (
+          <></>
+        ) : (
+          <>
+            <div className={styles.orBlock}>
+              <img className={styles.orImage} src={divider} alt="" />
+              <p className={styles.orText}>OR</p>
+              <img className={styles.orImage} src={divider} alt="" />
+            </div>
 
-        <div className={styles.authenticationButtons}>
-          <button className={styles.authButton}>
-            <img
-              src={facebookIcon}
-              alt="facebook"
-              className={styles.authIcon}
-            />
-            <p className={styles.authText}>Continue with Facebook</p>
-          </button>
+            <div className={styles.authenticationButtons}>
+              <button className={styles.authButton}>
+                <img
+                  src={facebookIcon}
+                  alt="facebook"
+                  className={styles.authIcon}
+                />
+                <p className={styles.authText}>Continue with Facebook</p>
+              </button>
 
-          <button className={styles.authButton}>
-            <img src={googleIcon} alt="google" className={styles.authIcon} />
-            <p className={styles.authText}>Continue with Google</p>
-          </button>
+              <button className={styles.authButton}>
+                <img
+                  src={googleIcon}
+                  alt="google"
+                  className={styles.authIcon}
+                />
+                <p className={styles.authText}>Continue with Google</p>
+              </button>
 
-          <button className={styles.authButton}>
-            <img src={appleIcon} alt="apple" className={styles.authIcon} />
-            <p className={styles.authText}>Continue with Apple</p>
-          </button>
-        </div> */}
+              <button className={styles.authButton}>
+                <img src={appleIcon} alt="apple" className={styles.authIcon} />
+                <p className={styles.authText}>Continue with Apple</p>
+              </button>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

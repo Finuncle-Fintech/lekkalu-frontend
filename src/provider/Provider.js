@@ -6,6 +6,7 @@ import Reducer from "./Reducer";
 import Types from "./Types";
 import setCookie from "components/Support/PopUp/utils/SetCookie";
 import deleteCookie from "components/Support/PopUp/utils/DeleteCookie";
+import { Store } from "react-notifications-component";
 
 const Context = createContext({
   ...InitialState,
@@ -494,6 +495,65 @@ const Provider = ({ children }) => {
     }
   };
 
+  // Mocked notifications
+  let mockNotification = [
+    {
+      id: 1,
+      is_seen: false,
+      message: 'When you click this notification, it will close and will not appear again.'
+    },
+    {
+      id: 2,
+      is_seen: false,
+      message: 'Once clicked, this would send a request to the backend to let it know that this notification has already been seen.'
+    },
+    {
+      id: 3,
+      is_seen: false,
+      message: 'For notifications the request is made every 2 seconds.'
+    },
+    {
+      id: 3,
+      is_seen: false,
+      message: 'It works fine with backend requests, but you need the put method '
+    }
+  ]
+  const fetchNotifications = async () => {
+    // try {
+    // const headers = {
+    //   Authorization: `Bearer ${authToken}`,
+    //   "Content-Type": "application/json",
+    // };
+
+    // return axiosPrivate
+    //   .get("https://api.finuncle.com/api/notification", { headers })
+    //   .then((response) => {
+    for (const notification of mockNotification) {
+
+      if (!notification.is_seen) {
+        Store.addNotification({
+          title: "New notification",
+          message: notification.message,
+          type: "default",
+          insert: "bottom",
+          container: "bottom-right",
+          animationIn: ["animate__animated", "animate__fadeIn"],
+          animationOut: ["animate__animated", "animate__fadeOut"],
+          onRemoval: () => {
+            mockNotification[notification.id-1].is_seen = true
+          },
+          id: notification.id
+        })
+        
+      }
+      //       }
+      //     });
+      // } catch (error) {
+      //   handleErrors(error);
+      // }
+    };
+  }
+
   const signOut = () => {
     setAuthToken(null);
     deleteCookie("refresh");
@@ -528,6 +588,7 @@ const Provider = ({ children }) => {
         fetchIncomeExpenses,
         fetchIncomeStatement,
         filterExpensesByDate,
+        fetchNotifications
       }}
     >
       {children}

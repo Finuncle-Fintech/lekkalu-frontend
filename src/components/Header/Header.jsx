@@ -50,7 +50,7 @@ const styles = {
 };
 
 const Header = () => {
-  const { signOut, authToken } = useContext(Context);
+  const { signOut, authToken, fetchNotifications } = useContext(Context);
   const [openCalculator, setOpenCalculator] = React.useState(false);
   const [openSettings, setOpenSettings] = React.useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -117,6 +117,7 @@ const Header = () => {
       >
         <Logo />
       </Box>
+      
       <Box
         sx={{
           width: "32vw",
@@ -139,6 +140,7 @@ const Header = () => {
 
           {authToken ? (
             <>
+
               <Tooltip title="Home">
                 <IconButton
                   sx={{

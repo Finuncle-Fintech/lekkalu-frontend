@@ -229,7 +229,7 @@ export const Signup = () => {
           </ReactRouterLink>
         </div>
 
-        <div className={styles.orBlock}>
+        {/* <div className={styles.orBlock}>
           <img className={styles.orImage} src={divider} alt="" />
           <p className={styles.orText}>OR</p>
           <img className={styles.orImage} src={divider} alt="" />
@@ -254,7 +254,7 @@ export const Signup = () => {
             <img src={appleIcon} alt="apple" className={styles.authIcon} />
             <p className={styles.authText}>Continue with Apple</p>
           </button>
-        </div>
+        </div> */}
       </div>
     </div>
   );

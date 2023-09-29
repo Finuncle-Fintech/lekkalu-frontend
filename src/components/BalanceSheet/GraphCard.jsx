@@ -1,15 +1,15 @@
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
-import NivoPie from "components/Charts/NivoPie";
+import PieChart from "components/Charts/PieChart";
 import NorthEastIcon from "@mui/icons-material/NorthEast";
 import BasicMenu from "components/Header/HeaderComponents/BasicMenu";
 import { Box, Typography, Button } from "@mui/material";
 
 export default function GraphCard(props) {
-    const userSetting = {
-        submenu: {},
-        title: "Balance sheet",
-        img: "https://img.icons8.com/material-outlined/24/menu-2.png",
-      };
+  const userSetting = {
+    submenu: {},
+    title: "Balance sheet",
+    img: "https://img.icons8.com/material-outlined/24/menu-2.png",
+  };
   return (
     <>
       <Typography
@@ -30,6 +30,7 @@ export default function GraphCard(props) {
           borderRadius: "40px",
           display: "flex",
           padding: "3%",
+          marginBottom: '100px',
           "@media (max-width: 1000px)": {
             display: "none",
           },
@@ -70,7 +71,7 @@ export default function GraphCard(props) {
               }}
             >
               <Box sx={{ height: "20rem", width: "50%", marginRight: "2.5%" }}>
-                <NivoPie data={props.assetDatas} innerRadius={0.7} />
+                <PieChart data={props.assetDatas} innerRadius={0.7} />
                 <Typography
                   sx={{
                     fontSize: "20px",
@@ -89,7 +90,7 @@ export default function GraphCard(props) {
                   marginLeft: "2.5%",
                 }}
               >
-                <NivoPie data={props.liabilityDatas} innerRadius={0} />
+                <PieChart data={props.liabilityDatas} innerRadius={0} />
 
                 <Typography
                   sx={{
@@ -141,7 +142,7 @@ export default function GraphCard(props) {
           </Typography>{" "}
           <Typography
             sx={{
-              width: '13vw',
+              width: "13vw",
               margin: "30% 0 0 0 ",
               fontSize: "45px",
               display: "flex",
@@ -237,7 +238,7 @@ export default function GraphCard(props) {
           <BasicMenu Menu={userSetting} />
         </Box>
         <Box sx={{ width: "100%", height: "50vh" }}>
-          <NivoPie data={props.assetDatas} innerRadius={0.7} />
+          <PieChart data={props.assetDatas} innerRadius={0.7} />
         </Box>
       </Box>
       <Box
@@ -274,7 +275,7 @@ export default function GraphCard(props) {
           <BasicMenu Menu={userSetting} />
         </Box>
         <Box sx={{ width: "100%", height: "50vh" }}>
-          <NivoPie data={props.liabilityDatas} innerRadius={0} />
+          <PieChart data={props.liabilityDatas} innerRadius={0} />
         </Box>
       </Box>
     </>

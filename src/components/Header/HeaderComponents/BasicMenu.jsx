@@ -45,7 +45,6 @@ function BasicMenu(props) {
         },
       }}
     >
-      {console.log(props.Menu.title)}
       <Tooltip title={props.Menu.title}>
         <IconButton
           onClick={handleClick}

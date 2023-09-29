@@ -111,9 +111,13 @@ const Provider = ({ children }) => {
         "Content-Type": "application/json",
       };
 
-      await axiosPrivate.post(`${process.env.REACT_APP_BACKEND_API}expense-tag/`, tag, {
-        headers,
-      });
+      await axiosPrivate.post(
+        `${process.env.REACT_APP_BACKEND_API}expense-tag/`,
+        tag,
+        {
+          headers,
+        }
+      );
     } catch (error) {
       handleErrors(error);
     }
@@ -246,7 +250,6 @@ const Provider = ({ children }) => {
 
   const fetchData = async () => {
     try {
-      console.log(`CURRENT TOKEN ${authToken}`);
       const headers = {
         Authorization: `Bearer ${authToken}`,
         "Content-Type": "application/json",
@@ -301,17 +304,16 @@ const Provider = ({ children }) => {
         });
 
       await axiosPrivate
-        .get(`${process.env.REACT_APP_BACKEND_API}assets/`, { headers })
+        .get(`${process.env.REACT_APP_BACKEND_API}physical_assets/`, {
+          headers,
+        })
         .then((res) => {
           let totalVal = 0.000000001;
           res.data.map((da) => {
             totalVal += da.market_value;
             finalAssets = [
               ...finalAssets,
-              {
-                name: da.name,
-                value: parseFloat(da.market_value),
-              },
+              { id: da.id, name: da.name, value: parseFloat(da.market_value) },
             ];
           });
           dispatch({
@@ -384,8 +386,6 @@ const Provider = ({ children }) => {
       // Handle errors
       handleErrors(error);
     }
-
-    //Removed fetch expenses here, because it breaks pagination request on expenses page
   };
 
   const fetchToken = async (username, password) => {
@@ -471,10 +471,6 @@ const Provider = ({ children }) => {
         //API returns [{‘name’: ‘day_job_income’, ‘type’:’salary’,’amount’:50000}]
         //Transform to [{‘name’: ‘day_job_income’, ‘type’:’salary’,’value’:50000}]
         transformedExpensesArray = incomeExpenses.map((each) => {
-          console.log({
-            original: each.amount,
-            value: parseFloat(each.amount),
-          });
           return {
             name: each.name,
             type: each.type,
@@ -491,6 +487,132 @@ const Provider = ({ children }) => {
       });
     } catch (error) {
       handleErrors(error);
+    }
+  };
+
+  const addAssetRequest = async (assetData) => {
+    try {
+      await new Promise((resolve) => {
+        setTimeout(resolve, 5000); // Delay for 5 seconds (5000 milliseconds)
+      });
+
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      await axiosPrivate
+        .post(
+          `${process.env.REACT_APP_BACKEND_API}physical_assets/`,
+          assetData,
+          {
+            headers,
+          }
+        )
+        .then((res) => {
+          fetchAsset();
+        });
+    } catch (error) {
+      handleErrors(error);
+    }
+  };
+
+  const editAssetRequest = async (assetId, updatedAssetData) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      await axiosPrivate
+        .put(
+          `${process.env.REACT_APP_BACKEND_API}assets/${assetId}`,
+          updatedAssetData,
+          { headers }
+        )
+        .then((res) => {
+          dispatch({
+            type: Types.EDIT_ASSET,
+            payload: { assetId, updatedAssetData }, // Send the assetId and updated data
+          });
+        });
+    } catch (error) {
+      handleErrors(error);
+    }
+  };
+
+  const deleteAssetRequest = async (assetId) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      console.log("hello");
+      await axiosPrivate
+        .delete(
+          `${process.env.REACT_APP_BACKEND_API}physical_assets/${assetId}`,
+          {
+            headers,
+          }
+        )
+        .then((res) => {
+          fetchAsset();
+        });
+    } catch (error) {
+      handleErrors(error);
+    }
+  };
+
+  const fetchAsset = async () => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      await axiosPrivate
+        .get(`${process.env.REACT_APP_BACKEND_API}physical_assets/`, {
+          headers,
+        })
+        .then((res) => {
+          let totalVal = 0.000000001;
+          res.data.map((da) => {
+            totalVal += da.market_value;
+            finalAssets = [
+              ...finalAssets,
+              { id: da.id, name: da.name, value: parseFloat(da.market_value) },
+            ];
+          });
+          dispatch({
+            type: Types.FETCH_ASSETS,
+            payload: { finalAssets, totalVal },
+          });
+        });
+    } catch (error) {
+      // Handle errors
+      handleErrors(error);
+    }
+  };
+
+  const fetchAssetById = async (assetId) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      const response = await axiosPrivate.get(
+        `${process.env.REACT_APP_BACKEND_API}assets/${assetId}`,
+        { headers }
+      );
+
+      const assetData = response.data;
+
+      return assetData;
+    } catch (error) {
+      handleErrors(error);
+      throw error;
     }
   };
 
@@ -528,6 +650,11 @@ const Provider = ({ children }) => {
         fetchIncomeExpenses,
         fetchIncomeStatement,
         filterExpensesByDate,
+        addAssetRequest,
+        editAssetRequest,
+        deleteAssetRequest,
+        fetchAssetById,
+        fetchAsset,
       }}
     >
       {children}

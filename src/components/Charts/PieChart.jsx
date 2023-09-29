@@ -14,9 +14,9 @@ const MyResponsivePie = (props) => (
         data={props.data}
         margin={{ top: 40, right: 40, bottom: 90, left: 40 }}
         innerRadius={props.innerRadius}
-        padAngle={5}
-        cornerRadius={10}
-        activeOuterRadiusOffset={18}
+        padAngle={0}
+        cornerRadius={0}
+        activeOuterRadiusOffset={10}
         borderWidth={1}
         borderColor={{
             from: 'color',

@@ -11,7 +11,11 @@ const Types = {
    FETCH_ASSETS: 'FETCH_ASSETS',
    FETCH_LIABILITIES: 'FETCH_LIABILITIES',
    SET_INCOME_STATEMENT: 'SET_INCOME_STATEMENT',
-   FETCH_depreciation:'FETCH_depreciation'
+   FETCH_depreciation:'FETCH_depreciation',
+   ADD_ASSET: 'ADD_ASSET',
+   EDIT_ASSET: 'EDIT_ASSET',
+   DELETE_ASSET: 'DELETE_ASSET',
+   GET_ASSET: 'GET_ASSET',
 };
 
 export default Types;

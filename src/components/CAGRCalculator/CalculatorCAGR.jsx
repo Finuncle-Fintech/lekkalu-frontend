@@ -65,21 +65,13 @@ export default function CalculatorCAGR({ setSummary }) {
       return;
     }
 
-    const calculatedCAGR = getCAGR(initialVal, finalVal, durationInvestment);
+    const calculatedCAGRSummary = getCAGR(
+      initialVal,
+      finalVal,
+      durationInvestment
+    );
 
-    setSummary({
-      pieChartData: [
-        {
-          name: "Initial Value",
-          value: calculatedCAGR.initialValNum,
-        },
-        {
-          name: "Final Value",
-          value: calculatedCAGR.finalValNum,
-        },
-      ],
-      ...calculatedCAGR,
-    });
+    setSummary(calculatedCAGRSummary);
     setErrors(false);
   };
 
@@ -139,6 +131,36 @@ const getCAGR = (initialVal, finalVal, durationInvestment) => {
   /** Calculating absolute returns */
   const absoluteReturns = (finalValNum / initialValNum - 1) * 100;
 
+  /** Pie chart configuration */
+  const pieChartData = [
+    {
+      name: "Initial Value",
+      value: initialValNum,
+    },
+    {
+      name: "Final Value",
+      value: finalValNum,
+    },
+  ];
+
+  /** Calculating amount based of CAGR for each year */
+  let initialValue = initialValNum;
+  const barChartData = [
+    {
+      name: "Year 0",
+      value: initialValue,
+    },
+  ];
+
+  for (let i = 1; i < durationInvestmentNum + 1; i++) {
+    const amountThisYear = initialValue * (1 + absoluteCAGR);
+    barChartData.push({
+      name: `Year ${i}`,
+      value: amountThisYear,
+    });
+    initialValue = amountThisYear;
+  }
+
   return {
     absoluteCAGR: absoluteCAGR.toFixed(2),
     absoluteReturns,
@@ -146,5 +168,7 @@ const getCAGR = (initialVal, finalVal, durationInvestment) => {
     durationInvestment: durationInvestmentNum,
     finalValNum,
     initialValNum,
+    pieChartData,
+    barChartData,
   };
 };

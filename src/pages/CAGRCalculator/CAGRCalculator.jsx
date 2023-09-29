@@ -4,6 +4,7 @@ import { useState } from "react";
 
 export default function CAGRCalculator() {
   const [summary, setSummary] = useState({
+    barChartData: [],
     pieChartData: [],
     absoluteCAGR: undefined,
     percentageCAGR: undefined,
@@ -23,7 +24,9 @@ export default function CAGRCalculator() {
         <CalculatorCAGR setSummary={setSummary} />
       </div>
 
-      {summary ? <SummaryCAGR summary={summary} /> : null}
+      {summary.barChartData.length > 0 ? (
+        <SummaryCAGR summary={summary} />
+      ) : null}
     </section>
   );
 }

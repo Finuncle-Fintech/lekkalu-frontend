@@ -23,15 +23,15 @@ import "./EmiCalculator.css";
 
 const today = new Date();
 const year = today.getFullYear();
-const month = String(today.getMonth() + 1).padStart(2, '0');
-const day = String(today.getDate()).padStart(2, '0');
+const month = String(today.getMonth() + 1).padStart(2, "0");
+const day = String(today.getDate()).padStart(2, "0");
 const formattedDate = `${year}-${month}-${day}`;
 
 const defaultData = {
   loan_principal: 300000,
   loan_interest: 11,
   loan_tenure: 36,
-  emi_day:5,
+  emi_day: 5,
   disbursement_date: formattedDate,
 };
 

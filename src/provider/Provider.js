@@ -331,6 +331,7 @@ const Provider = ({ children }) => {
             finalLiabilities = [
               ...finalLiabilities,
               {
+                id: da.id,
                 name: da.name,
                 value: parseFloat(da.balance),
               },
@@ -492,10 +493,6 @@ const Provider = ({ children }) => {
 
   const addAssetRequest = async (assetData) => {
     try {
-      await new Promise((resolve) => {
-        setTimeout(resolve, 5000); // Delay for 5 seconds (5000 milliseconds)
-      });
-
       const headers = {
         Authorization: `Bearer ${authToken}`,
         "Content-Type": "application/json",
@@ -526,39 +523,35 @@ const Provider = ({ children }) => {
 
       await axiosPrivate
         .put(
-          `${process.env.REACT_APP_BACKEND_API}assets/${assetId}`,
+          `${process.env.REACT_APP_BACKEND_API}physical_assets/${assetId}`,
           updatedAssetData,
           { headers }
         )
         .then((res) => {
-          dispatch({
-            type: Types.EDIT_ASSET,
-            payload: { assetId, updatedAssetData }, // Send the assetId and updated data
-          });
+          fetchAsset();
         });
     } catch (error) {
       handleErrors(error);
     }
   };
 
-  const deleteAssetRequest = async (assetId) => {
+  const deleteAssetRequest = async (Ids) => {
     try {
       const headers = {
         Authorization: `Bearer ${authToken}`,
         "Content-Type": "application/json",
       };
 
-      console.log("hello");
-      await axiosPrivate
-        .delete(
-          `${process.env.REACT_APP_BACKEND_API}physical_assets/${assetId}`,
+      for (const Id of Ids) {
+        await axiosPrivate.delete(
+          `${process.env.REACT_APP_BACKEND_API}physical_assets/${Id}`,
           {
             headers,
           }
-        )
-        .then((res) => {
-          fetchAsset();
-        });
+        );
+      }
+
+      fetchAsset();
     } catch (error) {
       handleErrors(error);
     }
@@ -601,9 +594,8 @@ const Provider = ({ children }) => {
         Authorization: `Bearer ${authToken}`,
         "Content-Type": "application/json",
       };
-
       const response = await axiosPrivate.get(
-        `${process.env.REACT_APP_BACKEND_API}assets/${assetId}`,
+        `${process.env.REACT_APP_BACKEND_API}physical_assets/${assetId}`,
         { headers }
       );
 

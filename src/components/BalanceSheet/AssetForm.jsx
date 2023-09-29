@@ -19,9 +19,11 @@ export default function SimpleBackdrop(props) {
     depreciation_frequency: "",
     init_dep: "",
     market_value: "",
+    user: "2",
+    type: "1",
   });
 
-  const { addAssetRequest, editAssetRequest } = useContext(Context);
+  const { addAssetRequest, editAssetRequest,fetchAssetById } = useContext(Context);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -31,36 +33,40 @@ export default function SimpleBackdrop(props) {
     });
   };
 
-  const data = {
-    name: "houseeee",
-    purchase_value: "80000.00",
-    sell_value: "0.00",
-    purchase_date: "2021-10-01",
-    sell_date: "2023-04-09",
-    depreciation_percent: "1.000000",
-    depreciation_frequency: 2592000,
-    init_dep: "0.750000",
-    market_value: "769417.39",
-    user: 2,
-    type: 1,
-    tags: [],
-  };
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    setOpen(true);
-    try {
-      await addAssetRequest(data);
-      setOpen(false);
-      props.setForm(false);
-      props.handleRequestForm();
-    } catch (error) {
-      console.error("Error adding asset:", error);
-      setOpen(false);
-    }
-  };
 
   useEffect(() => {
+    const fetchData = async () => {
+      if (props.title === "Edit") {
+        try {
+          
+          const assetData = await fetchAssetById(props.id);
+          setFormData({
+            ...formData,
+            name: assetData.name,
+            purchase_value: assetData.purchase_value,
+            sell_value: assetData.sell_value,
+            purchase_date: assetData.purchase_date,
+            sell_date: assetData.sell_date,
+            depreciation_percent: assetData.depreciation_percent,
+            depreciation_frequency: assetData.depreciation_frequency,
+            depreciation_frequency: assetData.depreciation_frequency,
+            init_dep: assetData.init_dep,
+            market_value: assetData.market_value,
+            user: assetData.user,
+            type: assetData.type,
+          
+            // Update other fields as needed
+          });
+          setOpen(false); // Close the backdrop
+        } catch (error) {
+          console.error("Error fetching asset data:", error);
+          setOpen(false);
+        }
+      }
+    };
+
+    fetchData(); // Fetch data when the component mounts
+
     const updateBoxWidth = () => {
       if (window.innerWidth <= 768) {
         setBoxWidth("80vw");
@@ -72,13 +78,45 @@ export default function SimpleBackdrop(props) {
         setBoxWidth("55vw");
       }
     };
+
     window.addEventListener("resize", updateBoxWidth);
     updateBoxWidth();
+
     return () => {
       window.removeEventListener("resize", updateBoxWidth);
     };
-  }, []);
+  }, [props.id, props.title]);
 
+
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setOpen(true);
+
+    if (props.title === "Add") {
+      try {
+        await addAssetRequest(formData);
+        setOpen(false);
+        props.setForm(false);
+        props.handleRequestForm();
+      } catch (error) {
+        console.error("Error adding asset:", error);
+        setOpen(false);
+      }
+    }
+    else if(props.title === "Edit"){
+      try {
+        await editAssetRequest(props.id,formData);
+        setOpen(false);
+        props.handleRequestForm();
+      } catch (error) {
+        console.error("Error editing asset:", error);
+        setOpen(false);
+      }
+    }
+  }
+
+  
   const handleBoxClick = (event) => {
     event.stopPropagation();
   };
@@ -128,7 +166,7 @@ export default function SimpleBackdrop(props) {
             <Typography
               sx={{ fontSize: "24px", fontWeight: "bold", color: "black" }}
             >
-              Add Assets
+              {props.title} Asset
             </Typography>
           </Box>
           <Box sx={{ padding: "5rem" }}>
@@ -138,7 +176,7 @@ export default function SimpleBackdrop(props) {
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                // required
+                required
                 fullWidth
                 sx={{ margin: "1em 0 " }}
               />
@@ -148,7 +186,7 @@ export default function SimpleBackdrop(props) {
                 type="number"
                 value={formData.purchase_value}
                 onChange={handleChange}
-                // required
+                required
                 fullWidth
                 sx={{ margin: "1em 0 " }}
               />
@@ -159,7 +197,7 @@ export default function SimpleBackdrop(props) {
                 type="number"
                 value={formData.sell_value}
                 onChange={handleChange}
-                //required
+                required
                 fullWidth
                 sx={{ margin: "1em 0 " }}
               />
@@ -170,7 +208,7 @@ export default function SimpleBackdrop(props) {
                 value={formData.purchase_date}
                 onChange={handleChange}
                 fullWidth
-                // required
+                required
                 InputLabelProps={{
                   shrink: true,
                 }}
@@ -183,7 +221,7 @@ export default function SimpleBackdrop(props) {
                 value={formData.sell_date}
                 onChange={handleChange}
                 fullWidth
-                //  required
+                required
                 height="50px"
                 InputLabelProps={{
                   shrink: true,
@@ -197,7 +235,7 @@ export default function SimpleBackdrop(props) {
                 value={formData.depreciation_percent}
                 onChange={handleChange}
                 fullWidth
-                // required
+                required
                 sx={{ margin: "1em 0 " }}
               />
               <TextField
@@ -207,7 +245,7 @@ export default function SimpleBackdrop(props) {
                 value={formData.depreciation_frequency}
                 onChange={handleChange}
                 fullWidth
-                //  required
+                required
                 sx={{ margin: "1em 0 " }}
               />
               <TextField
@@ -217,7 +255,7 @@ export default function SimpleBackdrop(props) {
                 value={formData.init_dep}
                 onChange={handleChange}
                 fullWidth
-                //  required
+                required
                 sx={{ margin: "1em 0 " }}
               />
               <TextField
@@ -227,7 +265,7 @@ export default function SimpleBackdrop(props) {
                 value={formData.market_value}
                 onChange={handleChange}
                 fullWidth
-                // required
+                required
                 sx={{ margin: "1em 0 " }}
               />
 
@@ -239,7 +277,10 @@ export default function SimpleBackdrop(props) {
                 onChange={handleChange}
                 fullWidth
                 sx={{ margin: "1em 0 " }}
-                // required
+                InputProps={{
+                  readOnly: true, 
+                }}
+                required
               />
               <TextField
                 label="Type"
@@ -249,7 +290,10 @@ export default function SimpleBackdrop(props) {
                 onChange={handleChange}
                 fullWidth
                 sx={{ margin: "1em 0 " }}
-                //required
+                InputProps={{
+                  readOnly: true, 
+                }}
+                required
               />
 
               {/* <TextField

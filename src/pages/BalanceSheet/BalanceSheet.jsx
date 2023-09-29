@@ -52,7 +52,7 @@ export default function BalanceSheet() {
     <>
       <Box
         sx={{
-          minHeight: "400vh",
+          minHeight: "250vh",
           backgroundColor: "primary.main",
           padding: "1% 5% 0 5%",
         }}
@@ -69,7 +69,7 @@ export default function BalanceSheet() {
           />
         ) : null}
         <AssetCard assetDatas={assetDatas} />
-        <LiabilitiesCard />
+        {/* <LiabilitiesCard /> */}
       </Box>
     </>
   );

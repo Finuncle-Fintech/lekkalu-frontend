@@ -95,14 +95,6 @@ export const Signin = () => {
               <input
                 {...register("password", {
                   required: "Password is required!",
-                  minLength: {
-                    value: 6,
-                    message: "Please enter at least 6 characters",
-                  },
-                  maxLength: {
-                    value: 20,
-                    message: "Please enter at most 20 characters",
-                  },
                 })}
                 type={showPassword ? "text" : "password"}
                 className={styles.passwordInput}

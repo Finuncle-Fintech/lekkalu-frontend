@@ -145,8 +145,8 @@ export const Signup = () => {
                 {...register("password", {
                   required: "Password is required!",
                   minLength: {
-                    value: 6,
-                    message: "Please enter at least 6 characters",
+                    value: 8,
+                    message: "Please enter at least 8 characters",
                   },
                   maxLength: {
                     value: 20,

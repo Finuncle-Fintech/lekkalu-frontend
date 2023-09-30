@@ -112,7 +112,7 @@ const DownloadData = () => {
         const blob = await workbook.xlsx.writeBuffer();
 
         // Save the Blob as a file
-        saveAs(new Blob([blob]), 'financial_data.xlsx');
+        saveAs(new Blob([blob]), 'financial_data.xlsx')
     };
 
     return (

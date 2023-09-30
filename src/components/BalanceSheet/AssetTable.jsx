@@ -102,7 +102,7 @@ const headCells = [
     id: "setting",
     numeric: false,
     disablePadding: false,
-    label: "Setting",
+    label: "",
   },
 ];
 

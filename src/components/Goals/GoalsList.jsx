@@ -4,7 +4,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import Swal from 'sweetalert2';
 import './Goals.css'
-const GoalsList = ({ goals, getTagNames, setEditIndex, deleteGoal }) => {
+const GoalsList = ({ goals, getTagNames, setEditIndex, deleteGoal, setStatusModal }) => {
 
     const columns = [
         { id: 'goals', label: 'Goals', align: 'right' },
@@ -91,11 +91,11 @@ const GoalsList = ({ goals, getTagNames, setEditIndex, deleteGoal }) => {
 
     const getBalanceCellStyle = (goal) => {
         if (typeof goal.balance === 'number') {
-            return getStyle(goal.preferredQuantity,goal.balance,goal.currentMetric);
-        } else if(typeof goal.balance === 'string' ) {
+            return getStyle(goal.preferredQuantity, goal.balance, goal.currentMetric);
+        } else if (typeof goal.balance === 'string') {
             let current = Number(goal.currentMetric?.split('%')[0]);
             let balance = Number(goal.balance?.split('%')[0]);
-            return getStyle(goal.preferredQuantity,balance,current);
+            return getStyle(goal.preferredQuantity, balance, current);
         }
     }
 
@@ -114,7 +114,7 @@ const GoalsList = ({ goals, getTagNames, setEditIndex, deleteGoal }) => {
             }
         }
     }
-   
+
 
     return (
         <Table>
@@ -138,28 +138,28 @@ const GoalsList = ({ goals, getTagNames, setEditIndex, deleteGoal }) => {
                         const balanceCellStyle = getBalanceCellStyle(goal);
                         return <TableRow key={goal.id}>
                             <TableCell>{goal.goal}</TableCell>
-                            <TableCell>{goal.subGoal}</TableCell>
-                            {typeof goal.targetMetric === 'number' ?
-                                <TableCell>&#8377; {goal.targetMetric.toLocaleString('en-IN')}</TableCell> :
-                                <TableCell>{goal.targetMetric}</TableCell>
+                            <TableCell>{goal.sub_goal}</TableCell>
+                            {typeof goal.target_metric === 'number' ?
+                                <TableCell>&#8377; {goal.target_metric.toLocaleString('en-IN')}</TableCell> :
+                                <TableCell>{goal.target_metric}</TableCell>
                             }
-                            {typeof goal.currentMetric === 'number' ?
-                                <TableCell>&#8377; {goal.currentMetric.toLocaleString('en-IN')}</TableCell> :
-                                <TableCell>{goal.currentMetric}</TableCell>
+                            {typeof goal.current_metric === 'number' ?
+                                <TableCell>&#8377; {goal.current_metric.toLocaleString('en-IN')}</TableCell> :
+                                <TableCell>{goal.current_metric}</TableCell>
                             }
                             {typeof goal.balance === 'number' ?
                                 <TableCell className={balanceCellStyle}>&#8377; {goal.balance.toLocaleString('en-IN')}</TableCell> :
                                 <TableCell className={balanceCellStyle}>{goal.balance}</TableCell>
                             }
-                            <TableCell>{goal.reachablitiyInMonths}</TableCell>
-                            <TableCell>{goal.reachabilityInYears}</TableCell>
+                            <TableCell>{goal.reachability_in_months}</TableCell>
+                            <TableCell>{goal.reachability_in_years}</TableCell>
                             <TableCell>{goal.started && new Date(goal.started).toDateString(0)}</TableCell>
                             <TableCell>{goal.finished && new Date(goal.finished).toDateString(0)}</TableCell>
-                            <TableCell>{goal.plannedStart && new Date(goal.plannedStart).toDateString(0)}</TableCell>
-                            <TableCell>{goal.plannedStart && new Date(goal.plannedFinish).toDateString(0)}</TableCell>
-                            <TableCell>{goal.plannedStart && goal.comments}</TableCell>
+                            <TableCell>{goal.planned_start && new Date(goal.planned_start).toDateString(0)}</TableCell>
+                            <TableCell>{goal.planned_finish && new Date(goal.planned_finish).toDateString(0)}</TableCell>
+                            <TableCell>{goal.comments && goal.comments}</TableCell>
                             <TableCell>
-                                <IconButton placeholder="edit-goal" edge="end" onClick={() => setEditIndex(index)}>
+                                <IconButton placeholder="edit-goal" edge="end" onClick={() => { setEditIndex(index); setStatusModal(true) }}>
                                     <EditIcon />
                                 </IconButton>
                                 <IconButton placeholder="delete-goal" edge="end" onClick={() => {

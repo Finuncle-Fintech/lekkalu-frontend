@@ -6,11 +6,9 @@ import Reducer from "./Reducer";
 import Types from "./Types";
 import setCookie from "components/Support/PopUp/utils/SetCookie";
 import deleteCookie from "components/Support/PopUp/utils/DeleteCookie";
-import { goalsData } from 'components/Goals/data';
 const Context = createContext({
   ...InitialState,
 });
-let goals = goalsData;
 
 const Provider = ({ children }) => {
   const axiosPrivate = useAxiosPrivate();
@@ -47,6 +45,7 @@ const Provider = ({ children }) => {
     liabilities,
     incomeStatement,
     depreciation,
+    goals
   } = store;
 
   const handleErrors = (error) => {
@@ -499,44 +498,108 @@ const Provider = ({ children }) => {
     setAuthToken(null);
     deleteCookie("refresh");
   };
-   const fetchGoals = async (page, rowsPerPage) => {
-      const startIndex = (page) * rowsPerPage;
-      const rows = [];
-      for (var i = startIndex; i <= startIndex + rowsPerPage && i < goalsData.length; i++) {
-         rows.push(goalsData[i]);
-      }
-      dispatch({
-         type: Types.FETCH_GOAL,
-         payload: rows,
+
+  const fetchGoals = async (page, rowsPerPage) => {
+
+    const headers = {
+      Authorization: `Bearer ${authToken}`,
+      "Content-Type": "application/json",
+    };
+
+    await axiosClient
+      .get(`${process.env.REACT_APP_BACKEND_URL}api/financial_goal/`, {
+        headers,
+        params: {
+          page: page + 1,
+          per_page: rowsPerPage,
+        },
+      })
+      .then((response) => {
+        dispatch({
+          type: Types.FETCH_GOAL,
+          payload: response.data,
+        });
+      })
+      .catch((error) => {
+        console.log(error?.response?.data?.detail);
+        handleErrors(error);
       });
 
-   };
 
-   const deleteGoalRequest = async (id) => {
-      dispatch({
-         type: Types.DELETE_GOAL,
-         payload: id,
-      });
-   };
 
-   const createGoalRequest = async (data) => {
-      dispatch({
-         type: Types.CREATE_GOAL,
-         payload: {
-            data: data,
-         }
-      });
-   };
+  };
 
-   const changeGoalRequest = async (index, goal) => {
-      dispatch({
-         type: Types.EDIT_GOAL,
-         payload: {
-            index,
-            goal,
-         }
+  const deleteGoalRequest = async (id) => {
+    const headers = {
+      Authorization: `Bearer ${authToken}`,
+      "Content-Type": "application/json",
+    };
+    await axiosClient
+      .delete(`${process.env.REACT_APP_BACKEND_URL}api/financial_goal/${id}`, {
+        headers
+      })
+      .then((response) => console.log(response))
+      .catch((error) => {
+        console.log(error?.response?.data?.detail);
+        handleErrors(error);
       });
-   };
+
+  };
+
+  const createGoalRequest = async (data) => {
+    const headers = {
+      Authorization: `Bearer ${authToken}`,
+      "Content-Type": "application/json",
+    };
+    try {
+      await axiosClient
+        .post(`${process.env.REACT_APP_BACKEND_URL}api/financial_goal/`, data, {
+          headers
+        })
+        .then((response) => {
+          console.log(response)
+          dispatch({
+            type: Types.CREATE_GOAL,
+            payload: {
+              data: response.data.data,
+            }
+          });
+        })
+        .catch((error) => {
+          console.log(error?.response?.data?.detail);
+          handleErrors(error);
+        });
+    } catch (error) {
+
+    }
+  };
+
+  const changeGoalRequest = async (goal) => {
+    const headers = {
+      Authorization: `Bearer ${authToken}`,
+      "Content-Type": "application/json",
+    };
+    try {
+      await axiosClient
+        .put(`${process.env.REACT_APP_BACKEND_URL}api/financial_goal/${goal.id}`, goal, {
+          headers
+        })
+        .then((response) => {
+          dispatch({
+            type: Types.EDIT_GOAL,
+            payload: {
+              goal: JSON.parse(response.config.data),
+            }
+          });
+        })
+        .catch((error) => {
+          console.log(error?.response?.data?.detail);
+          handleErrors(error);
+        });
+    } catch (error) {
+
+    }
+  };
 
 
   return (
@@ -554,11 +617,11 @@ const Provider = ({ children }) => {
         liabilities,
         incomeStatement,
         statusFeedback,
-            goals,
-            fetchGoals,
-            createGoalRequest,
-            deleteGoalRequest,
-            changeGoalRequest,
+        goals,
+        fetchGoals,
+        createGoalRequest,
+        deleteGoalRequest,
+        changeGoalRequest,
         depreciation,
         giveFeedback,
         fetchData,

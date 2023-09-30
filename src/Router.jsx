@@ -14,6 +14,8 @@ import SIPCalculator from "pages/SIPCalculator/SIPCalculator";
 import CAGRCalculator from "pages/CAGRCalculator/CAGRCalculator";
 import BalanceSheet from "pages/BalanceSheet/BalanceSheet";
 import PersistGuest from "components/GuestRoutes/PersistGuest";
+// 
+import Goals from "components/Goals/Goals";
 
 const RouterComponent = () => {
   return (
@@ -48,6 +50,10 @@ const RouterComponent = () => {
             <Route
               path="/"
               element={<ProtectedRoutes component={<Charts />} />}
+            />
+            <Route
+              path="/goals"
+              element={<ProtectedRoutes component={<Goals />} />}
             />
             <Route
               path="/income-statement"

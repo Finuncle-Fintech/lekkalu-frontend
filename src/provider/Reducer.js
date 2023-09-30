@@ -4,12 +4,12 @@ export const InitialState = {
    budget: [],
    expenses: [],
    weeklyExpense: [],
-   goals:[],
+   goals: [],
    monthlyExpenses: [],
    tags: [],
    assets: [],
    liabilities: [],
-   depreciation:[],
+   depreciation: [],
    incomeStatement: { income: [], expenses: [] }
 };
 
@@ -51,10 +51,10 @@ const Reducer = (state, action) => {
             liabilities: action.payload,
          };
       }
-      case Types.FETCH_depreciation:{
-         return{
+      case Types.FETCH_depreciation: {
+         return {
             ...state,
-            depreciation:action.payload
+            depreciation: action.payload
          }
       }
       case Types.DELETE_EXPENSE: {
@@ -122,7 +122,7 @@ const Reducer = (state, action) => {
          const newState = state.goals.length
             ? [
                ...state.goals,
-               { ...action.payload.data, id: state.goals.length },
+               { ...action.payload.data },
             ]
             : [action.payload];
 
@@ -132,10 +132,11 @@ const Reducer = (state, action) => {
          };
       }
       case Types.EDIT_GOAL: {
-         const { index, goal } = action.payload;
-         const newState = state.goals;
-         newState[index] = goal;
-
+         const { goal } = action.payload;
+         const newState = state.goals.map((value) => (
+            value.id === goal.id ? goal : value
+          ));
+          console.log(newState, goal);
          return {
             ...state,
             goals: newState,

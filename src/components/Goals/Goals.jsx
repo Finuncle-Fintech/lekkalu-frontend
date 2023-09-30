@@ -1,4 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
+import { Context } from "provider/Provider";
 import {
   Typography,
   TablePagination,
@@ -9,7 +10,7 @@ import GoalFormModal from "./GoalsModal";
 import { ModalContainer } from "../Expenses/styled";
 import GoalsList from "./GoalsList";
 
-const Goals = ({ Context }) => {
+export default function Goals() {
   const {
     goals,
     fetchGoals,
@@ -17,9 +18,12 @@ const Goals = ({ Context }) => {
     createGoalRequest,
     changeGoalRequest,
   } = useContext(Context);
+  
+  const [open, setOpen] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
   const [page, setPage] = useState(0);
   const rowsPerPage = 10;
+
   useEffect(() => {
     fetchGoals(page, rowsPerPage);
   }, [page]);
@@ -32,8 +36,8 @@ const Goals = ({ Context }) => {
     createGoalRequest({ ...goal });
   };
 
-  const updateGoal = (index, goal) => {
-    changeGoalRequest(index, goal);
+  const updateGoal = (goal) => {
+    changeGoalRequest(goal);
   };
 
   const returnGoalToEdit = () => {
@@ -46,14 +50,18 @@ const Goals = ({ Context }) => {
 
   return (
     <ModalContainer>
+
       <GoalFormModal
         onAddGoal={createGoal}
         onUpdateGoal={updateGoal}
-        goalToEdit={returnGoalToEdit()}
+        goalToEdit={returnGoalToEdit(editIndex)}
+        handlerCancelEdit = {()=>setEditIndex(null)}
         editIndex={editIndex}
-        onCancelEdit={() => setEditIndex(null)}
         Context={Context}
+        statusModal={open}
+        setStatusModal={setOpen}
       />
+
       <Typography variant="h6">Financial Goals List</Typography>
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <IconButton
@@ -84,9 +92,10 @@ const Goals = ({ Context }) => {
       <GoalsList
         goals={goals}
         setEditIndex={setEditIndex}
+        setStatusModal={setOpen}
         deleteGoal={deleteGoal}
       />
-      {!!goals.length &&
+      {goals.length > 1 &&
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <IconButton
             onClick={() => {
@@ -118,5 +127,4 @@ const Goals = ({ Context }) => {
   );
 };
 
-export default Goals;
 

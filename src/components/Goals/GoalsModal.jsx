@@ -14,89 +14,104 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { ModalContainer } from "../Expenses/styled";
-import { formatDate, preventPropagationOnEnter } from "../Expenses/utils";
+import { preventPropagationOnEnter } from "../Expenses/utils";
 import dayjs from "dayjs";
 import Swal from "sweetalert2";
+import { handleAmountChange, handleFinishedDateChange, isReachabilityValid } from "./GoalsFunctions";
 
 const GoalFormModal = ({
   onAddGoal,
   onUpdateGoal,
   goalToEdit,
   editIndex,
-  onCancelEdit,
-  Context,
+  statusModal,
+  setStatusModal,
+  handlerCancelEdit
 }) => {
-  const [open, setOpen] = useState(false);
-  const [goal, setGoal] = useState('');
-  const [subGoal, setSubGoal] = useState('');
-  const [targetMetric, setTargetMetric] = useState('');
-  const [currentMetric, setCurrentMetric] = useState('');
-  const [reachablitiyInMonths, setReachablitiyInMonths] = useState('');
-  const [reachabilityInYears, setReachabilityInYears] = useState('');
-  const [started, setStarted] = useState(dayjs());
-  const [finished, setFinished] = useState(dayjs());
-  const [plannedStart, setPlannedStart] = useState(dayjs());
-  const [plannedFinish, setPlannedFinish] = useState(dayjs());
-  const [comments, setComments] = useState('');
-  const [preferredQuantity, setPreferredQuantity] = React.useState('higher');
 
- 
-
+  const [goalData, setGoalData] = useState({
+    goal: '',
+    sub_goal: '',
+    target_metric: '',
+    current_metric: '',
+    reachability_in_months: '',
+    reachability_in_years: '',
+    started: '',
+    finished: '',
+    comments: '',
+    plannedFinish: '',
+    planned_start: '',
+    prefered_value_of_balance: '',
+    user: 5
+  })
   useEffect(() => {
     if (goalToEdit) {
-      setGoal(goalToEdit.goal);
-      setSubGoal(goalToEdit.subGoal);
-      setTargetMetric(goalToEdit.targetMetric);
-      setCurrentMetric(goalToEdit.currentMetric);
-      setReachablitiyInMonths(goalToEdit.reachablitiyInMonths);
-      setReachabilityInYears(goalToEdit.reachabilityInYears);
-      setStarted(goalToEdit.started);
-      setFinished(goalToEdit.finished);
-      setPlannedStart(goalToEdit.plannedStart);
-      setPlannedFinish(goalToEdit.plannedFinish);
-      setComments(goalToEdit.comments);
-      setPreferredQuantity(goalToEdit.preferredQuantity);
-      setOpen(true);
+
+      const convertToYYYYMMDD = (dateString) => {
+        const [day, month, year] = dateString.split('/');
+        const formattedDate = new Date(`${year}-${month}-${day}`).toISOString().split('T')[0];
+        return formattedDate;
+      };
+
+      const { planned_start, started, finished, ...restGoalToEdit } = goalToEdit
+
+      const plannedStartDate = convertToYYYYMMDD(new Date(planned_start).toLocaleDateString());
+      const startedDate = convertToYYYYMMDD(new Date(started).toLocaleDateString());
+      const finishedDate = convertToYYYYMMDD(new Date(finished).toLocaleDateString());
+
+      setGoalData(prevData => ({
+        ...prevData,
+        ...restGoalToEdit,
+        planned_start: plannedStartDate,
+        started: startedDate,
+        finished: finishedDate
+      }));
+
+    } else {
+      const initState = {
+        goal: '',
+        sub_goal: '',
+        target_metric: '',
+        current_metric: '',
+        reachability_in_months: '',
+        reachability_in_years: '',
+        started: '',
+        finished: '',
+        comments: '',
+        plannedFinish: '',
+        planned_start: '',
+        prefered_value_of_balance: '',
+        user: 5
+      }
+
+      setGoalData(initState)
     }
-  }, [goalToEdit]);
+  }, [goalToEdit])
 
   const handleClickOpen = () => {
-    setOpen(true);
+    setStatusModal(true);
   };
 
   const handleClose = () => {
-    setOpen(false);
+    setStatusModal(false);
     if (editIndex !== null) {
-      onCancelEdit();
+      handlerCancelEdit();
     }
   };
 
-  
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const balance = currentMetric.includes('%') && targetMetric.includes('%') ? Number(targetMetric?.split('%')[0]) - Number(currentMetric?.split('%')[0]) + "%" : targetMetric - currentMetric;
-    const newGoal = {
-      goal,
-      subGoal,
-      targetMetric,
-      currentMetric,
-      balance: balance,
-      reachablitiyInMonths,
-      reachabilityInYears,
-      user: 1,
-      started: formatDate(new Date(started)),
-      finished: formatDate(new Date(finished)),
-      plannedStart: formatDate(new Date(plannedStart)),
-      plannedFinish,
-      comments,
-      preferredQuantity
-    };
+    const { current_metric, target_metric } = goalData
+    const balance = current_metric.toString().includes('%') && target_metric.includes('%') ? Number(target_metric?.split('%')[0]) - Number(current_metric?.split('%')[0]) + "%" : target_metric - current_metric;
+
 
     if (editIndex !== null) {
-      onUpdateGoal(editIndex, { ...goalToEdit, ...newGoal });
+      onUpdateGoal(goalData);
     } else {
-      onAddGoal({ ...newGoal });
+      onAddGoal({
+        ...goalData,
+        balance: balance
+      });
     }
 
     Swal.fire({
@@ -105,80 +120,27 @@ const GoalFormModal = ({
       timer: 2300,
       timerProgressBar: true
     })
-    setGoal("");
-    setSubGoal("");
-    setTargetMetric("");
-    setCurrentMetric("");
-    setReachablitiyInMonths("");
-    setReachabilityInYears("");
-    setStarted("");
-    setFinished("");
-    setPlannedStart("");
-    setPlannedFinish("");
-    setComments("");
+
     handleClose();
   };
 
-  const isAmountValid = (value) => {
-    const regex = /^(0|[1-9]\d*)(\.\d{0,2})?$/;
-    return regex.test(value);
-  }
-
-  const isPercentageValid = (value)=>{
-    const regex = /^100(\.0{0,2})? *%?$|^\d{1,2}(\.\d{1,2})? *%?$/;
-    return regex.test(value);
-  }
-
-  const isReachabilityValid = (value)=>{
-    const regex = /^(0|[1-9]\d*)?$/;
-    return regex.test(value);
-  }
-  const handleAmountChange = (event, setAmount) => {
-    const newValue = event.target.value;
-    if ( isPercentageValid(newValue) || isAmountValid(newValue) || newValue === "") {
-      setAmount(newValue);
-    } else {
-      return;
+  const handleChange = (evt) => {
+    const { name, value } = evt.target
+    if (name === 'reachability_in_months' || name === 'reachability_in_years') {
+      if (!isReachabilityValid(value)) return
     }
-  };
-
-  const handleChange = (event, newPreferredQuantity) => {
-    setPreferredQuantity(newPreferredQuantity);
-  };
-
-  const handleReachabilityChange = (event, setReachability) => {
-    const newValue = event.target.value;
-    if (isReachabilityValid(newValue) ||  newValue === "") {
-      setReachability(newValue);
-    } else {
-      return;
+    if (name === 'finished') {
+      if (!handleFinishedDateChange(value, goalData.started)) return
     }
+    if (name === 'target_metric' || name === 'current_metric') {
+      if (!handleAmountChange(value)) return
+    }
+
+    setGoalData(prev => ({
+      ...prev,
+      [name]: value
+    }))
   }
-
-  const handleDateChange = async (date,setDate) => {
-    setDate(date);
-  };
-
-  const handleFinishedDateChange = async (date,setDate,startDate) => {
-    if(date.$d.getTime() < startDate.$d.getTime()){
-      alert("Finish date cannot be before start date")
-    }else{
-      setDate(date)
-    }
-  };
-  
-
-
-  const handleGoalChange = (event) => {
-    const newValue = event.target.value;
-    setGoal(newValue);
-
-  };
-  const handleSubGoalChange = (event) => {
-    const newValue = event.target.value;
-    setSubGoal(newValue);
-  };
-
   return (
     <>
       <ModalContainer>
@@ -190,7 +152,8 @@ const GoalFormModal = ({
         >
           Add Goal
         </Button>
-        <Dialog open={open} onClose={() => {
+
+        <Dialog open={statusModal} onClose={() => {
           handleClose()
         }}
         >
@@ -201,65 +164,78 @@ const GoalFormModal = ({
             <form onSubmit={handleSubmit}>
               <Typography variant="p">Provide the Goal:</Typography>
               <TextField
-                value={goal}
-                onChange={handleGoalChange}
+                value={goalData.goal}
+                onChange={handleChange}
                 onKeyPress={preventPropagationOnEnter}
                 required
                 fullWidth
                 data-testid="goal"
+                name="goal"
               />
               <Typography variant="p">Provide the Sub Goal:</Typography>
               <TextField
-                value={subGoal}
-                onChange={handleSubGoalChange}
+                value={goalData.sub_goal}
+                onChange={handleChange}
                 onKeyPress={preventPropagationOnEnter}
                 required
                 fullWidth
                 data-testid="sub-goal"
+                name="sub_goal"
               />
               <Typography variant="p">Provide the Target Metric:</Typography>
               <TextField
-                value={targetMetric}
-                onChange={(event) => handleAmountChange(event, setTargetMetric)}
+                value={goalData.target_metric}
+                onChange={handleChange}
                 onKeyPress={preventPropagationOnEnter}
                 required
                 fullWidth
                 data-testid="target-metric"
+                name="target_metric"
+                type="number"
               />
               <Typography variant="p">Provide the Current Metric:</Typography>
               <TextField
-                value={currentMetric}
-                onChange={(event) => handleAmountChange(event, setCurrentMetric)}
+                value={goalData.current_metric}
+                onChange={handleChange}
                 onKeyPress={preventPropagationOnEnter}
                 required
                 fullWidth
                 data-testid="current-metric"
+                name="current_metric"
+                type="number"
+
               />
               <Typography variant="p">Provide the Reachability in Months:</Typography>
               <TextField
-                value={reachablitiyInMonths}
-                onChange={(event) => handleReachabilityChange(event, setReachablitiyInMonths)}
+                value={goalData.reachability_in_months}
+                onChange={handleChange}
                 onKeyPress={preventPropagationOnEnter}
                 required
                 fullWidth
                 data-testid="reachablitiy-in-months"
+                name="reachability_in_months"
+                type="number"
+
               />
               <Typography variant="p">Provide the Reachability in Years:</Typography>
               <TextField
-                value={reachabilityInYears}
-                onChange={(event) => handleReachabilityChange(event, setReachabilityInYears)}
+                value={goalData.reachability_in_years}
+                onChange={handleChange}
                 onKeyPress={preventPropagationOnEnter}
                 required
                 fullWidth
                 data-testid="reachability-in-years"
+                name="reachability_in_years"
+                type="number"
+
               />
               <Typography variant="p">Choose the Started Date:</Typography>
               <div>
                 <LocalizationProvider dateAdapter={AdapterDayjs} >
                   <DatePicker
                     data-testid='start-date'
-                    defaultValue={dayjs(started)}
-                    onChange={(date) => handleDateChange(date, setStarted)}
+                    defaultValue={dayjs(goalToEdit?.started)}
+                    onChange={(value) => setGoalData(prev => ({ ...prev, started: dayjs(value.$d).format('YYYY-MM-DD') }))}
                   />
                 </LocalizationProvider>
               </div>
@@ -268,8 +244,10 @@ const GoalFormModal = ({
                 <LocalizationProvider dateAdapter={AdapterDayjs} >
                   <DatePicker
                     data-testid='finished-date'
-                    defaultValue={dayjs(finished)}
-                    onChange={(date) => handleFinishedDateChange(date,setFinished,started)}
+                    defaultValue={dayjs(goalToEdit?.finished)}
+                    onChange={(value) => setGoalData(prev => ({ ...prev, finished: dayjs(value.$d).format('YYYY-MM-DD') }))}
+
+                    name="finished"
                   />
                 </LocalizationProvider>
               </div>
@@ -278,8 +256,9 @@ const GoalFormModal = ({
                 <LocalizationProvider dateAdapter={AdapterDayjs} >
                   <DatePicker
                     data-testid='planned-start-date'
-                    defaultValue={dayjs(plannedStart)}
-                    onChange={(date) => handleDateChange(date, setPlannedStart)}
+                    defaultValue={dayjs(goalToEdit?.planned_start)}
+                    onChange={(value) => setGoalData(prev => ({ ...prev, planned_start: dayjs(value.$d).format('YYYY-MM-DD') }))}
+                    name="planned_start"
                   />
                 </LocalizationProvider>
               </div>
@@ -288,32 +267,34 @@ const GoalFormModal = ({
                 <LocalizationProvider dateAdapter={AdapterDayjs} >
                   <DatePicker
                     data-testid='planned-finish-date'
-                    defaultValue={dayjs(plannedFinish)}
-                    onChange={(date) => handleFinishedDateChange(date, setPlannedFinish,plannedStart)}
+                    defaultValue={dayjs(goalToEdit?.plannedFinish)}
+                    onChange={(value) => setGoalData(prev => ({ ...prev, plannedFinish: dayjs(value.$d).format('YYYY-MM-DD') }))}
+                    name="plannedFinish"
                   />
                 </LocalizationProvider>
               </div>
               <Typography variant="p">Provide the Comments for the Goal:</Typography>
               <TextField
-                value={comments}
-                onChange={(event) => setComments(event.target.value)}
+                value={goalData.comments}
+                onChange={handleChange}
                 onKeyPress={preventPropagationOnEnter}
                 required
                 fullWidth
                 data-testid="comments"
+                name="comments"
               />
               <Typography variant="p">Choose preffered value of Balance:</Typography>
               <div>
                 <ToggleButtonGroup
                   color="primary"
-                  value={preferredQuantity}
+                  value={goalData.prefered_value_of_balance}
                   exclusive
                   onChange={handleChange}
                   aria-label="Platform"
                   data-testid='preferred-quantity'
                 >
-                  <ToggleButton value="higher">Higher</ToggleButton>
-                  <ToggleButton value="lower">Lower</ToggleButton>
+                  <ToggleButton name='prefered_value_of_balance' value="H">Higher</ToggleButton>
+                  <ToggleButton name='prefered_value_of_balance' value="L">Low</ToggleButton>
                 </ToggleButtonGroup>
               </div>
               <DialogActions  >
@@ -325,6 +306,7 @@ const GoalFormModal = ({
             </form>
           </DialogContent>
         </Dialog>
+
       </ModalContainer>
 
     </>

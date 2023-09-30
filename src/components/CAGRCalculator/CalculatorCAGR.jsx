@@ -1,13 +1,26 @@
 import { Button, Slider, TextField } from "@mui/material";
+import {
+  isObjectEmpty,
+  parseQueryString,
+} from "components/EMI_Components/utils";
 import { useUserPreferences } from "hooks/useUserPreferences";
 import { useState } from "react";
+import { useLocation } from "react-router";
+import { parseNumbers } from "utils/Number";
+
+const DEFAULT_DATA = {
+  initialVal: 5000,
+  finalVal: 25000,
+  durationInvestment: 5,
+};
 
 export default function CalculatorCAGR({ setSummary }) {
-  const [values, setValues] = useState({
-    initialVal: 5000,
-    finalVal: 25000,
-    durationInvestment: 5,
-  });
+  const location = useLocation();
+  const parsedObject = parseQueryString(location.search);
+  const parsedNumbers = parseNumbers(parsedObject);
+  const [values, setValues] = useState(
+    !isObjectEmpty(parsedNumbers) ? parsedNumbers : DEFAULT_DATA
+  );
 
   const [errors, setErrors] = useState(false);
   const { preferences } = useUserPreferences();
@@ -71,7 +84,7 @@ export default function CalculatorCAGR({ setSummary }) {
       durationInvestment
     );
 
-    setSummary(calculatedCAGRSummary);
+    setSummary({ ...calculatedCAGRSummary, ...values });
     setErrors(false);
   };
 

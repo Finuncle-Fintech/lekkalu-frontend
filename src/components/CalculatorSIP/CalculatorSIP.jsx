@@ -1,13 +1,26 @@
 import { Button, Slider, TextField } from "@mui/material";
+import {
+  isObjectEmpty,
+  parseQueryString,
+} from "components/EMI_Components/utils";
 import { useUserPreferences } from "hooks/useUserPreferences";
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
+import { parseNumbers } from "utils/Number";
+
+const DEFAULT_DATA = {
+  monthlyAmount: 500,
+  durationInvestment: 1,
+  rateReturn: 1,
+};
 
 export default function CalculatorSIP({ setSummary }) {
-  const [values, setValues] = useState({
-    monthlyAmount: 500,
-    durationInvestment: 1,
-    rateReturn: 1,
-  });
+  const location = useLocation();
+  const parsedObject = parseQueryString(location.search);
+  const parsedNumbers = parseNumbers(parsedObject);
+  const [values, setValues] = useState(
+    !isObjectEmpty(parsedNumbers) ? parsedNumbers : DEFAULT_DATA
+  );
   const [errors, setError] = useState(false);
   const { preferences } = useUserPreferences();
 
@@ -65,7 +78,7 @@ export default function CalculatorSIP({ setSummary }) {
       return;
     }
     const value = getFinalValue(monthlyAmount, durationInvestment, rateReturn);
-    setSummary(value);
+    setSummary({ ...values, ...value });
     setError(false);
   };
 

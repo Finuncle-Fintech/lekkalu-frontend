@@ -1,7 +1,7 @@
 import axios from "axios";
 import CalculatorCAGR from "components/CAGRCalculator/CalculatorCAGR";
 import SummaryCAGR from "components/CAGRCalculator/SummaryCAGR";
-import { handleShare, isObjectEmpty } from "components/EMI_Components/utils";
+import { handleShare } from "components/EMI_Components/utils";
 import { useState } from "react";
 
 export default function CAGRCalculator() {
@@ -44,12 +44,21 @@ export default function CAGRCalculator() {
   return (
     <section className="container">
       <div className="d-flex align-items-center justify-content-between">
-        {!isObjectEmpty(summary) ? (
+        {summary.barChartData.length > 0 ? (
           <>
             <button className="save" onClick={handleSave} disabled={isLoading}>
               {isLoading ? "Saving..." : "Save"}
             </button>
-            <button className="save" onClick={() => handleCopy(summary)}>
+            <button
+              className="save"
+              onClick={() =>
+                handleCopy({
+                  initialVal: summary?.initialVal,
+                  finalVal: summary?.finalVal,
+                  durationInvestment: summary?.durationInvestment,
+                })
+              }
+            >
               {isCopied ? "Copied!" : "Share"}
             </button>
           </>

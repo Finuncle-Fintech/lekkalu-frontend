@@ -40,7 +40,16 @@ export default function SIPCalculator() {
             <button className="save" onClick={handleSave} disabled={isLoading}>
               {isLoading ? "Saving..." : "Save"}
             </button>
-            <button className="save" onClick={() => handleCopy(summary)}>
+            <button
+              className="save"
+              onClick={() =>
+                handleCopy({
+                  monthlyAmount: summary?.monthlyAmount,
+                  durationInvestment: summary?.durationInvestment,
+                  rateReturn: summary?.rateReturn,
+                })
+              }
+            >
               {isCopied ? "Copied!" : "Share"}
             </button>
           </>

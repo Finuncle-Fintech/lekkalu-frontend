@@ -1,10 +1,12 @@
 import CalculatorSIP from "components/CalculatorSIP/CalculatorSIP";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Summary from "components/CalculatorSIP/Summary";
 import { handleShare, isObjectEmpty } from "components/EMI_Components/utils";
 import axios from "axios";
+import { Context } from "provider/Provider";
 
 export default function SIPCalculator() {
+  const { authToken } = useContext(Context);
   const [summary, setSummary] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
@@ -12,11 +14,12 @@ export default function SIPCalculator() {
   const handleSave = async () => {
     setIsLoading(true);
     try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
       await axios.post(`${process.env.REACT_APP_API}expenses/`, summary, {
-        auth: {
-          username: process.env.REACT_APP_USER,
-          password: process.env.REACT_APP_PASSWORD,
-        },
+        headers,
       });
     } catch (error) {
       console.error("Error:", error);

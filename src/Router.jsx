@@ -18,6 +18,7 @@ import Settings from "pages/Settings/Settings";
 import PersistGuest from "components/GuestRoutes/PersistGuest";
 import Hero from "pages/Hero/Hero";
 import HeroRoute from "components/HeroRoute/HeroRoute";
+import Subscription from "pages/Subscription/Subscription";
 
 const RouterComponent = () => {
 
@@ -32,6 +33,10 @@ const RouterComponent = () => {
             <Route
               path="/" 
               element={<HeroRoute component={<Hero />} />}
+            />
+            <Route
+              path="/subscription"
+              element={<Subscription/>}
             />
             <Route
               path="/signin"
@@ -58,10 +63,6 @@ const RouterComponent = () => {
           <Route element={<PersistLogin />}>
             <Route
               path="/home"
-              element={<ProtectedRoutes component={<Charts />} />}
-            />
-            <Route
-              path="/subscription"
               element={<ProtectedRoutes component={<Charts />} />}
             />
             <Route

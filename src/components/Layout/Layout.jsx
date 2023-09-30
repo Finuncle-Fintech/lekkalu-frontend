@@ -9,7 +9,7 @@ export default function Layout({ children }) {
   const { authToken } = useContext(Context);
   const location = useLocation();
 
-  const isHeroPath = location.pathname === '/';
+  const isHeroPath = location.pathname === '/' || location.pathname === '/subscription';
 
   if (!authToken || isHeroPath) {
     return (

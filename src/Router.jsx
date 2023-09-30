@@ -61,6 +61,10 @@ const RouterComponent = () => {
               element={<ProtectedRoutes component={<Charts />} />}
             />
             <Route
+              path="/subscription"
+              element={<ProtectedRoutes component={<Charts />} />}
+            />
+            <Route
               path="/income-statement"
               element={<ProtectedRoutes component={<IncomeStatementPage />} />}
             />

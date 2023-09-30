@@ -1,4 +1,4 @@
-import react, { useState, useEffect, useMemo } from "react";
+import react, { useState, useEffect, useContext, useMemo } from "react";
 // import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -22,13 +22,15 @@ import {
 } from "@mui/x-data-grid";
 import { randomId } from "@mui/x-data-grid-generator";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { Context } from "provider/Provider";
 
 
 const ITEM_HEIGHT = 48;
-function EditToolbar(props) {
+
+
+const EditToolbar = (props) => {
   const isMobile = window.innerWidth <= 768;
-  console.log("isMobile: ", isMobile);
-  const { setRows, setRowModesModel, selectionModel, handleDeleteClick } =
+  const { setRows, setRowModesModel, selectionModel, incomeTable } =
     props;
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -39,9 +41,9 @@ function EditToolbar(props) {
     setAnchorEl(null);
   };
 
-  const handleClickA = () => {
+  const addRowButton = () => {
     const id = randomId();
-    setRows((oldRows) => [...oldRows, { id, name: "", age: "", isNew: true }]);
+    setRows((oldRows) => [...oldRows, { id, name: "", type: "", value: "", isNew: true }]);
     setRowModesModel((oldModel) => ({
       ...oldModel,
       [id]: { mode: GridRowModes.Edit, fieldToFocus: "name" },
@@ -172,9 +174,9 @@ function EditToolbar(props) {
                     sx={{ color: "#000000", width: 20, height: 20 }}
                   />
                 }
-                onClick={handleClickA}
+                onClick={addRowButton}
               >
-                Add new CTA
+                {`${incomeTable ? 'Add Income' : 'Add Expense'}`}
               </Button>
             </MenuItem>
           </Menu>
@@ -252,9 +254,9 @@ function EditToolbar(props) {
                 sx={{ color: "#ffffff", width: 20, height: 20 }}
               />
             }
-            onClick={handleClickA}
+            onClick={addRowButton}
           >
-            Add new CTA
+            {`${incomeTable ? 'Add Income' : 'Add Expense'}`}
           </Button>
         </div>
       )}
@@ -262,14 +264,16 @@ function EditToolbar(props) {
   );
 }
 
-const IncomeTable = ({ incomeStatement }) => {
+const IncomeExpenseTable = ({ incomeStatement, addfield, updateField, deleteField, incomeTable }) => {
   const [rows, setRows] = useState([]);
   const [rowModesModel, setRowModesModel] = useState({});
-  const [selectionModel, setSelectionModel] = useState([]);
+  const [selectedRows, setSelectedRows] = useState([]);
 
   useEffect(() => {
-    setRows(incomeStatement.expenses);
-  }, [incomeStatement.expenses]);
+    if(incomeStatement) {
+      setRows(incomeStatement);
+    }
+  }, [incomeStatement]);
 
   const handleRowEditStop = (params, event) => {
     if (params.reason === GridRowEditStopReasons.rowFocusOut) {
@@ -286,6 +290,7 @@ const IncomeTable = ({ incomeStatement }) => {
   };
 
   const handleDeleteClick = (id) => () => {
+    deleteField(id);
     setRows(rows.filter((row) => row.id !== id));
   };
 
@@ -302,6 +307,12 @@ const IncomeTable = ({ incomeStatement }) => {
   };
 
   const processRowUpdate = (newRow) => {
+    if(newRow.isNew === true) {
+      delete newRow.id;
+      addfield(newRow);
+    } else {
+      updateField(newRow.id, newRow);
+    }
     const updatedRow = { ...newRow, isNew: false };
     setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
     return updatedRow;
@@ -395,21 +406,23 @@ const IncomeTable = ({ incomeStatement }) => {
           sx={{ border: "unset" }}
           className="datagrid-container"
           columns={columns}
-          getRowId={(row) => row.name}
+          getRowId={(row) => row.id}
           checkboxSelection
           editMode="row"
           rowModesModel={rowModesModel}
           onRowModesModelChange={handleRowModesModelChange}
-          onSelectionModelChange={(ids) => {
-            setSelectionModel(ids);
-          }}
           onRowEditStop={handleRowEditStop}
           processRowUpdate={processRowUpdate}
+          rowSelectionModel={selectedRows ?? null}
+          onRowSelectionModelChange={(ids)=>{
+            setSelectedRows(ids);
+          }}
+          rowSelectionModel={selectedRows}
           slots={{
             toolbar: EditToolbar,
           }}
           slotProps={{
-            toolbar: { setRows, setRowModesModel, selectionModel },
+            toolbar: { setRows, setRowModesModel, incomeTable },
           }}
           hideFooter
         />
@@ -418,4 +431,4 @@ const IncomeTable = ({ incomeStatement }) => {
   );
 };
 
-export default IncomeTable;
+export default IncomeExpenseTable;

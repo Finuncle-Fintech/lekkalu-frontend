@@ -452,6 +452,98 @@ const Provider = ({ children }) => {
     }
   };
 
+  const addIncomeExpense = async (data) => {
+    console.log('=====data: ', data);
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      await axiosPrivate.post(`${process.env.REACT_APP_BACKEND_API}income_expense/`, data, {
+        headers,
+      });
+    } catch (error) {
+      handleErrors(error);
+    }
+  };
+
+  const updateIncomeExpenseById = async (id, data) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      await axiosPrivate.put(`${process.env.REACT_APP_BACKEND_API}income_expense/${id}`, data, {
+        headers,
+      });
+    } catch (error) {
+      handleErrors(error);
+    }
+  };
+
+  const deleteIncomeExpenseById = async (id) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      await axiosPrivate.delete(`${process.env.REACT_APP_BACKEND_API}income_expense/${id}`,  {
+        headers,
+      });
+    } catch (error) {
+      handleErrors(error);
+    }
+  };
+
+  const addIncomeSource = async (data) => {
+    console.log('=====data: ', data);
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      await axiosPrivate.post(`${process.env.REACT_APP_BACKEND_API}income_source/`, data, {
+        headers,
+      });
+    } catch (error) {
+      handleErrors(error);
+    }
+  };
+
+  const updateIncomeSourceById = async (id, data) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      await axiosPrivate.put(`${process.env.REACT_APP_BACKEND_API}income_source/${id}`, data, {
+        headers,
+      });
+    } catch (error) {
+      handleErrors(error);
+    }
+  };
+
+  const deleteIncomeSourceById = async (id) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      await axiosPrivate.delete(`${process.env.REACT_APP_BACKEND_API}income_source/${id}`,  {
+        headers,
+      });
+    } catch (error) {
+      handleErrors(error);
+    }
+  };
+
   const fetchIncomeExpenses = async () => {
     try {
       const headers = {
@@ -484,6 +576,7 @@ const Provider = ({ children }) => {
         //Transform to [{‘name’: ‘day_job_income’, ‘type’:’salary’,’value’:50000}]
         transformedIncomeArray = incomeSources.map((each) => {
           return {
+            id: each.id,
             name: each.name,
             type: each.type,
             value: parseFloat(each.amount),
@@ -499,6 +592,7 @@ const Provider = ({ children }) => {
             value: parseFloat(each.amount),
           });
           return {
+            id: each.id,
             name: each.name,
             type: each.type,
             value: parseFloat(each.amount),
@@ -568,6 +662,12 @@ const Provider = ({ children }) => {
         fetchIncomeExpenses,
         fetchIncomeStatement,
         filterExpensesByDate,
+        addIncomeExpense,
+        updateIncomeExpenseById,
+        deleteIncomeExpenseById,
+        addIncomeSource,
+        updateIncomeSourceById,
+        deleteIncomeSourceById,
         useUnit,
         useUnitUpdate,
         unit,

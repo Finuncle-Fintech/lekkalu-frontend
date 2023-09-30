@@ -3,6 +3,16 @@
     border-radius: 10px;
 }
 
+/* In your CSS file or style tag */
+.custom-tab {
+    border-bottom: 2px solid blue; /* Default border color for all tabs */
+  }
+
+  button.Mui-selected {
+    border-bottom: 2px solid #ffffff; /* Border color for the active tab */
+    z-index: 99;
+  }
+
 .MuiDataGrid-toolbarContainer {
     background-color: #ffffff;
     border-radius: 10px;

@@ -1,11 +1,13 @@
-import React, { createContext, useReducer, useState } from "react";
-import axiosClient from "components/Axios/Axios";
-import useAxiosPrivate from "hooks/useAxiosPrivate";
-import { InitialState } from "./Reducer";
-import Reducer from "./Reducer";
-import Types from "./Types";
-import setCookie from "components/Support/PopUp/utils/SetCookie";
-import deleteCookie from "components/Support/PopUp/utils/DeleteCookie";
+
+import React, { createContext, useReducer, useState, useContext } from 'react';
+import axiosClient from 'components/Axios/Axios';
+import useAxiosPrivate from 'hooks/useAxiosPrivate';
+import { InitialState } from './Reducer';
+import Reducer from './Reducer';
+import Types from './Types';
+import setCookie from 'components/Support/PopUp/utils/SetCookie';
+import deleteCookie from 'components/Support/PopUp/utils/DeleteCookie';
+
 
 const Context = createContext({
   ...InitialState,
@@ -479,6 +481,7 @@ const Provider = ({ children }) => {
           };
         });
       }
+
       populatedIncomeStatement.income = transformedIncomeArray;
       populatedIncomeStatement.expenses = transformedExpensesArray;
 
@@ -613,6 +616,22 @@ const Provider = ({ children }) => {
     deleteCookie("refresh");
   };
 
+  const UnitContext = React.createContext();
+   const UnitUpdateContext = React.createContext();
+
+   function useUnit() {
+      return useContext(UnitContext)
+    }
+
+    function useUnitUpdate() {
+      return useContext(UnitUpdateContext)
+    }   
+      const [unit, setUnit] = useState("Months");
+    
+      const handleUnitChange = (val) => {
+        setUnit(val)
+    }
+
   return (
     <Context.Provider
       value={{
@@ -647,11 +666,17 @@ const Provider = ({ children }) => {
         deleteAssetRequest,
         fetchAssetById,
         fetchAsset,
+        useUnit,
+        useUnitUpdate,
+        unit,
+        handleUnitChange 
+
       }}
     >
       {children}
     </Context.Provider>
   );
+
 };
 
 export { Context, Provider };

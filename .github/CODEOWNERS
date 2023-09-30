@@ -6,7 +6,7 @@
 
 # review when someone opens a pull request.
 
-*  @bharathkumarchowdary 
+*  @bharathkumarchowdary
 
 # Following user, owns any files in the src/
 
@@ -18,8 +18,8 @@
 package.json @mohitkhatri06
 package-lock.json @mohitkhatri06
 
-/src/pages/Signin 
-/src/pages/Signin 
+/src/pages/Signin
+/src/pages/Signin
 /src/Router.jsx
 
 /src/__test__/ @ivangarcilazo

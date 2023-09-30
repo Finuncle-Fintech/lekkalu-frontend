@@ -36,7 +36,7 @@ jest.mock('axios', () => ({
 
 
   describe('SignIn test functionality', () => {
-     
+
     test('Successful button login functionality when is clicked', async () => {
         const view = render(
             <BrowserRouter>
@@ -44,8 +44,8 @@ jest.mock('axios', () => ({
                     <Signin />
                 </Context.Provider>
             </BrowserRouter>
-        ); 
-    
+        );
+
         const buttonSignIn = screen.getByText('Continue')
 
         fireEvent.click(buttonSignIn)
@@ -62,16 +62,16 @@ jest.mock('axios', () => ({
                     <Signin />
                 </Context.Provider>
             </BrowserRouter>
-        );    
+        );
 
         // Arrange
         const errorText = 'User with provided details does not exist';
         const spySwal = jest.spyOn(swal, 'fire');
-        
+
         // Use getByLabelText to find input fields by their associated labels
         const usernameInput = screen.getByLabelText('Username');
         const passwordInput = screen.getByLabelText('Password');
-      
+
         // Act
         fireEvent.change(usernameInput, { target: { value: 'nameUser, this username does not exist' } });
         fireEvent.change(passwordInput, { target: { value: 'badPasswordThis Passowrd does not exist.' } });

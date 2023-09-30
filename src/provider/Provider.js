@@ -146,6 +146,27 @@ const Provider = ({ children }) => {
     }
   };
 
+  const fetchAllExpenses = async () => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      const response = await axiosPrivate.get(
+        `${process.env.REACT_APP_BACKEND_API}expenses/`,
+        { headers }
+      );
+
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      handleErrors(error);
+      throw error; // Rethrow the error so it can be caught in the calling function
+    }
+  };
+
+
   const filterExpensesByDate = async (page, rowsPerPage, fromDate, toDate) => {
     try {
       const headers = {
@@ -503,20 +524,20 @@ const Provider = ({ children }) => {
   };
 
   const UnitContext = React.createContext();
-   const UnitUpdateContext = React.createContext();
+  const UnitUpdateContext = React.createContext();
 
-   function useUnit() {
-      return useContext(UnitContext)
-    }
+  function useUnit() {
+    return useContext(UnitContext)
+  }
 
-    function useUnitUpdate() {
-      return useContext(UnitUpdateContext)
-    }   
-      const [unit, setUnit] = useState("Months");
-    
-      const handleUnitChange = (val) => {
-        setUnit(val)
-    }
+  function useUnitUpdate() {
+    return useContext(UnitUpdateContext)
+  }
+  const [unit, setUnit] = useState("Months");
+
+  const handleUnitChange = (val) => {
+    setUnit(val)
+  }
 
   return (
     <Context.Provider
@@ -550,7 +571,8 @@ const Provider = ({ children }) => {
         useUnit,
         useUnitUpdate,
         unit,
-        handleUnitChange 
+        handleUnitChange,
+        fetchAllExpenses
       }}
     >
       {children}

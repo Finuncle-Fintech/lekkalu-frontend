@@ -1,6 +1,6 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { BrowserRouter, MemoryRouter, Route, Routes } from "react-router-dom";
-import HeroHeader from "components/HeroHeader/HeroHeader";
+import HeroHeader from "components/GuestHeader/GuestHeader";
 import { Context } from "provider/Provider";
 import HeroRoute from '../../components/HeroRoute/HeroRoute';
 import '@testing-library/jest-dom/extend-expect';

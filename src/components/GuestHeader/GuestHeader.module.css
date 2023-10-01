@@ -30,22 +30,6 @@
     letter-spacing: 0;
 }
 
-.logo {
-    position: relative;
-    padding: 1rem 2rem 0;
-}
-
-.logoCircle {
-    position: absolute;
-    top: 0;
-    left: 0;
-    background-color: var(--primary-color);
-    border-radius: 50%;
-    height: 1.5625rem;
-    width: 1.5625rem;
-    z-index: 1;
-}
-
 .nav {
     padding-right: 5rem;
     display: flex;
@@ -58,8 +42,7 @@
     margin-right: 2rem;
     font-size: 1.5rem;
     font-weight: 700;
-    line-height: 3.75;
-    letter-spacing: -0.03em;
+    letter-spacing: 2px;
     text-align: left;
 }
 
@@ -79,45 +62,12 @@
     text-decoration: none;
 }
 
-@media (max-width: 768px) {
-    .header {
-        flex-direction: column;
-        align-items: center;
-    }
-
+@media (max-width: 992px) {
     .nav {
-        padding-right: 0;
-        margin-bottom: 2rem;
-        display: flex;
-    }
-
-    .link {
-        padding-right: 1rem;
-        padding-left: 1rem;
-        margin: 0;
-        text-align: center;
+        display: none;
     }
 
     .button {
-        width: 60%;
-    }
-}
-
-@media (max-width: 992px) {
-    .logo {
-        padding: 0.75rem 1.5rem 0;
-    }
-
-    .logoCircle {
-        width: 1.18rem;
-        height: 1.18rem;
-    }
-
-    .logoText {
-        font-size: 1.5rem;
-    }
-
-    .link {
-        font-size: 1.125rem;
+        display: none;
     }
 }

@@ -4,6 +4,7 @@ import SupportPopUp from "components/Support/PopUp/PopUp";
 import { Context } from "provider/Provider";
 import { useContext } from "react";
 import { useLocation } from 'react-router-dom';
+import GuestHeader from "components/GuestHeader/GuestHeader";
 
 export default function Layout({ children }) {
   const { authToken } = useContext(Context);
@@ -14,7 +15,7 @@ export default function Layout({ children }) {
   if (!authToken || isHeroPath) {
     return (
       <>
-        {!isHeroPath && <Header />}
+        {isHeroPath ? <GuestHeader /> : <Header />}
         {children}
         <div></div>
       </>

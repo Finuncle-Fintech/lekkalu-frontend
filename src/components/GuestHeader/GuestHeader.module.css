@@ -10,10 +10,10 @@
 }
 
 .header {
-    max-width: 90rem;
-    width: 95vw;
-    margin: auto;
-    margin-top: 2.815rem;
+    width: 100%;
+    background-color: #1976D2;
+    margin: 0;
+    padding: 2.815rem 5vw 0 5vw;
     display: flex;
     justify-content: space-between;
     align-items: center;

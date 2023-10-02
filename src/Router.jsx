@@ -2,7 +2,8 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import ProtectedRoutes from "./components/ProtectedRoutes/ProtectedRoutes";
 import Charts from "components/Charts/Charts";
 import Expenses from "components/Expenses/Expenses";
-import IncomeStatement from "pages/income-statement/IncomeStatement";
+// import IncomeStatement from "pages/income-statement/IncomeStatement";
+import IncomeStatementPage from "pages/income-statement/IncomeStatementPage";
 import EmiCalculator from "pages/EmiCalculator";
 import Signin from "./pages/Signin/Signin";
 import Signup from "./pages/Signup/Signup";
@@ -21,9 +22,12 @@ import TermsAndConditions from "pages/TermsAndConditions/TermsAndConditions";
 import PrivacyPolicies from "pages/PrivacyPolicies/PrivacyPolicies";
 
 const RouterComponent = () => {
+
   return (
     <Router>
+
       <Layout>
+
         <Routes>
           <Route path="*" element={<ErrorPage />} />
           <Route element={<PersistGuest />}>
@@ -65,7 +69,7 @@ const RouterComponent = () => {
             />
             <Route
               path="/income-statement"
-              element={<ProtectedRoutes component={<IncomeStatement />} />}
+              element={<ProtectedRoutes component={<IncomeStatementPage />} />}
             />
             <Route
               path="/expenses"
@@ -76,12 +80,15 @@ const RouterComponent = () => {
               element={<ProtectedRoutes component={<BalanceSheet />} />}
             />
             <Route
-              path="/settings"
-              element={<ProtectedRoutes component={<Settings />} />}
+                path="/settings"
+                element={<ProtectedRoutes component={<Settings />} />}
             />
           </Route>
+
         </Routes>
+
       </Layout>
+
     </Router>
   );
 };

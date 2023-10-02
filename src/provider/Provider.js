@@ -538,7 +538,17 @@ const Provider = ({ children }) => {
       .delete(`${process.env.REACT_APP_BACKEND_URL}api/financial_goal/${id}`, {
         headers
       })
-      .then((response) => console.log(response))
+      .then((response) => {
+        if (response.status === 204) {
+          dispatch({
+            type: Types.DELETE_GOAL,
+            payload: {
+              id: id,
+            }
+          })
+        }
+      }
+      )
       .catch((error) => {
         console.log(error?.response?.data?.detail);
         handleErrors(error);
@@ -557,7 +567,6 @@ const Provider = ({ children }) => {
           headers
         })
         .then((response) => {
-          console.log(response)
           dispatch({
             type: Types.CREATE_GOAL,
             payload: {

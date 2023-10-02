@@ -110,7 +110,7 @@ const Reducer = (state, action) => {
       }
       case Types.DELETE_GOAL: {
          const newGoals = state.goals.filter(
-            (expense) => expense.id !== action.payload
+            (expense) => expense.id !== action.payload.id
          );
 
          return {
@@ -136,7 +136,6 @@ const Reducer = (state, action) => {
          const newState = state.goals.map((value) => (
             value.id === goal.id ? goal : value
           ));
-          console.log(newState, goal);
          return {
             ...state,
             goals: newState,

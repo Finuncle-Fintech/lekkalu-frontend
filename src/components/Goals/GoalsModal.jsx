@@ -45,12 +45,12 @@ const GoalFormModal = ({
     user: 5
   })
   useEffect(() => {
+    const startDate = dayjs().$d
     if (goalToEdit) {
-
       const convertToYYYYMMDD = (dateString) => {
         const [day, month, year] = dateString.split('/');
-        const formattedDate = new Date(`${year}-${month}-${day}`).toISOString().split('T')[0];
-        return formattedDate;
+        const date = dayjs(new Date(`${year}/${month}/${day}`)).format('YYYY-MM-DD')
+        return date;
       };
 
       const { planned_start, started, finished, ...restGoalToEdit } = goalToEdit
@@ -64,10 +64,12 @@ const GoalFormModal = ({
         ...restGoalToEdit,
         planned_start: plannedStartDate,
         started: startedDate,
-        finished: finishedDate
+        finished: finishedDate,
+        plannedFinish: dayjs(startDate).format('YYYY-MM-DD')
       }));
 
     } else {
+
       const initState = {
         goal: '',
         sub_goal: '',
@@ -75,18 +77,18 @@ const GoalFormModal = ({
         current_metric: '',
         reachability_in_months: '',
         reachability_in_years: '',
-        started: '',
-        finished: '',
+        started: dayjs(startDate).format('YYYY-MM-DD'),
+        finished: dayjs(startDate).format('YYYY-MM-DD'),
         comments: '',
-        plannedFinish: '',
-        planned_start: '',
+        plannedFinish: dayjs(startDate).format('YYYY-MM-DD'),
+        planned_start: dayjs(startDate).format('YYYY-MM-DD'),
         prefered_value_of_balance: '',
         user: 5
       }
 
       setGoalData(initState)
     }
-  }, [goalToEdit])
+  }, [goalToEdit, statusModal])
 
   const handleClickOpen = () => {
     setStatusModal(true);
@@ -103,7 +105,6 @@ const GoalFormModal = ({
     e.preventDefault();
     const { current_metric, target_metric } = goalData
     const balance = current_metric.toString().includes('%') && target_metric.includes('%') ? Number(target_metric?.split('%')[0]) - Number(current_metric?.split('%')[0]) + "%" : target_metric - current_metric;
-
 
     if (editIndex !== null) {
       onUpdateGoal(goalData);
@@ -141,6 +142,7 @@ const GoalFormModal = ({
       [name]: value
     }))
   }
+  
   return (
     <>
       <ModalContainer>

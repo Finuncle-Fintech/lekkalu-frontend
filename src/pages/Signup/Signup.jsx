@@ -36,9 +36,9 @@ export const Signup = () => {
       .post(
         "users/api/users",
         JSON.stringify({
-          username: data.get("username"),
-          email: data.get("email"),
-          password: data.get("password"),
+          username: data.username,
+          email: data.email,
+          password: data.password,
         }),
         {
           headers: {
@@ -103,7 +103,7 @@ export const Signup = () => {
               Username
             </label>
             <input
-              type="text"
+              id="username"
               className={styles.loginInput}
               autoComplete="username"
               autoFocus
@@ -121,6 +121,7 @@ export const Signup = () => {
               Email Address
             </label>
             <input
+              id="email"
               type="email"
               className={styles.loginInput}
               autoComplete="email"
@@ -139,6 +140,7 @@ export const Signup = () => {
             </label>
             <div className={styles.passwordInputBox}>
               <input
+                id="password"
                 type={showPassword ? "text" : "password"}
                 className={styles.passwordInput}
                 autoComplete="current-password"
@@ -169,6 +171,7 @@ export const Signup = () => {
               className={styles.CheckBox}
               control={
                 <Checkbox
+                  data-testid="conditions"
                   color="success"
                   {...register("termsAndConditions", {
                     required: "Please accept terms and conditions!",
@@ -192,6 +195,7 @@ export const Signup = () => {
               className={styles.CheckBox}
               control={
                 <Checkbox
+                  data-testid="policies"
                   color="success"
                   {...register("privacyPolicy", {
                     required: "Please agree to the privacy policies!",

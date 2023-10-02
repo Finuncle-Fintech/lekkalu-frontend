@@ -1,11 +1,13 @@
-import React, { createContext, useReducer, useState } from "react";
-import axiosClient from "components/Axios/Axios";
-import useAxiosPrivate from "hooks/useAxiosPrivate";
-import { InitialState } from "./Reducer";
-import Reducer from "./Reducer";
-import Types from "./Types";
-import setCookie from "components/Support/PopUp/utils/SetCookie";
-import deleteCookie from "components/Support/PopUp/utils/DeleteCookie";
+
+import React, { createContext, useReducer, useState, useContext } from 'react';
+import axiosClient from 'components/Axios/Axios';
+import useAxiosPrivate from 'hooks/useAxiosPrivate';
+import { InitialState } from './Reducer';
+import Reducer from './Reducer';
+import Types from './Types';
+import setCookie from 'components/Support/PopUp/utils/SetCookie';
+import deleteCookie from 'components/Support/PopUp/utils/DeleteCookie';
+
 
 const Context = createContext({
   ...InitialState,
@@ -143,6 +145,27 @@ const Provider = ({ children }) => {
       handleErrors(error);
     }
   };
+
+  const fetchAllExpenses = async () => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      const response = await axiosPrivate.get(
+        `${process.env.REACT_APP_BACKEND_API}expenses/`,
+        { headers }
+      );
+
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      handleErrors(error);
+      throw error; // Rethrow the error so it can be caught in the calling function
+    }
+  };
+
 
   const filterExpensesByDate = async (page, rowsPerPage, fromDate, toDate) => {
     try {
@@ -482,6 +505,7 @@ const Provider = ({ children }) => {
           };
         });
       }
+
       populatedIncomeStatement.income = transformedIncomeArray;
       populatedIncomeStatement.expenses = transformedExpensesArray;
 
@@ -498,6 +522,22 @@ const Provider = ({ children }) => {
     setAuthToken(null);
     deleteCookie("refresh");
   };
+
+  const UnitContext = React.createContext();
+  const UnitUpdateContext = React.createContext();
+
+  function useUnit() {
+    return useContext(UnitContext)
+  }
+
+  function useUnitUpdate() {
+    return useContext(UnitUpdateContext)
+  }
+  const [unit, setUnit] = useState("Months");
+
+  const handleUnitChange = (val) => {
+    setUnit(val)
+  }
 
   return (
     <Context.Provider
@@ -528,11 +568,17 @@ const Provider = ({ children }) => {
         fetchIncomeExpenses,
         fetchIncomeStatement,
         filterExpensesByDate,
+        useUnit,
+        useUnitUpdate,
+        unit,
+        handleUnitChange,
+        fetchAllExpenses
       }}
     >
       {children}
     </Context.Provider>
   );
+
 };
 
 export { Context, Provider };

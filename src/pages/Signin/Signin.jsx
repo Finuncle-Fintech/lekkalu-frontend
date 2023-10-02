@@ -75,6 +75,7 @@ export const Signin = () => {
               Username
             </label>
             <input
+              id="username"
               {...register("username", {
                 required: "Username is required!",
                 minLength: {
@@ -93,6 +94,7 @@ export const Signin = () => {
             </label>
             <div className={styles.passwordInputBox}>
               <input
+                id="password"
                 {...register("password", {
                   required: "Password is required!",
                 })}

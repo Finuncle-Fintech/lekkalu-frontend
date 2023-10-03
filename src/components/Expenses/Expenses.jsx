@@ -18,6 +18,7 @@ import { checkTagsAndLoad } from "./utils";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import SetBudgetModal from "./SetBudgetModal";
 import { useUserPreferences } from "hooks/useUserPreferences";
+import ViewAllBudgetModal from "./ViewAllBudgetModal";
 dayjs.extend(customParseFormat);
 
 const Expenses = () => {
@@ -224,9 +225,7 @@ const Expenses = () => {
 
         <div className="d-flex align-items-center gap-2 w-100">
           <SetBudgetModal />
-          <Button variant="outlined" className="flex-grow-1">
-            View All
-          </Button>
+          <ViewAllBudgetModal />
         </div>
       </div>
 

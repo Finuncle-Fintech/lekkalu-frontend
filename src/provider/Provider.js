@@ -6,6 +6,7 @@ import Reducer from "./Reducer";
 import Types from "./Types";
 import setCookie from "components/Support/PopUp/utils/SetCookie";
 import deleteCookie from "components/Support/PopUp/utils/DeleteCookie";
+import Swal from "sweetalert2";
 
 const Context = createContext({
   ...InitialState,
@@ -523,8 +524,33 @@ const Provider = ({ children }) => {
     deleteCookie("refresh");
   };
 
+  const createBudget = async (data) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      const response = await axiosPrivate.post(
+        `${process.env.REACT_APP_BACKEND_API}budget/`,
+        data,
+        { headers }
+      );
+
+      if (response.status === 201) {
+        dispatch({
+          type: Types.SET_BUDGET,
+          payload: response.data.data,
+        });
+      }
+
+      return response;
+    } catch (error) {
+      handleErrors(error);
+    }
+  };
+
   const deleteBudget = async (id) => {
-    console.log(id);
     try {
       const headers = {
         Authorization: `Bearer ${authToken}`,
@@ -598,6 +624,7 @@ const Provider = ({ children }) => {
         handleUnitChange,
         fetchAllExpenses,
         deleteBudget,
+        createBudget,
       }}
     >
       {children}

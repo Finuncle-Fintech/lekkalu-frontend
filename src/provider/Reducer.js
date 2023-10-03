@@ -104,6 +104,12 @@ const Reducer = (state, action) => {
         budget: state.budget.filter((item) => item.id !== action.payload),
       };
     }
+    case Types.SET_BUDGET: {
+      return {
+        ...state,
+        budget: [...state.budget, action.payload],
+      };
+    }
     default: {
       return state;
     }

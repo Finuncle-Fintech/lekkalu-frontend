@@ -35,7 +35,7 @@ const defaultData = {
   loan_principal: 300000,
   loan_interest: 11,
   loan_tenure: 3,
-  emi_day: 5,
+  emi_day:  5,
   disbursement_date: formattedDate,
 };
 

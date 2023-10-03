@@ -15,7 +15,7 @@ import { MuiTable } from "./styled";
 
 export default function ViewAllBudgetModal() {
   const [open, setOpen] = useState(false);
-  const { budget } = useContext(Context);
+  const { budget, deleteBudget } = useContext(Context);
 
   return (
     <>
@@ -43,7 +43,13 @@ export default function ViewAllBudgetModal() {
                   <TableCell>{item.month}</TableCell>
                   <TableCell>{item.limit}</TableCell>
                   <TableCell>
-                    <IconButton aria-label="delete" color="error">
+                    <IconButton
+                      aria-label="delete"
+                      color="error"
+                      onClick={() => {
+                        deleteBudget(item.id);
+                      }}
+                    >
                       <Delete />
                     </IconButton>
                   </TableCell>

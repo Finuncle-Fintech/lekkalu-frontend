@@ -523,6 +523,30 @@ const Provider = ({ children }) => {
     deleteCookie("refresh");
   };
 
+  const deleteBudget = async (id) => {
+    console.log(id);
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      await axiosPrivate.delete(
+        `${process.env.REACT_APP_BACKEND_API}budget/${id}`,
+        {
+          headers,
+        }
+      );
+
+      dispatch({
+        type: Types.DELETE_BUDGET,
+        payload: id,
+      });
+    } catch (error) {
+      handleErrors(error);
+    }
+  };
+
   const UnitContext = React.createContext();
   const UnitUpdateContext = React.createContext();
 
@@ -573,6 +597,7 @@ const Provider = ({ children }) => {
         unit,
         handleUnitChange,
         fetchAllExpenses,
+        deleteBudget,
       }}
     >
       {children}

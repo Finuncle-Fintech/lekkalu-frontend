@@ -1,0 +1,52 @@
+import unittest
+
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
+
+class TestRegistration(unittest.TestCase):
+    def setup_method(self, method):
+        self.driver = webdriver.Chrome()
+        self.vars = {}
+
+    def teardown_method(self, method):
+        self.driver.quit()
+
+    def test_registration(self):
+        self.driver.get("http://localhost:3000/")
+        self.driver.set_window_size(1616, 876)
+        wait = WebDriverWait(self.driver, 10)
+        get_started_link = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, ".HeroHeader_button__EgRW5")))
+        get_started_link.click()
+        self.driver.find_element(By.ID, "username").click()
+        self.driver.find_element(By.ID, "username").send_keys("asd")
+        self.driver.find_element(By.ID, "email").click()
+        self.driver.find_element(By.ID, "email").send_keys("asd@asd.com")
+        self.driver.find_element(By.ID, "password").click()
+        element = self.driver.find_element(By.NAME, "termsAndConditions")
+        actions = ActionChains(self.driver)
+        actions.move_to_element(element).perform()
+        self.driver.find_element(By.ID, "password").send_keys("123456789")
+        self.driver.find_element(By.NAME, "termsAndConditions").click()
+        self.driver.find_element(By.NAME, "privacyPolicy").click()
+        signup_button = self.driver.find_element(By.CSS_SELECTOR, ".Signup_loginButton__jFyiN")
+        signup_button.click()
+        WebDriverWait(self.driver, 5)
+        self.assertEqual(False, signup_button.is_enabled())
+
+    def test_login_with_unregistered_user(self):
+        self.driver.get("http://localhost:3000/")
+        self.driver.set_window_size(1616, 876)
+        wait = WebDriverWait(self.driver, 10)
+        get_started_link = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, ".HeroHeader_button__EgRW5")))
+        get_started_link.click()
+        self.driver.find_element(By.CSS_SELECTOR, ".css-arys4y-MuiButtonBase-root-MuiIconButton-root > img").click()
+        self.driver.find_element(By.ID, "username").send_keys("asd")
+        self.driver.find_element(By.ID, "password").send_keys("CZS85dH22T9.grv")
+        self.driver.find_element(By.CSS_SELECTOR, ".Signin_loginButton__r5NYI").click()
+        alert = WebDriverWait(self.driver, 5).until(EC.alert_is_present())
+        alert_text = alert.text
+        assert alert_text == "Network Error"

@@ -8,15 +8,16 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 
 
+
 class TestRegistration(unittest.TestCase):
-    def setup_method(self, method):
+    def setUp(self) -> None:
         options = Options()
         options.add_argument('--headless=new')
 
         self.driver = webdriver.Chrome(options=options)
         self.vars = {}
 
-    def teardown_method(self, method):
+    def tearDown(self):
         self.driver.quit()
 
     def test_registration(self):
@@ -54,3 +55,6 @@ class TestRegistration(unittest.TestCase):
         alert = WebDriverWait(self.driver, 5).until(EC.alert_is_present())
         alert_text = alert.text
         assert alert_text == "Network Error"
+
+if __name__ == '__main__':
+    unittest.main()

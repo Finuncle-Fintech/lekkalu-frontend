@@ -24,7 +24,7 @@ jobs:
       with:
         node-version: 18
     - run: npm install
-    - run: npm run start:qa
+    - run: npm run start:qa &
      
     - uses: browser-actions/setup-chrome@latest
     - run: chrome --version

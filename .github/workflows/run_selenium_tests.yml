@@ -25,7 +25,10 @@ jobs:
         node-version: 18
     - run: npm install
     - run: npm run start:qa &
-     
+
+    - name: Install dependencies
+      run: pip install -r src/selenium_tests/requirements.txt
+       
     - uses: browser-actions/setup-chrome@latest
     - run: chrome --version
      

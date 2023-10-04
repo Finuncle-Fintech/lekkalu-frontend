@@ -31,5 +31,10 @@ jobs:
        
     - uses: browser-actions/setup-chrome@latest
     - run: chrome --version
+
+    - name: Sleep for 1 minute and 30 seconds
+      uses: jakejarvis/wait-action@master
+      with:
+        time: '90s'
      
     - run: python src/selenium_tests/main.py

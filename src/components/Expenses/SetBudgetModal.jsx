@@ -9,12 +9,13 @@ import {
 import { Context } from "provider/Provider";
 import { DatePicker } from "@mui/x-date-pickers";
 import Swal from "sweetalert2";
+import dayjs from "dayjs";
 
 export default function SetBudgetModal() {
   const [open, setOpen] = useState(false);
   const { createBudget } = useContext(Context);
   const [limit, setLimit] = useState("");
-  const [month, setMonth] = useState("");
+  const [month, setMonth] = useState(dayjs());
 
   const handleSubmit = async (e) => {
     e.preventDefault();

@@ -7,3 +7,26 @@ on:
       - "main" 
     paths:
       - ".github/workflows/run_selenium_tests.yaml"
+
+jobs:
+  build:
+ 
+    runs-on: ubuntu-latest
+ 
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up python
+      uses: actions/setup-python@v4
+      with:
+         python-version: 'pypy3.9'
+    - name: Setup node
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18
+    - run: npm install
+    - run: npm run start:qa &
+     
+    - uses: browser-actions/setup-chrome@latest
+    - run: chrome --version
+     
+    - run: python src/selenium_tests/main.py

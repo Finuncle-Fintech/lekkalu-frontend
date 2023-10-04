@@ -212,7 +212,10 @@ const Expenses = () => {
         authToken={authToken}
       />
 
-      <div className="border rounded-2 shadow-sm w-25 p-4 d-flex flex-column align-items-start gap-2">
+      <div
+        className="border rounded-2 shadow-sm w-100 p-4 d-flex flex-column align-items-start gap-2"
+        style={{ maxWidth: "400px" }}
+      >
         <div className="text-start fs-3 fw-bold">Budget</div>
         <div className="d-flex align-items-center gap-2">
           <div>{dayjs().format("MMMM")}</div>
@@ -261,7 +264,7 @@ const Expenses = () => {
         <Box
           component="form"
           onSubmit={handleFilterSubmit}
-          className="d-flex justify-ceontent-between"
+          className="d-flex justify-content-between"
         >
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <div>

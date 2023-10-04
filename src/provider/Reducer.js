@@ -110,6 +110,17 @@ const Reducer = (state, action) => {
         budget: [...state.budget, action.payload],
       };
     }
+    case Types.EDIT_BUDGET: {
+      return {
+        ...state,
+        budget: state.budget.map((item) => {
+          if (item.id === action.payload.id) {
+            return action.payload;
+          }
+          return item;
+        }),
+      };
+    }
     default: {
       return state;
     }

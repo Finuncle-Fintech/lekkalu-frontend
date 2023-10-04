@@ -1,20 +1,25 @@
-import { useContext, useState } from "react";
+import { Edit } from "@mui/icons-material";
 import {
   Button,
   Dialog,
   DialogContent,
   DialogTitle,
+  IconButton,
   TextField,
 } from "@mui/material";
-import { Context } from "provider/Provider";
 import { DatePicker } from "@mui/x-date-pickers";
+import dayjs from "dayjs";
+import { useContext, useState } from "react";
+import customParseFormat from "dayjs/plugin/customParseFormat";
 import Swal from "sweetalert2";
+import { Context } from "provider/Provider";
+dayjs.extend(customParseFormat);
 
-export default function SetBudgetModal() {
+export default function EditBudgetModal({ budget }) {
   const [open, setOpen] = useState(false);
-  const { createBudget } = useContext(Context);
-  const [limit, setLimit] = useState("");
-  const [month, setMonth] = useState("");
+  const [limit, setLimit] = useState(budget.limit);
+  const [month, setMonth] = useState(dayjs(budget.month, "YYYY-MM-DD"));
+  const { updateBudget } = useContext(Context);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -34,33 +39,39 @@ export default function SetBudgetModal() {
         month: month.format("YYYY-MM-DD"),
       };
 
-      const response = await createBudget(data);
-      if (response.status === 201) {
+      const response = await updateBudget(budget.id, data);
+      if (response.status === 200) {
         setOpen(false);
         setLimit("");
         setMonth("");
+
+        Swal.fire({
+          icon: "success",
+          title: "Successfully set the budget",
+          timer: 2300,
+          timerProgressBar: true,
+        });
       }
     } catch (error) {}
   };
 
   return (
     <>
-      <Button
-        variant="contained"
-        className="flex-grow-1"
+      <IconButton
+        aria-label="edit"
         onClick={() => {
           setOpen(true);
         }}
       >
-        Set Budget
-      </Button>
+        <Edit />
+      </IconButton>
       <Dialog
         open={open}
         onClose={() => {
           setOpen(false);
         }}
       >
-        <DialogTitle>Set Budget</DialogTitle>
+        <DialogTitle>Edit Budget</DialogTitle>
         <DialogContent>
           <form onSubmit={handleSubmit} className="p-4">
             <TextField
@@ -85,7 +96,7 @@ export default function SetBudgetModal() {
 
             <div className="d-flex align-items-center gap-2 w-100">
               <Button type="submit" variant="contained" className="flex-grow">
-                Set
+                Update
               </Button>
               <Button
                 className="flex-grow"

@@ -6,7 +6,6 @@ import Reducer from "./Reducer";
 import Types from "./Types";
 import setCookie from "components/Support/PopUp/utils/SetCookie";
 import deleteCookie from "components/Support/PopUp/utils/DeleteCookie";
-import Swal from "sweetalert2";
 
 const Context = createContext({
   ...InitialState,
@@ -160,8 +159,6 @@ const Provider = ({ children }) => {
         `${process.env.REACT_APP_BACKEND_API}expenses/`,
         { headers }
       );
-
-      console.log(response.data);
       return response.data;
     } catch (error) {
       handleErrors(error);
@@ -427,7 +424,6 @@ const Provider = ({ children }) => {
           return response.status;
         })
         .catch((error) => {
-          console.log(error?.response?.data?.detail);
           handleErrors(error);
         });
     } catch (error) {
@@ -495,10 +491,6 @@ const Provider = ({ children }) => {
         //API returns [{‘name’: ‘day_job_income’, ‘type’:’salary’,’amount’:50000}]
         //Transform to [{‘name’: ‘day_job_income’, ‘type’:’salary’,’value’:50000}]
         transformedExpensesArray = incomeExpenses.map((each) => {
-          console.log({
-            original: each.amount,
-            value: parseFloat(each.amount),
-          });
           return {
             name: each.name,
             type: each.type,
@@ -540,6 +532,32 @@ const Provider = ({ children }) => {
       if (response.status === 201) {
         dispatch({
           type: Types.SET_BUDGET,
+          payload: response.data.data,
+        });
+      }
+
+      return response;
+    } catch (error) {
+      handleErrors(error);
+    }
+  };
+
+  const updateBudget = async (id, data) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      const response = await axiosPrivate.put(
+        `${process.env.REACT_APP_BACKEND_API}budget/${id}`,
+        data,
+        { headers }
+      );
+
+      if (response.status === 200) {
+        dispatch({
+          type: Types.EDIT_BUDGET,
           payload: response.data.data,
         });
       }
@@ -625,6 +643,7 @@ const Provider = ({ children }) => {
         fetchAllExpenses,
         deleteBudget,
         createBudget,
+        updateBudget,
       }}
     >
       {children}

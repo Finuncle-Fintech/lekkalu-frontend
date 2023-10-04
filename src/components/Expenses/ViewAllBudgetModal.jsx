@@ -1,4 +1,4 @@
-import { Delete } from "@mui/icons-material";
+import { Delete, Edit } from "@mui/icons-material";
 import {
   Button,
   Dialog,
@@ -12,6 +12,7 @@ import {
 import { Context } from "provider/Provider";
 import { useContext, useState } from "react";
 import { MuiTable } from "./styled";
+import EditBudgetModal from "./EditBudgetModa";
 
 export default function ViewAllBudgetModal() {
   const [open, setOpen] = useState(false);
@@ -43,6 +44,7 @@ export default function ViewAllBudgetModal() {
                   <TableCell>{item.month}</TableCell>
                   <TableCell>{item.limit}</TableCell>
                   <TableCell>
+                    <EditBudgetModal budget={item} />
                     <IconButton
                       aria-label="delete"
                       color="error"

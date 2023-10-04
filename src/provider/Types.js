@@ -14,6 +14,7 @@ const Types = {
   FETCH_depreciation: "FETCH_depreciation",
   DELETE_BUDGET: "DELETE_BUDGET",
   SET_BUDGET: "SET_BUDGET",
+  EDIT_BUDGET: "EDIT_BUDGET",
 };
 
 export default Types;

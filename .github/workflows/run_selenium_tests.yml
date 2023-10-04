@@ -29,4 +29,4 @@ jobs:
     - uses: browser-actions/setup-chrome@latest
     - run: chrome --version
      
-    - run: python main.py
+    - run: python src/selenium_tests/main.py

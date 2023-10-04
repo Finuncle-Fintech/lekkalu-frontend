@@ -1,4 +1,4 @@
-import { Delete, Edit } from "@mui/icons-material";
+import { Delete } from "@mui/icons-material";
 import {
   Button,
   Dialog,
@@ -12,7 +12,10 @@ import {
 import { Context } from "provider/Provider";
 import { useContext, useState } from "react";
 import { MuiTable } from "./styled";
-import EditBudgetModal from "./EditBudgetModa";
+import EditBudgetModal from "./EditBudgetModal";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+dayjs.extend(customParseFormat);
 
 export default function ViewAllBudgetModal() {
   const [open, setOpen] = useState(false);
@@ -41,7 +44,9 @@ export default function ViewAllBudgetModal() {
             <TableBody>
               {budget.map((item) => (
                 <TableRow key={item.id}>
-                  <TableCell>{item.month}</TableCell>
+                  <TableCell>
+                    {dayjs(item.month, "YYYY-MM-DD").format("MMMM")}
+                  </TableCell>
                   <TableCell>{item.limit}</TableCell>
                   <TableCell>
                     <EditBudgetModal budget={item} />

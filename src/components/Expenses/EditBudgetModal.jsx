@@ -44,13 +44,6 @@ export default function EditBudgetModal({ budget }) {
         setOpen(false);
         setLimit("");
         setMonth("");
-
-        Swal.fire({
-          icon: "success",
-          title: "Successfully set the budget",
-          timer: 2300,
-          timerProgressBar: true,
-        });
       }
     } catch (error) {}
   };

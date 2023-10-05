@@ -15,6 +15,7 @@ import Logo from "./HeaderComponents/Logo";
 import BasicMenu from "./HeaderComponents/BasicMenu";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { Context } from "provider/Provider";
+import { Person } from "@mui/icons-material";
 
 const styles = {
   appBar: {
@@ -50,7 +51,7 @@ const styles = {
 };
 
 const Header = () => {
-  const { signOut, authToken } = useContext(Context);
+  const { signOut, authToken, user } = useContext(Context);
   const [openCalculator, setOpenCalculator] = React.useState(false);
   const [openSettings, setOpenSettings] = React.useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -58,8 +59,8 @@ const Header = () => {
   const userSetting = {
     submenu: {
       1: {
-        name: "Profile",
-        icon: <AccountCircleIcon />,
+        name: `${user?.username}`,
+        icon: <Person />,
         path: "/settings",
       },
       2: {

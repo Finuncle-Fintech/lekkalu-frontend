@@ -198,20 +198,6 @@ const Expenses = () => {
 
   return (
     <ModalContainer>
-      <ExpenseFormModal
-        onAddExpense={createExpense}
-        onUpdateExpense={updateExpense}
-        expenseToEdit={returnExpenseToEdit()}
-        editIndex={editIndex}
-        onCancelEdit={() => setEditIndex(null)}
-        loadExcelStatus={loadExcelStatus}
-        handleFileUpload={handleFileUpload}
-        createExpenseExcelStatus={newData}
-        expenses={expenses}
-        Context={Context}
-        authToken={authToken}
-      />
-
       <div
         className="border rounded-2 shadow-sm w-100 p-4 d-flex flex-column align-items-start gap-2"
         style={{ maxWidth: "400px" }}
@@ -231,6 +217,20 @@ const Expenses = () => {
           <ViewAllBudgetModal />
         </div>
       </div>
+
+      <ExpenseFormModal
+        onAddExpense={createExpense}
+        onUpdateExpense={updateExpense}
+        expenseToEdit={returnExpenseToEdit()}
+        editIndex={editIndex}
+        onCancelEdit={() => setEditIndex(null)}
+        loadExcelStatus={loadExcelStatus}
+        handleFileUpload={handleFileUpload}
+        createExpenseExcelStatus={newData}
+        expenses={expenses}
+        Context={Context}
+        authToken={authToken}
+      />
 
       <Typography variant="h6">Expense List</Typography>
       <div className="d-flex justify-content-between align-items-center my-3">

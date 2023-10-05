@@ -1,13 +1,11 @@
-
-import React, { createContext, useReducer, useState, useContext } from 'react';
-import axiosClient from 'components/Axios/Axios';
-import useAxiosPrivate from 'hooks/useAxiosPrivate';
-import { InitialState } from './Reducer';
-import Reducer from './Reducer';
-import Types from './Types';
-import setCookie from 'components/Support/PopUp/utils/SetCookie';
-import deleteCookie from 'components/Support/PopUp/utils/DeleteCookie';
-
+import React, { createContext, useReducer, useState, useContext } from "react";
+import axiosClient from "components/Axios/Axios";
+import useAxiosPrivate from "hooks/useAxiosPrivate";
+import { InitialState } from "./Reducer";
+import Reducer from "./Reducer";
+import Types from "./Types";
+import setCookie from "components/Support/PopUp/utils/SetCookie";
+import deleteCookie from "components/Support/PopUp/utils/DeleteCookie";
 
 const Context = createContext({
   ...InitialState,
@@ -251,6 +249,7 @@ const Provider = ({ children }) => {
   };
 
   const fetchData = async () => {
+    console.log(authToken);
     try {
       const headers = {
         Authorization: `Bearer ${authToken}`,
@@ -370,7 +369,6 @@ const Provider = ({ children }) => {
         });
 
       await axiosPrivate
-        //get assets depreciation
         .get(`${process.env.REACT_APP_BACKEND_API}physical_assets/`, {
           auth: {
             username: process.env.REACT_APP_USER,
@@ -386,8 +384,7 @@ const Provider = ({ children }) => {
           });
         });
     } catch (error) {
-      // Handle errors
-      handleErrors(error);
+      handleErrors(error.message);
     }
   };
 
@@ -397,6 +394,7 @@ const Provider = ({ children }) => {
         username: username,
         password: password,
       };
+      //console.log(username, password)
 
       return await axiosClient
         .post(`${process.env.REACT_APP_BACKEND_URL}token/`, auth)
@@ -500,6 +498,7 @@ const Provider = ({ children }) => {
         Authorization: `Bearer ${authToken}`,
         "Content-Type": "application/json",
       };
+      console.log(assetData);
 
       await axiosPrivate
         .post(
@@ -513,7 +512,7 @@ const Provider = ({ children }) => {
           fetchAsset();
         });
     } catch (error) {
-      handleErrors(error);
+      console.log(error);
     }
   };
 
@@ -587,7 +586,7 @@ const Provider = ({ children }) => {
         });
     } catch (error) {
       // Handle errors
-      handleErrors(error);
+      handleErrors(error.message);
     }
   };
 
@@ -611,26 +610,148 @@ const Provider = ({ children }) => {
     }
   };
 
+  const fetchLiabilities = async () => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      await axiosPrivate
+        .get(`${process.env.REACT_APP_BACKEND_API}loans/`, { headers })
+        .then((res) => {
+          let totalVal = 0.000000001;
+          res.data.map((da) => {
+            totalVal += parseFloat(da.balance);
+            finalLiabilities = [
+              ...finalLiabilities,
+              {
+                id: da.id,
+                name: da.name,
+                value: parseFloat(da.balance),
+                principal: parseFloat(da.principal),
+                interest: parseFloat(da.interest_rate),
+                tenure: da.tenure,
+                closure_charges: parseFloat(da.closure_charges),
+                disbursement_date: da.disbursement_date,
+              },
+            ];
+          });
+          dispatch({
+            type: Types.FETCH_LIABILITIES,
+            payload: { finalLiabilities, totalVal },
+          });
+        });
+    } catch (error) {
+      // Handle errors
+      // handleErrors(error.message);
+      console.log(error);
+    }
+  };
+
+  const addLiabilityRequest = async (liabilityData) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      await axiosPrivate
+        .post(`${process.env.REACT_APP_BACKEND_API}loans/`, liabilityData, {
+          headers,
+        })
+        .then((res) => {
+          fetchLiabilities();
+        });
+    } catch (error) {
+      console.log(error.response.data);
+    }
+  };
+
+  const editLiabilityRequest = async (liabilityId, updatedLiabilityData) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      await axiosPrivate
+        .put(
+          `${process.env.REACT_APP_BACKEND_API}loans/${liabilityId}`,
+          updatedLiabilityData,
+          { headers }
+        )
+        .then((res) => {
+          fetchLiabilities();
+        });
+    } catch (error) {
+      //handleErrors(error);
+      console.log(error);
+    }
+  };
+
+  const fetchLiabilityById = async (Id) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+      const response = await axiosPrivate.get(
+        `${process.env.REACT_APP_BACKEND_API}loans/${Id}`,
+        { headers }
+      );
+
+      const assetData = response.data;
+
+      return assetData;
+    } catch (error) {
+      handleErrors(error);
+      throw error;
+    }
+  };
+
+  const deleteLiabilityRequest = async (Ids) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      for (const Id of Ids) {
+        await axiosPrivate.delete(
+          `${process.env.REACT_APP_BACKEND_API}physical_assets/${Id}`,
+          {
+            headers,
+          }
+        );
+      }
+
+      fetchLiabilities();
+    } catch (error) {
+      handleErrors(error);
+    }
+  };
+
   const signOut = () => {
     setAuthToken(null);
     deleteCookie("refresh");
   };
 
   const UnitContext = React.createContext();
-   const UnitUpdateContext = React.createContext();
+  const UnitUpdateContext = React.createContext();
 
-   function useUnit() {
-      return useContext(UnitContext)
-    }
+  function useUnit() {
+    return useContext(UnitContext);
+  }
 
-    function useUnitUpdate() {
-      return useContext(UnitUpdateContext)
-    }   
-      const [unit, setUnit] = useState("Months");
-    
-      const handleUnitChange = (val) => {
-        setUnit(val)
-    }
+  function useUnitUpdate() {
+    return useContext(UnitUpdateContext);
+  }
+  const [unit, setUnit] = useState("Months");
+
+  const handleUnitChange = (val) => {
+    setUnit(val);
+  };
 
   return (
     <Context.Provider
@@ -669,14 +790,17 @@ const Provider = ({ children }) => {
         useUnit,
         useUnitUpdate,
         unit,
-        handleUnitChange 
-
+        handleUnitChange,
+        fetchLiabilities,
+        addLiabilityRequest,
+        editLiabilityRequest,
+        fetchLiabilityById,
+        deleteLiabilityRequest,
       }}
     >
       {children}
     </Context.Provider>
   );
-
 };
 
 export { Context, Provider };

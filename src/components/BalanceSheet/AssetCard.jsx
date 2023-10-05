@@ -9,9 +9,11 @@ export default function Asset(props) {
         borderRadius: "40px",
         padding: "3%",
         marginBottom: "100px",
-        "@media (max-width: 1000px)": {
+        "@media (max-width: 800px)": {
           display: "none",
         },
+        width: '100%',
+        height: '100%',
       }}
     >
       <AssetTable assetDatas={props.assetDatas} />

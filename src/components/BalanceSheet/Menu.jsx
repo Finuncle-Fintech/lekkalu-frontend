@@ -4,6 +4,7 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import AssetForm from "./AssetForm";
+import LiabilitiesForm from "./LiabilitiesForm";
 
 const options = ["Edit"];
 
@@ -21,7 +22,7 @@ export default function BasicMenu(props) {
 
   const handleEditClick = () => {
     setAnchorEl(null);
-     setIsEditClicked(true); 
+    setIsEditClicked(true);
     // handleClose(); // Close the menu
   };
 
@@ -33,7 +34,22 @@ export default function BasicMenu(props) {
   return (
     <div>
       {isEditClicked ? (
-        <AssetForm showForm={isEditClicked} handleRequestForm={handleClose} title="Edit" id={props.id} /> 
+        <>
+          {props.title === "Asset" &&
+          <AssetForm
+            showForm={isEditClicked}
+            handleRequestForm={handleClose}
+            title="Edit"
+            id={props.id}
+          />}
+          {props.title === "Liability" &&
+          <LiabilitiesForm
+            showForm={isEditClicked}
+            handleRequestForm={handleClose}
+            title="Edit"
+            id={props.id}
+          />}
+        </>
       ) : (
         <IconButton
           aria-label="more"

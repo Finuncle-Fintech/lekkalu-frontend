@@ -140,6 +140,7 @@ export default function SimpleBackdrop(props) {
 
   return (
     <div>
+      {console.log(props.dataAsset, props.dataLiability)}
       <Backdrop
         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={props.barGraphIsOpen}
@@ -171,7 +172,7 @@ export default function SimpleBackdrop(props) {
               <CloseIcon />
             </IconButton>
           </Box>
-          <BarChart data={data} />
+          <BarChart data={props.dataLiability} />
         </Box>
       </Backdrop>
     </div>

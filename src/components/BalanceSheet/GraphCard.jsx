@@ -2,7 +2,10 @@ import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import PieChart from "components/Charts/PieChart";
 import NorthEastIcon from "@mui/icons-material/NorthEast";
 import BasicMenu from "components/Header/HeaderComponents/BasicMenu";
+import AssetsCard from "components/BalanceSheet/BalanceCard";
+import { AssetsLiabilitiesChart } from "components/Charts/AssetsLiabilitiesChart";
 import { Box, Typography, Button } from "@mui/material";
+import Pie from "./Pie";
 
 export default function GraphCard(props) {
   const userSetting = {
@@ -30,8 +33,8 @@ export default function GraphCard(props) {
           borderRadius: "40px",
           display: "flex",
           padding: "3%",
-          marginBottom: '100px',
-          "@media (max-width: 1000px)": {
+          marginBottom: "100px",
+          "@media (max-width: 800px)": {
             display: "none",
           },
         }}
@@ -41,6 +44,8 @@ export default function GraphCard(props) {
             borderRadius: "10px",
             padding: "3%",
             boxShadow: "0px 0px 5px #000",
+            width: "100%",
+            height: '100%'
           }}
         >
           <Box>
@@ -60,6 +65,7 @@ export default function GraphCard(props) {
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
+              width: "100%",
             }}
           >
             {" "}
@@ -67,50 +73,66 @@ export default function GraphCard(props) {
               sx={{
                 display: "flex",
                 justifyContent: "center",
-                width: "58vw",
+                width: "100%",
+                alignItems: "center",
               }}
             >
-              <Box sx={{ height: "20rem", width: "50%", marginRight: "2.5%" }}>
-                <PieChart data={props.assetDatas} innerRadius={0.7} />
-                <Typography
-                  sx={{
-                    fontSize: "20px",
-                    fontWeight: "700",
-                    textAlign: "center",
-                    marginTop: "3vh",
-                  }}
-                >
-                  Assets
-                </Typography>
+              <Box sx={{ width: "50%" }}>
+                <Pie
+                  component={
+                    <AssetsLiabilitiesChart
+                      data={props.assetDatas}
+                      type={"assets"}
+                    />
+                  }
+                />
               </Box>
               <Box
                 sx={{
-                  height: "20rem",
                   width: "50%",
-                  marginLeft: "2.5%",
                 }}
               >
-                <PieChart data={props.liabilityDatas} innerRadius={0} />
-
-                <Typography
-                  sx={{
-                    fontSize: "20px",
-                    fontWeight: "700",
-                    textAlign: "center",
-                    marginTop: "3vh",
-                  }}
-                >
-                  Liabilities
-                </Typography>
+                <Pie
+                  component={
+                    <AssetsLiabilitiesChart
+                      data={props.liabilityDatas}
+                      type={"liabilities"}
+                    />
+                  }
+                />
               </Box>
             </Box>{" "}
-            <Box sx={{ width: "70%", textAlign: "center", marginTop: "3vh" }}>
+            <Box sx={{ width: "100%", display: "flex" }}>
+              {" "}
+              <Typography
+                sx={{
+                  fontSize: "18px",
+                  fontWeight: "700",
+                  margin: "10px 0 0 0",
+                  textAlign: "center",
+                  width: "50%",
+                }}
+              >
+                Assets
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: "18px",
+                  fontWeight: "700",
+                  margin: "10px 0 0 0",
+                  textAlign: "center",
+                  width: "50%",
+                }}
+              >
+                Liabilities
+              </Typography>
+            </Box>
+            <Box sx={{ width: "70%", textAlign: "center" }}>
               <Button
                 sx={{
                   fontSize: "12px",
                   fontWeight: "700",
                   borderRadius: "10px",
-                  margin: "10% 0 0 0",
                   color: "black",
                   boxShadow: "0px 0px 2px #000",
                 }}
@@ -127,7 +149,7 @@ export default function GraphCard(props) {
             borderRadius: "10px",
             padding: "3% 2% 3% 2%",
             boxShadow: "0px 0px 5px #000",
-            "@media (max-width: 1000px)": {
+            "@media (max-width: 1050px)": {
               display: "none",
             },
           }}
@@ -175,19 +197,21 @@ export default function GraphCard(props) {
           >
             2.76%
           </Typography>
-          <Typography
-            sx={{
-              fontSize: "15px",
-              fontWeight: "700",
-              color: "#55BC97",
-              background: "#00BA341A",
-              display: "inline",
-              padding: "5%",
-            }}
-          >
-            56%
-            <NorthEastIcon />
-          </Typography>
+          <Box>
+            <Typography
+              sx={{
+                fontSize: "15px",
+                fontWeight: "700",
+                color: "#55BC97",
+                background: "#00BA341A",
+                display: "inline",
+                padding: "5%",
+              }}
+            >
+              56%
+              <NorthEastIcon />
+            </Typography>
+          </Box>
           <Button
             sx={{
               fontSize: "12px",
@@ -212,7 +236,7 @@ export default function GraphCard(props) {
           flexDirection: "column",
           margin: "30px 0 50px 0",
           padding: "3%",
-          "@media (min-width: 1000px)": {
+          "@media (min-width: 800px)": {
             display: "none",
           },
         }}
@@ -237,8 +261,13 @@ export default function GraphCard(props) {
           </Typography>
           <BasicMenu Menu={userSetting} />
         </Box>
-        <Box sx={{ width: "100%", height: "50vh" }}>
-          <PieChart data={props.assetDatas} innerRadius={0.7} />
+        <Box sx={{ width: "100%" }}>
+          <Pie
+            title={"Liabilities"}
+            component={
+              <AssetsLiabilitiesChart data={props.assetDatas} type={"assets"} />
+            }
+          />
         </Box>
       </Box>
       <Box
@@ -249,7 +278,7 @@ export default function GraphCard(props) {
           flexDirection: "column",
           marginBottom: "15%",
           padding: "3%",
-          "@media (min-width: 1000px)": {
+          "@media (min-width: 800px)": {
             display: "none",
           },
         }}
@@ -274,8 +303,16 @@ export default function GraphCard(props) {
           </Typography>
           <BasicMenu Menu={userSetting} />
         </Box>
-        <Box sx={{ width: "100%", height: "50vh" }}>
-          <PieChart data={props.liabilityDatas} innerRadius={0} />
+        <Box sx={{ width: "100%" }}>
+          <Pie
+            title={"Liabilities"}
+            component={
+              <AssetsLiabilitiesChart
+                data={props.liabilityDatas}
+                type={"liabilities"}
+              />
+            }
+          />
         </Box>
       </Box>
     </>

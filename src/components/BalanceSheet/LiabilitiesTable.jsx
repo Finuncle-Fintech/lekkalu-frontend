@@ -2,6 +2,7 @@ import * as React from "react";
 import PropTypes from "prop-types";
 import { alpha } from "@mui/material/styles";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -24,47 +25,12 @@ import { visuallyHidden } from "@mui/utils";
 import IosShareIcon from "@mui/icons-material/IosShare";
 import LocalPrintshopIcon from "@mui/icons-material/LocalPrintshop";
 import DatePicker from "./DatePicker";
-
-function createData(Name, Outstanding, OS, EMI, Interest, PPM, Finish) {
-  return {
-    Name,
-    Outstanding,
-    OS,
-    EMI,
-    Interest,
-    PPM,
-    Finish,
-  };
-}
-
-const rows = [
-  createData("Cupcake", 305, 3.7, 67, 4.3),
-  createData("Donut", 452, 25.0, 51, 4.9),
-  createData("Eclair", 262, 16.0, 24, 6.0),
-  createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
-  createData("Gingerbread", 356, 16.0, 49, 3.9),
-  createData("Honeycomb", 408, 3.2, 87, 6.5),
-  createData("Ice cream sandwich", 237, 9.0, 37, 4.3),
-  createData("Jelly Bean", 375, 0.0, 94, 0.0),
-  createData("KitKat", 518, 26.0, 65, 7.0),
-  createData("Lollipop", 392, 0.2, 98, 0.0),
-  createData("Marshmallow", 318, 0, 81, 2.0),
-  createData("Nougat", 360, 19.0, 9, 37.0),
-  createData("Oreo", 437, 18.0, 63, 4.0),
-  createData("Cudpcake", 305, 3.7, 67, 4.3),
-  createData("Dsonut", 452, 25.0, 51, 4.9),
-  createData("Ecflair", 262, 16.0, 24, 6.0),
-  createData("Froszen yoghurt", 159, 6.0, 24, 4.0),
-  createData("Gindgerbread", 356, 16.0, 49, 3.9),
-  createData("Honfeycomb", 408, 3.2, 87, 6.5),
-  createData("Icef cream sandwich", 237, 9.0, 37, 4.3),
-  createData("Jellfy Bean", 375, 0.0, 94, 0.0),
-  createData("KfitKat", 518, 26.0, 65, 7.0),
-  createData("Lollfipop", 392, 0.2, 98, 0.0),
-  createData("Marshfmallow", 318, 0, 81, 2.0),
-  createData("Nougaft", 360, 19.0, 9, 37.0),
-  createData("Orefo", 437, 18.0, 63, 4.0),
-];
+import { Context } from "provider/Provider";
+import { useContext } from "react";
+import Menu from "./Menu";
+import AddIcon from "@mui/icons-material/Add";
+import LiabilitiesForm from "./LiabilitiesForm";
+import Loading from "./Loading";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -95,56 +61,78 @@ function stableSort(array, comparator) {
     }
     return a[1] - b[1];
   });
+
   return stabilizedThis.map((el) => el[0]);
 }
+
 const headCells = [
   {
-    id: "Name",
+    id: "id",
+    numeric: false,
+    disablePadding: true,
+    label: "ID",
+    hidden: true,
+  },
+  {
+    id: "name",
     numeric: false,
     disablePadding: true,
     label: "Name",
   },
   {
-    id: "Outstanding",
+    id: "value",
     numeric: true,
     disablePadding: false,
-    label: "Outstanding",
+    label: "Balance",
   },
   {
-    id: "OS",
+    id: "principal",
     numeric: true,
     disablePadding: false,
-    label: "O/S%",
+    label: "Principal",
   },
+  // {
+  //   id: "emi",
+  //   numeric: true,
+  //   disablePadding: false,
+  //   label: "EMI",
+  // },
+  // {
+  //   id: "emi_day",
+  //   numeric: true,
+  //   disablePadding: false,
+  //   label: "EMI Day",
+  // },
   {
-    id: "RolAbs",
-    numeric: true,
-    disablePadding: false,
-    label: "Rol Abs",
-  },
-  {
-    id: "EMI",
-    numeric: true,
-    disablePadding: false,
-    label: "EMI",
-  },
-  {
-    id: "Interest",
+    id: "interest",
     numeric: true,
     disablePadding: false,
     label: "Interest",
   },
   {
-    id: "PPM",
+    id: "tenure",
     numeric: true,
     disablePadding: false,
-    label: "PPM",
+    label: "Tenure",
   },
   {
-    id: "Finish",
+    id: "closure",
+    numeric: true,
+    disablePadding: false,
+    label: "Cls. Charges",
+  },
+  {
+    id: "disbursement",
+    numeric: true,
+    disablePadding: false,
+    label: "Disb. Date",
+  },
+
+  {
+    id: "setting",
     numeric: false,
     disablePadding: false,
-    label: "Finish",
+    label: "",
   },
 ];
 
@@ -181,40 +169,46 @@ function EnhancedTableHead(props) {
             sx={{ marginRight: "2vw" }}
           />
         </TableCell>
-        {headCells.map((headCell) => (
-          <TableCell
-            key={headCell.id}
-            // align={headCell.numeric ? "right" : "left"}
-            // padding={headCell.disablePadding ? "none" : "normal"}
-
-            sortDirection={orderBy === headCell.id ? order : false}
-            sx={{
-              backgroundColor: "white",
-              textAlign: "left",
-              borderTop: " 1px solid #e0e0e0",
-              borderLeft: "none",
-              borderRight: "none",
-            }}
-          >
-            <TableSortLabel
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : "asc"}
-              onClick={createSortHandler(headCell.id)}
+        {headCells.map((headCell) =>
+          // Conditionally render the header cell based on hidden property
+          headCell.hidden ? null : (
+            <TableCell
+              key={headCell.id}
+              sortDirection={orderBy === headCell.id ? order : false}
+              sx={{
+                backgroundColor: "white",
+                textAlign: "left",
+                borderTop: " 1px solid #e0e0e0",
+                borderLeft: "none",
+                borderRight: "none",
+              }}
             >
-              <Typography
-                variant="subtitle1"
-                sx={{ fontSize: "15px", fontWeight: "700", textAlign: "left" }}
+              <TableSortLabel
+                active={orderBy === headCell.id}
+                direction={orderBy === headCell.id ? order : "asc"}
+                onClick={createSortHandler(headCell.id)}
               >
-                {headCell.label}
-              </Typography>
-              {orderBy === headCell.id ? (
-                <Box component="span" sx={visuallyHidden}>
-                  {order === "desc" ? "sorted descending" : "sorted ascending"}
-                </Box>
-              ) : null}
-            </TableSortLabel>
-          </TableCell>
-        ))}
+                <Typography
+                  variant="subtitle1"
+                  sx={{
+                    fontSize: "15px",
+                    fontWeight: "700",
+                    textAlign: "left",
+                  }}
+                >
+                  {headCell.label}
+                </Typography>
+                {orderBy === headCell.id ? (
+                  <Box component="span" sx={visuallyHidden}>
+                    {order === "desc"
+                      ? "sorted descending"
+                      : "sorted ascending"}
+                  </Box>
+                ) : null}
+              </TableSortLabel>
+            </TableCell>
+          )
+        )}
       </TableRow>
     </TableHead>
   );
@@ -230,7 +224,26 @@ EnhancedTableHead.propTypes = {
 };
 
 function EnhancedTableToolbar(props) {
-  const { numSelected } = props;
+  const { numSelected, selectedLiabilityIds, handleSelectAfterDelete } = props;
+  const { deleteLiabilityRequest } = useContext(Context);
+
+  const handleLiabilityDelete = async () => {
+    if (selectedLiabilityIds.length > 0) {
+      try {
+        props.setLoading(true);
+        await deleteLiabilityRequest(selectedLiabilityIds);
+      } catch (error) {
+        console.error(
+          `Error deleting Liability with ID ${selectedLiabilityIds}:`,
+          error
+        );
+      } finally {
+        props.setLoading(false);
+      }
+
+      handleSelectAfterDelete();
+    }
+  };
 
   return (
     <Toolbar
@@ -275,7 +288,7 @@ function EnhancedTableToolbar(props) {
 
       {numSelected > 0 ? (
         <Tooltip title="Delete">
-          <IconButton>
+          <IconButton onClick={handleLiabilityDelete}>
             <DeleteIcon />
           </IconButton>
         </Tooltip>
@@ -301,38 +314,46 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 
-export default function EnhancedTable() {
+export default function EnhancedTable(props) {
   const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("Name");
+  const [orderBy, setOrderBy] = React.useState("name");
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [showForm, setForm] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
+  const handleRequestForm = () => {
+    setForm(!showForm);
+  };
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelected = rows.map((row) => row.Name);
+      const newSelected = props.liabilityDatas.map((row) => row.id);
       setSelected(newSelected);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
+  const handleSelectAfterDelete = () => {
+    setSelected([]);
+  };
 
+  const handleClick = (event, id) => {
+    const selectedIndex = selected.indexOf(id);
     let newSelected = [];
 
     if (selectedIndex === -1) {
-      newSelected = [...selected, name];
+      newSelected = [...selected, id];
     } else if (selectedIndex >= 0) {
-      newSelected = selected.filter((item) => item !== name);
+      newSelected = selected.filter((item) => item !== id);
     }
 
     setSelected(newSelected);
@@ -351,155 +372,213 @@ export default function EnhancedTable() {
     setDense(event.target.checked);
   };
 
-  const isSelected = (name) => selected.indexOf(name) !== -1;
+  const isSelected = (id) => selected.indexOf(id) !== -1;
 
-  // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
-  //rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+    page > 0
+      ? Math.max(
+          0,
+          (1 + page) * rowsPerPage - Object.keys(props.liabilityDatas).length
+        )
+      : 0;
 
-  const visibleRows = React.useMemo(
-    () =>
-      stableSort(rows, getComparator(order, orderBy)).slice(
+  const visibleRows = React.useMemo(() => {
+    if (props.liabilityDatas && Object.keys(props.liabilityDatas).length > 0) {
+      const sortedData = stableSort(
+        Object.values(props.liabilityDatas),
+        getComparator(order, orderBy)
+      );
+
+      return sortedData.slice(
         page * rowsPerPage,
         page * rowsPerPage + rowsPerPage
-      ),
-    [order, orderBy, page, rowsPerPage]
-  );
+      );
+    } else {
+      return [];
+    }
+  }, [props.liabilityDatas, order, orderBy, page, rowsPerPage]);
 
   return (
-    <Box sx={{ width: "100%" }}>
-      <Paper sx={{ width: "100%", mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+    <>
+      {isLoading && <Loading open={isLoading} />}
+      {showForm && (
+        <LiabilitiesForm
+          handleRequestForm={handleRequestForm}
+          showForm={showForm}
+          setForm={setForm}
+          title="Add"
+        />
+      )}
 
-        {/*  */}
-        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-          <Box>
-            {" "}
-            <DatePicker />
-          </Box>
-          <Box sx={{ display: "flex", marginRight: "2vw" }}>
-            <Typography
-              sx={{
-                fontSize: "13px",
-                fontWeight: "bold",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center", // Horizontally center the text
-                height: "100%", // Vertically center the text
-                marginBottom: "0",
-                paddingBottom: "0",
-              }}
-            >
-              Page {page + 1} of {Math.ceil(rows.length / rowsPerPage)}
-            </Typography>
-
-            <TablePagination
-              rowsPerPageOptions={[]}
-              component="div"
-              count={rows.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-              labelDisplayedRows={({ from, to, count }) => <></>}
-              labelRowsPerPage=""
-              sx={{
-                border: "none",
-              }}
-            />
-          </Box>
-        </Box>
-
-        <TableContainer>
-          <Table
-          //sx={{ minWidth: 750, border: "none"  }}
-          >
-            <EnhancedTableHead
+      {props.liabilityDatas && Object.keys(props.liabilityDatas).length >= 0 ? (
+        <Box sx={{ width: "100%" }}>
+          <Paper sx={{ width: "100%", mb: 2 }}>
+            <EnhancedTableToolbar
               numSelected={selected.length}
-              order={order}
-              orderBy={orderBy}
-              onSelectAllClick={handleSelectAllClick}
-              onRequestSort={handleRequestSort}
-              rowCount={rows.length}
+              selectedLiabilityIds={selected}
+              handleSelectAfterDelete={handleSelectAfterDelete}
+              setLoading={setIsLoading}
             />
 
-            <TableBody>
-              {visibleRows.map((row, index) => {
-                const isItemSelected = isSelected(row.Name);
-                const labelId = `enhanced-table-checkbox-${index}`;
-
-                return (
-                  <TableRow
-                    hover
-                    onClick={(event) => handleClick(event, row.Name)}
-                    role="checkbox"
-                    aria-checked={isItemSelected}
-                    tabIndex={-1}
-                    key={row.Name}
-                    selected={isItemSelected}
+            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+              <Box
+                sx={{
+                  width: "15%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Button variant="contained" onClick={handleRequestForm}>
+                  <AddIcon />
+                  <Typography
                     sx={{
-                      cursor: "pointer",
-                      margin: "20px",
-                      borderTop: " 1px solid #e0e0e0",
-                      borderLeft: "none",
-                      borderRight: "none",
-
-                      //   "&:hover": {
-                      //     backgroundColor: "lightblue", // Change row background color on hover
-                      //   },
+                      fontSize: "13px",
+                      fontWeight: "700",
+                      color: "white",
+                      margin: "0 10px 0 10px",
                     }}
                   >
-                    <TableCell
-                      padding="checkbox"
-                      sx={{
-                        borderTop: "1px solid #e0e0e0",
-                        borderLeft: "none",
-                        borderRight: "none",
-                      }}
-                    >
-                      <Checkbox
-                        color="primary"
-                        checked={isItemSelected}
-                        inputProps={{
-                          "aria-labelledby": labelId,
-                        }}
-                      />
-                    </TableCell>
-                    {Object.keys(row).map((key) => (
-                      <TableCell
-                        key={key}
-                        align="center"
+                    Add
+                  </Typography>
+                </Button>{" "}
+              </Box>
+              <Box sx={{ display: "flex", marginRight: "2vw" }}>
+                <Typography
+                  sx={{
+                    fontSize: "13px",
+                    fontWeight: "bold",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center", // Horizontally center the text
+                    height: "100%", // Vertically center the text
+                    marginBottom: "0",
+                    paddingBottom: "0",
+                  }}
+                >
+                  Page {page + 1} of{" "}
+                  {Math.ceil(
+                    Object.keys(props.liabilityDatas).length / rowsPerPage
+                  )}
+                </Typography>
+
+                <TablePagination
+                  rowsPerPageOptions={[]}
+                  component="div"
+                  count={Object.keys(props.liabilityDatas).length}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  onPageChange={handleChangePage}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                  labelDisplayedRows={({ from, to, count }) => <></>}
+                  labelRowsPerPage=""
+                  sx={{
+                    border: "none",
+                  }}
+                />
+              </Box>
+            </Box>
+            <TableContainer>
+              <Table sx={{ minWidth: 750, border: "none" }}>
+                <EnhancedTableHead
+                  numSelected={selected.length}
+                  order={order}
+                  orderBy={orderBy}
+                  onSelectAllClick={handleSelectAllClick}
+                  onRequestSort={handleRequestSort}
+                  rowCount={Object.keys(props.liabilityDatas).length}
+                />
+
+                <TableBody>
+                  {visibleRows.map((row, index) => {
+                    const isItemSelected = isSelected(
+                      props.liabilityDatas[index].id
+                    );
+                    const labelId = `enhanced-table-checkbox-${index}`;
+                    let idValue = row.id;
+
+                    return (
+                      <TableRow
+                        hover
+                        onClick={(event) =>
+                          handleClick(event, props.liabilityDatas[index].id)
+                        }
+                        role="checkbox"
+                        aria-checked={isItemSelected}
+                        tabIndex={-1}
+                        key={row.id}
+                        selected={isItemSelected}
                         sx={{
+                          cursor: "pointer",
+                          margin: "20px",
                           borderTop: " 1px solid #e0e0e0",
                           borderLeft: "none",
                           borderRight: "none",
-                          textAlign: "left",
                         }}
                       >
-                        {row[key]}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                );
-              })}
-              {emptyRows > 0 && (
-                <TableRow
-                  style={{
-                    height: (dense ? 33 : 53) * emptyRows,
-                  }}
-                >
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Paper>
-      {/* <FormControlLabel
-        control={<Switch checked={dense} onChange={handleChangeDense} />}
-        label="Dense padding"
-      /> */}
-    </Box>
+                        <TableCell
+                          padding="checkbox"
+                          sx={{
+                            borderTop: "1px solid #e0e0e0",
+                            borderLeft: "none",
+                            borderRight: "none",
+                          }}
+                        >
+                          <Checkbox
+                            color="primary"
+                            checked={isItemSelected}
+                            inputProps={{
+                              "aria-labelledby": labelId,
+                            }}
+                          />
+                        </TableCell>
+                        {Object.keys(row).map((key) =>
+                          key === "id" ? null : (
+                            <TableCell
+                              key={key}
+                              align="center"
+                              sx={{
+                                borderLeft: "none",
+                                borderRight: "none",
+                                textAlign: "left",
+                              }}
+                            >
+                              {row[key]}
+                            </TableCell>
+                          )
+                        )}
+
+                        <TableCell
+                          key="setting"
+                          align="center"
+                          sx={{
+                            borderLeft: "none",
+                            borderRight: "none",
+                            textAlign: "left",
+                          }}
+                        >
+                          <Menu id={idValue} title = "Liability" />
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                  {emptyRows > 0 && (
+                    <TableRow
+                      style={{
+                        height: (dense ? 33 : 53) * emptyRows,
+                      }}
+                    >
+                      <TableCell colSpan={6} />
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Paper>
+        </Box>
+      ) : (
+        <div>No Data</div>
+      )}
+    </>
   );
 }

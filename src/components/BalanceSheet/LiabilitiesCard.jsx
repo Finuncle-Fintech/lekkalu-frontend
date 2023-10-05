@@ -1,21 +1,20 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
-import Table from "./LiabilitiesTable";
+import LiabilitiesTable from "./LiabilitiesTable";
 
-
-export default function Liabilities() {
+export default function Liabilities(props) {
   return (
     <Box
       sx={{
         backgroundColor: "white",
         borderRadius: "40px",
         padding: "3%",
-        "@media (max-width: 1000px)": {
+        "@media (max-width: 800px)": {
           display: "none",
         },
       }}
     >
-      <Table />
+      <LiabilitiesTable liabilityDatas={props.liabilityDatas} />
     </Box>
   );
 }

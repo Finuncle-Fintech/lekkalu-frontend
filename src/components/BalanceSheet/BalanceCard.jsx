@@ -7,7 +7,7 @@ export default function BalanceCard({component, title}){
     const { props } = component
      
     return(
-        <ContainerBalanceCard>
+        <ContainerBalanceCard >
             <div className={styles.container}>
                 <div className="d-flex justify-content-between align-items-center">
                     <h4>{title}</h4>

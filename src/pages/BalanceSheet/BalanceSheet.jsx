@@ -7,15 +7,18 @@ import LiabilitiesCard from "components/BalanceSheet/LiabilitiesCard";
 import BarGraph from "components/BalanceSheet/BarGraph";
 
 export default function BalanceSheet() {
-  const { assets, liabilities, fetchData } = useContext(Context);
+  const { assets, liabilities, fetchData,fetchAsset, fetchLiabilities} = useContext(Context);
 
   const [barGraphIsOpen, setBarGraphIsOpen] = useState(false);
   const [assetDatas, setAssetDatas] = useState([]);
   const [liabilityDatas, setLiabilityDatas] = useState([]);
-
+ 
   useEffect(() => {
-    fetchData();
+    fetchLiabilities();
+   fetchAsset();
   }, []);
+
+
 
   useEffect(() => {
 
@@ -36,6 +39,13 @@ export default function BalanceSheet() {
         id: liability.id,
         label: liability.name,
         value: liability.value,
+        principal: liability.principal,
+        interest: liability.interest,
+        tenure: liability.tenure,
+        closure_charges: liability.closure_charges,
+        disbursement_date: liability.disbursement_date,
+
+
       }));
       setLiabilityDatas(newLiabilityDatas);
     }
@@ -52,24 +62,26 @@ export default function BalanceSheet() {
     <>
       <Box
         sx={{
-          minHeight: "250vh",
+          minHeight: "350vh",
           backgroundColor: "primary.main",
           padding: "1% 5% 0 5%",
         }}
       >
         <GraphCard
-          assetDatas={assetDatas}
-          liabilityDatas={liabilityDatas}
+          assetDatas={assets}
+          liabilityDatas={liabilities}
           setBarGraphIsOpen={handleOpen}
         />
         {barGraphIsOpen ? (
           <BarGraph
             setBarGraphIsOpen={handleClose}
             barGraphIsOpen={barGraphIsOpen}
+            dataAsset = {assetDatas}
+            dataLiability = {liabilityDatas}
           />
         ) : null}
         <AssetCard assetDatas={assetDatas} />
-        {/* <LiabilitiesCard /> */}
+        <LiabilitiesCard liabilityDatas={liabilityDatas} />
       </Box>
     </>
   );

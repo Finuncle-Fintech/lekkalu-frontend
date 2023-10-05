@@ -12,20 +12,22 @@ export default function SimpleBackdrop(props) {
   const [open, setOpen] = React.useState(false);
   const [formData, setFormData] = useState({
     name: "",
-    purchase_value: "",
-    sell_value: "",
-    purchase_date: "",
-    sell_date: "",
-    depreciation_percent: "",
-    depreciation_frequency: "",
-    init_dep: "",
-    market_value: "",
-    user: "",
-    type: "1",
+    balance: "",
+    principal: "",
+    disbursement_date: "",
+    emi_day: "",
+    emi: "",
+    tenure: "",
+    interest_rate: "",
+    closure_charges: "",
   });
 
-  const { addAssetRequest, editAssetRequest, fetchAssetById, authToken } =
-    useContext(Context);
+  const {
+    addLiabilityRequest,
+    editLiabilityRequest,
+    fetchLiabilityById,
+    authToken,
+  } = useContext(Context);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -50,25 +52,22 @@ export default function SimpleBackdrop(props) {
     const fetchData = async () => {
       if (props.title === "Edit") {
         try {
-          const assetData = await fetchAssetById(props.id);
-         
+          const LiabilityData = await fetchLiabilityById(props.id);
           setFormData({
             ...formData,
-            name: assetData.name,
-            purchase_value: assetData.purchase_value ,
-            sell_value: assetData.sell_value || "",
-            purchase_date: assetData.purchase_date,
-            sell_date: assetData.sell_date || "",
-            depreciation_percent: assetData.depreciation_percent,
-            depreciation_frequency: assetData.depreciation_frequency,
-            init_dep: assetData.init_dep,
-            market_value: assetData.market_value,
-            user: assetData.user,
-            type: assetData.type,
+            name: LiabilityData.name,
+            balance: LiabilityData.balance || "",
+            principal: LiabilityData.principal || "",
+            disbursement_date: LiabilityData.disbursement_date || "",
+            emi_day: LiabilityData.emi_day || "",
+            emi: LiabilityData.emi || "",
+            tenure: LiabilityData.tenure || "",
+            interest_rate: LiabilityData.interest_rate || "",
+            closure_charges: LiabilityData.closure_charges || "",
           });
           setOpen(false);
         } catch (error) {
-          console.error("Error fetching asset data:", error);
+          console.error("Error fetching Liability data:", error);
           setOpen(false);
         }
       }
@@ -100,31 +99,23 @@ export default function SimpleBackdrop(props) {
     event.preventDefault();
     setOpen(true);
 
-    const filteredData = {};
-
-    for (const key in formData) {
-      if (formData[key] !== "") {
-        filteredData[key] = formData[key];
-      }
-    }
-
     if (props.title === "Add") {
       try {
-        await addAssetRequest(filteredData);
+        await addLiabilityRequest(formData);
         setOpen(false);
         props.setForm(false);
         props.handleRequestForm();
       } catch (error) {
-        console.error("Error adding asset:", error);
+        console.error("Error adding Liability:", error);
         setOpen(false);
       }
     } else if (props.title === "Edit") {
       try {
-        await editAssetRequest(props.id, filteredData);
+        await editLiabilityRequest(props.id, formData);
         setOpen(false);
         props.handleRequestForm();
       } catch (error) {
-        console.error("Error editing asset:", error);
+        console.error("Error editing Liability:", error);
         setOpen(false);
       }
     }
@@ -179,7 +170,7 @@ export default function SimpleBackdrop(props) {
             <Typography
               sx={{ fontSize: "24px", fontWeight: "bold", color: "black" }}
             >
-              {props.title} Asset
+              {props.title} Liability
             </Typography>
           </Box>
           <Box sx={{ padding: "5rem" }}>
@@ -194,10 +185,10 @@ export default function SimpleBackdrop(props) {
                 sx={{ margin: "1em 0 " }}
               />
               <TextField
-                label="Purchase Value"
-                name="purchase_value"
+                label="Balance"
+                name="balance"
                 type="number"
-                value={formData.purchase_value}
+                value={formData.balance}
                 onChange={handleChange}
                 required
                 fullWidth
@@ -205,20 +196,20 @@ export default function SimpleBackdrop(props) {
               />
 
               <TextField
-                label="Sell Value"
-                name="sell_value"
+                label="Principal"
+                name="principal"
                 type="number"
-                value={formData.sell_value}
+                value={formData.principal}
                 onChange={handleChange}
-                // required
+                required
                 fullWidth
                 sx={{ margin: "1em 0 " }}
               />
               <TextField
-                label="Purchase Date"
-                name="purchase_date"
+                label="Disbursement Date"
+                name="disbursement_date"
                 type="date"
-                value={formData.purchase_date}
+                value={formData.disbursement_date}
                 onChange={handleChange}
                 fullWidth
                 required
@@ -228,13 +219,13 @@ export default function SimpleBackdrop(props) {
                 sx={{ margin: "1em 0 " }}
               />
               <TextField
-                label="Sell Date"
-                name="sell_date"
-                type="date"
-                value={formData.sell_date}
+                label="Emi Date"
+                name="emi_day"
+                type="number"
+                value={formData.emi_date}
                 onChange={handleChange}
                 fullWidth
-                //required
+                required
                 height="50px"
                 InputLabelProps={{
                   shrink: true,
@@ -242,67 +233,46 @@ export default function SimpleBackdrop(props) {
                 sx={{ margin: "1em 0 " }}
               />
               <TextField
-                label="Depreciation Percent"
-                name="depreciation_percent"
+                label="Emi"
+                name="emi"
                 type="number"
-                value={formData.depreciation_percent}
+                value={formData.emi}
                 onChange={handleChange}
                 fullWidth
-                required
-                sx={{ margin: "1em 0 " }}
-              />
-              <TextField
-                label="Depreciation Frequency"
-                name="depreciation_frequency"
-                type="number"
-                value={formData.depreciation_frequency}
-                onChange={handleChange}
-                fullWidth
-                required
-                sx={{ margin: "1em 0 " }}
-              />
-              <TextField
-                label="Initial Depreciation"
-                name="init_dep"
-                type="number"
-                value={formData.init_dep}
-                onChange={handleChange}
-                fullWidth
-                required
-                sx={{ margin: "1em 0 " }}
-              />
-              <TextField
-                label="Market Value"
-                name="market_value"
-                type="number"
-                value={formData.market_value}
-                onChange={handleChange}
-                fullWidth
-                required
-                sx={{ margin: "1em 0 " }}
-              />
-
-              <TextField
-                label="Type"
-                name="type"
-                type="number"
-                value={formData.type}
-                onChange={handleChange}
-                fullWidth
-                sx={{ margin: "1em 0 " }}
-                InputProps={{
-                  readOnly: true,
-                }}
                 //required
+                sx={{ margin: "1em 0 " }}
               />
-
-              {/* <TextField
-                label="Tags (comma-separated)"
-                name="tags"
-                value={formData.tag}
+              <TextField
+                label="Tenure"
+                name="tenure"
+                type="number"
+                value={formData.tenure}
                 onChange={handleChange}
                 fullWidth
-              /> */}
+                required
+                sx={{ margin: "1em 0 " }}
+              />
+              <TextField
+                label="Interest Rate"
+                name="interest_rate"
+                type="number"
+                value={formData.interest_rate}
+                onChange={handleChange}
+                fullWidth
+                required
+                sx={{ margin: "1em 0 " }}
+              />
+
+              <TextField
+                label="Closure Charges"
+                name="closure_charges"
+                type="number"
+                value={formData.closure_charges}
+                onChange={handleChange}
+                fullWidth
+                sx={{ margin: "1em 0 " }}
+                required
+              />
 
               <Button
                 variant="contained"

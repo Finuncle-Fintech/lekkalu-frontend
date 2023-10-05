@@ -380,7 +380,7 @@ export default function EnhancedTable(props) {
           title="Add"
         />
       )}
-      {props.assetDatas && Object.keys(props.assetDatas).length > 0 ? (
+      {props.assetDatas && Object.keys(props.assetDatas).length >= 0 ? (
         <Box sx={{ width: "100%" }}>
           <Paper sx={{ width: "100%", mb: 2 }}>
             <EnhancedTableToolbar
@@ -450,7 +450,7 @@ export default function EnhancedTable(props) {
             </Box>
             <TableContainer>
               <Table
-              //sx={{ minWidth: 750, border: "none"  }}
+              sx={{ minWidth: 750, border: "none" }}
               >
                 <EnhancedTableHead
                   numSelected={selected.length}
@@ -551,7 +551,7 @@ export default function EnhancedTable(props) {
                             textAlign: "left",
                           }}
                         >
-                          <Menu id={idValue} />
+                          <Menu id={idValue} title= "Asset"/>
                         </TableCell>
                       </TableRow>
                     );

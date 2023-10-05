@@ -768,8 +768,6 @@ const Provider = ({ children }) => {
 
   function useUnitUpdate() {
     return useContext(UnitUpdateContext);
-
-    return useContext(UnitContext)
   }
 
   function useUnitUpdate() {
@@ -783,8 +781,8 @@ const Provider = ({ children }) => {
     setUnit(val);
   };
 
-    setUnit(val)
-  }
+
+
 
 
   return (

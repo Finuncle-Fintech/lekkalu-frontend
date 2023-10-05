@@ -1,13 +1,11 @@
-
-import React, { createContext, useReducer, useState, useContext } from 'react';
-import axiosClient from 'components/Axios/Axios';
-import useAxiosPrivate from 'hooks/useAxiosPrivate';
-import { InitialState } from './Reducer';
-import Reducer from './Reducer';
-import Types from './Types';
-import setCookie from 'components/Support/PopUp/utils/SetCookie';
-import deleteCookie from 'components/Support/PopUp/utils/DeleteCookie';
-
+import React, { createContext, useReducer, useState, useContext } from "react";
+import axiosClient from "components/Axios/Axios";
+import useAxiosPrivate from "hooks/useAxiosPrivate";
+import { InitialState } from "./Reducer";
+import Reducer from "./Reducer";
+import Types from "./Types";
+import setCookie from "components/Support/PopUp/utils/SetCookie";
+import deleteCookie from "components/Support/PopUp/utils/DeleteCookie";
 
 const Context = createContext({
   ...InitialState,
@@ -162,14 +160,12 @@ const Provider = ({ children }) => {
         { headers }
       );
 
-      console.log(response.data);
       return response.data;
     } catch (error) {
       handleErrors(error);
       throw error; // Rethrow the error so it can be caught in the calling function
     }
   };
-
 
   const filterExpensesByDate = async (page, rowsPerPage, fromDate, toDate) => {
     try {
@@ -429,7 +425,6 @@ const Provider = ({ children }) => {
           return response.status;
         })
         .catch((error) => {
-          console.log(error?.response?.data?.detail);
           handleErrors(error);
         });
     } catch (error) {
@@ -497,10 +492,6 @@ const Provider = ({ children }) => {
         //API returns [{‘name’: ‘day_job_income’, ‘type’:’salary’,’amount’:50000}]
         //Transform to [{‘name’: ‘day_job_income’, ‘type’:’salary’,’value’:50000}]
         transformedExpensesArray = incomeExpenses.map((each) => {
-          console.log({
-            original: each.amount,
-            value: parseFloat(each.amount),
-          });
           return {
             name: each.name,
             type: each.type,
@@ -530,17 +521,17 @@ const Provider = ({ children }) => {
   const UnitUpdateContext = React.createContext();
 
   function useUnit() {
-    return useContext(UnitContext)
+    return useContext(UnitContext);
   }
 
   function useUnitUpdate() {
-    return useContext(UnitUpdateContext)
+    return useContext(UnitUpdateContext);
   }
   const [unit, setUnit] = useState("Months");
 
   const handleUnitChange = (val) => {
-    setUnit(val)
-  }
+    setUnit(val);
+  };
 
   return (
     <Context.Provider
@@ -575,13 +566,12 @@ const Provider = ({ children }) => {
         useUnitUpdate,
         unit,
         handleUnitChange,
-        fetchAllExpenses
+        fetchAllExpenses,
       }}
     >
       {children}
     </Context.Provider>
   );
-
 };
 
 export { Context, Provider };

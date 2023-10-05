@@ -222,7 +222,9 @@ const Header = () => {
                 <IconButton
                   sx={{
                     ...styles.iconButton,
-                    backgroundColor: isActive("/income-statement") ? "#0F4C91" : "white",
+                    backgroundColor: isActive("/income-statement")
+                      ? "#0F4C91"
+                      : "white",
                     color: isActive("/income-statement") ? "white" : "black",
                   }}
                   component={Link}
@@ -234,7 +236,9 @@ const Header = () => {
                     src="https://i.imgur.com/CSV4JtU.png"
                     alt="balance-scale-right"
                     style={{
-                      filter: isActive("/income-statement") ? "invert(1)" : "none",
+                      filter: isActive("/income-statement")
+                        ? "invert(1)"
+                        : "none",
                     }}
                   />
                 </IconButton>
@@ -291,12 +295,7 @@ const Header = () => {
       </Box>
 
       {authToken ? (
-        <BasicMenu
-          sx={{
-            ...styles.iconButton,
-          }}
-          Menu={userSetting}
-        />
+        <BasicMenu sx={styles.iconButton} Menu={userSetting} />
       ) : null}
 
       {/* Responsive menu button */}
@@ -428,9 +427,6 @@ const Header = () => {
                   <ListItemText primary="Goal" />
                 </ListItemButton>
 
-
-
-
                 <ListItemButton
                   component={Link}
                   to="/expenses"
@@ -461,7 +457,9 @@ const Header = () => {
                   component={Link}
                   to="/income-statement"
                   sx={{
-                    backgroundColor: isActive("/income-statement") ? "white" : "#1976D2",
+                    backgroundColor: isActive("/income-statement")
+                      ? "white"
+                      : "#1976D2",
                     color: isActive("/income-statement") ? "black" : "white",
                     margin: "10px 0",
                   }}
@@ -475,7 +473,9 @@ const Header = () => {
                       style={{
                         marginRight: "10px",
                         color: "white",
-                        filter: isActive("/income-statement") ? "none" : "invert(1)",
+                        filter: isActive("/income-statement")
+                          ? "none"
+                          : "invert(1)",
                       }}
                     />
                   </ListItemIcon>

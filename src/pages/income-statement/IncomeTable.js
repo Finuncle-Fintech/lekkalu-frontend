@@ -23,11 +23,10 @@ import {
 import { randomId } from "@mui/x-data-grid-generator";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 
-
 const ITEM_HEIGHT = 48;
 function EditToolbar(props) {
   const isMobile = window.innerWidth <= 768;
-  console.log("isMobile: ", isMobile);
+
   const { setRows, setRowModesModel, selectionModel, handleDeleteClick } =
     props;
   const [anchorEl, setAnchorEl] = useState(null);
@@ -101,8 +100,8 @@ function EditToolbar(props) {
                   fontSize: "14px",
                   fontWeight: "500",
                   "&:hover": {
-                    backgroundColor: "transparent"
-                    },
+                    backgroundColor: "transparent",
+                  },
                 }}
               >
                 <DeleteIcon
@@ -121,22 +120,22 @@ function EditToolbar(props) {
               <GridToolbarFilterButton
                 className="menu-item-button table-button"
                 sx={{
-                    color: "#344054",
-                    margin: "10px",
-                    "&:hover": {
-                        backgroundColor: "transparent"
-                    },
+                  color: "#344054",
+                  margin: "10px",
+                  "&:hover": {
+                    backgroundColor: "transparent",
+                  },
                 }}
               />
             </MenuItem>
             <MenuItem onClick={handleClose}>
               <GridToolbarExport
                 sx={{
-                    color: "#344054",
-                    margin: "10px",
-                    "&:hover": {
-                        backgroundColor: "transparent"
-                    },
+                  color: "#344054",
+                  margin: "10px",
+                  "&:hover": {
+                    backgroundColor: "transparent",
+                  },
                 }}
                 className="table-button table-export-icon"
               />
@@ -145,11 +144,11 @@ function EditToolbar(props) {
               <Button
                 color="primary"
                 sx={{
-                    color: "#344054",
-                    margin: "10px",
-                    "&:hover": {
-                        backgroundColor: "transparent"
-                    },
+                  color: "#344054",
+                  margin: "10px",
+                  "&:hover": {
+                    backgroundColor: "transparent",
+                  },
                 }}
                 // sx={{
                 //   borderRadius: "8px",

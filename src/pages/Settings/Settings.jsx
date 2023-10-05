@@ -26,8 +26,6 @@ export default function Settings() {
     return uniqBy(currencyList, (currency) => currency.symbol);
   }, []);
 
-  console.log(currencyCodes);
-
   const handleValueChange = (e) => {
     setPreferences((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };

@@ -23,19 +23,17 @@ import "./EmiCalculator.css";
 
 import { Context } from "../../provider/Provider";
 
-
 const today = new Date();
 const year = today.getFullYear();
 const month = String(today.getMonth() + 1).padStart(2, "0");
 const day = String(today.getDate()).padStart(2, "0");
 const formattedDate = `${year}-${month}-${day}`;
 
-
 const defaultData = {
   loan_principal: 300000,
   loan_interest: 11,
   loan_tenure: 3,
-  emi_day:  5,
+  emi_day: 5,
   disbursement_date: formattedDate,
 };
 
@@ -49,7 +47,7 @@ const defaultResults = {
 const EmiCalculator = () => {
   const location = useLocation();
   const parsedObject = parseQueryString(location.search);
-  const {unit} = useContext(Context);
+  const { unit } = useContext(Context);
   const [data, setData] = useState(
     !isObjectEmpty(parsedObject) ? parsedObject : defaultData
   );
@@ -65,7 +63,6 @@ const EmiCalculator = () => {
   };
 
   const handleSave = async () => {
-    console.log("data", data);
     setIsLoading(true);
     try {
       await axios.post(`${process.env.REACT_APP_API}expenses/`, data, {
@@ -84,7 +81,6 @@ const EmiCalculator = () => {
 
   useEffect(() => {
     setResults(calculateEmiOutputs(data, unit));
-    // console.log(data.loan_tenure)
   }, [data, unit]);
 
   useEffect(() => {
@@ -102,23 +98,19 @@ const EmiCalculator = () => {
     setTimeout(() => setIsCopied(false), 3000);
   };
 
-
-
-  const calculateTenureByUnit = (unit, data) => {    
-    if(unit === 'Years'){   
-      const yearValue = Math.floor(data.loan_tenure / 12) 
-      setData({...data, loan_tenure: yearValue})             
-    }else if(unit === 'Months'){      
-      const monthValue = Math.floor(data.loan_tenure * 12) 
-      setData({...data, loan_tenure: monthValue})       
+  const calculateTenureByUnit = (unit, data) => {
+    if (unit === "Years") {
+      const yearValue = Math.floor(data.loan_tenure / 12);
+      setData({ ...data, loan_tenure: yearValue });
+    } else if (unit === "Months") {
+      const monthValue = Math.floor(data.loan_tenure * 12);
+      setData({ ...data, loan_tenure: monthValue });
     }
-  }
+  };
 
-  useEffect(() => {    
-    calculateTenureByUnit(unit, data)
-  }, [unit])
-
-
+  useEffect(() => {
+    calculateTenureByUnit(unit, data);
+  }, [unit]);
 
   return (
     <div className="container">
@@ -160,23 +152,23 @@ const EmiCalculator = () => {
           showSlider
         />
       </div>
-   
-        <FormInput
-          handleChange={handleChange}
-          value={data.loan_tenure}
-          options={optionsMonth}         
-          name="loan_tenure"
-          type="number"
-          label="Loan Tenure"
-          symbol={unit}
-          min="0"
-          max={unit === "Months" ? "240" : "20"}
-          step={unit === "Months" ? "6" : "1"}
-          tooltip="how long do you want the loan for?"
-          showSlider
-          visible
-        />
-     
+
+      <FormInput
+        handleChange={handleChange}
+        value={data.loan_tenure}
+        options={optionsMonth}
+        name="loan_tenure"
+        type="number"
+        label="Loan Tenure"
+        symbol={unit}
+        min="0"
+        max={unit === "Months" ? "240" : "20"}
+        step={unit === "Months" ? "6" : "1"}
+        tooltip="how long do you want the loan for?"
+        showSlider
+        visible
+      />
+
       <div>
         <FormInput
           handleChange={handleChange}

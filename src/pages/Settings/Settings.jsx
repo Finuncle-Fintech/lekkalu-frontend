@@ -4,15 +4,19 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  TextField,
 } from "@mui/material";
 import styles from "./Settings.module.css";
 import { useUserPreferences } from "hooks/useUserPreferences";
 import { getCountryList } from "country-data-codes";
-import { useMemo } from "react";
+import { useContext, useMemo } from "react";
 import { uniqBy } from "lodash";
+import { Context } from "provider/Provider";
 
 export default function Settings() {
   const { preferences, setPreferences, savePreferences } = useUserPreferences();
+  const { user } = useContext(Context);
+  console.log(user);
 
   const currencyCodes = useMemo(() => {
     const countryList = getCountryList();
@@ -37,6 +41,18 @@ export default function Settings() {
 
       <div className={styles.grid}>
         <FormControl>
+          <TextField label="First Name" />
+        </FormControl>
+
+        <FormControl>
+          <TextField label="Last Name" />
+        </FormControl>
+
+        <FormControl>
+          <TextField label="Email" />
+        </FormControl>
+
+        <FormControl>
           <InputLabel>Currency Unit</InputLabel>
           <Select
             value={preferences.currencyUnit}
@@ -59,7 +75,7 @@ export default function Settings() {
           savePreferences();
         }}
       >
-        Save Preferences
+        Update
       </Button>
     </div>
   );

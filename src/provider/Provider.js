@@ -781,10 +781,6 @@ const Provider = ({ children }) => {
     setUnit(val);
   };
 
-
-
-
-
   return (
     <Context.Provider
       value={{

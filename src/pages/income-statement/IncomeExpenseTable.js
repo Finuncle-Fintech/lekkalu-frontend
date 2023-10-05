@@ -22,8 +22,7 @@ import {
 } from "@mui/x-data-grid";
 import { randomId } from "@mui/x-data-grid-generator";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { Context } from "provider/Provider";
-
+import Swal from "sweetalert2";
 
 const ITEM_HEIGHT = 48;
 
@@ -52,7 +51,7 @@ const EditToolbar = (props) => {
 
   return (
     <GridToolbarContainer
-      sx={{ backgroundColor: "#ffffff", marginBottom: "10px" }}
+      sx={{ backgroundColor: "#ffffff", marginBottom: "10px", borderRadius: 0, }}
       className="toolbar-container"
     >
       <div>
@@ -153,20 +152,6 @@ const EditToolbar = (props) => {
                         backgroundColor: "transparent"
                     },
                 }}
-                // sx={{
-                //   borderRadius: "8px",
-                //   border: "1px solid #0070FF",
-                //   background: "#0070FF",
-                //   boxShadow:
-                //     "0px 0.96159px 1.92319px 0pxrgba(16, 24, 40, 0.05)",
-                //   color: "#FFFFFF",
-                //   fontSize: "14px",
-                //   fontWeight: 500,
-                //   lineHeight: "20px",
-                //   padding: "10px",
-                //   marginLeft: "10px",
-                //   "&:hover": { backgroundColor: "#0070FF" },
-                // }}
                 className="table-button"
                 startIcon={
                   <AddIcon
@@ -264,6 +249,15 @@ const EditToolbar = (props) => {
   );
 }
 
+const CustomNoRowsOverlay = (props) => {
+  const { incomeTable } = props;
+  return (
+    <div>
+      <Box sx={{ mt: 1, textAlign: 'center' }}>{incomeTable ? 'No Incomes in Records!' : 'No Expenses in Records!'}</Box>
+    </div>
+  );
+}
+
 const IncomeExpenseTable = ({ incomeStatement, addfield, updateField, deleteField, incomeTable }) => {
   const [rows, setRows] = useState([]);
   const [rowModesModel, setRowModesModel] = useState({});
@@ -290,8 +284,21 @@ const IncomeExpenseTable = ({ incomeStatement, addfield, updateField, deleteFiel
   };
 
   const handleDeleteClick = (id) => () => {
-    deleteField(id);
-    setRows(rows.filter((row) => row.id !== id));
+    Swal.fire({
+      title: "Are you sure?",
+      text: `You won't be able to revert this`,
+      icon:  "warning",
+      showConfirmButton: true,
+      showCancelButton: true,
+      confirmButtonText: "Delete",
+      confirmButtonColor: "Red",
+    }).then((res) => {
+      if (res.isConfirmed) {
+        deleteField(id);
+        setRows(rows.filter((row) => row.id !== id));
+        Swal.fire("Deleted", "Your income record deleted successfully.", "success");
+      }
+    });
   };
 
   const handleCancelClick = (id) => () => {
@@ -309,9 +316,52 @@ const IncomeExpenseTable = ({ incomeStatement, addfield, updateField, deleteFiel
   const processRowUpdate = (newRow) => {
     if(newRow.isNew === true) {
       delete newRow.id;
-      addfield(newRow);
+      Swal.fire({
+        title: "Are you sure?",
+        text: `You won't be able to revert this`,
+        icon: "warning",
+        showConfirmButton: true,
+        showCancelButton: true,
+        confirmButtonText: "Save",
+        confirmButtonColor: "Blue",
+      }).then((res) => {
+        if (res.isConfirmed) {
+          addfield({...newRow, amount: newRow.value}).then((resp) => {
+            if(resp.status === 201) {
+              setRowModesModel(false);
+              Swal.fire("Added", "Your income record added successfully.", "success");
+            } else {
+              Swal.fire({
+                text: `Please enter valid value.`,
+                icon: "error",
+              });
+            }
+          });
+        }
+      });
     } else {
-      updateField(newRow.id, newRow);
+      Swal.fire({
+        title: "Are you sure?",
+        text: `You won't be able to revert this`,
+        icon: "warning",
+        showConfirmButton: true,
+        showCancelButton: true,
+        confirmButtonText: "Save",
+        confirmButtonColor: "Blue",
+      }).then((res) => {
+        if (res.isConfirmed) {
+          updateField(newRow.id, {...newRow, amount: newRow.value}).then((res) => {
+            if(res.status === 200) {
+              Swal.fire("Updated", "Your income record updated successfully.", "success");
+            } else {
+              Swal.fire({
+                text: `Please enter valid value.`,
+                icon: "error",
+              });
+            }
+          });
+        }
+      });
     }
     const updatedRow = { ...newRow, isNew: false };
     setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
@@ -420,9 +470,11 @@ const IncomeExpenseTable = ({ incomeStatement, addfield, updateField, deleteFiel
           rowSelectionModel={selectedRows}
           slots={{
             toolbar: EditToolbar,
+            noRowsOverlay: CustomNoRowsOverlay,
           }}
           slotProps={{
             toolbar: { setRows, setRowModesModel, incomeTable },
+            noRowsOverlay: { incomeTable }
           }}
           hideFooter
         />

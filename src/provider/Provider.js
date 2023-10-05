@@ -499,16 +499,15 @@ const Provider = ({ children }) => {
   };
 
   const addIncomeSource = async (data) => {
-    console.log('=====data: ', data);
     try {
       const headers = {
         Authorization: `Bearer ${authToken}`,
         "Content-Type": "application/json",
       };
 
-      await axiosPrivate.post(`${process.env.REACT_APP_BACKEND_API}income_source/`, data, {
+      return await axiosPrivate.post(`${process.env.REACT_APP_BACKEND_API}income_source/`, data, {
         headers,
-      });
+      }).then((response) =>response).catch((error) => error);
     } catch (error) {
       handleErrors(error);
     }
@@ -521,9 +520,9 @@ const Provider = ({ children }) => {
         "Content-Type": "application/json",
       };
 
-      await axiosPrivate.put(`${process.env.REACT_APP_BACKEND_API}income_source/${id}`, data, {
+      return await axiosPrivate.put(`${process.env.REACT_APP_BACKEND_API}income_source/${id}`, data, {
         headers,
-      });
+      }).then((response) =>response).catch((error) => error);
     } catch (error) {
       handleErrors(error);
     }

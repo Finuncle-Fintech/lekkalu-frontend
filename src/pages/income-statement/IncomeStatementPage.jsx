@@ -34,12 +34,6 @@ function CustomTabPanel(props) {
   );
 }
 
-// CustomTabPanel.propTypes = {
-//   children: PropTypes.node,
-//   index: PropTypes.number.isRequired,
-//   value: PropTypes.number.isRequired,
-// };
-
 function a11yProps(index) {
   return {
     id: `simple-tab-${index}`,
@@ -62,14 +56,33 @@ const IncomeStatementPage = () => {
   const [value, setValue] = React.useState(0);
 
   const tabStyle = {
-    color: '#ffffff', // Change this to your desired text color
+    fontWeight: 'bold',
+    backgroundColor: 'transparent',
+    color: '#ffffff',
+    borderTopLeftRadius: '10px',
+    borderTopRightRadius: '10px',
+    '&.Mui-selected': {
+      backgroundColor: '#ffffff'
+    }
+  };
+
+  const tabPanelStyle = {
+    borderBottomLeftRadius: '10px',
+    borderBottomRightRadius: '10px'
+  }
+  const tabsStyle = {
+    borderTopLeftRadius: '10px',
+    borderTopRightRadius: '10px',
+    backgroundColor: 'transparent',
+    '.css-jpln7h-MuiTabs-scroller': {
+      backgroundColor: 'transparent',
+    }
   };
 
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-  console.log('incomeStatement: ', incomeStatement);
   // Initialize variables to store the totals for each type
   let personalTotal = 0;
   let loanRepaymentTotal = 0;
@@ -98,6 +111,14 @@ const IncomeStatementPage = () => {
   const investmentPercentage = (investmentTotal / 179000) * 100;
 
 
+    // Step 1: Calculate the sum of all "Salary" type values
+  const salaryValues = incomeStatement.income.filter(item => item.type === "Salary");
+  const sumOfSalaryValues = salaryValues.reduce((total, item) => total + item.value, 0);
+
+  // Step 2: Calculate the percentage of "Salary" data compared to the total value
+  const totalValue = incomeStatement.income.reduce((total, item) => total + item.value, 0);
+  const salaryPercentage = ((sumOfSalaryValues / totalValue) * 100) + '%';
+
 
   useEffect(() => {
     fetchIncomeStatement();
@@ -118,7 +139,7 @@ const IncomeStatementPage = () => {
                     <img src={IncomePercentage} width={64} alt="" />
                     <div>
                       <Typography component="div" variant="h5" sx={{color: 'rgba(0, 0, 0, 0.75)', fontSize: '34px', fontWeight: 500, lineHeight: '40px'}} >
-                        100%
+                        {salaryPercentage}
                       </Typography>
                       <Typography
                         variant="subtitle1"
@@ -161,7 +182,7 @@ const IncomeStatementPage = () => {
           <Grid item xs={12} sm={6} md={3} >
             <Card sx={{ display: "flex" }}>
               <Box sx={{ display: "flex", borderRadius: '12px',flexDirection: "column" }}>
-                <CardContent sx={{ flex: "1 0 auto",paddingBottom:'16px !important  ' }}>
+                <CardContent sx={{ flex: "1 0 auto", paddingBottom:'16px !important  ' }}>
                 <Box sx={{ display: 'flex', flexDirection: 'row',alignItems:'center',gap:2 }}>
                     <img src={IncomePercentage} width={64} alt="" />
                     <div>
@@ -207,12 +228,11 @@ const IncomeStatementPage = () => {
             </Card>
           </Grid>
         </Grid>
-
-        <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-          <Tab style={tabStyle} label="Income" {...a11yProps(0)} />
-          <Tab style={tabStyle} label="Expense" {...a11yProps(1)} />
+        <Tabs sx={tabsStyle} value={value} variant="fullWidth" onChange={handleChange} aria-label="basic tabs example">
+          <Tab sx={tabStyle} label="Income" {...a11yProps(0)} />
+          <Tab sx={tabStyle} label="Expense" {...a11yProps(1)} />
         </Tabs>
-        <CustomTabPanel value={value} index={0}>
+        <CustomTabPanel style={tabPanelStyle} className='custom-tab-container' value={value} index={0}>
           <IncomeExpenseTable
             incomeStatement={incomeStatement.income}
             addfield={addIncomeSource}
@@ -221,7 +241,7 @@ const IncomeStatementPage = () => {
             incomeTable
           />
         </CustomTabPanel>
-        <CustomTabPanel value={value} index={1}>
+        <CustomTabPanel style={tabPanelStyle} className='custom-tab-container' value={value} index={1}>
           <IncomeExpenseTable
             incomeStatement={incomeStatement.expenses}
             addfield={addIncomeExpense}

@@ -7,6 +7,7 @@ class GetStartedPage(BasePage):
     def __init__(self, driver):
         super().__init__(driver)
         self.driver.get('http://127.0.0.1:3000/signup')
+        self.driver.set_window_size(1616, 876)
 
     def fill_out_registration_form_to_get_status_of_sign_up_button(self):
         #self.click(GetStartedPageLocators.get_started_link)

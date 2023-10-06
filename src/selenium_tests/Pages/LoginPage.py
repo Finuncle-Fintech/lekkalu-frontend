@@ -10,6 +10,7 @@ class LoginPage(BasePage):
     def __init__(self, driver):
         super().__init__(driver)
         self.driver.get('http://127.0.0.1:3000/signin')
+        self.driver.set_window_size(1616, 876)
 
     def fill_out_login_form_to_get_alert_text(self):
         #self.click(LoginPageLocators.get_started_link)

@@ -8,7 +8,6 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 
 
-
 class TestRegistration(unittest.TestCase):
     def setUp(self) -> None:
         options = Options()
@@ -16,10 +15,15 @@ class TestRegistration(unittest.TestCase):
 
         self.driver = webdriver.Chrome(options=options)
         self.vars = {}
-        self.base_url = "http://127.0.0.1:3000/"
+        self.base_url = 'http://127.0.0.1:3000/'
 
     def tearDown(self):
         self.driver.quit()
+
+    def test_url(self):
+        self.driver.get(self.base_url)
+        URL = self.driver.current_url
+        self.assertEqual(self.base_url, URL)
 
     def test_registration(self):
         self.driver.get(self.base_url)
@@ -56,6 +60,7 @@ class TestRegistration(unittest.TestCase):
         alert = WebDriverWait(self.driver, 5).until(EC.alert_is_present())
         alert_text = alert.text
         assert alert_text == "Network Error"
+
 
 if __name__ == '__main__':
     unittest.main()

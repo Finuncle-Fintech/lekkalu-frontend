@@ -9,11 +9,11 @@ from Resources.LoginPageLocators import LoginPageLocators
 class LoginPage(BasePage):
     def __init__(self, driver):
         super().__init__(driver)
-        self.driver.get('http://127.0.0.1:3000/')
+        self.driver.get('http://127.0.0.1:3000/signin')
 
     def fill_out_login_form_to_get_alert_text(self):
-        self.click(LoginPageLocators.get_started_link)
-        self.find_element_and_click(By.XPATH, LoginPageLocators.login_button)
+        #self.click(LoginPageLocators.get_started_link)
+        #self.find_element_and_click(By.XPATH, LoginPageLocators.login_button)
         self.click(LoginPageLocators.user_name)
         self.enter_text(LoginPageLocators.user_name, "asd")
         self.click(LoginPageLocators.password)

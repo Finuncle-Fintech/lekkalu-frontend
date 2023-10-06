@@ -16,6 +16,7 @@ class BasePage():
         WebDriverWait(self.driver, 20).until(EC.element_to_be_clickable(by_locator)).click()
 
     def find_element_and_click(self, by_what, by_locator):
+        #WebDriverWait(self.driver, 20).until(EC.element_to_be_clickable(by_locator))
         self.driver.find_element(by_what,by_locator).click()
 
     def find_element(self,by_what, by_locator):
@@ -23,7 +24,7 @@ class BasePage():
 
     def enter_text(self, by_locator, text):
         """ Performs text entry of the passed in text, in a web element whose locator is passed to it"""
-        return WebDriverWait(self.driver, 20).until(EC.presence_of_element_located(by_locator)).send_keys(text)
+        return WebDriverWait(self.driver, 20).until(EC.element_to_be_clickable(by_locator)).send_keys(text)
 
     def get_title(self, title) -> str:
         """Returns the title of the page"""

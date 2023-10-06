@@ -21,11 +21,11 @@ class TestRegistration(unittest.TestCase):
 
     def setUp(self) -> None:
         options = Options()
-        options.add_argument('--headless=new')
+        #options.add_argument('--headless=new')
 
         self.driver = webdriver.Chrome(options=options)
-        self.get_started_page = GetStartedPage(self.driver)
-        self.login_page = LoginPage(self.driver)
+
+
 
 
     def tearDown(self):
@@ -36,6 +36,7 @@ class TestRegistration(unittest.TestCase):
         Testing whether the loaded page's url is the same as set in the base url.
         :return:
         """
+        self.driver.get("http://127.0.0.1:3000/")
         self.assertEqual('http://127.0.0.1:3000/', self.driver.current_url)
 
     def test_registration(self):
@@ -43,6 +44,7 @@ class TestRegistration(unittest.TestCase):
         Test the 'Get Started' page on Finuncle. At the end of the process when all the fields are filled the button is
         disabled at the moment.
         """
+        self.get_started_page = GetStartedPage(self.driver)
         signup_button_enabled = self.get_started_page.fill_out_registration_form_to_get_status_of_sign_up_button()
         self.assertEqual(False, signup_button_enabled)
 
@@ -50,6 +52,7 @@ class TestRegistration(unittest.TestCase):
         """
          Test login with an unregistered user.
          """
+        self.login_page = LoginPage(self.driver)
         alert_text = self.login_page.fill_out_login_form_to_get_alert_text()
         self.assertEqual(alert_text,"Network Error")
 

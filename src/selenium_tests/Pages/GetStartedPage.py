@@ -6,10 +6,10 @@ from Resources.GetStartedPageLocators import GetStartedPageLocators
 class GetStartedPage(BasePage):
     def __init__(self, driver):
         super().__init__(driver)
-        self.driver.get('http://127.0.0.1:3000/')
+        self.driver.get('http://127.0.0.1:3000/signup')
 
     def fill_out_registration_form_to_get_status_of_sign_up_button(self):
-        self.click(GetStartedPageLocators.get_started_link)
+        #self.click(GetStartedPageLocators.get_started_link)
         self.click(GetStartedPageLocators.user_name)
         self.enter_text(GetStartedPageLocators.user_name, "asd")
         self.click(GetStartedPageLocators.email)

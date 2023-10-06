@@ -1,3 +1,4 @@
+from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
@@ -12,12 +13,12 @@ class LoginPage(BasePage):
 
     def fill_out_login_form_to_get_alert_text(self):
         self.click(LoginPageLocators.get_started_link)
-        self.click(LoginPageLocators.login_button)
+        self.find_element_and_click(By.XPATH, LoginPageLocators.login_button)
         self.click(LoginPageLocators.user_name)
         self.enter_text(LoginPageLocators.user_name, "asd")
         self.click(LoginPageLocators.password)
         self.enter_text(LoginPageLocators.password, "123456789")
-        self.click(LoginPageLocators.continue_button)
+        self.find_element_and_click(By.XPATH, LoginPageLocators.continue_button)
         alert = WebDriverWait(self.driver, 5).until(EC.alert_is_present())
         alert_text = alert.text
 

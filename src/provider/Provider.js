@@ -160,7 +160,7 @@ const Provider = ({ children }) => {
         { headers }
       );
 
-      console.log(response.data);
+      //console.log(response.data);
       return response.data;
     } catch (error) {
       handleErrors(error);
@@ -390,10 +390,7 @@ const Provider = ({ children }) => {
 
       await axiosPrivate
         .get(`${process.env.REACT_APP_BACKEND_API}physical_assets/`, {
-          auth: {
-            username: process.env.REACT_APP_USER,
-            password: process.env.REACT_APP_PASSWORD,
-          },
+          headers,
         })
         .then((res) => {
           const data = res.data;
@@ -492,6 +489,11 @@ const Provider = ({ children }) => {
         //API returns [{‘name’: ‘day_job_income’, ‘type’:’salary’,’amount’:50000}]
         //Transform to [{‘name’: ‘day_job_income’, ‘type’:’salary’,’value’:50000}]
         transformedExpensesArray = incomeExpenses.map((each) => {
+          // console.log({
+          //   original: each.amount,
+          //   value: parseFloat(each.amount),
+          // });
+
           return {
             name: each.name,
             type: each.type,

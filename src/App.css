@@ -30,6 +30,10 @@
   margin-left: 75%;
 }
 
+.errorMessage {
+  color: red;
+}
+
 @media (max-width: 600px) {
   .loginbtn {
     width: 200px;

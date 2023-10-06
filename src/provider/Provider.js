@@ -592,6 +592,7 @@ const Provider = ({ children }) => {
           headers,
         })
         .then((res) => {
+          console.log(res)
           let totalVal = 0.000000001;
           res.data.map((da) => {
             totalVal += da.market_value;

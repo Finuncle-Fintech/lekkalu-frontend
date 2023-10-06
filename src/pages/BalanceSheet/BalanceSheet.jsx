@@ -7,17 +7,14 @@ import LiabilitiesCard from "components/BalanceSheet/LiabilitiesCard";
 import BarGraph from "components/BalanceSheet/BarGraph";
 
 export default function BalanceSheet() {
-  const { assets, liabilities, fetchAsset, fetchLiabilities } =
+  const { assets, liabilities } =
     useContext(Context);
 
   const [barGraphIsOpen, setBarGraphIsOpen] = useState(false);
   const [assetDatas, setAssetDatas] = useState([]);
   const [liabilityDatas, setLiabilityDatas] = useState([]);
 
-  useEffect(() => {
-    fetchLiabilities();
-    fetchAsset();
-  }, []);
+
 
 
   useEffect(() => {

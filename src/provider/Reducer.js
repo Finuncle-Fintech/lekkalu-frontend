@@ -93,31 +93,6 @@ const Reducer = (state, action) => {
         tags: action.payload,
       };
     }
-    case Types.ADD_ASSET: {
-      return {
-        ...state,
-        assets: action.payload,
-      };
-    }
-    case Types.EDIT_ASSET: {
-      return {
-        ...state,
-        assets: action.payload,
-      };
-    }
-    case Types.DELETE_ASSET: {
-      const assetIdToDelete = action.payload;
-        
-      const updatedAssets = state.assets.finalAssets.filter(
-        (asset) => asset.id !== assetIdToDelete
-      );
-      console.log(updatedAssets)
-
-      return {
-        ...state,
-        assets: updatedAssets,  
-      };
-    }
     case Types.FETCH_ASSETS: {
       console.log(action.payload)
       return {

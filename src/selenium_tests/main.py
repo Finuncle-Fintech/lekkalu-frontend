@@ -12,7 +12,10 @@ class TestRegistration(unittest.TestCase):
     """
     Run tests in headless mode.
     Base URL set to 127.0.0.1:3000 because of the github Actions page.
+    Make sure to use XPATH where ever you can, because with CSS selectors the script running on github actions did not
+    find the elements.
     """
+
     def setUp(self) -> None:
         options = Options()
         options.add_argument('--headless=new')
@@ -25,14 +28,19 @@ class TestRegistration(unittest.TestCase):
         self.driver.quit()
 
     def test_url(self):
+        """
+        Testing whether the loaded page's url is the same as set in the base url.
+        :return:
+        """
         self.driver.get(self.base_url)
         URL = self.driver.current_url
         self.assertEqual(self.base_url, URL)
 
-    """
-    Test the 'Get Started' page on Finuncle. At the end of the process when all the fields are filled the button is disabled at the moment.
-    """
     def test_registration(self):
+        """
+        Test the 'Get Started' page on Finuncle. At the end of the process when all the fields are filled the button is
+        disabled at the moment.
+        """
         self.driver.get(self.base_url)
         self.driver.set_window_size(1616, 876)
         wait = WebDriverWait(self.driver, 20)
@@ -56,6 +64,9 @@ class TestRegistration(unittest.TestCase):
         self.assertEqual(False, signup_button.is_enabled())
 
     def test_login_with_unregistered_user(self):
+        """
+         Test login with an unregistered user.
+         """
         self.driver.get(self.base_url)
         self.driver.set_window_size(1616, 876)
         wait = WebDriverWait(self.driver, 20)

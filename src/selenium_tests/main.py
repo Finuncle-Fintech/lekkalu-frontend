@@ -16,12 +16,13 @@ class TestRegistration(unittest.TestCase):
 
         self.driver = webdriver.Chrome(options=options)
         self.vars = {}
+        self.base_url = "http://127.0.0.1:3000/"
 
     def tearDown(self):
         self.driver.quit()
 
     def test_registration(self):
-        self.driver.get("http://localhost:3000/")
+        self.driver.get(self.base_url)
         self.driver.set_window_size(1616, 876)
         wait = WebDriverWait(self.driver, 10)
         get_started_link = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, ".HeroHeader_button__EgRW5")))
@@ -43,7 +44,7 @@ class TestRegistration(unittest.TestCase):
         self.assertEqual(False, signup_button.is_enabled())
 
     def test_login_with_unregistered_user(self):
-        self.driver.get("http://localhost:3000/")
+        self.driver.get(self.base_url)
         self.driver.set_window_size(1616, 876)
         wait = WebDriverWait(self.driver, 10)
         get_started_link = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, ".HeroHeader_button__EgRW5")))

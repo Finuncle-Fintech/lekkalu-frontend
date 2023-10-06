@@ -59,7 +59,7 @@ class TestRegistration(unittest.TestCase):
         self.driver.get(self.base_url)
         self.driver.set_window_size(1616, 876)
         wait = WebDriverWait(self.driver, 20)
-
+        wait.until(EC.presence_of_element_located((By.XPATH, "/html/body/div/div/div[1]/header/div/p")))
         wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, ".HeroHeader_button__EgRW5")))
         get_started_link = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, ".HeroHeader_button__EgRW5")))
         l = self.driver.find_element(By.CSS_SELECTOR, ".HeroHeader_button__EgRW5")

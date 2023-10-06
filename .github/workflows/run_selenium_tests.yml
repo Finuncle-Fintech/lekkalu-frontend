@@ -41,6 +41,6 @@ jobs:
     - name: curl
       uses: enflo/curl-action@master
       with:
-        curl:  curl -XGET 'http://localhost:3000/'
+        curl:  curl -XGET 'http://17.0.0.1:3000/'
      
     - run: python src/selenium_tests/main.py

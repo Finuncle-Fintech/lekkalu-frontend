@@ -39,8 +39,6 @@ jobs:
       with:
         time: '90s'
     - name: curl
-      uses: enflo/curl-action@master
-      with:
-        curl:  curl -XGET 'http://17.0.0.1:3000/'
+    - run:  curl -XGET 'http://17.0.0.1:3000/'
      
     - run: python src/selenium_tests/main.py

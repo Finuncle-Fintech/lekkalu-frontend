@@ -15,7 +15,7 @@ class TestRegistration(unittest.TestCase):
     """
     def setUp(self) -> None:
         options = Options()
-        #options.add_argument('--headless=new')
+        options.add_argument('--headless=new')
 
         self.driver = webdriver.Chrome(options=options)
         self.vars = {}

@@ -3,7 +3,7 @@ import unittest
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 
@@ -15,7 +15,7 @@ class TestRegistration(unittest.TestCase):
     """
     def setUp(self) -> None:
         options = Options()
-        options.add_argument('--headless=new')
+        #options.add_argument('--headless=new')
 
         self.driver = webdriver.Chrome(options=options)
         self.vars = {}
@@ -59,8 +59,11 @@ class TestRegistration(unittest.TestCase):
         self.driver.get(self.base_url)
         self.driver.set_window_size(1616, 876)
         wait = WebDriverWait(self.driver, 20)
+
         wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, ".HeroHeader_button__EgRW5")))
         get_started_link = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, ".HeroHeader_button__EgRW5")))
+        l = self.driver.find_element(By.CSS_SELECTOR, ".HeroHeader_button__EgRW5")
+        self.assertEqual('Get Started', l.text)
         get_started_link.click()
         self.driver.find_element(By.CSS_SELECTOR, ".css-arys4y-MuiButtonBase-root-MuiIconButton-root > img").click()
         self.driver.find_element(By.ID, "username").send_keys("asd")

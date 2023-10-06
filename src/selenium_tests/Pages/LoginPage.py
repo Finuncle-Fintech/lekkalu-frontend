@@ -1,10 +1,10 @@
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
+from selenium.webdriver.support.wait import WebDriverWait
 
 from Pages.BasePage import BasePage
 from Resources.LoginPageLocators import LoginPageLocators
+
 
 class LoginPage(BasePage):
     def __init__(self, driver):
@@ -13,8 +13,6 @@ class LoginPage(BasePage):
         self.driver.set_window_size(1616, 876)
 
     def fill_out_login_form_to_get_alert_text(self):
-        #self.click(LoginPageLocators.get_started_link)
-        #self.find_element_and_click(By.XPATH, LoginPageLocators.login_button)
         self.click(LoginPageLocators.user_name)
         self.enter_text(LoginPageLocators.user_name, "asd")
         self.click(LoginPageLocators.password)

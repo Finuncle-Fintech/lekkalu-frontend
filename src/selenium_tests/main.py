@@ -1,10 +1,6 @@
 import unittest
 
 from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 
 from Pages.GetStartedPage import GetStartedPage
@@ -24,9 +20,6 @@ class TestRegistration(unittest.TestCase):
         options.add_argument('--headless=new')
 
         self.driver = webdriver.Chrome(options=options)
-
-
-
 
     def tearDown(self):
         self.driver.quit()
@@ -54,8 +47,7 @@ class TestRegistration(unittest.TestCase):
          """
         self.login_page = LoginPage(self.driver)
         alert_text = self.login_page.fill_out_login_form_to_get_alert_text()
-        self.assertEqual(alert_text,"Network Error")
-
+        self.assertEqual(alert_text, "Network Error")
 
 
 if __name__ == '__main__':

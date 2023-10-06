@@ -1,3 +1,4 @@
+from selenium.webdriver import ActionChains
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
@@ -17,7 +18,9 @@ class BasePage():
 
     def find_element_and_click(self, by_what, by_locator):
         #WebDriverWait(self.driver, 20).until(EC.element_to_be_clickable(by_locator))
-        self.driver.find_element(by_what,by_locator).click()
+        element = self.driver.find_element(by_what,by_locator)
+        actions = ActionChains(self.driver)
+        actions.move_to_element(element).click().perform()
 
     def find_element(self,by_what, by_locator):
         return self.driver.find_element(by_what,by_locator)

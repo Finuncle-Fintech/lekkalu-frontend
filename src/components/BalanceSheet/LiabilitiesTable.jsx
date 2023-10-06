@@ -423,13 +423,12 @@ export default function EnhancedTable(props) {
             <Box sx={{ display: "flex", justifyContent: "space-between" }}>
               <Box
                 sx={{
-                  width: "15%",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
                 }}
               >
-                <Button variant="contained" onClick={handleRequestForm}>
+                <Button variant="contained" onClick={handleRequestForm} sx={{marginLeft: '20px'}}>
                   <AddIcon />
                   <Typography
                     sx={{

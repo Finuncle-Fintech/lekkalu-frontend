@@ -131,7 +131,6 @@ export default function SimpleBackdrop(props) {
               height: "70px",
               display: "flex",
               justifyContent: "flex-end",
-              marginTop: "10px",
             }}
           >
             <IconButton
@@ -144,7 +143,6 @@ export default function SimpleBackdrop(props) {
           <Box
             sx={{
               width: "100%",
-              height: "70px",
               display: "flex",
               justifyContent: "center",
             }}
@@ -155,7 +153,7 @@ export default function SimpleBackdrop(props) {
               {props.title} Liability
             </Typography>
           </Box>
-          <Box sx={{ padding: "5rem" }}>
+          <Box sx={{ padding: "1rem 5rem 5rem 5rem" }}>
             <form onSubmit={handleSubmit}>
               <TextField
                 label="Name"
@@ -195,11 +193,15 @@ export default function SimpleBackdrop(props) {
                 onChange={handleChange}
                 fullWidth
                 required
+                sx={{ margin: "1em 0 " }}
                 InputLabelProps={{
                   shrink: true,
                 }}
-                sx={{ margin: "1em 0 " }}
+                InputProps={{
+                  sx: { height: "56px" },
+                }}
               />
+
               <TextField
                 label="Emi Date"
                 name="emi_day"

@@ -9,9 +9,6 @@ export default function Liabilities(props) {
         backgroundColor: "white",
         borderRadius: "40px",
         padding: "3%",
-        "@media (max-width: 800px)": {
-          display: "none",
-        },
       }}
     >
       <LiabilitiesTable liabilityDatas={props.liabilityDatas} />

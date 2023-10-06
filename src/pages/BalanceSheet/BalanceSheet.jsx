@@ -7,21 +7,20 @@ import LiabilitiesCard from "components/BalanceSheet/LiabilitiesCard";
 import BarGraph from "components/BalanceSheet/BarGraph";
 
 export default function BalanceSheet() {
-  const { assets, liabilities, fetchData,fetchAsset, fetchLiabilities} = useContext(Context);
+  const { assets, liabilities, fetchAsset, fetchLiabilities } =
+    useContext(Context);
 
   const [barGraphIsOpen, setBarGraphIsOpen] = useState(false);
   const [assetDatas, setAssetDatas] = useState([]);
   const [liabilityDatas, setLiabilityDatas] = useState([]);
- 
+
   useEffect(() => {
     fetchLiabilities();
-   fetchAsset();
+    fetchAsset();
   }, []);
 
 
-
   useEffect(() => {
-
     if (assets.finalAssets && assets.finalAssets.length > 0) {
       const newAssetDatas = assets.finalAssets.map((asset) => ({
         id: asset.id,
@@ -32,21 +31,23 @@ export default function BalanceSheet() {
     }
   }, [assets]);
 
-
   useEffect(() => {
-    if (liabilities.finalLiabilities && liabilities.finalLiabilities.length > 0) {
-      const newLiabilityDatas = liabilities.finalLiabilities.map((liability) => ({
-        id: liability.id,
-        label: liability.name,
-        value: liability.value,
-        principal: liability.principal,
-        interest: liability.interest,
-        tenure: liability.tenure,
-        closure_charges: liability.closure_charges,
-        disbursement_date: liability.disbursement_date,
-
-
-      }));
+    if (
+      liabilities.finalLiabilities &&
+      liabilities.finalLiabilities.length > 0
+    ) {
+      const newLiabilityDatas = liabilities.finalLiabilities.map(
+        (liability) => ({
+          id: liability.id,
+          label: liability.name,
+          value: liability.value,
+          principal: liability.principal,
+          interest: liability.interest,
+          tenure: liability.tenure,
+          closure_charges: liability.closure_charges,
+          disbursement_date: liability.disbursement_date,
+        })
+      );
       setLiabilityDatas(newLiabilityDatas);
     }
   }, [liabilities]);
@@ -76,8 +77,8 @@ export default function BalanceSheet() {
           <BarGraph
             setBarGraphIsOpen={handleClose}
             barGraphIsOpen={barGraphIsOpen}
-            dataAsset = {assetDatas}
-            dataLiability = {liabilityDatas}
+            dataAsset={assetDatas}
+            dataLiability={liabilityDatas}
           />
         ) : null}
         <AssetCard assetDatas={assetDatas} />

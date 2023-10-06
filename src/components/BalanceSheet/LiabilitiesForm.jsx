@@ -8,7 +8,6 @@ import Loading from "./Loading";
 import jwt_decode from "jwt-decode";
 
 export default function SimpleBackdrop(props) {
-  const [boxWidth, setBoxWidth] = useState("40vw");
   const [open, setOpen] = React.useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -74,25 +73,6 @@ export default function SimpleBackdrop(props) {
     };
 
     fetchData();
-
-    const updateBoxWidth = () => {
-      if (window.innerWidth <= 768) {
-        setBoxWidth("80vw");
-      } else if (window.innerWidth <= 1000) {
-        setBoxWidth("70vw");
-      } else if (window.innerWidth <= 480) {
-        setBoxWidth("90vw");
-      } else {
-        setBoxWidth("55vw");
-      }
-    };
-
-    window.addEventListener("resize", updateBoxWidth);
-    updateBoxWidth();
-
-    return () => {
-      window.removeEventListener("resize", updateBoxWidth);
-    };
   }, [props.id, props.title]);
 
   const handleSubmit = async (event) => {
@@ -135,12 +115,13 @@ export default function SimpleBackdrop(props) {
       >
         <Box
           sx={{
-            width: boxWidth,
+            width: "30em",
             backgroundColor: "white",
             display: "flex",
             flexDirection: "column",
-            maxHeight: "100%",
+            maxHeight: "95%",
             overflowY: "auto",
+            borderRadius: "10px",
           }}
           onClick={handleBoxClick}
         >
@@ -150,6 +131,7 @@ export default function SimpleBackdrop(props) {
               height: "70px",
               display: "flex",
               justifyContent: "flex-end",
+              marginTop: "10px",
             }}
           >
             <IconButton
@@ -222,7 +204,7 @@ export default function SimpleBackdrop(props) {
                 label="Emi Date"
                 name="emi_day"
                 type="number"
-                value={formData.emi_date}
+                value={formData.emi_day}
                 onChange={handleChange}
                 fullWidth
                 required

@@ -119,6 +119,7 @@ const Reducer = (state, action) => {
       };
     }
     case Types.FETCH_ASSETS: {
+      console.log(action.payload)
       return {
         ...state,
         assets: action.payload,

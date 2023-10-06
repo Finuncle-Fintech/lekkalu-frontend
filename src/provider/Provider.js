@@ -168,7 +168,6 @@ const Provider = ({ children }) => {
     }
   };
 
-
   const filterExpensesByDate = async (page, rowsPerPage, fromDate, toDate) => {
     try {
       const headers = {
@@ -519,7 +518,6 @@ const Provider = ({ children }) => {
         Authorization: `Bearer ${authToken}`,
         "Content-Type": "application/json",
       };
-      console.log(assetData);
 
       await axiosPrivate
         .post(
@@ -600,6 +598,7 @@ const Provider = ({ children }) => {
               { id: da.id, name: da.name, value: parseFloat(da.market_value) },
             ];
           });
+          console.log(finalAssets);
           dispatch({
             type: Types.FETCH_ASSETS,
             payload: { finalAssets, totalVal },
@@ -762,7 +761,6 @@ const Provider = ({ children }) => {
   const UnitUpdateContext = React.createContext();
 
   function useUnit() {
-
     return useContext(UnitContext);
   }
 
@@ -771,13 +769,11 @@ const Provider = ({ children }) => {
   }
 
   function useUnitUpdate() {
-    return useContext(UnitUpdateContext)
-
+    return useContext(UnitUpdateContext);
   }
   const [unit, setUnit] = useState("Months");
 
   const handleUnitChange = (val) => {
-
     setUnit(val);
   };
 
@@ -824,8 +820,7 @@ const Provider = ({ children }) => {
         editLiabilityRequest,
         fetchLiabilityById,
         deleteLiabilityRequest,
-        fetchAllExpenses
-
+        fetchAllExpenses,
       }}
     >
       {children}

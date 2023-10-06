@@ -9,7 +9,7 @@ on:
       - ".github/workflows/run_selenium_tests.yaml"
 
 jobs:
-  build:
+  selenium-test:
  
     runs-on: ubuntu-latest
  
@@ -25,8 +25,18 @@ jobs:
         node-version: 18
     - run: npm install
     - run: npm run start:qa &
-     
+
+    - name: Install dependencies
+      run: pip install -r src/selenium_tests/requirements.txt
+       
     - uses: browser-actions/setup-chrome@latest
     - run: chrome --version
+
+    - name: Sleep for 1 minute and 30 seconds
+      uses: jakejarvis/wait-action@master
+      with:
+        time: '90s'
+    - name: curl
+      run:  curl -XGET 'http://127.0.0.1:3000/'
      
     - run: python src/selenium_tests/main.py

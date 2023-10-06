@@ -32,11 +32,9 @@ jobs:
     - uses: browser-actions/setup-chrome@latest
     - run: chrome --version
 
-    - name: Sleep for 1 minute and 30 seconds
+    - name: Wait until the server is started (for 1 minute and 30 seconds) 
       uses: jakejarvis/wait-action@master
       with:
         time: '90s'
-    - name: curl
-      run:  curl -XGET 'http://127.0.0.1:3000/'
      
     - run: python src/selenium_tests/main.py

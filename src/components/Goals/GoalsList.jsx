@@ -8,7 +8,6 @@ const GoalsList = ({ goals, getTagNames, setEditIndex, deleteGoal, setStatusModa
 
     const columns = [
         { id: 'goals', label: 'Goals', align: 'right' },
-        { id: 'subGoals', label: 'Sub Goals', align: 'center' },
         {
             id: 'targetMetric',
             label: 'Target Metric',
@@ -138,7 +137,6 @@ const GoalsList = ({ goals, getTagNames, setEditIndex, deleteGoal, setStatusModa
                         const balanceCellStyle = getBalanceCellStyle(goal);
                         return <TableRow key={goal.id}>
                             <TableCell>{goal.goal}</TableCell>
-                            <TableCell>{goal.sub_goal}</TableCell>
                             {typeof goal.target_metric === 'number' ?
                                 <TableCell>&#8377; {goal.target_metric.toLocaleString('en-IN')}</TableCell> :
                                 <TableCell>{goal.target_metric}</TableCell>

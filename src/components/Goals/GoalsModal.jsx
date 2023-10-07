@@ -31,7 +31,6 @@ const GoalFormModal = ({
 
   const [goalData, setGoalData] = useState({
     goal: '',
-    sub_goal: '',
     target_metric: '',
     current_metric: '',
     reachability_in_months: '',
@@ -72,7 +71,6 @@ const GoalFormModal = ({
 
       const initState = {
         goal: '',
-        sub_goal: '',
         target_metric: '',
         current_metric: '',
         reachability_in_months: '',
@@ -173,16 +171,6 @@ const GoalFormModal = ({
                 fullWidth
                 data-testid="goal"
                 name="goal"
-              />
-              <Typography variant="p">Provide the Sub Goal:</Typography>
-              <TextField
-                value={goalData.sub_goal}
-                onChange={handleChange}
-                onKeyPress={preventPropagationOnEnter}
-                required
-                fullWidth
-                data-testid="sub-goal"
-                name="sub_goal"
               />
               <Typography variant="p">Provide the Target Metric:</Typography>
               <TextField

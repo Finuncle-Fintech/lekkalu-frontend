@@ -3,7 +3,14 @@ import { Context } from "provider/Provider";
 import Backdrop from "@mui/material/Backdrop";
 
 import CloseIcon from "@mui/icons-material/Close";
-import { Box, IconButton, TextField, Button, Typography } from "@mui/material";
+import {
+  Box,
+  IconButton,
+  TextField,
+  Button,
+  Typography,
+  MenuItem,
+} from "@mui/material";
 import Loading from "./Loading";
 import jwt_decode from "jwt-decode";
 
@@ -15,18 +22,43 @@ export default function SimpleBackdrop(props) {
     sell_value: "",
     purchase_date: "",
     sell_date: "",
+    year: "1",
+    month: "1",
     depreciation_percent: "",
     depreciation_frequency: "",
-    init_dep: "",
     market_value: "",
     user: "",
     type: "1",
   });
 
+  const months = Array.from({ length: 12 }, (_, index) => ({
+    value: index + 1,
+    label: index + 1,
+  }));
+
+  const years = Array.from({ length: 40 }, (_, index) => ({
+    value: index + 1,
+    label: index + 1,
+  }));
+
   const { addAssetRequest, editAssetRequest, fetchAssetById, authToken } =
     useContext(Context);
 
   const handleChange = (event) => {
+    const { name, value } = event.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const handleYearChange = (event) => {
+    setFormData({
+      ...formData,
+      year: event.target.value,
+    });
+  };
+  const handleMonthChange = (event) => {
     const { name, value } = event.target;
     setFormData({
       ...formData,
@@ -60,7 +92,6 @@ export default function SimpleBackdrop(props) {
             sell_date: assetData.sell_date || "",
             depreciation_percent: assetData.depreciation_percent,
             depreciation_frequency: assetData.depreciation_frequency,
-            init_dep: assetData.init_dep,
             market_value: assetData.market_value,
             user: assetData.user,
             type: assetData.type,
@@ -228,6 +259,39 @@ export default function SimpleBackdrop(props) {
                 }}
               />
               <TextField
+                label="Select Month"
+                name="month"
+                select
+                value={formData.month}
+                onChange={handleMonthChange}
+                fullWidth
+                required
+                sx={{ margin: "1em 0 " }}
+              >
+                {months.map((month) => (
+                  <MenuItem key={month.value} value={month.value}>
+                    {month.label}
+                  </MenuItem>
+                ))}
+              </TextField>
+              <TextField
+                label="Select Year"
+                name="year"
+                select
+                value={formData.year}
+                onChange={handleYearChange}
+                fullWidth
+                required
+                sx={{ margin: "1em 0 " }}
+              >
+                {years.map((year) => (
+                  <MenuItem key={year.value} value={year.value}>
+                    {year.label}
+                  </MenuItem>
+                ))}
+              </TextField>
+
+              <TextField
                 label="Depreciation Percent"
                 name="depreciation_percent"
                 type="number"
@@ -247,16 +311,7 @@ export default function SimpleBackdrop(props) {
                 required
                 sx={{ margin: "1em 0 " }}
               />
-              <TextField
-                label="Initial Depreciation"
-                name="init_dep"
-                type="number"
-                value={formData.init_dep}
-                onChange={handleChange}
-                fullWidth
-                required
-                sx={{ margin: "1em 0 " }}
-              />
+
               <TextField
                 label="Market Value"
                 name="market_value"

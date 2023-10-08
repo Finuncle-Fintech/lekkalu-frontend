@@ -1,6 +1,5 @@
 import { useState, useEffect, useContext } from "react";
 import { useLocation } from "react-router-dom";
-import axios from "axios";
 
 import {
   optionsPrincipal,
@@ -22,6 +21,8 @@ import { AssetsLiabilitiesChart } from "../../components/Charts/AssetsLiabilitie
 import "./EmiCalculator.css";
 
 import { Context } from "../../provider/Provider";
+import useAxiosPrivate from "hooks/useAxiosPrivate";
+
 
 const today = new Date();
 const year = today.getFullYear();
@@ -47,7 +48,9 @@ const defaultResults = {
 const EmiCalculator = () => {
   const location = useLocation();
   const parsedObject = parseQueryString(location.search);
-  const { unit } = useContext(Context);
+  const {unit} = useContext(Context);
+  const axiosPrivate = useAxiosPrivate();
+
   const [data, setData] = useState(
     !isObjectEmpty(parsedObject) ? parsedObject : defaultData
   );
@@ -65,12 +68,7 @@ const EmiCalculator = () => {
   const handleSave = async () => {
     setIsLoading(true);
     try {
-      await axios.post(`${process.env.REACT_APP_API}expenses/`, data, {
-        auth: {
-          username: process.env.REACT_APP_USER,
-          password: process.env.REACT_APP_PASSWORD,
-        },
-      });
+      await axiosPrivate.post(`${process.env.REACT_APP_API}expenses/`, data);
     } catch (error) {
       console.error("Error:", error);
       alert("Error occurred during API call.");

@@ -31,6 +31,7 @@ const GoalFormModal = ({
 
   const [goalData, setGoalData] = useState({
     goal: '',
+    sub_goal:'NA',
     target_metric: '',
     current_metric: '',
     reachability_in_months: '',
@@ -71,6 +72,7 @@ const GoalFormModal = ({
 
       const initState = {
         goal: '',
+        sub_goal:'NA',
         target_metric: '',
         current_metric: '',
         reachability_in_months: '',

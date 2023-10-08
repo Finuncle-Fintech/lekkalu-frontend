@@ -193,7 +193,7 @@ const Header = () => {
                     height="28"
                     src="https://img.icons8.com/material-outlined/24/goal.png"
                     alt="goal"
-                    style={{ filter: isActive("/goal") ? "invert(1)" : "none" }}
+                    style={{ filter: isActive("/goals") ? "invert(1)" : "none" }}
                   />
                 </IconButton>
               </Tooltip>
@@ -388,8 +388,8 @@ const Header = () => {
                   component={Link}
                   to="/goals"
                   sx={{
-                    backgroundColor: isActive("/goal") ? "white" : "#1976D2",
-                    color: isActive("/goal") ? "black" : "white",
+                    backgroundColor: isActive("/goals") ? "white" : "#1976D2",
+                    color: isActive("/goals") ? "black" : "white",
                     margin: "10px 0",
                   }}
                 >

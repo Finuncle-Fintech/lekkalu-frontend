@@ -388,10 +388,7 @@ const Provider = ({ children }) => {
       await axiosPrivate
         //get assets depreciation
         .get(`${process.env.REACT_APP_BACKEND_API}physical_assets/`, {
-          auth: {
-            username: process.env.REACT_APP_USER,
-            password: process.env.REACT_APP_PASSWORD,
-          },
+          headers
         })
         .then((res) => {
           const data = res.data;

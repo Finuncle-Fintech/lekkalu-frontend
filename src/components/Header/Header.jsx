@@ -220,6 +220,27 @@ const Header = () => {
                   />
                 </IconButton>
               </Tooltip>
+              <Tooltip title="Income Statement">
+                <IconButton
+                  sx={{
+                    ...styles.iconButton,
+                    backgroundColor: isActive("/income-statement") ? "#0F4C91" : "white",
+                    color: isActive("/income-statement") ? "white" : "black",
+                  }}
+                  component={Link}
+                  to={"/income-statement"}
+                >
+                  <img
+                    width="28"
+                    height="28"
+                    src="https://i.imgur.com/CSV4JtU.png"
+                    alt="balance-scale-right"
+                    style={{
+                      filter: isActive("/income-statement") ? "invert(1)" : "none",
+                    }}
+                  />
+                </IconButton>
+              </Tooltip>
             </>
           ) : null}
           <BasicMenu Menu={calculatorOption} />
@@ -408,7 +429,6 @@ const Header = () => {
                   </ListItemIcon>
                   <ListItemText primary="Goal" />
                 </ListItemButton>
-                
                 <ListItemButton
                   component={Link}
                   to="/expenses"
@@ -433,6 +453,31 @@ const Header = () => {
                     />
                   </ListItemIcon>
                   <ListItemText primary="Expense" />
+                </ListItemButton>
+
+                <ListItemButton
+                  component={Link}
+                  to="/income-statement"
+                  sx={{
+                    backgroundColor: isActive("/income-statement") ? "white" : "#1976D2",
+                    color: isActive("/income-statement") ? "black" : "white",
+                    margin: "10px 0",
+                  }}
+                >
+                  <ListItemIcon>
+                    <img
+                      width="28"
+                      height="28"
+                      src="https://i.imgur.com/CSV4JtU.png"
+                      alt="Income statement"
+                      style={{
+                        marginRight: "10px",
+                        color: "white",
+                        filter: isActive("/income-statement") ? "none" : "invert(1)",
+                      }}
+                    />
+                  </ListItemIcon>
+                  <ListItemText primary="Income statement" />
                 </ListItemButton>
               </>
             ) : (

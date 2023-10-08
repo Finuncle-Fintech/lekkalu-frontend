@@ -1,4 +1,4 @@
-import React, { createContext, useReducer, useState } from "react";
+import React, { createContext, useReducer, useState, useContext } from "react";
 import axiosClient from "components/Axios/Axios";
 import useAxiosPrivate from "hooks/useAxiosPrivate";
 import { InitialState } from "./Reducer";
@@ -111,9 +111,13 @@ const Provider = ({ children }) => {
         "Content-Type": "application/json",
       };
 
-      await axiosPrivate.post(`${process.env.REACT_APP_BACKEND_API}expense-tag/`, tag, {
-        headers,
-      });
+      await axiosPrivate.post(
+        `${process.env.REACT_APP_BACKEND_API}expense-tag/`,
+        tag,
+        {
+          headers,
+        }
+      );
     } catch (error) {
       handleErrors(error);
     }
@@ -141,6 +145,24 @@ const Provider = ({ children }) => {
         });
     } catch (error) {
       handleErrors(error);
+    }
+  };
+
+  const fetchAllExpenses = async () => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      const response = await axiosPrivate.get(
+        `${process.env.REACT_APP_BACKEND_API}expenses/`,
+        { headers }
+      );
+      return response.data;
+    } catch (error) {
+      handleErrors(error);
+      throw error; // Rethrow the error so it can be caught in the calling function
     }
   };
 
@@ -246,7 +268,6 @@ const Provider = ({ children }) => {
 
   const fetchData = async () => {
     try {
-      console.log(`CURRENT TOKEN ${authToken}`);
       const headers = {
         Authorization: `Bearer ${authToken}`,
         "Content-Type": "application/json",
@@ -367,10 +388,7 @@ const Provider = ({ children }) => {
       await axiosPrivate
         //get assets depreciation
         .get(`${process.env.REACT_APP_BACKEND_API}physical_assets/`, {
-          auth: {
-            username: process.env.REACT_APP_USER,
-            password: process.env.REACT_APP_PASSWORD,
-          },
+          headers
         })
         .then((res) => {
           const data = res.data;
@@ -403,7 +421,6 @@ const Provider = ({ children }) => {
           return response.status;
         })
         .catch((error) => {
-          console.log(error?.response?.data?.detail);
           handleErrors(error);
         });
     } catch (error) {
@@ -471,10 +488,6 @@ const Provider = ({ children }) => {
         //API returns [{‘name’: ‘day_job_income’, ‘type’:’salary’,’amount’:50000}]
         //Transform to [{‘name’: ‘day_job_income’, ‘type’:’salary’,’value’:50000}]
         transformedExpensesArray = incomeExpenses.map((each) => {
-          console.log({
-            original: each.amount,
-            value: parseFloat(each.amount),
-          });
           return {
             name: each.name,
             type: each.type,
@@ -482,6 +495,7 @@ const Provider = ({ children }) => {
           };
         });
       }
+
       populatedIncomeStatement.income = transformedIncomeArray;
       populatedIncomeStatement.expenses = transformedExpensesArray;
 
@@ -611,6 +625,97 @@ const Provider = ({ children }) => {
   };
 
 
+  const createBudget = async (data) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      const response = await axiosPrivate.post(
+        `${process.env.REACT_APP_BACKEND_API}budget/`,
+        data,
+        { headers }
+      );
+
+      if (response.status === 201) {
+        dispatch({
+          type: Types.SET_BUDGET,
+          payload: response.data.data,
+        });
+      }
+
+      return response;
+    } catch (error) {
+      handleErrors(error);
+    }
+  };
+
+  const updateBudget = async (id, data) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      const response = await axiosPrivate.put(
+        `${process.env.REACT_APP_BACKEND_API}budget/${id}`,
+        data,
+        { headers }
+      );
+
+      if (response.status === 200) {
+        dispatch({
+          type: Types.EDIT_BUDGET,
+          payload: response.data.data,
+        });
+      }
+
+      return response;
+    } catch (error) {
+      handleErrors(error);
+    }
+  };
+
+  const deleteBudget = async (id) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      await axiosPrivate.delete(
+        `${process.env.REACT_APP_BACKEND_API}budget/${id}`,
+        {
+          headers,
+        }
+      );
+
+      dispatch({
+        type: Types.DELETE_BUDGET,
+        payload: id,
+      });
+    } catch (error) {
+      handleErrors(error);
+    }
+  };
+
+  const UnitContext = React.createContext();
+  const UnitUpdateContext = React.createContext();
+
+  function useUnit() {
+    return useContext(UnitContext);
+  }
+
+  function useUnitUpdate() {
+    return useContext(UnitUpdateContext);
+  }
+  const [unit, setUnit] = useState("Months");
+
+  const handleUnitChange = (val) => {
+    setUnit(val);
+  };
+
   return (
     <Context.Provider
       value={{
@@ -645,6 +750,14 @@ const Provider = ({ children }) => {
         fetchIncomeExpenses,
         fetchIncomeStatement,
         filterExpensesByDate,
+        useUnit,
+        useUnitUpdate,
+        unit,
+        handleUnitChange,
+        fetchAllExpenses,
+        deleteBudget,
+        createBudget,
+        updateBudget,
       }}
     >
       {children}

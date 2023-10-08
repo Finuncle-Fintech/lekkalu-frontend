@@ -1,16 +1,16 @@
-import Types from './Types';
+import Types from "./Types";
 
 export const InitialState = {
-   budget: [],
-   expenses: [],
-   weeklyExpense: [],
+  budget: [],
+  expenses: [],
+  weeklyExpense: [],
    goals: [],
-   monthlyExpenses: [],
-   tags: [],
-   assets: [],
-   liabilities: [],
-   depreciation: [],
-   incomeStatement: { income: [], expenses: [] }
+  monthlyExpenses: [],
+  tags: [],
+  assets: [],
+  liabilities: [],
+  depreciation:  [],
+  incomeStatement: { income: [], expenses: [] },
 };
 
 const Reducer = (state, action) => {
@@ -62,46 +62,43 @@ const Reducer = (state, action) => {
             (expense) => expense.id !== action.payload
          );
 
-         return {
-            ...state,
-            expenses: newExpenses,
-         };
-      }
-      case Types.CREATE_EXPENSE: {
-         const newState = state.expenses.length
-            ? [
-               ...state.expenses,
-               { ...action.payload.data, id: action.payload.id },
-            ]
-            : [action.payload];
+      return {
+        ...state,
+        expenses: newExpenses,
+      };
+    }
+    case Types.CREATE_EXPENSE: {
+      const newState = state.expenses.length
+        ? [...state.expenses, { ...action.payload.data, id: action.payload.id }]
+        : [action.payload];
 
-         return {
-            ...state,
-            expenses: newState,
-         };
-      }
-      case Types.EDIT_EXPENSE: {
-         const { index, expense } = action.payload;
-         const newState = state.expenses;
-         newState[index] = expense;
+      return {
+        ...state,
+        expenses: newState,
+      };
+    }
+    case Types.EDIT_EXPENSE: {
+      const { index, expense } = action.payload;
+      const newState = state.expenses;
+      newState[index] = expense;
 
-         return {
-            ...state,
-            expenses: newState,
-         };
-      }
-      case Types.SET_INCOME_STATEMENT: {
-         return {
-            ...state,
-            incomeStatement: action.payload,
-         };
-      }
-      case Types.FETCH_TAGS: {
-         return {
-            ...state,
-            tags: action.payload,
-         };
-      }
+      return {
+        ...state,
+        expenses: newState,
+      };
+    }
+    case Types.SET_INCOME_STATEMENT: {
+      return {
+        ...state,
+        incomeStatement: action.payload,
+      };
+    }
+    case Types.FETCH_TAGS: {
+      return {
+        ...state,
+        tags: action.payload,
+      };
+    }
       case Types.FETCH_GOAL: {
          return {
             ...state,
@@ -141,7 +138,33 @@ const Reducer = (state, action) => {
             goals: newState,
          };
       }
-   }
+    case Types.DELETE_BUDGET: {
+      return {
+        ...state,
+        budget: state.budget.filter((item) => item.id !== action.payload),
+      };
+    }
+    case Types.SET_BUDGET: {
+      return {
+        ...state,
+        budget: [...state.budget, action.payload],
+      };
+    }
+    case Types.EDIT_BUDGET: {
+      return {
+        ...state,
+        budget: state.budget.map((item) => {
+          if (item.id === action.payload.id) {
+            return action.payload;
+          }
+          return item;
+        }),
+      };
+    }
+    default: {
+      return state;
+    }
+  }
 };
 
 export default Reducer;

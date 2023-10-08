@@ -9,8 +9,8 @@ export default function FeedbackButton (){
     }
     
     return(
-        <>
+        <div style={{textAlign: 'end', backgroundColor: 'rgb(25, 118, 210)'}}>
             <button className={styles.button} onClick={handleClick}>Leave your feedback</button>
-        </>
+        </div>
     )
 }

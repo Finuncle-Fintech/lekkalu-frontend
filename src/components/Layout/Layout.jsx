@@ -1,16 +1,20 @@
-import Footer from "components/Footer/Footer";
 import Header from "components/Header/Header";
+import Footer from "components/Footer/Footer";
 import SupportPopUp from "components/Support/PopUp/PopUp";
 import { Context } from "provider/Provider";
 import { useContext } from "react";
+import { useLocation } from 'react-router-dom';
 
 export default function Layout({ children }) {
   const { authToken } = useContext(Context);
+  const location = useLocation();
 
-  if (!authToken) {
+  const isHeroPath = location.pathname === '/';
+
+  if (!authToken || isHeroPath) {
     return (
       <>
-        <Header />
+        {!isHeroPath && <Header />}
         {children}
         <div></div>
       </>

@@ -1,0 +1,15 @@
+.container {
+  width: 100%;
+  max-width: 1500px;
+  margin-inline: auto;
+  align-self: flex-start;
+  min-height: 80vh;
+  padding: 20px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  margin-bottom: 10px;
+  gap: 20px;
+}

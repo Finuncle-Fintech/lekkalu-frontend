@@ -15,7 +15,7 @@ import Logo from "./HeaderComponents/Logo";
 import BasicMenu from "./HeaderComponents/BasicMenu";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { Context } from "provider/Provider";
-import { Person } from "@mui/icons-material";
+import { Person, Settings } from "@mui/icons-material";
 
 const styles = {
   appBar: {
@@ -59,11 +59,16 @@ const Header = () => {
   const userSetting = {
     submenu: {
       1: {
-        name: `${user?.username}`,
+        name: user?.username,
         icon: <Person />,
-        path: "/settings",
+        path: "/profile",
       },
       2: {
+        name: "Settings",
+        icon: <Settings />,
+        path: "/settings",
+      },
+      3: {
         name: "Logout",
         icon: <LogoutIcon />,
         onClick: signOut,

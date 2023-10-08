@@ -23,14 +23,13 @@ describe("createGoalRequest", () => {
     fireEvent.click(screen.getByTestId("add-goal"));
 
     const goalField = screen.getByTestId("goal").firstChild.firstChild;
-    const subGoalField = screen.getByTestId("sub-goal").firstChild.firstChild;
+  
     const targetMetricField = screen.getByTestId("target-metric").firstChild.firstChild;
     const currentField = screen.getByTestId("current-metric").firstChild.firstChild;
    
     const reachablitiyInMonthsField = screen.getByTestId("reachablitiy-in-months").firstChild.firstChild;
     const reachabilityInYearsField = screen.getByTestId("reachability-in-years").firstChild.firstChild
     
-    fireEvent.change(subGoalField, {target: {value: 'Net cash reserve of 3 months of your current total income'}});
     fireEvent.change(goalField, {target: {value: ''}});
     fireEvent.change(targetMetricField, {target: {value: '25.0%'}});
     fireEvent.change(currentField, {target: {value: '25.7%'}});

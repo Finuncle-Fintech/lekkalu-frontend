@@ -38,7 +38,12 @@ const Reducer = (state, action) => {
         monthlyExpenses: action.payload,
       };
     }
-
+    case Types.FETCH_ASSETS: {
+      return {
+        ...state,
+        assets: action.payload,
+      };
+    }
     case Types.FETCH_LIABILITIES: {
       return {
         ...state,
@@ -71,6 +76,7 @@ const Reducer = (state, action) => {
         expenses: newState,
       };
     }
+
     case Types.EDIT_EXPENSE: {
       const { index, expense } = action.payload;
       const newState = state.expenses;
@@ -93,12 +99,32 @@ const Reducer = (state, action) => {
         tags: action.payload,
       };
     }
-    case Types.FETCH_ASSETS: {
-      console.log(action.payload)
+
+    case Types.DELETE_BUDGET: {
       return {
         ...state,
-        assets: action.payload,
+        budget: state.budget.filter((item) => item.id !== action.payload),
       };
+    }
+    case Types.SET_BUDGET: {
+      return {
+        ...state,
+        budget: [...state.budget, action.payload],
+      };
+    }
+    case Types.EDIT_BUDGET: {
+      return {
+        ...state,
+        budget: state.budget.map((item) => {
+          if (item.id === action.payload.id) {
+            return action.payload;
+          }
+          return item;
+        }),
+      };
+    }
+    default: {
+      return state;
     }
   }
 };

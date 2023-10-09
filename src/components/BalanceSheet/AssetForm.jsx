@@ -323,20 +323,6 @@ export default function SimpleBackdrop(props) {
                 sx={{ margin: "1em 0 " }}
               />
 
-              <TextField
-                label="Type"
-                name="type"
-                type="number"
-                value={formData.type}
-                onChange={handleChange}
-                fullWidth
-                sx={{ margin: "1em 0 " }}
-                InputProps={{
-                  readOnly: true,
-                }}
-                //required
-              />
-
               {/* <TextField
                 label="Tags (comma-separated)"
                 name="tags"

@@ -14,19 +14,35 @@ import {
 import Loading from "./Loading";
 import jwt_decode from "jwt-decode";
 
+function monthOrYearToSeconds(number, isMonth) {
+  const secondsInMinute = 60;
+  const minutesInHour = 60;
+  const hoursInDay = 24;
+  const daysInMonth = 30.44; // Average number of days in a month
+  const daysInYear = 365.25; // Average number of days in a year
+
+  if (isMonth) {
+    // Convert the month number to seconds
+    return number * secondsInMinute * minutesInHour * hoursInDay * daysInMonth;
+  } else {
+    // Convert the year number to seconds
+    return number * secondsInMinute * minutesInHour * hoursInDay * daysInYear;
+  }
+}
 export default function SimpleBackdrop(props) {
   const [open, setOpen] = React.useState(false);
+  const [year, setYear] = React.useState("0");
+  const [month, setMonth] = React.useState("1");
   const [formData, setFormData] = useState({
     name: "",
     purchase_value: "",
     sell_value: "",
     purchase_date: "",
     sell_date: "",
-    year: "1",
-    month: "1",
     depreciation_percent: "",
     depreciation_frequency: "",
-    market_value: "",
+    init_dep: "",
+    market_value: "0",
     user: "",
     type: "1",
   });
@@ -36,9 +52,9 @@ export default function SimpleBackdrop(props) {
     label: index + 1,
   }));
 
-  const years = Array.from({ length: 40 }, (_, index) => ({
-    value: index + 1,
-    label: index + 1,
+  const years = Array.from({ length: 41 }, (_, index) => ({
+    value: index,
+    label: index,
   }));
 
   const { addAssetRequest, editAssetRequest, fetchAssetById, authToken } =
@@ -53,17 +69,10 @@ export default function SimpleBackdrop(props) {
   };
 
   const handleYearChange = (event) => {
-    setFormData({
-      ...formData,
-      year: event.target.value,
-    });
+    setYear(event.target.value);
   };
   const handleMonthChange = (event) => {
-    const { name, value } = event.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+    setMonth(event.target.value);
   };
 
   useEffect(() => {
@@ -121,7 +130,10 @@ export default function SimpleBackdrop(props) {
 
     if (props.title === "Add") {
       try {
-        await addAssetRequest(filteredData);
+        let second = monthOrYearToSeconds(year,false)
+        second += monthOrYearToSeconds(month,true)
+        filteredData.depreciation_frequency = second
+       await addAssetRequest(filteredData);
         setOpen(false);
         props.setForm(false);
         props.handleRequestForm();
@@ -258,15 +270,17 @@ export default function SimpleBackdrop(props) {
                   sx: { height: "56px" },
                 }}
               />
+              <Typography variant="subtitle2" sx={{ color: "black" }}>
+                Depreciation Frequency
+              </Typography>
               <TextField
                 label="Select Month"
                 name="month"
                 select
-                value={formData.month}
+                value={month}
                 onChange={handleMonthChange}
-                fullWidth
                 required
-                sx={{ margin: "1em 0 " }}
+                sx={{ margin: "1em 0 ", width: "45%", marginRight: "10%" }}
               >
                 {months.map((month) => (
                   <MenuItem key={month.value} value={month.value}>
@@ -278,11 +292,10 @@ export default function SimpleBackdrop(props) {
                 label="Select Year"
                 name="year"
                 select
-                value={formData.year}
+                value={year}
                 onChange={handleYearChange}
-                fullWidth
                 required
-                sx={{ margin: "1em 0 " }}
+                sx={{ margin: "1em 0 ", width: "45%" }}
               >
                 {years.map((year) => (
                   <MenuItem key={year.value} value={year.value}>
@@ -290,6 +303,17 @@ export default function SimpleBackdrop(props) {
                   </MenuItem>
                 ))}
               </TextField>
+
+              <TextField
+                label="Initial Depreciation"
+                name="init_dep"
+                type="number"
+                value={formData.init_dep}
+                onChange={handleChange}
+                fullWidth
+                required
+                sx={{ margin: "1em 0 " }}
+              />
 
               <TextField
                 label="Depreciation Percent"
@@ -301,35 +325,6 @@ export default function SimpleBackdrop(props) {
                 required
                 sx={{ margin: "1em 0 " }}
               />
-              <TextField
-                label="Depreciation Frequency"
-                name="depreciation_frequency"
-                type="number"
-                value={formData.depreciation_frequency}
-                onChange={handleChange}
-                fullWidth
-                required
-                sx={{ margin: "1em 0 " }}
-              />
-
-              <TextField
-                label="Market Value"
-                name="market_value"
-                type="number"
-                value={formData.market_value}
-                onChange={handleChange}
-                fullWidth
-                required
-                sx={{ margin: "1em 0 " }}
-              />
-
-              {/* <TextField
-                label="Tags (comma-separated)"
-                name="tags"
-                value={formData.tag}
-                onChange={handleChange}
-                fullWidth
-              /> */}
 
               <Button
                 variant="contained"

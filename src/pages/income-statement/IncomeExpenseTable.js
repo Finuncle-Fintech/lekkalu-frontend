@@ -321,7 +321,7 @@ const IncomeExpenseTable = ({
     if (newRow.isNew === true) {
       delete newRow.id;
       addfield({ ...newRow, amount: newRow.value }).then((resp) => {
-        if (resp.status === 201) {
+         if (resp.status === 201) {
           setRowModesModel(false);
           Swal.fire(
             "Added",

@@ -159,8 +159,6 @@ const Provider = ({ children }) => {
         `${process.env.REACT_APP_BACKEND_API}expenses/`,
         { headers }
       );
-
-      console.log(response.data);
       return response.data;
     } catch (error) {
       handleErrors(error);
@@ -270,7 +268,6 @@ const Provider = ({ children }) => {
 
   const fetchData = async () => {
     try {
-      console.log(`CURRENT TOKEN ${authToken}`);
       const headers = {
         Authorization: `Bearer ${authToken}`,
         "Content-Type": "application/json",
@@ -391,10 +388,7 @@ const Provider = ({ children }) => {
       await axiosPrivate
         //get assets depreciation
         .get(`${process.env.REACT_APP_BACKEND_API}physical_assets/`, {
-          auth: {
-            username: process.env.REACT_APP_USER,
-            password: process.env.REACT_APP_PASSWORD,
-          },
+          headers
         })
         .then((res) => {
           const data = res.data;
@@ -427,7 +421,6 @@ const Provider = ({ children }) => {
           return response.status;
         })
         .catch((error) => {
-          console.log(error?.response?.data?.detail);
           handleErrors(error);
         });
     } catch (error) {
@@ -604,10 +597,6 @@ const Provider = ({ children }) => {
         //API returns [{‘name’: ‘day_job_income’, ‘type’:’salary’,’amount’:50000}]
         //Transform to [{‘name’: ‘day_job_income’, ‘type’:’salary’,’value’:50000}]
         transformedExpensesArray = incomeExpenses.map((each) => {
-          console.log({
-            original: each.amount,
-            value: parseFloat(each.amount),
-          });
           return {
             id: each.id,
             name: each.name,
@@ -632,6 +621,81 @@ const Provider = ({ children }) => {
   const signOut = () => {
     setAuthToken(null);
     deleteCookie("refresh");
+  };
+
+  const createBudget = async (data) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      const response = await axiosPrivate.post(
+        `${process.env.REACT_APP_BACKEND_API}budget/`,
+        data,
+        { headers }
+      );
+
+      if (response.status === 201) {
+        dispatch({
+          type: Types.SET_BUDGET,
+          payload: response.data.data,
+        });
+      }
+
+      return response;
+    } catch (error) {
+      handleErrors(error);
+    }
+  };
+
+  const updateBudget = async (id, data) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      const response = await axiosPrivate.put(
+        `${process.env.REACT_APP_BACKEND_API}budget/${id}`,
+        data,
+        { headers }
+      );
+
+      if (response.status === 200) {
+        dispatch({
+          type: Types.EDIT_BUDGET,
+          payload: response.data.data,
+        });
+      }
+
+      return response;
+    } catch (error) {
+      handleErrors(error);
+    }
+  };
+
+  const deleteBudget = async (id) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      await axiosPrivate.delete(
+        `${process.env.REACT_APP_BACKEND_API}budget/${id}`,
+        {
+          headers,
+        }
+      );
+
+      dispatch({
+        type: Types.DELETE_BUDGET,
+        payload: id,
+      });
+    } catch (error) {
+      handleErrors(error);
+    }
   };
 
   const UnitContext = React.createContext();
@@ -689,7 +753,10 @@ const Provider = ({ children }) => {
         useUnitUpdate,
         unit,
         handleUnitChange,
-        fetchAllExpenses,
+        fetchAllExpenses,,
+        deleteBudget,
+        createBudget,
+        updateBudget,
       }}
     >
       {children}

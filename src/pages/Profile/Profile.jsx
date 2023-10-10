@@ -21,14 +21,27 @@ export default function Profile() {
     },
   });
 
+  const passwordForm = useForm();
+
   const handleUserProfileUpdate = (data) => {
     Swal.fire({
       title: "Profile updated successfully!",
       icon: "success",
     });
   };
+
+  const handlePasswordChange = (data) => {
+    Swal.fire({
+      title: "Password updated successfully!",
+      icon: "success",
+    });
+  };
+
   return (
     <div className={styles.container}>
+      <div className={styles.heading}>Update your info</div>
+      <div className={styles.divider}></div>
+
       <form onSubmit={handleSubmit(handleUserProfileUpdate)}>
         <div className={styles.grid}>
           <FormControl>
@@ -85,6 +98,75 @@ export default function Profile() {
 
         <Button variant="contained" type="submit">
           Update
+        </Button>
+      </form>
+
+      <div className={styles.heading}>Update your password</div>
+      <div className={styles.divider}></div>
+
+      <form onSubmit={passwordForm.handleSubmit(handlePasswordChange)}>
+        <div className={styles.grid}>
+          <FormControl>
+            <TextField
+              label="Current Password"
+              {...passwordForm.register("current_password", {
+                required: "Current password is required",
+              })}
+              error={Boolean(
+                passwordForm.formState.errors?.current_password?.message
+              )}
+              helperText={
+                passwordForm.formState.errors?.current_password?.message
+              }
+            />
+          </FormControl>
+
+          <FormControl>
+            <TextField
+              type="password"
+              label="New Password"
+              {...passwordForm.register("new_password", {
+                required: "New password is required",
+                minLength: {
+                  value: 8,
+                  message: "Please enter at least 8 characters",
+                },
+                maxLength: {
+                  value: 20,
+                  message: "Please enter at most 20 characters",
+                },
+              })}
+              error={Boolean(
+                passwordForm.formState.errors?.new_password?.message
+              )}
+              helperText={passwordForm.formState.errors?.new_password?.message}
+            />
+          </FormControl>
+
+          <FormControl>
+            <TextField
+              type="password"
+              label="Confirm Password"
+              {...passwordForm.register("confirm_password", {
+                required: "Confirm password is required",
+                validate: (value, formValues) => {
+                  if (value !== formValues?.new_password) {
+                    return "Value does not match";
+                  }
+                },
+              })}
+              error={Boolean(
+                passwordForm.formState.errors?.confirm_password?.message
+              )}
+              helperText={
+                passwordForm.formState.errors?.confirm_password?.message
+              }
+            />
+          </FormControl>
+        </div>
+
+        <Button variant="contained" type="submit">
+          Change Password
         </Button>
       </form>
     </div>

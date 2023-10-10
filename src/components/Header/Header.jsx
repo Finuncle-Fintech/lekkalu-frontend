@@ -648,11 +648,25 @@ const Header = () => {
                         backgroundColor: "#1976D2",
                         color: "white",
                       }}
+                      to="/profile"
+                    >
+                      <ListItemIcon>
+                        <Person sx={{ color: "white" }} />
+                      </ListItemIcon>
+                      <ListItemText primary={user?.username} />
+                    </ListItemButton>
+                    <ListItemButton
+                      to="/settings"
+                      sx={{
+                        pl: 4,
+                        backgroundColor: "#1976D2",
+                        color: "white",
+                      }}
                     >
                       <ListItemIcon>
                         <AccountCircleIcon sx={{ color: "white" }} />
                       </ListItemIcon>
-                      <ListItemText primary="Profile" />
+                      <ListItemText primary="Settings" />
                     </ListItemButton>
                     <ListItemButton
                       sx={{

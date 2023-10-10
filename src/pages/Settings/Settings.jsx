@@ -45,7 +45,7 @@ export default function Settings() {
             onChange={handleValueChange}
           >
             {currencyCodes.map(({ name, symbol }) => (
-              <MenuItem value={symbol}>
+              <MenuItem value={symbol} key={name}>
                 {name} ({symbol})
               </MenuItem>
             ))}

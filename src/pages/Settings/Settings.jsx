@@ -26,8 +26,6 @@ export default function Settings() {
     return uniqBy(currencyList, (currency) => currency.symbol);
   }, []);
 
-  console.log(currencyCodes);
-
   const handleValueChange = (e) => {
     setPreferences((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
@@ -47,7 +45,7 @@ export default function Settings() {
             onChange={handleValueChange}
           >
             {currencyCodes.map(({ name, symbol }) => (
-              <MenuItem value={symbol}>
+              <MenuItem value={symbol} key={name}>
                 {name} ({symbol})
               </MenuItem>
             ))}
@@ -61,7 +59,7 @@ export default function Settings() {
           savePreferences();
         }}
       >
-        Save Preferences
+        Update
       </Button>
     </div>
   );

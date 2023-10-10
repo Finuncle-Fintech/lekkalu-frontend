@@ -1,4 +1,4 @@
-.settings_container {
+.container {
   width: 100%;
   max-width: 1500px;
   margin-inline: auto;
@@ -7,9 +7,17 @@
   padding: 20px;
 }
 
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  margin-bottom: 10px;
+  gap: 20px;
+}
+
 .heading {
   font-size: 24px;
   font-weight: bold;
+  margin-top: 1rem;
 }
 
 .divider {
@@ -18,11 +26,4 @@
   background-color: gray;
   opacity: 0.5;
   margin-block: 20px;
-}
-
-.grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  margin-bottom: 10px;
-  gap: 20px;
 }

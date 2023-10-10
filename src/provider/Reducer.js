@@ -98,6 +98,29 @@ const Reducer = (state, action) => {
         tags: action.payload,
       };
     }
+    case Types.DELETE_BUDGET: {
+      return {
+        ...state,
+        budget: state.budget.filter((item) => item.id !== action.payload),
+      };
+    }
+    case Types.SET_BUDGET: {
+      return {
+        ...state,
+        budget: [...state.budget, action.payload],
+      };
+    }
+    case Types.EDIT_BUDGET: {
+      return {
+        ...state,
+        budget: state.budget.map((item) => {
+          if (item.id === action.payload.id) {
+            return action.payload;
+          }
+          return item;
+        }),
+      };
+    }
     case Types.SET_USER: {
       return { ...state, user: action.payload };
     }

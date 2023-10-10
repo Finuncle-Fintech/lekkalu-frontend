@@ -15,6 +15,7 @@ const Types = {
   DELETE_BUDGET: "DELETE_BUDGET",
   SET_BUDGET: "SET_BUDGET",
   EDIT_BUDGET: "EDIT_BUDGET",
+  SET_USER: "SET_USER",
 };
 
 export default Types;

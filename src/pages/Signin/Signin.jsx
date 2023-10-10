@@ -50,7 +50,6 @@ export const Signin = () => {
         showConfirmButton: false,
         timer: 3000,
       });
-      console.log(error);
     } finally {
       setLoading(false);
     }

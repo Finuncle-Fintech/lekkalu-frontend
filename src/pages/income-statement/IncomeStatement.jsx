@@ -27,9 +27,6 @@ const IncomeStatement = () => {
   useEffect(() => {
     fetchIncomeStatement();
   }, []);
-  useEffect(() => {
-    console.log({ incomeStatement });
-  }, [JSON.stringify(incomeStatement)]);
 
   const loadCurrentTab = () => {
     switch (currentab) {

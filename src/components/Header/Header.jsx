@@ -15,6 +15,7 @@ import Logo from "./HeaderComponents/Logo";
 import BasicMenu from "./HeaderComponents/BasicMenu";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { Context } from "provider/Provider";
+import { Person, Settings } from "@mui/icons-material";
 
 const styles = {
   appBar: {
@@ -50,7 +51,7 @@ const styles = {
 };
 
 const Header = () => {
-  const { signOut, authToken } = useContext(Context);
+  const { signOut, authToken, user } = useContext(Context);
   const [openCalculator, setOpenCalculator] = React.useState(false);
   const [openSettings, setOpenSettings] = React.useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -58,11 +59,16 @@ const Header = () => {
   const userSetting = {
     submenu: {
       1: {
-        name: "Profile",
-        icon: <AccountCircleIcon />,
-        path: "/settings",
+        name: user?.username,
+        icon: <Person />,
+        path: "/profile",
       },
       2: {
+        name: "Settings",
+        icon: <Settings />,
+        path: "/settings",
+      },
+      3: {
         name: "Logout",
         icon: <LogoutIcon />,
         onClick: signOut,
@@ -222,7 +228,9 @@ const Header = () => {
                 <IconButton
                   sx={{
                     ...styles.iconButton,
-                    backgroundColor: isActive("/income-statement") ? "#0F4C91" : "white",
+                    backgroundColor: isActive("/income-statement")
+                      ? "#0F4C91"
+                      : "white",
                     color: isActive("/income-statement") ? "white" : "black",
                   }}
                   component={Link}
@@ -234,7 +242,9 @@ const Header = () => {
                     src="https://i.imgur.com/CSV4JtU.png"
                     alt="balance-scale-right"
                     style={{
-                      filter: isActive("/income-statement") ? "invert(1)" : "none",
+                      filter: isActive("/income-statement")
+                        ? "invert(1)"
+                        : "none",
                     }}
                   />
                 </IconButton>
@@ -291,12 +301,7 @@ const Header = () => {
       </Box>
 
       {authToken ? (
-        <BasicMenu
-          sx={{
-            ...styles.iconButton,
-          }}
-          Menu={userSetting}
-        />
+        <BasicMenu sx={styles.iconButton} Menu={userSetting} />
       ) : null}
 
       {/* Responsive menu button */}
@@ -428,9 +433,6 @@ const Header = () => {
                   <ListItemText primary="Goal" />
                 </ListItemButton>
 
-
-
-
                 <ListItemButton
                   component={Link}
                   to="/expenses"
@@ -461,7 +463,9 @@ const Header = () => {
                   component={Link}
                   to="/income-statement"
                   sx={{
-                    backgroundColor: isActive("/income-statement") ? "white" : "#1976D2",
+                    backgroundColor: isActive("/income-statement")
+                      ? "white"
+                      : "#1976D2",
                     color: isActive("/income-statement") ? "black" : "white",
                     margin: "10px 0",
                   }}
@@ -475,7 +479,9 @@ const Header = () => {
                       style={{
                         marginRight: "10px",
                         color: "white",
-                        filter: isActive("/income-statement") ? "none" : "invert(1)",
+                        filter: isActive("/income-statement")
+                          ? "none"
+                          : "invert(1)",
                       }}
                     />
                   </ListItemIcon>
@@ -642,11 +648,25 @@ const Header = () => {
                         backgroundColor: "#1976D2",
                         color: "white",
                       }}
+                      to="/profile"
+                    >
+                      <ListItemIcon>
+                        <Person sx={{ color: "white" }} />
+                      </ListItemIcon>
+                      <ListItemText primary={user?.username} />
+                    </ListItemButton>
+                    <ListItemButton
+                      to="/settings"
+                      sx={{
+                        pl: 4,
+                        backgroundColor: "#1976D2",
+                        color: "white",
+                      }}
                     >
                       <ListItemIcon>
                         <AccountCircleIcon sx={{ color: "white" }} />
                       </ListItemIcon>
-                      <ListItemText primary="Profile" />
+                      <ListItemText primary="Settings" />
                     </ListItemButton>
                     <ListItemButton
                       sx={{

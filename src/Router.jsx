@@ -20,14 +20,12 @@ import Hero from "pages/Hero/Hero";
 import HeroRoute from "components/HeroRoute/HeroRoute";
 import TermsAndConditions from "pages/TermsAndConditions/TermsAndConditions";
 import PrivacyPolicies from "pages/PrivacyPolicies/PrivacyPolicies";
+import Profile from "pages/Profile/Profile";
 
 const RouterComponent = () => {
-
   return (
     <Router>
-
       <Layout>
-
         <Routes>
           <Route path="*" element={<ErrorPage />} />
           <Route element={<PersistGuest />}>
@@ -80,15 +78,16 @@ const RouterComponent = () => {
               element={<ProtectedRoutes component={<BalanceSheet />} />}
             />
             <Route
-                path="/settings"
-                element={<ProtectedRoutes component={<Settings />} />}
+              path="/settings"
+              element={<ProtectedRoutes component={<Settings />} />}
+            />
+            <Route
+              path="/profile"
+              element={<ProtectedRoutes component={<Profile />} />}
             />
           </Route>
-
         </Routes>
-
       </Layout>
-
     </Router>
   );
 };

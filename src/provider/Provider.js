@@ -1,13 +1,11 @@
-
-import React, { createContext, useReducer, useState, useContext } from 'react';
-import axiosClient from 'components/Axios/Axios';
-import useAxiosPrivate from 'hooks/useAxiosPrivate';
-import { InitialState } from './Reducer';
-import Reducer from './Reducer';
-import Types from './Types';
-import setCookie from 'components/Support/PopUp/utils/SetCookie';
-import deleteCookie from 'components/Support/PopUp/utils/DeleteCookie';
-
+import React, { createContext, useReducer, useState, useContext } from "react";
+import axiosClient from "components/Axios/Axios";
+import useAxiosPrivate from "hooks/useAxiosPrivate";
+import { InitialState } from "./Reducer";
+import Reducer from "./Reducer";
+import Types from "./Types";
+import setCookie from "components/Support/PopUp/utils/SetCookie";
+import deleteCookie from "components/Support/PopUp/utils/DeleteCookie";
 
 const Context = createContext({
   ...InitialState,
@@ -113,9 +111,13 @@ const Provider = ({ children }) => {
         "Content-Type": "application/json",
       };
 
-      await axiosPrivate.post(`${process.env.REACT_APP_BACKEND_API}expense-tag/`, tag, {
-        headers,
-      });
+      await axiosPrivate.post(
+        `${process.env.REACT_APP_BACKEND_API}expense-tag/`,
+        tag,
+        {
+          headers,
+        }
+      );
     } catch (error) {
       handleErrors(error);
     }
@@ -165,7 +167,6 @@ const Provider = ({ children }) => {
       throw error; // Rethrow the error so it can be caught in the calling function
     }
   };
-
 
   const filterExpensesByDate = async (page, rowsPerPage, fromDate, toDate) => {
     try {
@@ -453,16 +454,19 @@ const Provider = ({ children }) => {
   };
 
   const addIncomeExpense = async (data) => {
-    console.log('=====data: ', data);
     try {
       const headers = {
         Authorization: `Bearer ${authToken}`,
         "Content-Type": "application/json",
       };
 
-      await axiosPrivate.post(`${process.env.REACT_APP_BACKEND_API}income_expense/`, data, {
-        headers,
-      });
+      await axiosPrivate.post(
+        `${process.env.REACT_APP_BACKEND_API}income_expense/`,
+        data,
+        {
+          headers,
+        }
+      );
     } catch (error) {
       handleErrors(error);
     }
@@ -475,9 +479,13 @@ const Provider = ({ children }) => {
         "Content-Type": "application/json",
       };
 
-      await axiosPrivate.put(`${process.env.REACT_APP_BACKEND_API}income_expense/${id}`, data, {
-        headers,
-      });
+      await axiosPrivate.put(
+        `${process.env.REACT_APP_BACKEND_API}income_expense/${id}`,
+        data,
+        {
+          headers,
+        }
+      );
     } catch (error) {
       handleErrors(error);
     }
@@ -490,9 +498,12 @@ const Provider = ({ children }) => {
         "Content-Type": "application/json",
       };
 
-      await axiosPrivate.delete(`${process.env.REACT_APP_BACKEND_API}income_expense/${id}`,  {
-        headers,
-      });
+      await axiosPrivate.delete(
+        `${process.env.REACT_APP_BACKEND_API}income_expense/${id}`,
+        {
+          headers,
+        }
+      );
     } catch (error) {
       handleErrors(error);
     }
@@ -505,9 +516,12 @@ const Provider = ({ children }) => {
         "Content-Type": "application/json",
       };
 
-      return await axiosPrivate.post(`${process.env.REACT_APP_BACKEND_API}income_source/`, data, {
-        headers,
-      }).then((response) =>response).catch((error) => error);
+      return await axiosPrivate
+        .post(`${process.env.REACT_APP_BACKEND_API}income_source/`, data, {
+          headers,
+        })
+        .then((response) => response)
+        .catch((error) => error);
     } catch (error) {
       handleErrors(error);
     }
@@ -520,9 +534,12 @@ const Provider = ({ children }) => {
         "Content-Type": "application/json",
       };
 
-      return await axiosPrivate.put(`${process.env.REACT_APP_BACKEND_API}income_source/${id}`, data, {
-        headers,
-      }).then((response) =>response).catch((error) => error);
+      return await axiosPrivate
+        .put(`${process.env.REACT_APP_BACKEND_API}income_source/${id}`, data, {
+          headers,
+        })
+        .then((response) => response)
+        .catch((error) => error);
     } catch (error) {
       handleErrors(error);
     }
@@ -535,9 +552,12 @@ const Provider = ({ children }) => {
         "Content-Type": "application/json",
       };
 
-      await axiosPrivate.delete(`${process.env.REACT_APP_BACKEND_API}income_source/${id}`,  {
-        headers,
-      });
+      await axiosPrivate.delete(
+        `${process.env.REACT_APP_BACKEND_API}income_source/${id}`,
+        {
+          headers,
+        }
+      );
     } catch (error) {
       handleErrors(error);
     }
@@ -620,17 +640,17 @@ const Provider = ({ children }) => {
   const UnitUpdateContext = React.createContext();
 
   function useUnit() {
-    return useContext(UnitContext)
+    return useContext(UnitContext);
   }
 
   function useUnitUpdate() {
-    return useContext(UnitUpdateContext)
+    return useContext(UnitUpdateContext);
   }
   const [unit, setUnit] = useState("Months");
 
   const handleUnitChange = (val) => {
-    setUnit(val)
-  }
+    setUnit(val);
+  };
 
   return (
     <Context.Provider
@@ -671,13 +691,12 @@ const Provider = ({ children }) => {
         useUnitUpdate,
         unit,
         handleUnitChange,
-        fetchAllExpenses
+        fetchAllExpenses,
       }}
     >
       {children}
     </Context.Provider>
   );
-
 };
 
 export { Context, Provider };

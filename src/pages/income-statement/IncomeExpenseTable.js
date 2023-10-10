@@ -1,5 +1,4 @@
-import react, { useState, useEffect, useContext, useMemo } from "react";
-// import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import { useState, useEffect, useMemo } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
@@ -26,11 +25,10 @@ import Swal from "sweetalert2";
 
 const ITEM_HEIGHT = 48;
 
-
 const EditToolbar = (props) => {
   const isMobile = window.innerWidth <= 768;
-  const { setRows, setRowModesModel, selectionModel, incomeTable } =
-    props;
+  const { setRows, setRowModesModel, incomeTable, selectedRows } = props;
+
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -42,7 +40,10 @@ const EditToolbar = (props) => {
 
   const addRowButton = () => {
     const id = randomId();
-    setRows((oldRows) => [...oldRows, { id, name: "", type: "", value: "", isNew: true }]);
+    setRows((oldRows) => [
+      ...oldRows,
+      { id, name: "", type: "", value: "", isNew: true },
+    ]);
     setRowModesModel((oldModel) => ({
       ...oldModel,
       [id]: { mode: GridRowModes.Edit, fieldToFocus: "name" },
@@ -51,17 +52,15 @@ const EditToolbar = (props) => {
 
   return (
     <GridToolbarContainer
-      sx={{ backgroundColor: "#ffffff", marginBottom: "10px", borderRadius: 0, }}
+      sx={{ backgroundColor: "#ffffff", marginBottom: "10px", borderRadius: 0 }}
       className="toolbar-container"
     >
-      <div>
-        <GridToolbarQuickFilter
-          className="quick-filter"
-          variant="outlined"
-          size="small"
-          sx={{ ml: 1, flex: 1 }}
-        />
-      </div>
+      <GridToolbarQuickFilter
+        className="quick-filter"
+        variant="outlined"
+        size="small"
+        sx={{ ml: 1, flex: 1 }}
+      />
       {isMobile ? (
         <>
           <IconButton
@@ -93,8 +92,7 @@ const EditToolbar = (props) => {
             <MenuItem onClick={handleClose}>
               <IconButton
                 onClick={() => {
-                  const selectedIDs = new Set(selectionModel);
-                  setRows((r) => r.filter((x) => !selectedIDs.has(x.id)));
+                  setRows((r) => r.filter((x) => !selectedRows.includes(x.id)));
                 }}
                 className="table-button"
                 sx={{
@@ -102,8 +100,8 @@ const EditToolbar = (props) => {
                   fontSize: "14px",
                   fontWeight: "500",
                   "&:hover": {
-                    backgroundColor: "transparent"
-                    },
+                    backgroundColor: "transparent",
+                  },
                 }}
               >
                 <DeleteIcon
@@ -122,22 +120,22 @@ const EditToolbar = (props) => {
               <GridToolbarFilterButton
                 className="menu-item-button table-button"
                 sx={{
-                    color: "#344054",
-                    margin: "10px",
-                    "&:hover": {
-                        backgroundColor: "transparent"
-                    },
+                  color: "#344054",
+                  margin: "10px",
+                  "&:hover": {
+                    backgroundColor: "transparent",
+                  },
                 }}
               />
             </MenuItem>
             <MenuItem onClick={handleClose}>
               <GridToolbarExport
                 sx={{
-                    color: "#344054",
-                    margin: "10px",
-                    "&:hover": {
-                        backgroundColor: "transparent"
-                    },
+                  color: "#344054",
+                  margin: "10px",
+                  "&:hover": {
+                    backgroundColor: "transparent",
+                  },
                 }}
                 className="table-button table-export-icon"
               />
@@ -146,11 +144,11 @@ const EditToolbar = (props) => {
               <Button
                 color="primary"
                 sx={{
-                    color: "#344054",
-                    margin: "10px",
-                    "&:hover": {
-                        backgroundColor: "transparent"
-                    },
+                  color: "#344054",
+                  margin: "10px",
+                  "&:hover": {
+                    backgroundColor: "transparent",
+                  },
                 }}
                 className="table-button"
                 startIcon={
@@ -161,7 +159,7 @@ const EditToolbar = (props) => {
                 }
                 onClick={addRowButton}
               >
-                {`${incomeTable ? 'Add Income' : 'Add Expense'}`}
+                {`${incomeTable ? "Add Income" : "Add Expense"}`}
               </Button>
             </MenuItem>
           </Menu>
@@ -169,12 +167,9 @@ const EditToolbar = (props) => {
       ) : (
         <div>
           <IconButton
+            disabled={selectedRows?.length === 0}
             onClick={() => {
-              const selectedIDs = new Set(selectionModel);
-              // you can call an API to delete the selected IDs
-              // and get the latest results after the deletion
-              // then call setRows() to update the data locally here
-              setRows((r) => r.filter((x) => !selectedIDs.has(x.id)));
+              setRows((r) => r.filter((x) => !selectedRows.includes(x.id)));
             }}
             className="table-button"
             sx={{
@@ -202,7 +197,6 @@ const EditToolbar = (props) => {
           <GridToolbarExport
             sx={{
               border: "1px solid #D0D5DD",
-              color: "#FFFfff",
               borderRadius: "8px",
               color: "#344054",
               fontSize: "14px",
@@ -223,7 +217,7 @@ const EditToolbar = (props) => {
               borderRadius: "8px",
               border: "1px solid #0070FF",
               background: "#0070FF",
-              boxShadow: "0px 0.96159px 1.92319px 0pxrgba(16, 24, 40, 0.05)",
+              boxShadow: "0px 0.96159px 1.92319px 0px rgba(16, 24, 40, 0.05)",
               color: "#FFFFFF",
               fontSize: "14px",
               fontWeight: 500,
@@ -241,30 +235,36 @@ const EditToolbar = (props) => {
             }
             onClick={addRowButton}
           >
-            {`${incomeTable ? 'Add Income' : 'Add Expense'}`}
+            {`${incomeTable ? "Add Income" : "Add Expense"}`}
           </Button>
         </div>
       )}
     </GridToolbarContainer>
   );
-}
+};
 
 const CustomNoRowsOverlay = (props) => {
   const { incomeTable } = props;
   return (
-    <div>
-      <Box sx={{ mt: 1, textAlign: 'center' }}>{incomeTable ? 'No Incomes in Records!' : 'No Expenses in Records!'}</Box>
-    </div>
+    <Box sx={{ mt: 1, textAlign: "center" }}>
+      {incomeTable ? "No Incomes in Records!" : "No Expenses in Records!"}
+    </Box>
   );
-}
+};
 
-const IncomeExpenseTable = ({ incomeStatement, addfield, updateField, deleteField, incomeTable }) => {
+const IncomeExpenseTable = ({
+  incomeStatement,
+  addfield,
+  updateField,
+  deleteField,
+  incomeTable,
+}) => {
   const [rows, setRows] = useState([]);
   const [rowModesModel, setRowModesModel] = useState({});
   const [selectedRows, setSelectedRows] = useState([]);
 
   useEffect(() => {
-    if(incomeStatement) {
+    if (incomeStatement) {
       setRows(incomeStatement);
     }
   }, [incomeStatement]);
@@ -287,7 +287,7 @@ const IncomeExpenseTable = ({ incomeStatement, addfield, updateField, deleteFiel
     Swal.fire({
       title: "Are you sure?",
       text: `You won't be able to revert this`,
-      icon:  "warning",
+      icon: "warning",
       showConfirmButton: true,
       showCancelButton: true,
       confirmButtonText: "Delete",
@@ -296,7 +296,11 @@ const IncomeExpenseTable = ({ incomeStatement, addfield, updateField, deleteFiel
       if (res.isConfirmed) {
         deleteField(id);
         setRows(rows.filter((row) => row.id !== id));
-        Swal.fire("Deleted", "Your income record deleted successfully.", "success");
+        Swal.fire(
+          "Deleted",
+          "Your income record deleted successfully.",
+          "success"
+        );
       }
     });
   };
@@ -314,54 +318,40 @@ const IncomeExpenseTable = ({ incomeStatement, addfield, updateField, deleteFiel
   };
 
   const processRowUpdate = (newRow) => {
-    if(newRow.isNew === true) {
+    if (newRow.isNew === true) {
       delete newRow.id;
-      Swal.fire({
-        title: "Are you sure?",
-        text: `You won't be able to revert this`,
-        icon: "warning",
-        showConfirmButton: true,
-        showCancelButton: true,
-        confirmButtonText: "Save",
-        confirmButtonColor: "Blue",
-      }).then((res) => {
-        if (res.isConfirmed) {
-          addfield({...newRow, amount: newRow.value}).then((resp) => {
-            if(resp.status === 201) {
-              setRowModesModel(false);
-              Swal.fire("Added", "Your income record added successfully.", "success");
-            } else {
-              Swal.fire({
-                text: `Please enter valid value.`,
-                icon: "error",
-              });
-            }
+      addfield({ ...newRow, amount: newRow.value }).then((resp) => {
+        if (resp.status === 201) {
+          setRowModesModel(false);
+          Swal.fire(
+            "Added",
+            "Your income record added successfully.",
+            "success"
+          );
+        } else {
+          Swal.fire({
+            text: `Please enter valid value.`,
+            icon: "error",
           });
         }
       });
     } else {
-      Swal.fire({
-        title: "Are you sure?",
-        text: `You won't be able to revert this`,
-        icon: "warning",
-        showConfirmButton: true,
-        showCancelButton: true,
-        confirmButtonText: "Save",
-        confirmButtonColor: "Blue",
-      }).then((res) => {
-        if (res.isConfirmed) {
-          updateField(newRow.id, {...newRow, amount: newRow.value}).then((res) => {
-            if(res.status === 200) {
-              Swal.fire("Updated", "Your income record updated successfully.", "success");
-            } else {
-              Swal.fire({
-                text: `Please enter valid value.`,
-                icon: "error",
-              });
-            }
-          });
+      updateField(newRow.id, { ...newRow, amount: newRow.value }).then(
+        (res) => {
+          if (res.status === 200) {
+            Swal.fire(
+              "Updated",
+              "Your income record updated successfully.",
+              "success"
+            );
+          } else {
+            Swal.fire({
+              text: `Please enter valid value.`,
+              icon: "error",
+            });
+          }
         }
-      });
+      );
     }
     const updatedRow = { ...newRow, isNew: false };
     setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
@@ -371,9 +361,15 @@ const IncomeExpenseTable = ({ incomeStatement, addfield, updateField, deleteFiel
   const handleRowModesModelChange = (newRowModesModel) => {
     setRowModesModel(newRowModesModel);
   };
+
   const columns = useMemo(
     () => [
-      { field: "name", headerName: "Name", width: 180, editable: true },
+      {
+        field: "name",
+        headerName: "Name",
+        width: 180,
+        editable: true,
+      },
       {
         field: "type",
         headerName: "Type",
@@ -464,17 +460,16 @@ const IncomeExpenseTable = ({ incomeStatement, addfield, updateField, deleteFiel
           onRowEditStop={handleRowEditStop}
           processRowUpdate={processRowUpdate}
           rowSelectionModel={selectedRows ?? null}
-          onRowSelectionModelChange={(ids)=>{
+          onRowSelectionModelChange={(ids) => {
             setSelectedRows(ids);
           }}
-          rowSelectionModel={selectedRows}
           slots={{
             toolbar: EditToolbar,
             noRowsOverlay: CustomNoRowsOverlay,
           }}
           slotProps={{
-            toolbar: { setRows, setRowModesModel, incomeTable },
-            noRowsOverlay: { incomeTable }
+            toolbar: { setRows, setRowModesModel, incomeTable, selectedRows },
+            noRowsOverlay: { incomeTable },
           }}
           hideFooter
         />

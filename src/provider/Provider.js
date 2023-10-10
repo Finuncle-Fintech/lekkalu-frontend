@@ -388,7 +388,7 @@ const Provider = ({ children }) => {
       await axiosPrivate
         //get assets depreciation
         .get(`${process.env.REACT_APP_BACKEND_API}physical_assets/`, {
-          headers
+          headers,
         })
         .then((res) => {
           const data = res.data;
@@ -753,7 +753,7 @@ const Provider = ({ children }) => {
         useUnitUpdate,
         unit,
         handleUnitChange,
-        fetchAllExpenses,,
+        fetchAllExpenses,
         deleteBudget,
         createBudget,
         updateBudget,

@@ -35,6 +35,7 @@ export default function Profile() {
             <TextField
               label="First Name"
               {...register("first_name", {
+                required: "First name is required",
                 minLength: {
                   value: 3,
                   message: "Please enter at least 3 characters!",

@@ -56,7 +56,7 @@ const Provider = ({ children }) => {
         alert(error.message);
       }
     }
-    if (error.message == "Network Error") {
+    if (error.message === "Network Error") {
       alert("Network Error");
     }
   };
@@ -460,13 +460,12 @@ const Provider = ({ children }) => {
         "Content-Type": "application/json",
       };
 
-      await axiosPrivate.post(
-        `${process.env.REACT_APP_BACKEND_API}income_expense/`,
-        data,
-        {
+      return await axiosPrivate
+        .post(`${process.env.REACT_APP_BACKEND_API}income_expense/`, data, {
           headers,
-        }
-      );
+        })
+        .then((response) => response)
+        .catch((error) => error);
     } catch (error) {
       handleErrors(error);
     }
@@ -479,13 +478,12 @@ const Provider = ({ children }) => {
         "Content-Type": "application/json",
       };
 
-      await axiosPrivate.put(
-        `${process.env.REACT_APP_BACKEND_API}income_expense/${id}`,
-        data,
-        {
+      return await axiosPrivate
+        .put(`${process.env.REACT_APP_BACKEND_API}income_expense/${id}`, data, {
           headers,
-        }
-      );
+        })
+        .then((response) => response)
+        .catch((error) => error);
     } catch (error) {
       handleErrors(error);
     }

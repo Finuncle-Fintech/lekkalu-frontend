@@ -3,13 +3,23 @@ import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
 import { EMAIL_REGEX } from "utils/Constants";
 import styles from "./Profile.module.css";
+import { useContext } from "react";
+import { Context } from "provider/Provider";
 
 export default function Profile() {
+  const { user } = useContext(Context);
+
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    defaultValues: {
+      first_name: user?.first_name,
+      last_name: user?.last_name,
+      email: user?.email,
+    },
+  });
 
   const handleUserProfileUpdate = (data) => {
     Swal.fire({
@@ -25,7 +35,6 @@ export default function Profile() {
             <TextField
               label="First Name"
               {...register("first_name", {
-                required: "First name is required!",
                 minLength: {
                   value: 3,
                   message: "Please enter at least 3 characters!",
@@ -44,7 +53,6 @@ export default function Profile() {
             <TextField
               label="Last Name"
               {...register("last_name", {
-                required: "Last name is required!",
                 minLength: {
                   value: 3,
                   message: "Please enter at least 3 characters!",
@@ -63,7 +71,6 @@ export default function Profile() {
             <TextField
               label="Email"
               {...register("email", {
-                required: "Email is required!",
                 pattern: {
                   value: EMAIL_REGEX,
                   message: "Please enter a valid email!",

@@ -355,6 +355,11 @@ const Provider = ({ children }) => {
                 id: da.id,
                 name: da.name,
                 value: parseFloat(da.balance),
+                principal: parseFloat(da.principal),
+                interest: parseFloat(da.interest_rate),
+                tenure: da.tenure,
+                closure_charges: parseFloat(da.closure_charges),
+                disbursement_date: da.disbursement_date,
               },
             ];
           });
@@ -515,6 +520,7 @@ const Provider = ({ children }) => {
         "Content-Type": "application/json",
       };
 
+      console.log(assetData)
       await axiosPrivate
         .post(
           `${process.env.REACT_APP_BACKEND_API}physical_assets/`,
@@ -638,8 +644,10 @@ const Provider = ({ children }) => {
         .get(`${process.env.REACT_APP_BACKEND_API}loans/`, { headers })
         .then((res) => {
           let totalVal = 0.000000001;
+          console.log(res)
           res.data.map((da) => {
             totalVal += parseFloat(da.balance);
+            
             finalLiabilities = [
               ...finalLiabilities,
               {

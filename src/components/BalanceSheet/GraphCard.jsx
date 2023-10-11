@@ -77,6 +77,7 @@ export default function GraphCard(props) {
                 alignItems: "center",
               }}
             >
+              
               <Box sx={{ width: "50%" }}>
                 <Pie
                   component={

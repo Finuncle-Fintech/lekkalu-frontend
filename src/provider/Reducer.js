@@ -45,8 +45,10 @@ const Reducer = (state, action) => {
       };
     }
     case Types.FETCH_LIABILITIES: {
+   
       return {
         ...state,
+        
         liabilities: action.payload,
       };
     }

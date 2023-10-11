@@ -135,7 +135,6 @@ export const AssetsLiabilitiesChart = (props) => {
               verticalAlign="bottom"
               align="center"
               payload={pieData.map((item, index) => {
-                // console.log({ item, totalValue });
                 return {
                   id: item.name,
                   type: "circle",

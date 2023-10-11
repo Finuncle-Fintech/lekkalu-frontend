@@ -188,16 +188,18 @@ const Header = () => {
                 <IconButton
                   sx={{
                     ...styles.iconButton,
-                    backgroundColor: isActive("/goal") ? "#0F4C91" : "white",
+                    backgroundColor: isActive("/goals") ? "#0F4C91" : "white",
                     color: isActive("/goal") ? "white" : "black",
                   }}
+                  component={Link}
+                  to={"/goals"}
                 >
                   <img
                     width="28"
                     height="28"
                     src="https://img.icons8.com/material-outlined/24/goal.png"
                     alt="goal"
-                    style={{ filter: isActive("/goal") ? "invert(1)" : "none" }}
+                    style={{ filter: isActive("/goals") ? "invert(1)" : "none" }}
                   />
                 </IconButton>
               </Tooltip>
@@ -409,11 +411,11 @@ const Header = () => {
                 </ListItemButton>
 
                 <ListItemButton
-                  // component={Link}
-                  // to="/goal"
+                  component={Link}
+                  to="/goals"
                   sx={{
-                    backgroundColor: isActive("/goal") ? "white" : "#1976D2",
-                    color: isActive("/goal") ? "black" : "white",
+                    backgroundColor: isActive("/goals") ? "white" : "#1976D2",
+                    color: isActive("/goals") ? "black" : "white",
                     margin: "10px 0",
                   }}
                 >
@@ -422,17 +424,16 @@ const Header = () => {
                       width="28"
                       height="28"
                       src="https://img.icons8.com/material-outlined/24/goal.png"
-                      alt="goal"
+                      alt="goals"
                       style={{
                         marginRight: "10px",
                         color: "white",
-                        filter: isActive("/goal") ? "none" : "invert(1)",
+                        filter: isActive("/goals") ? "none" : "invert(1)",
                       }}
                     />
                   </ListItemIcon>
                   <ListItemText primary="Goal" />
                 </ListItemButton>
-
                 <ListItemButton
                   component={Link}
                   to="/expenses"

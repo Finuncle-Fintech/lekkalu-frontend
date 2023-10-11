@@ -21,6 +21,7 @@ const Types = {
   CREATE_GOAL: 'CREATE_GOAL',
   EDIT_GOAL: 'EDIT_GOAL',
 
+  SET_USER: "SET_USER",
 };
 
 export default Types;

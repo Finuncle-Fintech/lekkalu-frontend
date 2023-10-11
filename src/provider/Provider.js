@@ -6,6 +6,8 @@ import Reducer from "./Reducer";
 import Types from "./Types";
 import setCookie from "components/Support/PopUp/utils/SetCookie";
 import deleteCookie from "components/Support/PopUp/utils/DeleteCookie";
+import jwtDecode from "jwt-decode";
+
 const Context = createContext({
   ...InitialState,
 });
@@ -45,6 +47,7 @@ const Provider = ({ children }) => {
     liabilities,
     incomeStatement,
     depreciation,
+    user,
     goals
   } = store;
 
@@ -625,6 +628,31 @@ const Provider = ({ children }) => {
   };
 
 
+  const fetchUser = async (authToken) => {
+    if (!authToken) return;
+
+    const decodedToken = jwtDecode(authToken);
+    const userId = decodedToken.user_id;
+
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      const response = await axiosPrivate.get(
+        `${process.env.REACT_APP_BACKEND_URL}users/api/users/${userId}`,
+        { headers }
+      );
+
+      if (response.status === 200) {
+        dispatch({ type: Types.SET_USER, payload: response.data });
+      }
+    } catch (error) {
+      handleErrors(error);
+    }
+  };
+
   const createBudget = async (data) => {
     try {
       const headers = {
@@ -755,6 +783,8 @@ const Provider = ({ children }) => {
         unit,
         handleUnitChange,
         fetchAllExpenses,
+        fetchUser,
+        user,
         deleteBudget,
         createBudget,
         updateBudget,

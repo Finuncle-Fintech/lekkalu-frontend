@@ -17,7 +17,6 @@ const IncomeStatementSummary = ({
 }) => {
   const { preferences } = useUserPreferences();
 
-  console.log({ totalIncome, totalExpense });
   const [expanded, setExpanded] = React.useState(false);
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
@@ -30,7 +29,7 @@ const IncomeStatementSummary = ({
         .map((each) => each.type)
     ),
   ];
-  console.log({ typesOfIncome });
+
   typesOfIncome.map((eachType) => {
     let sumOfType = incomeStatement.income
       .filter((each) => each.type === eachType)
@@ -46,7 +45,7 @@ const IncomeStatementSummary = ({
         .map((each) => each.type)
     ),
   ];
-  console.log({ typesOfExpense });
+
   typesOfExpense.map((eachType) => {
     let sumOfType = incomeStatement.expenses
       .filter((each) => each.type === eachType)

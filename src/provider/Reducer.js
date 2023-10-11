@@ -161,6 +161,9 @@ const Reducer = (state, action) => {
         }),
       };
     }
+    case Types.SET_USER: {
+      return { ...state, user: action.payload };
+    }
     default: {
       return state;
     }

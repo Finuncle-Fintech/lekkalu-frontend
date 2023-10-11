@@ -1,5 +1,4 @@
-import react, { useState, useEffect, useMemo } from "react";
-// import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import { useState, useEffect, useMemo } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
@@ -22,13 +21,14 @@ import {
 } from "@mui/x-data-grid";
 import { randomId } from "@mui/x-data-grid-generator";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import Swal from "sweetalert2";
 
 const ITEM_HEIGHT = 48;
-function EditToolbar(props) {
-  const isMobile = window.innerWidth <= 768;
 
-  const { setRows, setRowModesModel, selectionModel, handleDeleteClick } =
-    props;
+const EditToolbar = (props) => {
+  const isMobile = window.innerWidth <= 768;
+  const { setRows, setRowModesModel, incomeTable, selectedRows } = props;
+
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -38,9 +38,18 @@ function EditToolbar(props) {
     setAnchorEl(null);
   };
 
-  const handleClickA = () => {
+  const addRowButton = () => {
     const id = randomId();
-    setRows((oldRows) => [...oldRows, { id, name: "", age: "", isNew: true }]);
+    setRows((oldRows) => [
+      ...oldRows,
+      {
+        id,
+        name: "",
+        type: incomeTable ? "Salary" : "Personal",
+        value: "",
+        isNew: true,
+      },
+    ]);
     setRowModesModel((oldModel) => ({
       ...oldModel,
       [id]: { mode: GridRowModes.Edit, fieldToFocus: "name" },
@@ -49,17 +58,15 @@ function EditToolbar(props) {
 
   return (
     <GridToolbarContainer
-      sx={{ backgroundColor: "#ffffff", marginBottom: "10px" }}
+      sx={{ backgroundColor: "#ffffff", marginBottom: "10px", borderRadius: 0 }}
       className="toolbar-container"
     >
-      <div>
-        <GridToolbarQuickFilter
-          className="quick-filter"
-          variant="outlined"
-          size="small"
-          sx={{ ml: 1, flex: 1 }}
-        />
-      </div>
+      <GridToolbarQuickFilter
+        className="quick-filter"
+        variant="outlined"
+        size="small"
+        sx={{ ml: 1, flex: 1 }}
+      />
       {isMobile ? (
         <>
           <IconButton
@@ -91,8 +98,7 @@ function EditToolbar(props) {
             <MenuItem onClick={handleClose}>
               <IconButton
                 onClick={() => {
-                  const selectedIDs = new Set(selectionModel);
-                  setRows((r) => r.filter((x) => !selectedIDs.has(x.id)));
+                  setRows((r) => r.filter((x) => !selectedRows.includes(x.id)));
                 }}
                 className="table-button"
                 sx={{
@@ -150,20 +156,6 @@ function EditToolbar(props) {
                     backgroundColor: "transparent",
                   },
                 }}
-                // sx={{
-                //   borderRadius: "8px",
-                //   border: "1px solid #0070FF",
-                //   background: "#0070FF",
-                //   boxShadow:
-                //     "0px 0.96159px 1.92319px 0pxrgba(16, 24, 40, 0.05)",
-                //   color: "#FFFFFF",
-                //   fontSize: "14px",
-                //   fontWeight: 500,
-                //   lineHeight: "20px",
-                //   padding: "10px",
-                //   marginLeft: "10px",
-                //   "&:hover": { backgroundColor: "#0070FF" },
-                // }}
                 className="table-button"
                 startIcon={
                   <AddIcon
@@ -171,9 +163,9 @@ function EditToolbar(props) {
                     sx={{ color: "#000000", width: 20, height: 20 }}
                   />
                 }
-                onClick={handleClickA}
+                onClick={addRowButton}
               >
-                Add new CTA
+                {`${incomeTable ? "Add Income" : "Add Expense"}`}
               </Button>
             </MenuItem>
           </Menu>
@@ -181,12 +173,9 @@ function EditToolbar(props) {
       ) : (
         <div>
           <IconButton
+            disabled={selectedRows?.length === 0}
             onClick={() => {
-              const selectedIDs = new Set(selectionModel);
-              // you can call an API to delete the selected IDs
-              // and get the latest results after the deletion
-              // then call setRows() to update the data locally here
-              setRows((r) => r.filter((x) => !selectedIDs.has(x.id)));
+              setRows((r) => r.filter((x) => !selectedRows.includes(x.id)));
             }}
             className="table-button"
             sx={{
@@ -214,7 +203,6 @@ function EditToolbar(props) {
           <GridToolbarExport
             sx={{
               border: "1px solid #D0D5DD",
-              color: "#FFFfff",
               borderRadius: "8px",
               color: "#344054",
               fontSize: "14px",
@@ -235,7 +223,7 @@ function EditToolbar(props) {
               borderRadius: "8px",
               border: "1px solid #0070FF",
               background: "#0070FF",
-              boxShadow: "0px 0.96159px 1.92319px 0pxrgba(16, 24, 40, 0.05)",
+              boxShadow: "0px 0.96159px 1.92319px 0px rgba(16, 24, 40, 0.05)",
               color: "#FFFFFF",
               fontSize: "14px",
               fontWeight: 500,
@@ -251,24 +239,41 @@ function EditToolbar(props) {
                 sx={{ color: "#ffffff", width: 20, height: 20 }}
               />
             }
-            onClick={handleClickA}
+            onClick={addRowButton}
           >
-            Add new CTA
+            {`${incomeTable ? "Add Income" : "Add Expense"}`}
           </Button>
         </div>
       )}
     </GridToolbarContainer>
   );
-}
+};
 
-const IncomeTable = ({ incomeStatement }) => {
+const CustomNoRowsOverlay = (props) => {
+  const { incomeTable } = props;
+  return (
+    <Box sx={{ mt: 1, textAlign: "center" }}>
+      {incomeTable ? "No Incomes in Records!" : "No Expenses in Records!"}
+    </Box>
+  );
+};
+
+const IncomeExpenseTable = ({
+  incomeStatement,
+  addfield,
+  updateField,
+  deleteField,
+  incomeTable,
+}) => {
   const [rows, setRows] = useState([]);
   const [rowModesModel, setRowModesModel] = useState({});
-  const [selectionModel, setSelectionModel] = useState([]);
+  const [selectedRows, setSelectedRows] = useState([]);
 
   useEffect(() => {
-    setRows(incomeStatement.expenses);
-  }, [incomeStatement.expenses]);
+    if (incomeStatement) {
+      setRows(incomeStatement);
+    }
+  }, [incomeStatement]);
 
   const handleRowEditStop = (params, event) => {
     if (params.reason === GridRowEditStopReasons.rowFocusOut) {
@@ -285,7 +290,25 @@ const IncomeTable = ({ incomeStatement }) => {
   };
 
   const handleDeleteClick = (id) => () => {
-    setRows(rows.filter((row) => row.id !== id));
+    Swal.fire({
+      title: "Are you sure?",
+      text: `You won't be able to revert this`,
+      icon: "warning",
+      showConfirmButton: true,
+      showCancelButton: true,
+      confirmButtonText: "Delete",
+      confirmButtonColor: "Red",
+    }).then((res) => {
+      if (res.isConfirmed) {
+        deleteField(id);
+        setRows(rows.filter((row) => row.id !== id));
+        Swal.fire(
+          "Deleted",
+          "Your income record deleted successfully.",
+          "success"
+        );
+      }
+    });
   };
 
   const handleCancelClick = (id) => () => {
@@ -301,6 +324,41 @@ const IncomeTable = ({ incomeStatement }) => {
   };
 
   const processRowUpdate = (newRow) => {
+    if (newRow.isNew === true) {
+      delete newRow.id;
+      addfield({ ...newRow, amount: newRow.value }).then((resp) => {
+        if (resp.status === 201) {
+          setRowModesModel(false);
+          Swal.fire(
+            "Added",
+            "Your income record added successfully.",
+            "success"
+          );
+        } else {
+          Swal.fire({
+            text: `Please enter valid value.`,
+            icon: "error",
+          });
+        }
+      });
+    } else {
+      updateField(newRow.id, { ...newRow, amount: newRow.value }).then(
+        (res) => {
+          if (res.status === 200) {
+            Swal.fire(
+              "Updated",
+              "Your income record updated successfully.",
+              "success"
+            );
+          } else {
+            Swal.fire({
+              text: `Please enter valid value.`,
+              icon: "error",
+            });
+          }
+        }
+      );
+    }
     const updatedRow = { ...newRow, isNew: false };
     setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
     return updatedRow;
@@ -309,9 +367,15 @@ const IncomeTable = ({ incomeStatement }) => {
   const handleRowModesModelChange = (newRowModesModel) => {
     setRowModesModel(newRowModesModel);
   };
+
   const columns = useMemo(
     () => [
-      { field: "name", headerName: "Name", width: 180, editable: true },
+      {
+        field: "name",
+        headerName: "Name",
+        width: 180,
+        editable: true,
+      },
       {
         field: "type",
         headerName: "Type",
@@ -394,21 +458,24 @@ const IncomeTable = ({ incomeStatement }) => {
           sx={{ border: "unset" }}
           className="datagrid-container"
           columns={columns}
-          getRowId={(row) => row.name}
+          getRowId={(row) => row.id}
           checkboxSelection
           editMode="row"
           rowModesModel={rowModesModel}
           onRowModesModelChange={handleRowModesModelChange}
-          onSelectionModelChange={(ids) => {
-            setSelectionModel(ids);
-          }}
           onRowEditStop={handleRowEditStop}
           processRowUpdate={processRowUpdate}
+          rowSelectionModel={selectedRows ?? null}
+          onRowSelectionModelChange={(ids) => {
+            setSelectedRows(ids);
+          }}
           slots={{
             toolbar: EditToolbar,
+            noRowsOverlay: CustomNoRowsOverlay,
           }}
           slotProps={{
-            toolbar: { setRows, setRowModesModel, selectionModel },
+            toolbar: { setRows, setRowModesModel, incomeTable, selectedRows },
+            noRowsOverlay: { incomeTable },
           }}
           hideFooter
         />
@@ -417,4 +484,4 @@ const IncomeTable = ({ incomeStatement }) => {
   );
 };
 
-export default IncomeTable;
+export default IncomeExpenseTable;

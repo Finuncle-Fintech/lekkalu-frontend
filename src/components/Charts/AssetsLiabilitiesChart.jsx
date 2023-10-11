@@ -134,16 +134,19 @@ export const AssetsLiabilitiesChart = (props) => {
               layout="horizontal"
               verticalAlign="bottom"
               align="center"
-              payload={pieData.map((item, index) => ({
-                id: item.name,
-                type: "circle",
-                value:
-                  item.name +
-                  ` : ` +
-                  ((item.value * 100) / totalValue).toFixed(2) +
-                  `%`,
-                color: `url(#myGradient${index})`,
-              }))}
+              payload={pieData.map((item, index) => {
+                // console.log({ item, totalValue });
+                return {
+                  id: item.name,
+                  type: "circle",
+                  value:
+                    item.name +
+                    ` : ` +
+                    ((item.value * 100) / totalValue).toFixed(2) +
+                    `%`,
+                  color: `url(#myGradient${index})`,
+                };
+              })}
             />
           </PieChart>
         </ResponsiveContainer>

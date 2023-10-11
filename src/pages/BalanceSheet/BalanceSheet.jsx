@@ -7,15 +7,11 @@ import LiabilitiesCard from "components/BalanceSheet/LiabilitiesCard";
 import BarGraph from "components/BalanceSheet/BarGraph";
 
 export default function BalanceSheet() {
-  const { assets, liabilities } =
-    useContext(Context);
+  const { assets, liabilities } = useContext(Context);
 
   const [barGraphIsOpen, setBarGraphIsOpen] = useState(false);
   const [assetDatas, setAssetDatas] = useState([]);
   const [liabilityDatas, setLiabilityDatas] = useState([]);
-
-
-
 
   useEffect(() => {
     if (assets.finalAssets && assets.finalAssets.length > 0) {
@@ -55,6 +51,8 @@ export default function BalanceSheet() {
   const handleClose = () => {
     setBarGraphIsOpen(false);
   };
+
+  console.log(assets);
 
   return (
     <>

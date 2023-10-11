@@ -48,7 +48,7 @@ const Provider = ({ children }) => {
     incomeStatement,
     depreciation,
     user,
-    goals
+    goals,
   } = store;
 
   const handleErrors = (error) => {
@@ -332,7 +332,7 @@ const Provider = ({ children }) => {
         .then((res) => {
           let totalVal = 0.000000001;
           res.data.map((da) => {
-            totalVal += da.market_value;
+            totalVal += Number(da.market_value);
             finalAssets = [
               ...finalAssets,
               { id: da.id, name: da.name, value: parseFloat(da.market_value) },
@@ -521,7 +521,7 @@ const Provider = ({ children }) => {
         "Content-Type": "application/json",
       };
 
-      console.log(assetData)
+      console.log(assetData);
       await axiosPrivate
         .post(
           `${process.env.REACT_APP_BACKEND_API}physical_assets/`,
@@ -593,7 +593,7 @@ const Provider = ({ children }) => {
           headers,
         })
         .then((res) => {
-          console.log(res)
+          console.log(res);
           let totalVal = 0.000000001;
           res.data.map((da) => {
             totalVal += da.market_value;
@@ -645,10 +645,10 @@ const Provider = ({ children }) => {
         .get(`${process.env.REACT_APP_BACKEND_API}loans/`, { headers })
         .then((res) => {
           let totalVal = 0.000000001;
-          console.log(res)
+          console.log(res);
           res.data.map((da) => {
             totalVal += parseFloat(da.balance);
-            
+
             finalLiabilities = [
               ...finalLiabilities,
               {
@@ -764,7 +764,6 @@ const Provider = ({ children }) => {
   };
 
   const fetchGoals = async (page, rowsPerPage) => {
-
     const headers = {
       Authorization: `Bearer ${authToken}`,
       "Content-Type": "application/json",
@@ -788,9 +787,6 @@ const Provider = ({ children }) => {
         console.log(error?.response?.data?.detail);
         handleErrors(error);
       });
-
-
-
   };
 
   const deleteGoalRequest = async (id) => {
@@ -800,7 +796,7 @@ const Provider = ({ children }) => {
     };
     await axiosClient
       .delete(`${process.env.REACT_APP_BACKEND_URL}api/financial_goal/${id}`, {
-        headers
+        headers,
       })
       .then((response) => {
         if (response.status === 204) {
@@ -808,16 +804,14 @@ const Provider = ({ children }) => {
             type: Types.DELETE_GOAL,
             payload: {
               id: id,
-            }
-          })
+            },
+          });
         }
-      }
-      )
+      })
       .catch((error) => {
         console.log(error?.response?.data?.detail);
         handleErrors(error);
       });
-
   };
 
   const createGoalRequest = async (data) => {
@@ -828,23 +822,21 @@ const Provider = ({ children }) => {
     try {
       await axiosClient
         .post(`${process.env.REACT_APP_BACKEND_URL}api/financial_goal/`, data, {
-          headers
+          headers,
         })
         .then((response) => {
           dispatch({
             type: Types.CREATE_GOAL,
             payload: {
               data: response.data.data,
-            }
+            },
           });
         })
         .catch((error) => {
           console.log(error?.response?.data?.detail);
           handleErrors(error);
         });
-    } catch (error) {
-
-    }
+    } catch (error) {}
   };
 
   const changeGoalRequest = async (goal) => {
@@ -854,26 +846,27 @@ const Provider = ({ children }) => {
     };
     try {
       await axiosClient
-        .put(`${process.env.REACT_APP_BACKEND_URL}api/financial_goal/${goal.id}`, goal, {
-          headers
-        })
+        .put(
+          `${process.env.REACT_APP_BACKEND_URL}api/financial_goal/${goal.id}`,
+          goal,
+          {
+            headers,
+          }
+        )
         .then((response) => {
           dispatch({
             type: Types.EDIT_GOAL,
             payload: {
               goal: JSON.parse(response.config.data),
-            }
+            },
           });
         })
         .catch((error) => {
           console.log(error?.response?.data?.detail);
           handleErrors(error);
         });
-    } catch (error) {
-
-    }
+    } catch (error) {}
   };
-
 
   const fetchUser = async (authToken) => {
     if (!authToken) return;

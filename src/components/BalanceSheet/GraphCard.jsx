@@ -1,8 +1,6 @@
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
-import PieChart from "components/Charts/PieChart";
 import NorthEastIcon from "@mui/icons-material/NorthEast";
 import BasicMenu from "components/Header/HeaderComponents/BasicMenu";
-import AssetsCard from "components/BalanceSheet/BalanceCard";
 import { AssetsLiabilitiesChart } from "components/Charts/AssetsLiabilitiesChart";
 import { Box, Typography, Button } from "@mui/material";
 import Pie from "./Pie";
@@ -45,7 +43,7 @@ export default function GraphCard(props) {
             padding: "3%",
             boxShadow: "0px 0px 5px #000",
             width: "100%",
-            height: '100%'
+            height: "100%",
           }}
         >
           <Box>
@@ -77,7 +75,6 @@ export default function GraphCard(props) {
                 alignItems: "center",
               }}
             >
-              
               <Box sx={{ width: "50%" }}>
                 <Pie
                   component={

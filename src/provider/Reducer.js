@@ -1,15 +1,16 @@
-import Types from './Types';
+import Types from "./Types";
 
 export const InitialState = {
-   budget: [],
-   expenses: [],
-   weeklyExpense: [],
-   monthlyExpenses: [],
-   tags: [],
-   assets: [],
-   liabilities: [],
-   depreciation:[],
-   incomeStatement: { income: [], expenses: [] }
+  budget: [],
+  expenses: [],
+  weeklyExpense: [],
+   goals: [],
+  monthlyExpenses: [],
+  tags: [],
+  assets: [],
+  liabilities: [],
+  depreciation:  [],
+  incomeStatement: { income: [], expenses: [] },
 };
 
 const Reducer = (state, action) => {
@@ -50,10 +51,10 @@ const Reducer = (state, action) => {
             liabilities: action.payload,
          };
       }
-      case Types.FETCH_depreciation:{
-         return{
+      case Types.FETCH_depreciation: {
+         return {
             ...state,
-            depreciation:action.payload
+            depreciation: action.payload
          }
       }
       case Types.DELETE_EXPENSE: {
@@ -61,47 +62,112 @@ const Reducer = (state, action) => {
             (expense) => expense.id !== action.payload
          );
 
+      return {
+        ...state,
+        expenses: newExpenses,
+      };
+    }
+    case Types.CREATE_EXPENSE: {
+      const newState = state.expenses.length
+        ? [...state.expenses, { ...action.payload.data, id: action.payload.id }]
+        : [action.payload];
+
+      return {
+        ...state,
+        expenses: newState,
+      };
+    }
+    case Types.EDIT_EXPENSE: {
+      const { index, expense } = action.payload;
+      const newState = state.expenses;
+      newState[index] = expense;
+
+      return {
+        ...state,
+        expenses: newState,
+      };
+    }
+    case Types.SET_INCOME_STATEMENT: {
+      return {
+        ...state,
+        incomeStatement: action.payload,
+      };
+    }
+    case Types.FETCH_TAGS: {
+      return {
+        ...state,
+        tags: action.payload,
+      };
+    }
+      case Types.FETCH_GOAL: {
          return {
             ...state,
-            expenses: newExpenses,
+            goals: action.payload,
          };
       }
-      case Types.CREATE_EXPENSE: {
-         const newState = state.expenses.length
+      case Types.DELETE_GOAL: {
+         const newGoals = state.goals.filter(
+            (expense) => expense.id !== action.payload.id
+         );
+
+         return {
+            ...state,
+            goals: newGoals,
+         };
+      }
+      case Types.CREATE_GOAL: {
+         const newState = state.goals.length
             ? [
-               ...state.expenses,
-               { ...action.payload.data, id: action.payload.id },
+               ...state.goals,
+               { ...action.payload.data },
             ]
             : [action.payload];
 
          return {
             ...state,
-            expenses: newState,
+            goals: newState,
          };
       }
-      case Types.EDIT_EXPENSE: {
-         const { index, expense } = action.payload;
-         const newState = state.expenses;
-         newState[index] = expense;
-
+      case Types.EDIT_GOAL: {
+         const { goal } = action.payload;
+         const newState = state.goals.map((value) => (
+            value.id === goal.id ? goal : value
+          ));
          return {
             ...state,
-            expenses: newState,
+            goals: newState,
          };
       }
-      case Types.SET_INCOME_STATEMENT: {
-         return {
-            ...state,
-            incomeStatement: action.payload,
-         };
-      }
-      case Types.FETCH_TAGS: {
-         return {
-            ...state,
-            tags: action.payload,
-         };
-      }
-   }
+    case Types.DELETE_BUDGET: {
+      return {
+        ...state,
+        budget: state.budget.filter((item) => item.id !== action.payload),
+      };
+    }
+    case Types.SET_BUDGET: {
+      return {
+        ...state,
+        budget: [...state.budget, action.payload],
+      };
+    }
+    case Types.EDIT_BUDGET: {
+      return {
+        ...state,
+        budget: state.budget.map((item) => {
+          if (item.id === action.payload.id) {
+            return action.payload;
+          }
+          return item;
+        }),
+      };
+    }
+    case Types.SET_USER: {
+      return { ...state, user: action.payload };
+    }
+    default: {
+      return state;
+    }
+  }
 };
 
 export default Reducer;

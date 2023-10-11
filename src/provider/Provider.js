@@ -1,13 +1,12 @@
-
-import React, { createContext, useReducer, useState, useContext } from 'react';
-import axiosClient from 'components/Axios/Axios';
-import useAxiosPrivate from 'hooks/useAxiosPrivate';
-import { InitialState } from './Reducer';
-import Reducer from './Reducer';
-import Types from './Types';
-import setCookie from 'components/Support/PopUp/utils/SetCookie';
-import deleteCookie from 'components/Support/PopUp/utils/DeleteCookie';
-
+import React, { createContext, useReducer, useState, useContext } from "react";
+import axiosClient from "components/Axios/Axios";
+import useAxiosPrivate from "hooks/useAxiosPrivate";
+import { InitialState } from "./Reducer";
+import Reducer from "./Reducer";
+import Types from "./Types";
+import setCookie from "components/Support/PopUp/utils/SetCookie";
+import deleteCookie from "components/Support/PopUp/utils/DeleteCookie";
+import jwtDecode from "jwt-decode";
 
 const Context = createContext({
   ...InitialState,
@@ -48,6 +47,8 @@ const Provider = ({ children }) => {
     liabilities,
     incomeStatement,
     depreciation,
+    user,
+    goals
   } = store;
 
   const handleErrors = (error) => {
@@ -58,7 +59,7 @@ const Provider = ({ children }) => {
         alert(error.message);
       }
     }
-    if (error.message == "Network Error") {
+    if (error.message === "Network Error") {
       alert("Network Error");
     }
   };
@@ -161,15 +162,12 @@ const Provider = ({ children }) => {
         `${process.env.REACT_APP_BACKEND_API}expenses/`,
         { headers }
       );
-
-      //console.log(response.data);
       return response.data;
     } catch (error) {
       handleErrors(error);
       throw error; // Rethrow the error so it can be caught in the calling function
     }
   };
-
 
   const filterExpensesByDate = async (page, rowsPerPage, fromDate, toDate) => {
     try {
@@ -393,7 +391,7 @@ const Provider = ({ children }) => {
       await axiosPrivate
         //get assets depreciation
         .get(`${process.env.REACT_APP_BACKEND_API}physical_assets/`, {
-          headers
+          headers,
         })
         .then((res) => {
           const data = res.data;
@@ -426,7 +424,6 @@ const Provider = ({ children }) => {
           return response.status;
         })
         .catch((error) => {
-          console.log(error?.response?.data?.detail);
           handleErrors(error);
         });
     } catch (error) {
@@ -449,6 +446,114 @@ const Provider = ({ children }) => {
     } catch (error) {
       handleErrors(error);
       return [];
+    }
+  };
+
+  const addIncomeExpense = async (data) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      return await axiosPrivate
+        .post(`${process.env.REACT_APP_BACKEND_API}income_expense/`, data, {
+          headers,
+        })
+        .then((response) => response)
+        .catch((error) => error);
+    } catch (error) {
+      handleErrors(error);
+    }
+  };
+
+  const updateIncomeExpenseById = async (id, data) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      return await axiosPrivate
+        .put(`${process.env.REACT_APP_BACKEND_API}income_expense/${id}`, data, {
+          headers,
+        })
+        .then((response) => response)
+        .catch((error) => error);
+    } catch (error) {
+      handleErrors(error);
+    }
+  };
+
+  const deleteIncomeExpenseById = async (id) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      await axiosPrivate.delete(
+        `${process.env.REACT_APP_BACKEND_API}income_expense/${id}`,
+        {
+          headers,
+        }
+      );
+    } catch (error) {
+      handleErrors(error);
+    }
+  };
+
+  const addIncomeSource = async (data) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      return await axiosPrivate
+        .post(`${process.env.REACT_APP_BACKEND_API}income_source/`, data, {
+          headers,
+        })
+        .then((response) => response)
+        .catch((error) => error);
+    } catch (error) {
+      handleErrors(error);
+    }
+  };
+
+  const updateIncomeSourceById = async (id, data) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      return await axiosPrivate
+        .put(`${process.env.REACT_APP_BACKEND_API}income_source/${id}`, data, {
+          headers,
+        })
+        .then((response) => response)
+        .catch((error) => error);
+    } catch (error) {
+      handleErrors(error);
+    }
+  };
+
+  const deleteIncomeSourceById = async (id) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      await axiosPrivate.delete(
+        `${process.env.REACT_APP_BACKEND_API}income_source/${id}`,
+        {
+          headers,
+        }
+      );
+    } catch (error) {
+      handleErrors(error);
     }
   };
 
@@ -484,6 +589,7 @@ const Provider = ({ children }) => {
         //Transform to [{‘name’: ‘day_job_income’, ‘type’:’salary’,’value’:50000}]
         transformedIncomeArray = incomeSources.map((each) => {
           return {
+            id: each.id,
             name: each.name,
             type: each.type,
             value: parseFloat(each.amount),
@@ -494,11 +600,8 @@ const Provider = ({ children }) => {
         //API returns [{‘name’: ‘day_job_income’, ‘type’:’salary’,’amount’:50000}]
         //Transform to [{‘name’: ‘day_job_income’, ‘type’:’salary’,’value’:50000}]
         transformedExpensesArray = incomeExpenses.map((each) => {
-          // console.log({
-          //   original: each.amount,
-          //   value: parseFloat(each.amount),
-          // });
           return {
+            id: each.id,
             name: each.name,
             type: each.type,
             value: parseFloat(each.amount),
@@ -523,21 +626,233 @@ const Provider = ({ children }) => {
     deleteCookie("refresh");
   };
 
+  const fetchGoals = async (page, rowsPerPage) => {
+
+    const headers = {
+      Authorization: `Bearer ${authToken}`,
+      "Content-Type": "application/json",
+    };
+
+    await axiosClient
+      .get(`${process.env.REACT_APP_BACKEND_URL}api/financial_goal/`, {
+        headers,
+        params: {
+          page: page + 1,
+          per_page: rowsPerPage,
+        },
+      })
+      .then((response) => {
+        dispatch({
+          type: Types.FETCH_GOAL,
+          payload: response.data,
+        });
+      })
+      .catch((error) => {
+        console.log(error?.response?.data?.detail);
+        handleErrors(error);
+      });
+
+
+
+  };
+
+  const deleteGoalRequest = async (id) => {
+    const headers = {
+      Authorization: `Bearer ${authToken}`,
+      "Content-Type": "application/json",
+    };
+    await axiosClient
+      .delete(`${process.env.REACT_APP_BACKEND_URL}api/financial_goal/${id}`, {
+        headers
+      })
+      .then((response) => {
+        if (response.status === 204) {
+          dispatch({
+            type: Types.DELETE_GOAL,
+            payload: {
+              id: id,
+            }
+          })
+        }
+      }
+      )
+      .catch((error) => {
+        console.log(error?.response?.data?.detail);
+        handleErrors(error);
+      });
+
+  };
+
+  const createGoalRequest = async (data) => {
+    const headers = {
+      Authorization: `Bearer ${authToken}`,
+      "Content-Type": "application/json",
+    };
+    try {
+      await axiosClient
+        .post(`${process.env.REACT_APP_BACKEND_URL}api/financial_goal/`, data, {
+          headers
+        })
+        .then((response) => {
+          dispatch({
+            type: Types.CREATE_GOAL,
+            payload: {
+              data: response.data.data,
+            }
+          });
+        })
+        .catch((error) => {
+          console.log(error?.response?.data?.detail);
+          handleErrors(error);
+        });
+    } catch (error) {
+
+    }
+  };
+
+  const changeGoalRequest = async (goal) => {
+    const headers = {
+      Authorization: `Bearer ${authToken}`,
+      "Content-Type": "application/json",
+    };
+    try {
+      await axiosClient
+        .put(`${process.env.REACT_APP_BACKEND_URL}api/financial_goal/${goal.id}`, goal, {
+          headers
+        })
+        .then((response) => {
+          dispatch({
+            type: Types.EDIT_GOAL,
+            payload: {
+              goal: JSON.parse(response.config.data),
+            }
+          });
+        })
+        .catch((error) => {
+          console.log(error?.response?.data?.detail);
+          handleErrors(error);
+        });
+    } catch (error) {
+
+    }
+  };
+
+
+  const fetchUser = async (authToken) => {
+    if (!authToken) return;
+
+    const decodedToken = jwtDecode(authToken);
+    const userId = decodedToken.user_id;
+
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      const response = await axiosPrivate.get(
+        `${process.env.REACT_APP_BACKEND_URL}users/api/users/${userId}`,
+        { headers }
+      );
+
+      if (response.status === 200) {
+        dispatch({ type: Types.SET_USER, payload: response.data });
+      }
+    } catch (error) {
+      handleErrors(error);
+    }
+  };
+
+  const createBudget = async (data) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      const response = await axiosPrivate.post(
+        `${process.env.REACT_APP_BACKEND_API}budget/`,
+        data,
+        { headers }
+      );
+
+      if (response.status === 201) {
+        dispatch({
+          type: Types.SET_BUDGET,
+          payload: response.data.data,
+        });
+      }
+
+      return response;
+    } catch (error) {
+      handleErrors(error);
+    }
+  };
+
+  const updateBudget = async (id, data) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      const response = await axiosPrivate.put(
+        `${process.env.REACT_APP_BACKEND_API}budget/${id}`,
+        data,
+        { headers }
+      );
+
+      if (response.status === 200) {
+        dispatch({
+          type: Types.EDIT_BUDGET,
+          payload: response.data.data,
+        });
+      }
+
+      return response;
+    } catch (error) {
+      handleErrors(error);
+    }
+  };
+
+  const deleteBudget = async (id) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      await axiosPrivate.delete(
+        `${process.env.REACT_APP_BACKEND_API}budget/${id}`,
+        {
+          headers,
+        }
+      );
+
+      dispatch({
+        type: Types.DELETE_BUDGET,
+        payload: id,
+      });
+    } catch (error) {
+      handleErrors(error);
+    }
+  };
+
   const UnitContext = React.createContext();
   const UnitUpdateContext = React.createContext();
 
   function useUnit() {
-    return useContext(UnitContext)
+    return useContext(UnitContext);
   }
 
   function useUnitUpdate() {
-    return useContext(UnitUpdateContext)
+    return useContext(UnitUpdateContext);
   }
   const [unit, setUnit] = useState("Months");
 
   const handleUnitChange = (val) => {
-    setUnit(val)
-  }
+    setUnit(val);
+  };
 
   return (
     <Context.Provider
@@ -554,6 +869,11 @@ const Provider = ({ children }) => {
         liabilities,
         incomeStatement,
         statusFeedback,
+        goals,
+        fetchGoals,
+        createGoalRequest,
+        deleteGoalRequest,
+        changeGoalRequest,
         depreciation,
         giveFeedback,
         fetchData,
@@ -568,17 +888,27 @@ const Provider = ({ children }) => {
         fetchIncomeExpenses,
         fetchIncomeStatement,
         filterExpensesByDate,
+        addIncomeExpense,
+        updateIncomeExpenseById,
+        deleteIncomeExpenseById,
+        addIncomeSource,
+        updateIncomeSourceById,
+        deleteIncomeSourceById,
         useUnit,
         useUnitUpdate,
         unit,
         handleUnitChange,
-        fetchAllExpenses
+        fetchAllExpenses,
+        fetchUser,
+        user,
+        deleteBudget,
+        createBudget,
+        updateBudget,
       }}
     >
       {children}
     </Context.Provider>
   );
-
 };
 
 export { Context, Provider };

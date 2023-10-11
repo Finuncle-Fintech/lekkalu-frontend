@@ -16,18 +16,18 @@ import CAGRCalculator from "pages/CAGRCalculator/CAGRCalculator";
 import BalanceSheet from "pages/BalanceSheet/BalanceSheet";
 import Settings from "pages/Settings/Settings";
 import PersistGuest from "components/GuestRoutes/PersistGuest";
+// 
+import Goals from "components/Goals/Goals";
 import Hero from "pages/Hero/Hero";
 import HeroRoute from "components/HeroRoute/HeroRoute";
 import TermsAndConditions from "pages/TermsAndConditions/TermsAndConditions";
 import PrivacyPolicies from "pages/PrivacyPolicies/PrivacyPolicies";
+import Profile from "pages/Profile/Profile";
 
 const RouterComponent = () => {
-
   return (
     <Router>
-
       <Layout>
-
         <Routes>
           <Route path="*" element={<ErrorPage />} />
           <Route element={<PersistGuest />}>
@@ -68,6 +68,10 @@ const RouterComponent = () => {
               element={<ProtectedRoutes component={<Charts />} />}
             />
             <Route
+              path="/goals"
+              element={<ProtectedRoutes component={<Goals />} />}
+            />
+            <Route
               path="/income-statement"
               element={<ProtectedRoutes component={<IncomeStatementPage />} />}
             />
@@ -80,15 +84,16 @@ const RouterComponent = () => {
               element={<ProtectedRoutes component={<BalanceSheet />} />}
             />
             <Route
-                path="/settings"
-                element={<ProtectedRoutes component={<Settings />} />}
+              path="/settings"
+              element={<ProtectedRoutes component={<Settings />} />}
+            />
+            <Route
+              path="/profile"
+              element={<ProtectedRoutes component={<Profile />} />}
             />
           </Route>
-
         </Routes>
-
       </Layout>
-
     </Router>
   );
 };

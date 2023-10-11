@@ -6,6 +6,7 @@ import Reducer from "./Reducer";
 import Types from "./Types";
 import setCookie from "components/Support/PopUp/utils/SetCookie";
 import deleteCookie from "components/Support/PopUp/utils/DeleteCookie";
+import jwtDecode from "jwt-decode";
 
 const Context = createContext({
   ...InitialState,
@@ -46,6 +47,8 @@ const Provider = ({ children }) => {
     liabilities,
     incomeStatement,
     depreciation,
+    user,
+    goals
   } = store;
 
   const handleErrors = (error) => {
@@ -623,6 +626,143 @@ const Provider = ({ children }) => {
     deleteCookie("refresh");
   };
 
+  const fetchGoals = async (page, rowsPerPage) => {
+
+    const headers = {
+      Authorization: `Bearer ${authToken}`,
+      "Content-Type": "application/json",
+    };
+
+    await axiosClient
+      .get(`${process.env.REACT_APP_BACKEND_URL}api/financial_goal/`, {
+        headers,
+        params: {
+          page: page + 1,
+          per_page: rowsPerPage,
+        },
+      })
+      .then((response) => {
+        dispatch({
+          type: Types.FETCH_GOAL,
+          payload: response.data,
+        });
+      })
+      .catch((error) => {
+        console.log(error?.response?.data?.detail);
+        handleErrors(error);
+      });
+
+
+
+  };
+
+  const deleteGoalRequest = async (id) => {
+    const headers = {
+      Authorization: `Bearer ${authToken}`,
+      "Content-Type": "application/json",
+    };
+    await axiosClient
+      .delete(`${process.env.REACT_APP_BACKEND_URL}api/financial_goal/${id}`, {
+        headers
+      })
+      .then((response) => {
+        if (response.status === 204) {
+          dispatch({
+            type: Types.DELETE_GOAL,
+            payload: {
+              id: id,
+            }
+          })
+        }
+      }
+      )
+      .catch((error) => {
+        console.log(error?.response?.data?.detail);
+        handleErrors(error);
+      });
+
+  };
+
+  const createGoalRequest = async (data) => {
+    const headers = {
+      Authorization: `Bearer ${authToken}`,
+      "Content-Type": "application/json",
+    };
+    try {
+      await axiosClient
+        .post(`${process.env.REACT_APP_BACKEND_URL}api/financial_goal/`, data, {
+          headers
+        })
+        .then((response) => {
+          dispatch({
+            type: Types.CREATE_GOAL,
+            payload: {
+              data: response.data.data,
+            }
+          });
+        })
+        .catch((error) => {
+          console.log(error?.response?.data?.detail);
+          handleErrors(error);
+        });
+    } catch (error) {
+
+    }
+  };
+
+  const changeGoalRequest = async (goal) => {
+    const headers = {
+      Authorization: `Bearer ${authToken}`,
+      "Content-Type": "application/json",
+    };
+    try {
+      await axiosClient
+        .put(`${process.env.REACT_APP_BACKEND_URL}api/financial_goal/${goal.id}`, goal, {
+          headers
+        })
+        .then((response) => {
+          dispatch({
+            type: Types.EDIT_GOAL,
+            payload: {
+              goal: JSON.parse(response.config.data),
+            }
+          });
+        })
+        .catch((error) => {
+          console.log(error?.response?.data?.detail);
+          handleErrors(error);
+        });
+    } catch (error) {
+
+    }
+  };
+
+
+  const fetchUser = async (authToken) => {
+    if (!authToken) return;
+
+    const decodedToken = jwtDecode(authToken);
+    const userId = decodedToken.user_id;
+
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      const response = await axiosPrivate.get(
+        `${process.env.REACT_APP_BACKEND_URL}users/api/users/${userId}`,
+        { headers }
+      );
+
+      if (response.status === 200) {
+        dispatch({ type: Types.SET_USER, payload: response.data });
+      }
+    } catch (error) {
+      handleErrors(error);
+    }
+  };
+
   const createBudget = async (data) => {
     try {
       const headers = {
@@ -729,6 +869,11 @@ const Provider = ({ children }) => {
         liabilities,
         incomeStatement,
         statusFeedback,
+        goals,
+        fetchGoals,
+        createGoalRequest,
+        deleteGoalRequest,
+        changeGoalRequest,
         depreciation,
         giveFeedback,
         fetchData,
@@ -754,6 +899,8 @@ const Provider = ({ children }) => {
         unit,
         handleUnitChange,
         fetchAllExpenses,
+        fetchUser,
+        user,
         deleteBudget,
         createBudget,
         updateBudget,

@@ -1,6 +1,25 @@
 .datagrid-container .MuiDataGrid-main {
     background-color: #ffffff;
     border-radius: 10px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0
+}
+
+.css-ql19fo-MuiDataGrid-overlayWrapper {
+    height: 50px !important; 
+}
+.css-1akuw9y-MuiDataGrid-overlayWrapperInner {
+    height: 50px !important;   
+    display: flex;
+    align-items: center;
+    justify-content: center
+}
+.custom-tab-container > div {
+    padding: 1px 0 0 0;
+}
+
+.MuiTabs-scroller {
+    background-color: #ffffff;
 }
 
 .MuiDataGrid-toolbarContainer {

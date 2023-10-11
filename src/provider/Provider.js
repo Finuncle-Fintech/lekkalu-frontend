@@ -59,7 +59,7 @@ const Provider = ({ children }) => {
         alert(error.message);
       }
     }
-    if (error.message == "Network Error") {
+    if (error.message === "Network Error") {
       alert("Network Error");
     }
   };
@@ -452,6 +452,114 @@ const Provider = ({ children }) => {
     }
   };
 
+  const addIncomeExpense = async (data) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      return await axiosPrivate
+        .post(`${process.env.REACT_APP_BACKEND_API}income_expense/`, data, {
+          headers,
+        })
+        .then((response) => response)
+        .catch((error) => error);
+    } catch (error) {
+      handleErrors(error);
+    }
+  };
+
+  const updateIncomeExpenseById = async (id, data) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      return await axiosPrivate
+        .put(`${process.env.REACT_APP_BACKEND_API}income_expense/${id}`, data, {
+          headers,
+        })
+        .then((response) => response)
+        .catch((error) => error);
+    } catch (error) {
+      handleErrors(error);
+    }
+  };
+
+  const deleteIncomeExpenseById = async (id) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      await axiosPrivate.delete(
+        `${process.env.REACT_APP_BACKEND_API}income_expense/${id}`,
+        {
+          headers,
+        }
+      );
+    } catch (error) {
+      handleErrors(error);
+    }
+  };
+
+  const addIncomeSource = async (data) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      return await axiosPrivate
+        .post(`${process.env.REACT_APP_BACKEND_API}income_source/`, data, {
+          headers,
+        })
+        .then((response) => response)
+        .catch((error) => error);
+    } catch (error) {
+      handleErrors(error);
+    }
+  };
+
+  const updateIncomeSourceById = async (id, data) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      return await axiosPrivate
+        .put(`${process.env.REACT_APP_BACKEND_API}income_source/${id}`, data, {
+          headers,
+        })
+        .then((response) => response)
+        .catch((error) => error);
+    } catch (error) {
+      handleErrors(error);
+    }
+  };
+
+  const deleteIncomeSourceById = async (id) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      await axiosPrivate.delete(
+        `${process.env.REACT_APP_BACKEND_API}income_source/${id}`,
+        {
+          headers,
+        }
+      );
+    } catch (error) {
+      handleErrors(error);
+    }
+  };
+
   const fetchIncomeExpenses = async () => {
     try {
       const headers = {
@@ -484,6 +592,7 @@ const Provider = ({ children }) => {
         //Transform to [{‘name’: ‘day_job_income’, ‘type’:’salary’,’value’:50000}]
         transformedIncomeArray = incomeSources.map((each) => {
           return {
+            id: each.id,
             name: each.name,
             type: each.type,
             value: parseFloat(each.amount),
@@ -495,6 +604,7 @@ const Provider = ({ children }) => {
         //Transform to [{‘name’: ‘day_job_income’, ‘type’:’salary’,’value’:50000}]
         transformedExpensesArray = incomeExpenses.map((each) => {
           return {
+            id: each.id,
             name: each.name,
             type: each.type,
             value: parseFloat(each.amount),
@@ -1023,6 +1133,12 @@ const Provider = ({ children }) => {
         deleteAssetRequest,
         fetchAssetById,
         fetchAsset,
+        addIncomeExpense,
+        updateIncomeExpenseById,
+        deleteIncomeExpenseById,
+        addIncomeSource,
+        updateIncomeSourceById,
+        deleteIncomeSourceById,
         useUnit,
         useUnitUpdate,
         unit,

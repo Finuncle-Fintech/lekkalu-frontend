@@ -4,11 +4,12 @@ export const InitialState = {
   budget: [],
   expenses: [],
   weeklyExpense: [],
+   goals: [],
   monthlyExpenses: [],
   tags: [],
   assets: [],
   liabilities: [],
-  depreciation: [],
+  depreciation:  [],
   incomeStatement: { income: [], expenses: [] },
 };
 
@@ -45,10 +46,8 @@ const Reducer = (state, action) => {
       };
     }
     case Types.FETCH_LIABILITIES: {
-   
       return {
         ...state,
-        
         liabilities: action.payload,
       };
     }
@@ -101,7 +100,6 @@ const Reducer = (state, action) => {
         tags: action.payload,
       };
     }
-
     case Types.DELETE_BUDGET: {
       return {
         ...state,

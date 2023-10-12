@@ -852,7 +852,7 @@ const Provider = ({ children }) => {
 
       for (const Id of Ids) {
         await axiosPrivate.delete(
-          `${process.env.REACT_APP_BACKEND_API}physical_assets/${Id}`,
+          `${process.env.REACT_APP_BACKEND_API}loans/${Id}`,
           {
             headers,
           }

@@ -24,13 +24,14 @@ class TestRegistration(unittest.TestCase):
     def tearDown(self):
         self.driver.quit()
 
-    def test_url(self):
+    def test_url_and_title(self):
         """
         Testing whether the loaded page's url is the same as set in the base url.
         :return:
         """
         self.driver.get("http://127.0.0.1:3000/")
         self.assertEqual('http://127.0.0.1:3000/', self.driver.current_url)
+        self.assertEqual('Finuncle', self.driver.title)
 
     def test_registration(self):
         """

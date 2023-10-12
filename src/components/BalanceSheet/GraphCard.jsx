@@ -6,6 +6,8 @@ import { Box, Typography, Button } from "@mui/material";
 import Pie from "./Pie";
 
 export default function GraphCard(props) {
+  const isUnderDevelopment = true;
+
   const userSetting = {
     submenu: {},
     title: "Balance sheet",
@@ -25,11 +27,11 @@ export default function GraphCard(props) {
         Balance Sheet
       </Typography>
       {/* Curved parent */}
+
       <Box
         sx={{
           backgroundColor: "white",
-          borderRadius: "40px",
-          display: "flex",
+          borderRadius: "5px",
           padding: "3%",
           marginBottom: "100px",
           "@media (max-width: 800px)": {
@@ -37,110 +39,104 @@ export default function GraphCard(props) {
           },
         }}
       >
+        <Box>
+          <Typography
+            sx={{
+              marginLeft: "5%",
+              fontSize: "24px",
+              fontWeight: "700",
+            }}
+          >
+            Graphs
+          </Typography>
+        </Box>
+
         <Box
           sx={{
-            borderRadius: "10px",
-            padding: "3%",
-            boxShadow: "0px 0px 5px #000",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
             width: "100%",
-            height: "100%",
           }}
         >
-          <Box>
-            <Typography
-              sx={{
-                marginLeft: "5%",
-                fontSize: "24px",
-                fontWeight: "700",
-              }}
-            >
-              Graphs
-            </Typography>
-          </Box>
-
+          {" "}
           <Box
             sx={{
               display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
+              justifyContent: "center",
               width: "100%",
+              alignItems: "center",
             }}
           >
-            {" "}
+            <Box sx={{ width: "50%" }}>
+              <Pie
+                component={
+                  <AssetsLiabilitiesChart
+                    data={props.assetDatas}
+                    type={"assets"}
+                  />
+                }
+              />
+            </Box>
             <Box
               sx={{
-                display: "flex",
-                justifyContent: "center",
-                width: "100%",
-                alignItems: "center",
+                width: "50%",
               }}
             >
-              <Box sx={{ width: "50%" }}>
-                <Pie
-                  component={
-                    <AssetsLiabilitiesChart
-                      data={props.assetDatas}
-                      type={"assets"}
-                    />
-                  }
-                />
-              </Box>
-              <Box
-                sx={{
-                  width: "50%",
-                }}
-              >
-                <Pie
-                  component={
-                    <AssetsLiabilitiesChart
-                      data={props.liabilityDatas}
-                      type={"liabilities"}
-                    />
-                  }
-                />
-              </Box>
-            </Box>{" "}
-            <Box sx={{ width: "100%", display: "flex" }}>
-              {" "}
-              <Typography
-                sx={{
-                  fontSize: "18px",
-                  fontWeight: "700",
-                  margin: "10px 0 0 0",
-                  textAlign: "center",
-                  width: "50%",
-                }}
-              >
-                Assets
-              </Typography>
-              <Typography
-                sx={{
-                  fontSize: "18px",
-                  fontWeight: "700",
-                  margin: "10px 0 0 0",
-                  textAlign: "center",
-                  width: "50%",
-                }}
-              >
-                Liabilities
-              </Typography>
-            </Box>
-            <Box sx={{ width: "70%", textAlign: "center" }}>
-              <Button
-                sx={{
-                  fontSize: "12px",
-                  fontWeight: "700",
-                  borderRadius: "10px",
-                  color: "black",
-                  boxShadow: "0px 0px 2px #000",
-                }}
-                onClick={props.setBarGraphIsOpen}
-              >
-                Bar Chart <NavigateNextIcon />
-              </Button>
+              <Pie
+                component={
+                  <AssetsLiabilitiesChart
+                    data={props.liabilityDatas}
+                    type={"liabilities"}
+                  />
+                }
+              />
             </Box>
           </Box>
+          <Box sx={{ width: "100%", display: "flex" }}>
+            <Typography
+              sx={{
+                fontSize: "18px",
+                fontWeight: "700",
+                margin: "10px 0 0 0",
+                textAlign: "center",
+                width: "50%",
+              }}
+            >
+              Assets
+            </Typography>
+            <Typography
+              sx={{
+                fontSize: "18px",
+                fontWeight: "700",
+                margin: "10px 0 0 0",
+                textAlign: "center",
+                width: "50%",
+              }}
+            >
+              Liabilities
+            </Typography>
+          </Box>
+          <Box sx={{ width: "70%", textAlign: "center" }}>
+            <Button
+              sx={{
+                fontSize: "12px",
+                fontWeight: "700",
+                borderRadius: "10px",
+                color: "black",
+                boxShadow: "0px 0px 2px #000",
+              }}
+              onClick={props.setBarGraphIsOpen}
+            >
+              Bar Chart <NavigateNextIcon />
+            </Button>
+          </Box>
         </Box>
+      </Box>
+
+      {isUnderDevelopment ? (
+        <></>
+      ) : (
         <Box
           sx={{
             marginLeft: "5%",
@@ -223,9 +219,9 @@ export default function GraphCard(props) {
             View More <NavigateNextIcon />
           </Button>
         </Box>
+      )}
 
-        {/* Responsive view */}
-      </Box>{" "}
+      {/* Responsive view */}
       <Box
         sx={{
           backgroundColor: "white",

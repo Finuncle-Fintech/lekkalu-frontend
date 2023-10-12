@@ -270,7 +270,6 @@ const Provider = ({ children }) => {
   };
 
   const fetchData = async () => {
-    console.log(authToken);
     try {
       const headers = {
         Authorization: `Bearer ${authToken}`,
@@ -631,7 +630,6 @@ const Provider = ({ children }) => {
         "Content-Type": "application/json",
       };
 
-      console.log(assetData);
       await axiosPrivate
         .post(
           `${process.env.REACT_APP_BACKEND_API}physical_assets/`,
@@ -703,7 +701,6 @@ const Provider = ({ children }) => {
           headers,
         })
         .then((res) => {
-          console.log(res);
           let totalVal = 0.000000001;
           res.data.map((da) => {
             totalVal += da.market_value;
@@ -712,7 +709,7 @@ const Provider = ({ children }) => {
               { id: da.id, name: da.name, value: parseFloat(da.market_value) },
             ];
           });
-          console.log(finalAssets);
+
           dispatch({
             type: Types.FETCH_ASSETS,
             payload: { finalAssets, totalVal },
@@ -755,8 +752,8 @@ const Provider = ({ children }) => {
         .get(`${process.env.REACT_APP_BACKEND_API}loans/`, { headers })
         .then((res) => {
           let totalVal = 0.000000001;
-          console.log(res);
-          res.data.map((da) => {
+
+          res.data.forEach((da) => {
             totalVal += parseFloat(da.balance);
 
             finalLiabilities = [
@@ -1149,6 +1146,10 @@ const Provider = ({ children }) => {
         deleteBudget,
         createBudget,
         updateBudget,
+        addLiabilityRequest,
+        editLiabilityRequest,
+        fetchLiabilityById,
+        deleteLiabilityRequest,
       }}
     >
       {children}

@@ -17,14 +17,10 @@ import Paper from "@mui/material/Paper";
 import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Switch from "@mui/material/Switch";
 import DeleteIcon from "@mui/icons-material/Delete";
-import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
 import IosShareIcon from "@mui/icons-material/IosShare";
 import LocalPrintshopIcon from "@mui/icons-material/LocalPrintshop";
-import DatePicker from "./DatePicker";
 import { Context } from "provider/Provider";
 import { useContext } from "react";
 import Menu from "./Menu";
@@ -233,6 +229,7 @@ function EnhancedTableToolbar(props) {
         props.setLoading(true);
         await deleteLiabilityRequest(selectedLiabilityIds);
       } catch (error) {
+        console.log(error);
         console.error(
           `Error deleting Liability with ID ${selectedLiabilityIds}:`,
           error
@@ -428,7 +425,11 @@ export default function EnhancedTable(props) {
                   justifyContent: "center",
                 }}
               >
-                <Button variant="contained" onClick={handleRequestForm} sx={{marginLeft: '20px'}}>
+                <Button
+                  variant="contained"
+                  onClick={handleRequestForm}
+                  sx={{ marginLeft: "20px" }}
+                >
                   <AddIcon />
                   <Typography
                     sx={{
@@ -556,7 +557,7 @@ export default function EnhancedTable(props) {
                             textAlign: "left",
                           }}
                         >
-                          <Menu id={idValue} title = "Liability" />
+                          <Menu id={idValue} title="Liability" />
                         </TableCell>
                       </TableRow>
                     );

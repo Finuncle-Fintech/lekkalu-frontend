@@ -2,9 +2,9 @@ import { useContext, useEffect, useState } from "react";
 import { Context } from "provider/Provider";
 import { Box } from "@mui/material";
 import GraphCard from "components/BalanceSheet/GraphCard";
-import AssetCard from "components/BalanceSheet/AssetCard";
-import LiabilitiesCard from "components/BalanceSheet/LiabilitiesCard";
 import BarGraph from "components/BalanceSheet/BarGraph";
+import EnhancedTable from "components/BalanceSheet/AssetTable";
+import LiabilitiesTable from "components/BalanceSheet/LiabilitiesTable";
 
 export default function BalanceSheet() {
   const { assets, liabilities } = useContext(Context);
@@ -52,33 +52,29 @@ export default function BalanceSheet() {
     setBarGraphIsOpen(false);
   };
 
-  console.log(assets);
-
   return (
-    <>
-      <Box
-        sx={{
-          minHeight: "350vh",
-          backgroundColor: "primary.main",
-          padding: "1% 5% 0 5%",
-        }}
-      >
-        <GraphCard
-          assetDatas={assets}
-          liabilityDatas={liabilities}
-          setBarGraphIsOpen={handleOpen}
+    <Box
+      sx={{
+        minHeight: "350vh",
+        backgroundColor: "primary.main",
+        padding: "1% 5% 0 5%",
+      }}
+    >
+      <GraphCard
+        assetDatas={assets}
+        liabilityDatas={liabilities}
+        setBarGraphIsOpen={handleOpen}
+      />
+      {barGraphIsOpen ? (
+        <BarGraph
+          setBarGraphIsOpen={handleClose}
+          barGraphIsOpen={barGraphIsOpen}
+          dataAsset={assetDatas}
+          dataLiability={liabilityDatas}
         />
-        {barGraphIsOpen ? (
-          <BarGraph
-            setBarGraphIsOpen={handleClose}
-            barGraphIsOpen={barGraphIsOpen}
-            dataAsset={assetDatas}
-            dataLiability={liabilityDatas}
-          />
-        ) : null}
-        <AssetCard assetDatas={assetDatas} />
-        <LiabilitiesCard liabilityDatas={liabilityDatas} />
-      </Box>
-    </>
+      ) : null}
+      <EnhancedTable assetDatas={assetDatas} />
+      <LiabilitiesTable liabilityDatas={liabilityDatas} />
+    </Box>
   );
 }

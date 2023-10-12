@@ -2,9 +2,10 @@ on:
   push:
     branches:
       - "selenium-tests-and-github-ci"
-  pull_request:
-    branches:
-      - "main" 
+  #commented out for now    
+  #pull_request:
+  #  branches:
+  #    - "main" 
     paths:
       - ".github/workflows/run_selenium_tests.yaml"
 
@@ -32,9 +33,9 @@ jobs:
     - uses: browser-actions/setup-chrome@latest
     - run: chrome --version
 
-    - name: Wait until the server is started (for 30 seconds) 
+    - name: Wait until the server is started (for 20 seconds) 
       uses: jakejarvis/wait-action@master
       with:
-        time: '30s'
+        time: '20s'
      
     - run: python src/selenium_tests/main.py

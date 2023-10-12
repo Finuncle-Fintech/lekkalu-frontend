@@ -215,6 +215,7 @@ export default function SimpleBackdrop(props) {
                   shrink: true,
                 }}
                 sx={{ margin: "1em 0 " }}
+                inputProps={{ inputMode: "numeric", min: 1, max: 30 }}
               />
               <TextField
                 label="Emi"

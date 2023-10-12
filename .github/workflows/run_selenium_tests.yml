@@ -32,9 +32,9 @@ jobs:
     - uses: browser-actions/setup-chrome@latest
     - run: chrome --version
 
-    - name: Wait until the server is started (for 20 seconds) 
+    - name: Wait until the server is started (for 10 seconds) 
       uses: jakejarvis/wait-action@master
       with:
-        time: '20s'
+        time: '10s'
      
     - run: python src/selenium_tests/main.py

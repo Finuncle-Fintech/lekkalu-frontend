@@ -14,53 +14,53 @@ export const InitialState = {
 };
 
 const Reducer = (state, action) => {
-   switch (action.type) {
-      case Types.FETCH_BUDGET: {
-         return {
-            ...state,
-            budget: action.payload,
-         };
-      }
-      case Types.FETCH_EXPENSE: {
-         return {
-            ...state,
-            expenses: action.payload,
-         };
-      }
-      case Types.FETCH_WEEKLY_EXPENSE: {
-         return {
-            ...state,
-            weeklyExpense: action.payload,
-         };
-      }
-      case Types.FETCH_MONTHLY_EXPENSE: {
-         return {
-            ...state,
-            monthlyExpenses: action.payload,
-         };
-      }
-      case Types.FETCH_ASSETS: {
-         return {
-            ...state,
-            assets: action.payload,
-         };
-      }
-      case Types.FETCH_LIABILITIES: {
-         return {
-            ...state,
-            liabilities: action.payload,
-         };
-      }
-      case Types.FETCH_depreciation: {
-         return {
-            ...state,
-            depreciation: action.payload
-         }
-      }
-      case Types.DELETE_EXPENSE: {
-         const newExpenses = state.expenses.filter(
-            (expense) => expense.id !== action.payload
-         );
+  switch (action.type) {
+    case Types.FETCH_BUDGET: {
+      return {
+        ...state,
+        budget: action.payload,
+      };
+    }
+    case Types.FETCH_EXPENSE: {
+      return {
+        ...state,
+        expenses: action.payload,
+      };
+    }
+    case Types.FETCH_WEEKLY_EXPENSE: {
+      return {
+        ...state,
+        weeklyExpense: action.payload,
+      };
+    }
+    case Types.FETCH_MONTHLY_EXPENSE: {
+      return {
+        ...state,
+        monthlyExpenses: action.payload,
+      };
+    }
+    case Types.FETCH_ASSETS: {
+      return {
+        ...state,
+        assets: action.payload,
+      };
+    }
+    case Types.FETCH_LIABILITIES: {
+      return {
+        ...state,
+        liabilities: action.payload,
+      };
+    }
+    case Types.FETCH_depreciation: {
+      return {
+        ...state,
+        depreciation: action.payload,
+      };
+    }
+    case Types.DELETE_EXPENSE: {
+      const newExpenses = state.expenses.filter(
+        (expense) => expense.id !== action.payload
+      );
 
       return {
         ...state,
@@ -77,6 +77,7 @@ const Reducer = (state, action) => {
         expenses: newState,
       };
     }
+
     case Types.EDIT_EXPENSE: {
       const { index, expense } = action.payload;
       const newState = state.expenses;
@@ -99,45 +100,6 @@ const Reducer = (state, action) => {
         tags: action.payload,
       };
     }
-      case Types.FETCH_GOAL: {
-         return {
-            ...state,
-            goals: action.payload,
-         };
-      }
-      case Types.DELETE_GOAL: {
-         const newGoals = state.goals.filter(
-            (expense) => expense.id !== action.payload.id
-         );
-
-         return {
-            ...state,
-            goals: newGoals,
-         };
-      }
-      case Types.CREATE_GOAL: {
-         const newState = state.goals.length
-            ? [
-               ...state.goals,
-               { ...action.payload.data },
-            ]
-            : [action.payload];
-
-         return {
-            ...state,
-            goals: newState,
-         };
-      }
-      case Types.EDIT_GOAL: {
-         const { goal } = action.payload;
-         const newState = state.goals.map((value) => (
-            value.id === goal.id ? goal : value
-          ));
-         return {
-            ...state,
-            goals: newState,
-         };
-      }
     case Types.DELETE_BUDGET: {
       return {
         ...state,

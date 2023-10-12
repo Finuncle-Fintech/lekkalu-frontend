@@ -27,6 +27,7 @@ import Menu from "./Menu";
 import AddIcon from "@mui/icons-material/Add";
 import LiabilitiesForm from "./LiabilitiesForm";
 import Loading from "./Loading";
+import Swal from "sweetalert2";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -225,20 +226,31 @@ function EnhancedTableToolbar(props) {
 
   const handleLiabilityDelete = async () => {
     if (selectedLiabilityIds.length > 0) {
-      try {
-        props.setLoading(true);
-        await deleteLiabilityRequest(selectedLiabilityIds);
-      } catch (error) {
-        console.log(error);
-        console.error(
-          `Error deleting Liability with ID ${selectedLiabilityIds}:`,
-          error
-        );
-      } finally {
-        props.setLoading(false);
-      }
-
-      handleSelectAfterDelete();
+      Swal.fire({
+        title: "Are you sure?",
+        text: `You won't be able to revert this`,
+        icon: "warning",
+        showConfirmButton: true,
+        showCancelButton: true,
+        confirmButtonText: "Delete",
+        confirmButtonColor: "Red",
+      }).then(async (res) => {
+        if (res.isConfirmed) {
+          try {
+            props.setLoading(true);
+            await deleteLiabilityRequest(selectedLiabilityIds);
+          } catch (error) {
+            Swal.fire(
+              "Failure",
+              "Something went wrong while deleting liability!.",
+              "error"
+            );
+          } finally {
+            props.setLoading(false);
+            handleSelectAfterDelete();
+          }
+        }
+      });
     }
   };
 

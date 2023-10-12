@@ -31,6 +31,7 @@ import Menu from "./Menu";
 import AddIcon from "@mui/icons-material/Add";
 import AssetForm from "./AssetForm";
 import Loading from "./Loading";
+import Swal from "sweetalert2";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -53,7 +54,6 @@ function getComparator(order, orderBy) {
 // only support modern browsers you can replace stableSort(exampleArray, exampleComparator)
 // with exampleArray.slice().sort(exampleComparator)
 function stableSort(array, comparator) {
-
   const stabilizedThis = array.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
@@ -199,19 +199,31 @@ function EnhancedTableToolbar(props) {
 
   const handleAssetDelete = async () => {
     if (selectedAssetIds.length > 0) {
-      try {
-        props.setLoading(true);
-        await deleteAssetRequest(selectedAssetIds);
-      } catch (error) {
-        console.error(
-          `Error deleting asset with ID ${selectedAssetIds}:`,
-          error
-        );
-      } finally {
-        props.setLoading(false);
-      }
-
-      handleSelectAfterDelete();
+      Swal.fire({
+        title: "Are you sure?",
+        text: `You won't be able to revert this`,
+        icon: "warning",
+        showConfirmButton: true,
+        showCancelButton: true,
+        confirmButtonText: "Delete",
+        confirmButtonColor: "Red",
+      }).then(async (res) => {
+        if (res.isConfirmed) {
+          try {
+            props.setLoading(true);
+            await deleteAssetRequest(selectedAssetIds);
+          } catch (error) {
+            Swal.fire(
+              "Failure",
+              "Something went wrong while deleting asset!.",
+              "error"
+            );
+          } finally {
+            props.setLoading(false);
+            handleSelectAfterDelete();
+          }
+        }
+      });
     }
   };
 
@@ -293,7 +305,6 @@ export default function EnhancedTable(props) {
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [showForm, setForm] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
-
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -398,7 +409,11 @@ export default function EnhancedTable(props) {
                   justifyContent: "center",
                 }}
               >
-                <Button variant="contained" onClick={handleRequestForm} sx={{marginLeft: '20px'}}  >
+                <Button
+                  variant="contained"
+                  onClick={handleRequestForm}
+                  sx={{ marginLeft: "20px" }}
+                >
                   <AddIcon />
                   <Typography
                     sx={{
@@ -406,7 +421,6 @@ export default function EnhancedTable(props) {
                       fontWeight: "700",
                       color: "white",
                       margin: "0 10px 0 10px",
-                      
                     }}
                   >
                     Add
@@ -449,9 +463,7 @@ export default function EnhancedTable(props) {
               </Box>
             </Box>
             <TableContainer>
-              <Table
-              sx={{ minWidth: 750, border: "none" }}
-              >
+              <Table sx={{ minWidth: 750, border: "none" }}>
                 <EnhancedTableHead
                   numSelected={selected.length}
                   order={order}
@@ -551,7 +563,7 @@ export default function EnhancedTable(props) {
                             textAlign: "left",
                           }}
                         >
-                          <Menu id={idValue} title= "Asset"/>
+                          <Menu id={idValue} title="Asset" />
                         </TableCell>
                       </TableRow>
                     );

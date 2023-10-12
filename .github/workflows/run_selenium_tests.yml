@@ -2,12 +2,13 @@ on:
   push:
     branches:
       - "selenium-tests-and-github-ci"
+    paths:
+      - ".github/workflows/run_selenium_tests.yaml"
   #commented out for now    
   #pull_request:
   #  branches:
   #    - "main" 
-    paths:
-      - ".github/workflows/run_selenium_tests.yaml"
+    
 
 jobs:
   selenium-test:

@@ -1,7 +1,7 @@
 import React from "react";
 import Signin from "pages/Signin/Signin";
-import "@testing-library/jest-dom/extend-expect";
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import '@testing-library/jest-dom'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { BrowserRouter } from "react-router-dom";
 import swal from "sweetalert2";
 import { Context } from "provider/Provider";

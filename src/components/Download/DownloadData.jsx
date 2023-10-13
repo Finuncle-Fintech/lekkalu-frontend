@@ -68,30 +68,30 @@ const DownloadData = () => {
     })
     // Income Statement
     incomeWorksheet.addRow(['Income Name', 'Type of Income', 'Value'])
-    incomeData.forEach((item) => {
+    incomeData?.forEach((item) => {
       incomeWorksheet.addRow([item.name, item.type, item.value])
     })
-    incomeWorksheet.addRow(['Total Income', '', `${totalIncome.toFixed(2)} Lac₹`])
+    incomeWorksheet.addRow(['Total Income', '', `${totalIncome?.toFixed(2)} Lac₹`])
 
     // Expense Statement
     expenseWorksheet.addRow(['Expense Name', 'Type of Expense', 'Value'])
-    expenseData.forEach((item) => {
+    expenseData?.forEach((item) => {
       expenseWorksheet.addRow([item.name, item.type, item.value])
     })
-    expenseWorksheet.addRow(['Total Expense', '', `${totalExpense.toFixed(2)} Lac₹`])
+    expenseWorksheet.addRow(['Total Expense', '', `${totalExpense?.toFixed(2)} Lac₹`])
 
     // Balance Sheet
     assetsWorksheet.addRow(['Asset Name', 'Value'])
-    assetsData.forEach((item) => {
+    assetsData?.forEach((item) => {
       assetsWorksheet.addRow([item.name, item.value])
     })
-    assetsWorksheet.addRow(['Total Value', `${assetsValue.toFixed(2)} Lac₹`])
+    assetsWorksheet.addRow(['Total Value', `${assetsValue?.toFixed(2)} Lac₹`])
 
     liabilitiesWorksheet.addRow(['Liabilities Name', 'Value'])
-    liabilitiesData.forEach((item) => {
+    liabilitiesData?.forEach((item) => {
       liabilitiesWorksheet.addRow([item.name, item.value])
     })
-    liabilitiesWorksheet.addRow(['Total Liabilities', `${liabilitiesValue.toFixed(2)} Lac₹`])
+    liabilitiesWorksheet.addRow(['Total Liabilities', `${liabilitiesValue?.toFixed(2)} Lac₹`])
 
     // Generate the Excel file as a blob
     const blob = await workbook.xlsx.writeBuffer()

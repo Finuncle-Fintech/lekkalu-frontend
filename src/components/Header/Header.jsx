@@ -98,6 +98,7 @@ const Header = () => {
     },
     title: "Calculator",
     img: "https://img.icons8.com/external-glyph-zulfa-mahendra/48/external-calculator-business-training-glyph-zulfa-mahendra.png",
+    
   };
 
   const isActive = (pathname) => {
@@ -129,7 +130,6 @@ const Header = () => {
           display: "flex",
           justifyContent: "center",
           "@media (max-width: 900px)": {
-            // Hide for screens smaller than 768px
             display: "none",
           },
         }}
@@ -138,7 +138,7 @@ const Header = () => {
           sx={{
             width: "21vw",
             display: "flex",
-            justifyContent: "space-between",
+            justifyContent: "center",
           }}
         >
           {/* List of pages depicted by icons */}
@@ -251,12 +251,16 @@ const Header = () => {
                   />
                 </IconButton>
               </Tooltip>
+              
+          <BasicMenu Menu={calculatorOption} width={"0"}/>
             </>
           ) : null}
-          <BasicMenu Menu={calculatorOption} />
+
 
           {!authToken ? (
             <>
+            
+          <BasicMenu Menu={calculatorOption} width={"2"} />
               <Tooltip title="Signin">
                 <IconButton
                   sx={{

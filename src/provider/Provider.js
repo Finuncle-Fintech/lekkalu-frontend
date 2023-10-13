@@ -48,7 +48,7 @@ const Provider = ({ children }) => {
     incomeStatement,
     depreciation,
     user,
-    goals
+    goals,
   } = store;
 
   const handleErrors = (error) => {
@@ -325,17 +325,16 @@ const Provider = ({ children }) => {
         });
 
       await axiosPrivate
-        .get(`${process.env.REACT_APP_BACKEND_API}assets/`, { headers })
+        .get(`${process.env.REACT_APP_BACKEND_API}physical_assets/`, {
+          headers,
+        })
         .then((res) => {
           let totalVal = 0.000000001;
           res.data.map((da) => {
-            totalVal += da.market_value;
+            totalVal += Number(da.market_value);
             finalAssets = [
               ...finalAssets,
-              {
-                name: da.name,
-                value: parseFloat(da.market_value),
-              },
+              { id: da.id, name: da.name, value: parseFloat(da.market_value) },
             ];
           });
           dispatch({
@@ -353,8 +352,14 @@ const Provider = ({ children }) => {
             finalLiabilities = [
               ...finalLiabilities,
               {
+                id: da.id,
                 name: da.name,
                 value: parseFloat(da.balance),
+                principal: parseFloat(da.principal),
+                interest: parseFloat(da.interest_rate),
+                tenure: da.tenure,
+                closure_charges: parseFloat(da.closure_charges),
+                disbursement_date: da.disbursement_date,
               },
             ];
           });
@@ -389,7 +394,6 @@ const Provider = ({ children }) => {
         });
 
       await axiosPrivate
-        //get assets depreciation
         .get(`${process.env.REACT_APP_BACKEND_API}physical_assets/`, {
           headers,
         })
@@ -402,11 +406,8 @@ const Provider = ({ children }) => {
           });
         });
     } catch (error) {
-      // Handle errors
-      handleErrors(error);
+      handleErrors(error.message);
     }
-
-    //Removed fetch expenses here, because it breaks pagination request on expenses page
   };
 
   const fetchToken = async (username, password) => {
@@ -415,6 +416,7 @@ const Provider = ({ children }) => {
         username: username,
         password: password,
       };
+      //console.log(username, password)
 
       return await axiosClient
         .post(`${process.env.REACT_APP_BACKEND_URL}token/`, auth)
@@ -621,13 +623,254 @@ const Provider = ({ children }) => {
     }
   };
 
+  const addAssetRequest = async (assetData) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      await axiosPrivate
+        .post(
+          `${process.env.REACT_APP_BACKEND_API}physical_assets/`,
+          assetData,
+          {
+            headers,
+          }
+        )
+        .then((res) => {
+          fetchAsset();
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const editAssetRequest = async (assetId, updatedAssetData) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      await axiosPrivate
+        .put(
+          `${process.env.REACT_APP_BACKEND_API}physical_assets/${assetId}`,
+          updatedAssetData,
+          { headers }
+        )
+        .then((res) => {
+          fetchAsset();
+        });
+    } catch (error) {
+      handleErrors(error);
+    }
+  };
+
+  const deleteAssetRequest = async (Ids) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      for (const Id of Ids) {
+        await axiosPrivate.delete(
+          `${process.env.REACT_APP_BACKEND_API}physical_assets/${Id}`,
+          {
+            headers,
+          }
+        );
+      }
+
+      fetchAsset();
+    } catch (error) {
+      handleErrors(error);
+    }
+  };
+
+  const fetchAsset = async () => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      await axiosPrivate
+        .get(`${process.env.REACT_APP_BACKEND_API}physical_assets/`, {
+          headers,
+        })
+        .then((res) => {
+          let totalVal = 0.000000001;
+          res.data.map((da) => {
+            totalVal += da.market_value;
+            finalAssets = [
+              ...finalAssets,
+              { id: da.id, name: da.name, value: parseFloat(da.market_value) },
+            ];
+          });
+
+          dispatch({
+            type: Types.FETCH_ASSETS,
+            payload: { finalAssets, totalVal },
+          });
+        });
+    } catch (error) {
+      // Handle errors
+      handleErrors(error.message);
+    }
+  };
+
+  const fetchAssetById = async (assetId) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+      const response = await axiosPrivate.get(
+        `${process.env.REACT_APP_BACKEND_API}physical_assets/${assetId}`,
+        { headers }
+      );
+
+      const assetData = response.data;
+
+      return assetData;
+    } catch (error) {
+      handleErrors(error);
+      throw error;
+    }
+  };
+
+  const fetchLiabilities = async () => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      await axiosPrivate
+        .get(`${process.env.REACT_APP_BACKEND_API}loans/`, { headers })
+        .then((res) => {
+          let totalVal = 0.000000001;
+
+          res.data.forEach((da) => {
+            totalVal += parseFloat(da.balance);
+
+            finalLiabilities = [
+              ...finalLiabilities,
+              {
+                id: da.id,
+                name: da.name,
+                value: parseFloat(da.balance),
+                principal: parseFloat(da.principal),
+                interest: parseFloat(da.interest_rate),
+                tenure: da.tenure,
+                closure_charges: parseFloat(da.closure_charges),
+                disbursement_date: da.disbursement_date,
+              },
+            ];
+          });
+          dispatch({
+            type: Types.FETCH_LIABILITIES,
+            payload: { finalLiabilities, totalVal },
+          });
+        });
+    } catch (error) {
+      // Handle errors
+      // handleErrors(error.message);
+      console.log(error);
+    }
+  };
+
+  const addLiabilityRequest = async (liabilityData) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      await axiosPrivate
+        .post(`${process.env.REACT_APP_BACKEND_API}loans/`, liabilityData, {
+          headers,
+        })
+        .then((res) => {
+          fetchLiabilities();
+        });
+    } catch (error) {
+      console.log(error.response.data);
+    }
+  };
+
+  const editLiabilityRequest = async (liabilityId, updatedLiabilityData) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      await axiosPrivate
+        .put(
+          `${process.env.REACT_APP_BACKEND_API}loans/${liabilityId}`,
+          updatedLiabilityData,
+          { headers }
+        )
+        .then((res) => {
+          fetchLiabilities();
+        });
+    } catch (error) {
+      //handleErrors(error);
+      console.log(error);
+    }
+  };
+
+  const fetchLiabilityById = async (Id) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+      const response = await axiosPrivate.get(
+        `${process.env.REACT_APP_BACKEND_API}loans/${Id}`,
+        { headers }
+      );
+
+      const assetData = response.data;
+
+      return assetData;
+    } catch (error) {
+      handleErrors(error);
+      throw error;
+    }
+  };
+
+  const deleteLiabilityRequest = async (Ids) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      for (const Id of Ids) {
+        await axiosPrivate.delete(
+          `${process.env.REACT_APP_BACKEND_API}loans/${Id}`,
+          {
+            headers,
+          }
+        );
+      }
+
+      fetchLiabilities();
+    } catch (error) {
+      handleErrors(error);
+    }
+  };
+
   const signOut = () => {
     setAuthToken(null);
     deleteCookie("refresh");
   };
 
   const fetchGoals = async (page, rowsPerPage) => {
-
     const headers = {
       Authorization: `Bearer ${authToken}`,
       "Content-Type": "application/json",
@@ -651,9 +894,6 @@ const Provider = ({ children }) => {
         console.log(error?.response?.data?.detail);
         handleErrors(error);
       });
-
-
-
   };
 
   const deleteGoalRequest = async (id) => {
@@ -663,7 +903,7 @@ const Provider = ({ children }) => {
     };
     await axiosClient
       .delete(`${process.env.REACT_APP_BACKEND_URL}api/financial_goal/${id}`, {
-        headers
+        headers,
       })
       .then((response) => {
         if (response.status === 204) {
@@ -671,16 +911,14 @@ const Provider = ({ children }) => {
             type: Types.DELETE_GOAL,
             payload: {
               id: id,
-            }
-          })
+            },
+          });
         }
-      }
-      )
+      })
       .catch((error) => {
         console.log(error?.response?.data?.detail);
         handleErrors(error);
       });
-
   };
 
   const createGoalRequest = async (data) => {
@@ -691,23 +929,21 @@ const Provider = ({ children }) => {
     try {
       await axiosClient
         .post(`${process.env.REACT_APP_BACKEND_URL}api/financial_goal/`, data, {
-          headers
+          headers,
         })
         .then((response) => {
           dispatch({
             type: Types.CREATE_GOAL,
             payload: {
               data: response.data.data,
-            }
+            },
           });
         })
         .catch((error) => {
           console.log(error?.response?.data?.detail);
           handleErrors(error);
         });
-    } catch (error) {
-
-    }
+    } catch (error) {}
   };
 
   const changeGoalRequest = async (goal) => {
@@ -717,26 +953,27 @@ const Provider = ({ children }) => {
     };
     try {
       await axiosClient
-        .put(`${process.env.REACT_APP_BACKEND_URL}api/financial_goal/${goal.id}`, goal, {
-          headers
-        })
+        .put(
+          `${process.env.REACT_APP_BACKEND_URL}api/financial_goal/${goal.id}`,
+          goal,
+          {
+            headers,
+          }
+        )
         .then((response) => {
           dispatch({
             type: Types.EDIT_GOAL,
             payload: {
               goal: JSON.parse(response.config.data),
-            }
+            },
           });
         })
         .catch((error) => {
           console.log(error?.response?.data?.detail);
           handleErrors(error);
         });
-    } catch (error) {
-
-    }
+    } catch (error) {}
   };
-
 
   const fetchUser = async (authToken) => {
     if (!authToken) return;
@@ -888,6 +1125,11 @@ const Provider = ({ children }) => {
         fetchIncomeExpenses,
         fetchIncomeStatement,
         filterExpensesByDate,
+        addAssetRequest,
+        editAssetRequest,
+        deleteAssetRequest,
+        fetchAssetById,
+        fetchAsset,
         addIncomeExpense,
         updateIncomeExpenseById,
         deleteIncomeExpenseById,
@@ -904,6 +1146,10 @@ const Provider = ({ children }) => {
         deleteBudget,
         createBudget,
         updateBudget,
+        addLiabilityRequest,
+        editLiabilityRequest,
+        fetchLiabilityById,
+        deleteLiabilityRequest,
       }}
     >
       {children}

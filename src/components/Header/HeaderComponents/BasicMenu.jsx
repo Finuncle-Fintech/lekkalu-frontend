@@ -35,12 +35,15 @@ function BasicMenu(props) {
   return (
     <Box
       sx={{
-        width: "34vw",
+        width: props.Menu.title === "Calculator" ? props.width : "34vw",
         display: "flex",
-        justifyContent: "flex-end",
+        justifyContent:
+          props.Menu.title === "Calculator" ? "flex-start" : "flex-end",
         alignItems: "center",
+        marginLeft: "10px",
+        marginRight: props.Menu.title === "Calculator" ? "10px" : "0",
         "@media (max-width: 900px)": {
-          display: "none", // Hide for screens smaller than 768px
+          display: props.Menu.title === "User setting" ? "none" : "flex",
         },
       }}
     >
@@ -48,17 +51,34 @@ function BasicMenu(props) {
         <IconButton
           onClick={handleClick}
           style={{
-            margin: props.Menu.title === "User setting" ? "0 2vw 0 0 " : "10px",
-            width: "51px",
-            height: "51px",
+            margin:
+              props.Menu.title === "User setting"
+                ? "0 2vw 0 0 "
+                : "Balance sheet"
+                ? "0"
+                : "10px",
+            width: props.Menu.title === "Balance sheet" ? "51px" : "51px",
+            height: props.Menu.title === "Balance sheet" ? "51px" : "51px",
             backgroundColor: "white",
           }}
         >
           <img
             src={props.Menu.img}
             alt="menu-2"
-            width={props.Menu.title === "User setting" ? 21 : 28}
-            height={props.Menu.title === "User setting" ? 21 : 28}
+            width={
+              props.Menu.title === "User setting"
+                ? 21
+                : "Balance sheet"
+                ? 21
+                : 28
+            }
+            height={
+              props.Menu.title === "User setting"
+                ? 21
+                : "Balance sheet"
+                ? 21
+                : 28
+            }
           />
         </IconButton>
       </Tooltip>

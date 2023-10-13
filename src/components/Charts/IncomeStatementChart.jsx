@@ -11,6 +11,7 @@ import {
 } from "recharts";
 import styles from "./IncomeStatementChart.module.css";
 import useWindowDimensions from "hooks/useWindowDimensions";
+import { useUserPreferences } from "hooks/useUserPreferences";
 export const IncomeStatementChart = (props) => {
   const size = useWindowDimensions();
   let totalValue = props.totalVal;
@@ -103,6 +104,8 @@ export const IncomeStatementChart = (props) => {
   };
 
   const CustomTooltip = ({ active, payload, percent }) => {
+    const { preferences } = useUserPreferences();
+
     if (active) {
       return (
         <div
@@ -137,7 +140,9 @@ export const IncomeStatementChart = (props) => {
                     fontWeight: "bold",
                     color: "#fa4646",
                   }}
-                >{`\u20B9 ${numDifferentiation(payload[0].value)} `}</span>
+                >{`${preferences.currencyUnit} ${numDifferentiation(
+                  payload[0].value
+                )} `}</span>
               </label>
               <div className={styles.detailsContainer}>
                 {props.data.income
@@ -150,7 +155,9 @@ export const IncomeStatementChart = (props) => {
                             {each?.name} :
                           </span>
                           <span style={{ fontWeight: 700 }}>
-                            {`\u20B9 ${numDifferentiation(each.value)} `}
+                            {`${preferences.currencyUnit} ${numDifferentiation(
+                              each.value
+                            )} `}
                           </span>
                         </p>
                       </div>
@@ -181,7 +188,9 @@ export const IncomeStatementChart = (props) => {
                     fontWeight: "bold",
                     color: "#fa4646",
                   }}
-                >{`\u20B9 ${numDifferentiation(payload[0].value)} `}</span>
+                >{`${preferences.currencyUnit} ${numDifferentiation(
+                  payload[0].value
+                )} `}</span>
               </label>
               <div className={styles.detailsContainer}>
                 {props.data.expenses
@@ -194,7 +203,9 @@ export const IncomeStatementChart = (props) => {
                             {each?.name} :
                           </span>
                           <span style={{ fontWeight: 700 }}>
-                            {`\u20B9 ${numDifferentiation(each.value)} `}
+                            {`${preferences.currencyUnit} ${numDifferentiation(
+                              each.value
+                            )} `}
                           </span>
                         </p>
                       </div>
@@ -208,7 +219,9 @@ export const IncomeStatementChart = (props) => {
                 ((`${payload[0].value}` * 100) / totalValue).toFixed(2) +
                 "%"}
               <br />
-              {`\u20B9 ${numDifferentiation(payload[0].value)} `}
+              {`${preferences.currencyUnit} ${numDifferentiation(
+                payload[0].value
+              )} `}
             </label>
           )}
         </div>

@@ -1,6 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useLocation } from "react-router-dom";
-import axios from "axios";
 
 import {
   optionsPrincipal,
@@ -21,17 +20,21 @@ import { AssetsLiabilitiesChart } from "../../components/Charts/AssetsLiabilitie
 
 import "./EmiCalculator.css";
 
+import { Context } from "../../provider/Provider";
+import useAxiosPrivate from "hooks/useAxiosPrivate";
+
+
 const today = new Date();
 const year = today.getFullYear();
-const month = String(today.getMonth() + 1).padStart(2, '0');
-const day = String(today.getDate()).padStart(2, '0');
+const month = String(today.getMonth() + 1).padStart(2, "0");
+const day = String(today.getDate()).padStart(2, "0");
 const formattedDate = `${year}-${month}-${day}`;
 
 const defaultData = {
   loan_principal: 300000,
   loan_interest: 11,
-  loan_tenure: 36,
-  emi_day:5,
+  loan_tenure: 3,
+  emi_day: 5,
   disbursement_date: formattedDate,
 };
 
@@ -45,6 +48,8 @@ const defaultResults = {
 const EmiCalculator = () => {
   const location = useLocation();
   const parsedObject = parseQueryString(location.search);
+  const {unit} = useContext(Context);
+  const axiosPrivate = useAxiosPrivate();
 
   const [data, setData] = useState(
     !isObjectEmpty(parsedObject) ? parsedObject : defaultData
@@ -61,15 +66,9 @@ const EmiCalculator = () => {
   };
 
   const handleSave = async () => {
-    console.log("data", data);
     setIsLoading(true);
     try {
-      await axios.post(`${process.env.REACT_APP_API}expenses/`, data, {
-        auth: {
-          username: process.env.REACT_APP_USER,
-          password: process.env.REACT_APP_PASSWORD,
-        },
-      });
+      await axiosPrivate.post(`${process.env.REACT_APP_API}expenses/`, data);
     } catch (error) {
       console.error("Error:", error);
       alert("Error occurred during API call.");
@@ -79,8 +78,8 @@ const EmiCalculator = () => {
   };
 
   useEffect(() => {
-    setResults(calculateEmiOutputs(data));
-  }, [data]);
+    setResults(calculateEmiOutputs(data, unit));
+  }, [data, unit]);
 
   useEffect(() => {
     setAssets(
@@ -96,6 +95,20 @@ const EmiCalculator = () => {
     handleShare(data);
     setTimeout(() => setIsCopied(false), 3000);
   };
+
+  const calculateTenureByUnit = (unit, data) => {
+    if (unit === "Years") {
+      const yearValue = Math.floor(data.loan_tenure / 12);
+      setData({ ...data, loan_tenure: yearValue });
+    } else if (unit === "Months") {
+      const monthValue = Math.floor(data.loan_tenure * 12);
+      setData({ ...data, loan_tenure: monthValue });
+    }
+  };
+
+  useEffect(() => {
+    calculateTenureByUnit(unit, data);
+  }, [unit]);
 
   return (
     <div className="container">
@@ -137,6 +150,7 @@ const EmiCalculator = () => {
           showSlider
         />
       </div>
+
       <FormInput
         handleChange={handleChange}
         value={data.loan_tenure}
@@ -144,12 +158,13 @@ const EmiCalculator = () => {
         name="loan_tenure"
         type="number"
         label="Loan Tenure"
-        symbol="Month"
+        symbol={unit}
         min="0"
-        max={"240"}
-        step="5"
+        max={unit === "Months" ? "240" : "20"}
+        step={unit === "Months" ? "6" : "1"}
         tooltip="how long do you want the loan for?"
         showSlider
+        visible
       />
 
       <div>
@@ -190,7 +205,7 @@ const EmiCalculator = () => {
         </div>
       </div>
 
-      <div className="table-container">
+      <div className="table-container mb-10">
         {results?.repayment_table && results.repayment_table.length > 0 && (
           <RepaymentTable repaymentTable={results.repayment_table} />
         )}

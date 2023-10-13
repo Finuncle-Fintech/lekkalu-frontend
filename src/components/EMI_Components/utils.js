@@ -2,7 +2,8 @@ export const parseQueryString = (queryString) => {
   const paramsArray = queryString.substring(1).split("&");
   return paramsArray.reduce((result, param) => {
     const [key, value] = param.split("=");
-    if (key !== "") { // only add to result if value is not an empty string
+    if (key !== "") {
+      // only add to result if value is not an empty string
       result[key] = value;
     }
     return result;
@@ -16,20 +17,20 @@ export const createUrlString = (params) => {
   return url;
 };
 
-export const isObjectEmpty=(obj)=> {
+export const isObjectEmpty = (obj) => {
   return Object.keys(obj).length === 0;
-}
+};
 
-export const copyToClipboard = (str , setIsCopied) => {
+export const copyToClipboard = (str, setIsCopied) => {
   navigator.clipboard
     .writeText(str)
     .then(() => {
-      console.log("String copied to clipboard!");
       setIsCopied(true);
     })
     .catch((error) => {
       console.error("Failed to copy string: ", error);
-    }).finally(() => {
+    })
+    .finally(() => {
       setIsCopied(false);
     });
 };
@@ -41,19 +42,22 @@ export const handleShare = (data) => {
   copyToClipboard(share_url);
 };
 
-export const calculateEmiOutputs = (data) => {
+export const calculateEmiOutputs = (data, unit) => {
   const { loan_principal, loan_interest, loan_tenure } = data;
 
   if (loan_principal && loan_interest && loan_tenure) {
     const P = Math.abs(parseInt(loan_principal));
     const r = Math.abs(parseFloat(loan_interest) / (12 * 100));
-    const n = Math.abs(parseInt(loan_tenure));
-    const E = (P * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+    const n = Math.abs(parseInt(loan_tenure)); //*12 when year
+    const nYear = Math.abs(parseInt(loan_tenure) * 12);
+    const E =
+      (P * r * Math.pow(1 + r, unit === "Months" ? n : nYear)) /
+      (Math.pow(1 + r, unit === "Months" ? n : nYear) - 1);
 
     const repaymentTable = [];
     let outstandingPrincipal = P;
 
-    for (let i = 1; i <= n; i++) {
+    for (let i = 1; unit === "Months" ? i <= n : i <= nYear; i++) {
       const interestComponent = outstandingPrincipal * r;
       const principalComponent = E - interestComponent;
       outstandingPrincipal -= principalComponent;
@@ -70,7 +74,7 @@ export const calculateEmiOutputs = (data) => {
       repaymentTable.push(repaymentRecord);
     }
 
-    const total_interest_payable = E * n - P;
+    const total_interest_payable = E * (unit === "Months" ? n : nYear) - P;
     const total_payment = P + total_interest_payable;
 
     return {

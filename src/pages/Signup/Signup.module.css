@@ -1,0 +1,278 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
+
+.authentication {
+  width: 100%;
+  height: 100vh;
+  min-height: 50rem;
+  background-color: #1976d2;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  font-family: "Poppins";
+}
+
+.logoText {
+  color: #ffffff;
+  font-family: #ffffff;
+  font-size: 56px;
+  font-weight: 600;
+  line-height: 64px;
+  letter-spacing: 0em;
+  text-align: center;
+}
+
+.logo {
+  position: relative;
+  padding-top: 4rem;
+}
+
+.logoCircle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: #ffffff;
+  border-radius: 50%;
+  height: 48px;
+  width: 48px;
+  z-index: 1;
+}
+
+.authenticationContainer {
+  background-color: #ffffff;
+  width: 528px;
+  padding: 1.75rem;
+  border-radius: 24px;
+}
+
+.loginContainer {
+  margin: auto;
+}
+
+.title {
+  color: #333333;
+  font-size: 1.5rem;
+  font-weight: 500;
+  letter-spacing: 0em;
+  text-align: center;
+}
+
+.loginForm {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 0.75rem;
+}
+
+.error {
+  text-align: center;
+  margin: 0;
+  color: red;
+  font-weight: 600;
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
+
+.loginLabel {
+  color: #666666;
+  font-size: 0.75rem;
+  font-weight: 400;
+  line-height: 1rem;
+  letter-spacing: 0em;
+  text-align: left;
+}
+
+.loginInput {
+  width: auto;
+  height: 3rem;
+  border-radius: 12px;
+  border: 1px solid;
+  border-color: #66666659;
+  margin-bottom: 0.75rem;
+  padding-inline: 15px;
+}
+
+.loginInput:focus {
+  outline: none;
+}
+
+.CheckBox {
+  margin-top: 0.5rem;
+}
+
+.CheckBox > div > span {
+  font-size: 0.825rem;
+}
+
+.loginButton {
+  margin: 0.5rem 0;
+  width: auto;
+  height: 3rem;
+  border: 0;
+  border-radius: 32px;
+  opacity: 0.25px;
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 2rem;
+  letter-spacing: 0em;
+  text-align: center;
+}
+
+.orBlock {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 90%;
+  margin: 1rem auto;
+}
+
+.orText {
+  font-family: "Avenir";
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 27px;
+  letter-spacing: 0em;
+  color: #666666;
+  margin: 0;
+}
+
+.orImage {
+  width: 40%;
+}
+
+.authenticationButtons {
+  width: auto;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.authButton {
+  width: 100%;
+  height: 3rem;
+  border-radius: 40px;
+  border: 1px solid;
+  border-color: #333333;
+  background-color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
+.authText {
+  font-family: "Avenir";
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 2rem;
+  letter-spacing: 0em;
+  color: #333333;
+  margin: 0;
+}
+
+.link {
+  font-size: 0.825rem;
+}
+
+.passwordInputBox {
+  display: flex;
+  align-items: center;
+  gap: 2;
+  height: 3rem;
+  border: 1px solid;
+  border-radius: 12px;
+  border-color: #66666659;
+  margin-bottom: 1rem;
+  padding-inline: 15px;
+}
+
+.passwordInput {
+  height: 100%;
+  width: 100%;
+  border: none;
+  outline: none;
+}
+
+.visibilityButton {
+  height: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+@media screen and (max-width: 1000px) {
+  .authentication {
+    display: flex;
+    min-height: 60rem;
+    justify-content: flex-start;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+  }
+
+  .logo {
+    position: relative;
+    padding-top: 3rem;
+    margin-bottom: 1rem;
+  }
+
+  .logoText {
+    font-size: 36px;
+    line-height: 40px;
+  }
+
+  .logoCircle {
+    height: 36px;
+    width: 36px;
+    margin-bottom: 10px;
+  }
+
+  .authenticationContainer {
+    width: 100%;
+    max-width: 600px;
+    margin-bottom: 10rem;
+    padding: 1.5rem;
+  }
+
+  .title {
+    font-size: 28px;
+    line-height: 40px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  .loginContainer {
+    width: 90%;
+  }
+
+  .loginInput {
+    width: 100%;
+  }
+
+  .loginButton {
+    width: 100%;
+  }
+
+  .authenticationButtons {
+    width: 90%;
+    margin-bottom: 2rem;
+  }
+
+  .authText {
+    font-size: 0.75rem;
+  }
+
+  .authIcon {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  .authButton {
+    gap: 0.75rem;
+  }
+}

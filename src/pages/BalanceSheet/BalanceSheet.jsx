@@ -1,38 +1,80 @@
-import AssetsCard from 'components/BalanceSheet/BalanceCard'
-import styles from './BalanceSheet.module.css'
-import { AssetsLiabilitiesChart } from 'components/Charts/AssetsLiabilitiesChart'
-import { useContext, useEffect } from 'react'
-import { Context } from 'provider/Provider'
-import BalanceCardLong from 'components/BalanceSheet/BalanceCardLong'
-import searchIcon from 'assets/search-icon.svg'
+import { useContext, useEffect, useState } from "react";
+import { Context } from "provider/Provider";
+import { Box } from "@mui/material";
+import GraphCard from "components/BalanceSheet/GraphCard";
+import BarGraph from "components/BalanceSheet/BarGraph";
+import EnhancedTable from "components/BalanceSheet/AssetTable";
+import LiabilitiesTable from "components/BalanceSheet/LiabilitiesTable";
 
-export default function BalanceSheet(){
+export default function BalanceSheet() {
+  const { assets, liabilities } = useContext(Context);
 
-    const { assets, liabilities, fetchData } = useContext(Context)
+  const [barGraphIsOpen, setBarGraphIsOpen] = useState(false);
+  const [assetDatas, setAssetDatas] = useState([]);
+  const [liabilityDatas, setLiabilityDatas] = useState([]);
 
-    useEffect(()=>{
-        fetchData()
-    }, [])
+  useEffect(() => {
+    if (assets.finalAssets && assets.finalAssets.length > 0) {
+      const newAssetDatas = assets.finalAssets.map((asset) => ({
+        id: asset.id,
+        label: asset.name,
+        value: asset.value,
+      }));
+      setAssetDatas(newAssetDatas);
+    }
+  }, [assets]);
 
-    return( 
-    <main className={styles.main}>
+  useEffect(() => {
+    if (
+      liabilities.finalLiabilities &&
+      liabilities.finalLiabilities.length > 0
+    ) {
+      const newLiabilityDatas = liabilities.finalLiabilities.map(
+        (liability) => ({
+          id: liability.id,
+          label: liability.name,
+          value: liability.value,
+          principal: liability.principal,
+          interest: liability.interest,
+          tenure: liability.tenure,
+          closure_charges: liability.closure_charges,
+          disbursement_date: liability.disbursement_date,
+        })
+      );
+      setLiabilityDatas(newLiabilityDatas);
+    }
+  }, [liabilities]);
 
-        <div className='container-fluid d-flex justify-content-center align-items-center'>
-            <div className={styles.containerSearch}>
-                <input type="search" name="" id="" className={styles.search} placeholder='Search...' autoComplete='off' />
-                <img src={searchIcon} width={30} alt="" />
-            </div>
-        </div>
+  const handleOpen = () => {
+    setBarGraphIsOpen(true);
+  };
+  const handleClose = () => {
+    setBarGraphIsOpen(false);
+  };
 
-        <div className='d-flex justify-content-between container-fluid  flex-column flex-lg-row gap-2 gap-lg-0'>
-            <AssetsCard title={'Assets'} component={<AssetsLiabilitiesChart data={assets} type={'assets'} />} />
-            <AssetsCard title={'Liabilities'} component={<AssetsLiabilitiesChart data={liabilities} type={'liabilities'} />} />
-        </div>
-        
-        <div className='container-fluid'>
-            <BalanceCardLong assets={assets} liabilities={liabilities} />
-        </div>
-
-    </main>
-    )
+  return (
+    <Box
+      sx={{
+        minHeight: "350vh",
+        backgroundColor: "primary.main",
+        padding: "1% 5% 0 5%",
+      }}
+    >
+      <GraphCard
+        assetDatas={assets}
+        liabilityDatas={liabilities}
+        setBarGraphIsOpen={handleOpen}
+      />
+      {barGraphIsOpen ? (
+        <BarGraph
+          setBarGraphIsOpen={handleClose}
+          barGraphIsOpen={barGraphIsOpen}
+          dataAsset={assetDatas}
+          dataLiability={liabilityDatas}
+        />
+      ) : null}
+      <EnhancedTable assetDatas={assetDatas} />
+      <LiabilitiesTable liabilityDatas={liabilityDatas} />
+    </Box>
+  );
 }

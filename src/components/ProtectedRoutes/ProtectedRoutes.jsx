@@ -2,6 +2,7 @@ import React from 'react'
 import { Navigate } from 'react-router-dom'
 import { useContext } from 'react';
 import { Context } from 'provider/Provider';
+import DownloadData from 'components/Download/DownloadData';
 
 // High order component
 export const ProtectedRoutes = ({ component }) => {
@@ -10,7 +11,10 @@ export const ProtectedRoutes = ({ component }) => {
     if (!authToken) {
         return <Navigate to="/signin" replace />
     }
-    return component
+    return <>
+        <DownloadData />
+        {component}
+    </>
 }
 
 export default ProtectedRoutes;

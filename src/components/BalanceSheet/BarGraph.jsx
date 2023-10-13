@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Backdrop from '@mui/material/Backdrop'
-
 import CloseIcon from '@mui/icons-material/Close'
-import { Box, CssBaseline, IconButton, Drawer, Tooltip } from '@mui/material'
+import { Box, IconButton } from '@mui/material'
 import BarChart from './BarChart'
 
 export default function SimpleBackdrop(props) {

@@ -1,4 +1,3 @@
-/* eslint-disable testing-library/no-node-access */
 import React from 'react'
 import { render, fireEvent, waitFor, screen } from '@testing-library/react'
 import '@testing-library/jest-dom'
@@ -21,14 +20,6 @@ describe('changeGoalRequest', () => {
     )
 
     fireEvent.click(screen.getAllByPlaceholderText('edit-goal')[0])
-
-    const goalField = screen.getByTestId('goal').firstChild.firstChild
-
-    const targetMetricField = screen.getByTestId('target-metric').firstChild.firstChild
-    const currentField = screen.getByTestId('current-metric').firstChild.firstChild
-    const reachablitiyInMonthsField = screen.getByTestId('reachablitiy-in-months').firstChild.firstChild
-    const reachabilityInYearsField = screen.getByTestId('reachability-in-years').firstChild.firstChild
-
     fireEvent.click(screen.getByTestId('submit-goal'))
 
     await waitFor(() => {

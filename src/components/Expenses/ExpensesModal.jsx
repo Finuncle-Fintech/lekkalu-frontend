@@ -137,7 +137,6 @@ const ExpenseFormModal = ({
 
     if (newValue === '' || isAmountValid(newValue)) {
       setAmount(newValue)
-    } else {
     }
   }
 

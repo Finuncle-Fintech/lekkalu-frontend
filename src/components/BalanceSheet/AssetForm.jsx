@@ -99,7 +99,6 @@ export default function SimpleBackdrop(props) {
           })
           setOpen(false)
         } catch (error) {
-          console.error('Error fetching asset data:', error)
           setOpen(false)
         }
       }

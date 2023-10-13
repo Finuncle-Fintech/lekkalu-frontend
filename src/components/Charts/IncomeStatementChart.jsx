@@ -1,5 +1,5 @@
 import Colors from 'constants/colors'
-import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer, Surface, Symbols } from 'recharts'
+import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 import useWindowDimensions from 'hooks/useWindowDimensions'
 import { useUserPreferences } from 'hooks/useUserPreferences'
 import styles from './IncomeStatementChart.module.css'
@@ -7,13 +7,13 @@ export const IncomeStatementChart = (props) => {
   const size = useWindowDimensions()
   const totalValue = props.totalVal
   let pieData
-  if (props.type == 'income') {
+  if (props.type === 'income') {
     pieData = props.data.income
-  } else if (props.type == 'expenses') {
+  } else if (props.type === 'expenses') {
     pieData = props.data.expenses
-  } else if (props.type == 'income-overview') {
+  } else if (props.type === 'income-overview') {
     pieData = props.incomeOverviewData
-  } else if (props.type == 'expense-overview') {
+  } else if (props.type === 'expense-overview') {
     pieData = props.expenseOverviewData
   }
   // const pieData = [
@@ -60,7 +60,7 @@ export const IncomeStatementChart = (props) => {
   // ];
 
   const RADIAN = Math.PI / 180
-  const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
+  const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }) => {
     const radius = innerRadius + (outerRadius - innerRadius) * 0.7
     const x = cx + radius * Math.cos(-midAngle * RADIAN)
     const y = cy + radius * Math.sin(-midAngle * RADIAN)
@@ -81,7 +81,7 @@ export const IncomeStatementChart = (props) => {
     return val
   }
 
-  const CustomTooltip = ({ active, payload, percent }) => {
+  const CustomTooltip = ({ active, payload }) => {
     const { preferences } = useUserPreferences()
 
     if (active) {
@@ -95,7 +95,7 @@ export const IncomeStatementChart = (props) => {
             borderRadius: 5 + 'px',
           }}
         >
-          {(props.type == 'income-overview') & props?.details ? (
+          {(props.type === 'income-overview') & props?.details ? (
             <div className={styles.mainTooltip}>
               <label
                 style={{
@@ -120,9 +120,9 @@ export const IncomeStatementChart = (props) => {
               <div className={styles.detailsContainer}>
                 {props.data.income
                   ?.filter((each) => each?.type === payload[0].name)
-                  ?.map((each) => {
+                  ?.map((each, index) => {
                     return (
-                      <div style={{ width: '100%' }}>
+                      <div style={{ width: '100%' }} key={index}>
                         <p style={{ width: '100%', lineHeight: '0.5rem' }}>
                           <span style={{ fontWeight: 600 }}>{each?.name} :</span>
                           <span style={{ fontWeight: 700 }}>
@@ -134,7 +134,7 @@ export const IncomeStatementChart = (props) => {
                   })}
               </div>
             </div>
-          ) : (props.type == 'expense-overview') & props?.details ? (
+          ) : (props.type === 'expense-overview') & props?.details ? (
             <div className={styles.mainTooltip}>
               <label
                 style={{
@@ -159,9 +159,9 @@ export const IncomeStatementChart = (props) => {
               <div className={styles.detailsContainer}>
                 {props.data.expenses
                   ?.filter((each) => each?.type === payload[0].name)
-                  ?.map((each) => {
+                  ?.map((each, index) => {
                     return (
-                      <div style={{ width: '100%' }}>
+                      <div style={{ width: '100%' }} key={index}>
                         <p style={{ width: '100%', lineHeight: '0.5rem' }}>
                           <span style={{ fontWeight: 600 }}>{each?.name} :</span>
                           <span style={{ fontWeight: 700 }}>

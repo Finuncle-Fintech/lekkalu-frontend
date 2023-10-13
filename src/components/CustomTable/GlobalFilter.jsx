@@ -3,7 +3,7 @@ import { useAsyncDebounce } from 'react-table'
 import { TextField, InputAdornment, IconButton } from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search'
 
-const GlobalFilter = ({ globalFilter, setGlobalFilter, ...props }) => {
+const GlobalFilter = ({ globalFilter, setGlobalFilter }) => {
   const [value, setValue] = useState(globalFilter)
 
   const onChange = useAsyncDebounce((value) => {

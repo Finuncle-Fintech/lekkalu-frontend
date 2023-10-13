@@ -1,4 +1,4 @@
-import { Button, Slider, TextField } from '@mui/material'
+import { Slider, TextField } from '@mui/material'
 import { isObjectEmpty, parseQueryString } from 'components/EMI_Components/utils'
 import { useUserPreferences } from 'hooks/useUserPreferences'
 import { useCallback, useEffect, useState } from 'react'
@@ -83,7 +83,7 @@ export default function CalculatorSIP({ setSummary }) {
   return (
     <div className='d-grid gap-4 w-100' style={{ gridTemplateColumns: 'repeat(2, 1fr)' }}>
       {inputs.map((input) => (
-        <div>
+        <div key={input.id}>
           <TextField
             name={input.id}
             error={errors[input.id]}

@@ -50,7 +50,8 @@ function BasicMenu(props) {
         <IconButton
           onClick={handleClick}
           style={{
-            margin: props.Menu.title === 'User setting' ? '0 2vw 0 0 ' : 'Balance sheet' ? '0' : '10px',
+            margin:
+              props.Menu.title === 'User setting' ? '0 2vw 0 0 ' : props.Menu.title === 'Balance sheet' ? '0' : '10px',
             width: props.Menu.title === 'Balance sheet' ? '51px' : '51px',
             height: props.Menu.title === 'Balance sheet' ? '51px' : '51px',
             backgroundColor: 'white',
@@ -59,8 +60,8 @@ function BasicMenu(props) {
           <img
             src={props.Menu.img}
             alt='menu-2'
-            width={props.Menu.title === 'User setting' ? 21 : 'Balance sheet' ? 21 : 28}
-            height={props.Menu.title === 'User setting' ? 21 : 'Balance sheet' ? 21 : 28}
+            width={props.Menu.title === 'User setting' ? 21 : props.Menu.title === 'Balance sheet' ? 21 : 28}
+            height={props.Menu.title === 'User setting' ? 21 : props.Menu.title === 'Balance sheet' ? 21 : 28}
           />
         </IconButton>
       </Tooltip>

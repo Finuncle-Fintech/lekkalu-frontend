@@ -32,7 +32,7 @@ export const checkExpensesDoesNotRepeat = async (newExpense, axiosPrivate, authT
         headers,
       })
       .then((res) => {
-        res?.data.filter((expenses) => {
+        res?.data.forEach((expenses) => {
           if (expenses.amount === newExpense.amount) {
             const existingsTags = expenses.tags.sort()
             const newTags = newExpense.tags.sort()

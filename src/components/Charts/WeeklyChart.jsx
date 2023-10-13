@@ -1,8 +1,8 @@
 import 'bootstrap/dist/css/bootstrap.min.css'
+import Colors from 'constants/colors'
 import React from 'react'
 import './WeeklyChart.css'
 import { ResponsiveContainer, LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend } from 'recharts'
-import Colors from 'constants/colors'
 import { useUserPreferences } from 'hooks/useUserPreferences'
 
 export const WeeklyChart = (WeekData) => {

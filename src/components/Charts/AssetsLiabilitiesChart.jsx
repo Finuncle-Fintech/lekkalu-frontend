@@ -12,7 +12,7 @@ export const AssetsLiabilitiesChart = (props) => {
   }
 
   const RADIAN = Math.PI / 180
-  const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
+  const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }) => {
     const radius = innerRadius + (outerRadius - innerRadius) * 0.7
     const x = cx + radius * Math.cos(-midAngle * RADIAN)
     const y = cy + radius * Math.sin(-midAngle * RADIAN)
@@ -33,7 +33,7 @@ export const AssetsLiabilitiesChart = (props) => {
     return val
   }
 
-  const CustomTooltip = ({ active, payload, percent }) => {
+  const CustomTooltip = ({ active, payload }) => {
     const { preferences } = useUserPreferences()
 
     if (active) {

@@ -97,7 +97,7 @@ export const calculateLoanPrincipalAndInterestPayable = (loan_principal, total_i
     },
   ]
 
-  const totalVal = assets.reduce((acc, asset, _idx) => acc + parseInt(asset.value), 0)
+  const totalVal = assets.reduce((acc, asset) => acc + parseInt(asset.value), 0)
 
   return { finalAssets: assets, totalVal }
 }

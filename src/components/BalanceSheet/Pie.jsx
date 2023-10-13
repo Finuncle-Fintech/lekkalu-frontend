@@ -1,7 +1,6 @@
-import { Spinner } from 'reactstrap'
 import ContainerBalanceCard from './ContainerBalanceCard'
 
-export default function BalanceCard({ component, title }) {
+export default function BalanceCard({ component }) {
   const { props } = component
 
   return (

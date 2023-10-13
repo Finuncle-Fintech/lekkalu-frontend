@@ -249,7 +249,7 @@ const Expenses = () => {
         <Box component='form' onSubmit={handleFilterSubmit} className='d-flex justify-content-between'>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <div>
-              <div components={['DatePicker']} className='d-flex justify-content-center align-items-center'>
+              <div className='d-flex justify-content-center align-items-center'>
                 <DatePicker
                   label='From'
                   value={fromDate}

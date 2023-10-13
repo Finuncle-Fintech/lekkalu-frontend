@@ -1,5 +1,5 @@
 import Colors from 'constants/colors'
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useEffect, useContext } from 'react'
 
 import { Context } from 'provider/Provider'
 import BeatLoader from 'react-spinners/BeatLoader'

@@ -23,14 +23,14 @@ export default function Profile() {
 
   const passwordForm = useForm()
 
-  const handleUserProfileUpdate = (data) => {
+  const handleUserProfileUpdate = () => {
     Swal.fire({
       title: 'Profile updated successfully!',
       icon: 'success',
     })
   }
 
-  const handlePasswordChange = (data) => {
+  const handlePasswordChange = () => {
     Swal.fire({
       title: 'Password updated successfully!',
       icon: 'success',

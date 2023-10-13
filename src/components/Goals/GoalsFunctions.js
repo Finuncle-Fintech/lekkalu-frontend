@@ -9,7 +9,6 @@ export const handleAmountChange = (value) => {
 export const handleReachabilityChange = (value, setReachability) => {
   if (isReachabilityValid(value) || value === '') {
     setReachability(value)
-  } else {
   }
 }
 

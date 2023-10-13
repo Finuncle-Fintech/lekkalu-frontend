@@ -1,15 +1,13 @@
 import React from 'react'
 import { IncomeStatementChart } from 'components/Charts/IncomeStatementChart'
-import Heading from 'components/shared/heading/Heading'
 import { numDifferentiation } from 'utils/AppUtils'
 import { useUserPreferences } from 'hooks/useUserPreferences'
 import styles from './IncomeStatementSummary.module.css'
-import StatsCard from '../stats-card/StatsCard'
 import SourceCard from '../sources-card/SourceCard'
 
 import Add from '../add-card/AddCard'
 import StatsAccordion from '../stats-accordion/StatsAccordion'
-const IncomeStatementSummary = ({ incomeStatement, totalIncome, totalExpense, difference }) => {
+const IncomeStatementSummary = ({ incomeStatement, totalIncome, totalExpense }) => {
   const { preferences } = useUserPreferences()
 
   const [expanded, setExpanded] = React.useState(false)
@@ -19,7 +17,7 @@ const IncomeStatementSummary = ({ incomeStatement, totalIncome, totalExpense, di
   const incomeOverviewData = []
   const typesOfIncome = [...new Set(incomeStatement.income.filter((each) => each.type).map((each) => each.type))]
 
-  typesOfIncome.map((eachType) => {
+  typesOfIncome.forEach((eachType) => {
     const sumOfType = incomeStatement.income
       .filter((each) => each.type === eachType)
       .reduce((sum, each) => sum + each.value, 0)
@@ -29,7 +27,7 @@ const IncomeStatementSummary = ({ incomeStatement, totalIncome, totalExpense, di
   const expenseOverviewData = []
   const typesOfExpense = [...new Set(incomeStatement.expenses.filter((each) => each.type).map((each) => each.type))]
 
-  typesOfExpense.map((eachType) => {
+  typesOfExpense.forEach((eachType) => {
     const sumOfType = incomeStatement.expenses
       .filter((each) => each.type === eachType)
       .reduce((sum, each) => sum + each.value, 0)

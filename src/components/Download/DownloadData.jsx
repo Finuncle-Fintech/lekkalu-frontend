@@ -3,7 +3,6 @@ import * as ExcelJS from 'exceljs'
 import { saveAs } from 'file-saver'
 import { Context } from 'provider/Provider'
 import { FiDownloadCloud } from 'react-icons/fi'
-import { FcBrokenLink } from 'react-icons/fc'
 import './index.css'
 
 const DownloadData = () => {
@@ -24,7 +23,6 @@ const DownloadData = () => {
       setAllexpensess(resp)
       setLoading(false)
     } catch (error) {
-      console.error(error)
       setLoading(false)
     }
   }
@@ -40,10 +38,6 @@ const DownloadData = () => {
   const expenseData = incomeStatement.expenses
   const totalIncome = incomeStatement.income.reduce((total, item) => total + item.value, 0)
   const totalExpense = incomeStatement.expenses.reduce((total, item) => total + item.value, 0)
-
-  const getTagObjects = (tagValues) => {
-    return tagValues.map((tagValue) => tags.find((tag) => tag.id === tagValue)).filter((tag) => tag !== undefined)
-  }
 
   const getTagNames = (tagValues) => {
     const tagNames =

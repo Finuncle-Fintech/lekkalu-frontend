@@ -306,7 +306,7 @@ export default function EnhancedTable(props) {
   const [orderBy, setOrderBy] = React.useState('name')
   const [selected, setSelected] = React.useState([])
   const [page, setPage] = React.useState(0)
-  const [dense, setDense] = React.useState(false)
+  const [dense] = React.useState(false)
   const [rowsPerPage, setRowsPerPage] = React.useState(5)
   const [showForm, setForm] = React.useState(false)
   const [isLoading, setIsLoading] = React.useState(false)
@@ -353,10 +353,6 @@ export default function EnhancedTable(props) {
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10))
     setPage(0)
-  }
-
-  const handleChangeDense = (event) => {
-    setDense(event.target.checked)
   }
 
   const isSelected = (id) => selected.indexOf(id) !== -1
@@ -436,7 +432,7 @@ export default function EnhancedTable(props) {
                   page={page}
                   onPageChange={handleChangePage}
                   onRowsPerPageChange={handleChangeRowsPerPage}
-                  labelDisplayedRows={({ from, to, count }) => <></>}
+                  labelDisplayedRows={() => <></>}
                   labelRowsPerPage=''
                   sx={{
                     border: 'none',

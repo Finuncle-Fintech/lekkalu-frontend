@@ -361,6 +361,7 @@ const IncomeExpenseTable = ({ incomeStatement, addfield, updateField, deleteFiel
           if (isInEditMode) {
             return [
               <GridActionsCellItem
+                key={`${id}_save`}
                 icon={<SaveIcon />}
                 label='Save'
                 sx={{
@@ -369,6 +370,7 @@ const IncomeExpenseTable = ({ incomeStatement, addfield, updateField, deleteFiel
                 onClick={handleSaveClick(id)}
               />,
               <GridActionsCellItem
+                key={`${id}_cancel`}
                 icon={<CancelIcon />}
                 label='Cancel'
                 className='textPrimary'
@@ -380,6 +382,7 @@ const IncomeExpenseTable = ({ incomeStatement, addfield, updateField, deleteFiel
 
           return [
             <GridActionsCellItem
+              key={`${id}_edit`}
               icon={<EditIcon />}
               label='Edit'
               className='textPrimary'
@@ -388,6 +391,7 @@ const IncomeExpenseTable = ({ incomeStatement, addfield, updateField, deleteFiel
               showInMenu
             />,
             <GridActionsCellItem
+              key={`${id}_delete`}
               icon={<DeleteIcon />}
               label='Delete'
               onClick={handleDeleteClick(id)}

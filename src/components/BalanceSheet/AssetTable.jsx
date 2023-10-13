@@ -17,10 +17,7 @@ import Paper from '@mui/material/Paper'
 import Checkbox from '@mui/material/Checkbox'
 import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
-import FormControlLabel from '@mui/material/FormControlLabel'
-import Switch from '@mui/material/Switch'
 import DeleteIcon from '@mui/icons-material/Delete'
-import FilterListIcon from '@mui/icons-material/FilterList'
 import { visuallyHidden } from '@mui/utils'
 import IosShareIcon from '@mui/icons-material/IosShare'
 import LocalPrintshopIcon from '@mui/icons-material/LocalPrintshop'
@@ -28,7 +25,6 @@ import { Context } from 'provider/Provider'
 import { useContext } from 'react'
 import AddIcon from '@mui/icons-material/Add'
 import Swal from 'sweetalert2'
-import DatePicker from './DatePicker'
 import Menu from './Menu'
 import AssetForm from './AssetForm'
 import Loading from './Loading'
@@ -279,7 +275,7 @@ export default function EnhancedTable(props) {
   const [orderBy, setOrderBy] = React.useState('name')
   const [selected, setSelected] = React.useState([])
   const [page, setPage] = React.useState(0)
-  const [dense, setDense] = React.useState(false)
+  const [dense] = React.useState(false)
   const [rowsPerPage, setRowsPerPage] = React.useState(5)
   const [showForm, setForm] = React.useState(false)
   const [isLoading, setIsLoading] = React.useState(false)
@@ -326,10 +322,6 @@ export default function EnhancedTable(props) {
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10))
     setPage(0)
-  }
-
-  const handleChangeDense = (event) => {
-    setDense(event.target.checked)
   }
 
   const isSelected = (id) => selected.indexOf(id) !== -1
@@ -408,7 +400,7 @@ export default function EnhancedTable(props) {
                   page={page}
                   onPageChange={handleChangePage}
                   onRowsPerPageChange={handleChangeRowsPerPage}
-                  labelDisplayedRows={({ from, to, count }) => <></>}
+                  labelDisplayedRows={() => <></>}
                   labelRowsPerPage=''
                   sx={{
                     border: 'none',

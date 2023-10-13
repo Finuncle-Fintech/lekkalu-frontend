@@ -195,7 +195,7 @@ const Provider = ({ children }) => {
         .delete(`${process.env.REACT_APP_BACKEND_API}expenses/${id}`, {
           headers,
         })
-        .then((res) => {
+        .then(() => {
           dispatch({
             type: Types.DELETE_EXPENSE,
             payload: id,
@@ -241,7 +241,7 @@ const Provider = ({ children }) => {
       }
       await axiosPrivate
         .put(`${process.env.REACT_APP_BACKEND_API}expenses/${expense.id}`, expense, { headers })
-        .then((res) => {
+        .then(() => {
           dispatch({
             type: Types.EDIT_EXPENSE,
             payload: { index, expense },
@@ -278,7 +278,7 @@ const Provider = ({ children }) => {
           weekData = res.data
           let totlamount = 0
           let i = 0
-          weekData.map((da) => {
+          weekData.forEach((da) => {
             totlamount += weekData[i]?.total_amount
             if (finalDataWeekly.length >= 4) {
               finalDataWeekly = [
@@ -313,7 +313,7 @@ const Provider = ({ children }) => {
         })
         .then((res) => {
           let totalVal = 0.000000001
-          res.data.map((da) => {
+          res.data.forEach((da) => {
             totalVal += Number(da.market_value)
             finalAssets = [...finalAssets, { id: da.id, name: da.name, value: parseFloat(da.market_value) }]
           })
@@ -325,7 +325,7 @@ const Provider = ({ children }) => {
 
       await axiosPrivate.get(`${process.env.REACT_APP_BACKEND_API}loans/`, { headers }).then((res) => {
         let totalVal = 0.000000001
-        res.data.map((da) => {
+        res.data.forEach((da) => {
           totalVal += parseFloat(da.balance)
           finalLiabilities = [
             ...finalLiabilities,
@@ -353,7 +353,7 @@ const Provider = ({ children }) => {
         .then((res) => {
           let finalMonthlyExp = []
           const response = res.data
-          response.map((da) => {
+          response.forEach((da) => {
             finalMonthlyExp = [
               ...finalMonthlyExp,
               {
@@ -602,7 +602,7 @@ const Provider = ({ children }) => {
         .post(`${process.env.REACT_APP_BACKEND_API}physical_assets/`, assetData, {
           headers,
         })
-        .then((res) => {
+        .then(() => {
           fetchAsset()
         })
     } catch (error) {
@@ -619,7 +619,7 @@ const Provider = ({ children }) => {
 
       await axiosPrivate
         .put(`${process.env.REACT_APP_BACKEND_API}physical_assets/${assetId}`, updatedAssetData, { headers })
-        .then((res) => {
+        .then(() => {
           fetchAsset()
         })
     } catch (error) {
@@ -659,7 +659,7 @@ const Provider = ({ children }) => {
         })
         .then((res) => {
           let totalVal = 0.000000001
-          res.data.map((da) => {
+          res.data.forEach((da) => {
             totalVal += da.market_value
             finalAssets = [...finalAssets, { id: da.id, name: da.name, value: parseFloat(da.market_value) }]
           })
@@ -744,7 +744,7 @@ const Provider = ({ children }) => {
         .post(`${process.env.REACT_APP_BACKEND_API}loans/`, liabilityData, {
           headers,
         })
-        .then((res) => {
+        .then(() => {
           fetchLiabilities()
         })
     } catch (error) {
@@ -761,7 +761,7 @@ const Provider = ({ children }) => {
 
       await axiosPrivate
         .put(`${process.env.REACT_APP_BACKEND_API}loans/${liabilityId}`, updatedLiabilityData, { headers })
-        .then((res) => {
+        .then(() => {
           fetchLiabilities()
         })
     } catch (error) {
@@ -832,7 +832,6 @@ const Provider = ({ children }) => {
         })
       })
       .catch((error) => {
-        console.log(error?.response?.data?.detail)
         handleErrors(error)
       })
   }
@@ -857,7 +856,6 @@ const Provider = ({ children }) => {
         }
       })
       .catch((error) => {
-        console.log(error?.response?.data?.detail)
         handleErrors(error)
       })
   }
@@ -881,7 +879,6 @@ const Provider = ({ children }) => {
           })
         })
         .catch((error) => {
-          console.log(error?.response?.data?.detail)
           handleErrors(error)
         })
     } catch (error) {}
@@ -906,7 +903,6 @@ const Provider = ({ children }) => {
           })
         })
         .catch((error) => {
-          console.log(error?.response?.data?.detail)
           handleErrors(error)
         })
     } catch (error) {}

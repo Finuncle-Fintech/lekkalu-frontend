@@ -5,12 +5,7 @@ const config = {
     node: true,
   },
   globals: {},
-  extends: [
-    'plugin:react/recommended',
-    'standard',
-    'plugin:react-hooks/recommended',
-    'plugin:import/typescript',
-  ],
+  extends: ['plugin:react/recommended', 'standard', 'plugin:react-hooks/recommended', 'plugin:import/typescript'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaFeatures: {
@@ -33,7 +28,7 @@ const config = {
   rules: {
     'no-undef': 'off',
     '@typescript-eslint/no-unused-vars': 'error',
-    '@typescript-eslint/no-use-before-define': 'error',
+    '@typescript-eslint/no-use-before-define': 'off',
     camelcase: 'off',
     'comma-dangle': 'off',
     'func-call-spacing': 'off',

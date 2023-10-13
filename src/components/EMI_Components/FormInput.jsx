@@ -13,20 +13,7 @@ import {
 } from 'reactstrap'
 import { Context } from 'provider/Provider'
 
-const FormInput = ({
-  handleChange,
-  value,
-  name,
-  type,
-  label,
-  symbol,
-  min,
-  max,
-  step,
-  showSlider,
-  tooltip,
-  visible,
-}) => {
+const FormInput = ({ handleChange, value, name, type, label, symbol, min, max, step, showSlider, visible }) => {
   const [isOpen, setIsOpen] = useState(false)
   const units = ['Months', 'Years']
   const { unit, handleUnitChange } = useContext(Context)

@@ -175,7 +175,7 @@ export const Signup = () => {
               label={
                 <div>
                   I have read, understood and agreed to{' '}
-                  <Link to='/terms-and-conditions'>Finuncle's Terms and Conditions</Link>
+                  <Link to='/terms-and-conditions'>Finuncle&apos;s Terms and Conditions</Link>
                 </div>
               }
             />
@@ -194,7 +194,8 @@ export const Signup = () => {
               }
               label={
                 <div>
-                  I have read, understood and agreed to <Link to='/privacy-policies'>Finuncle's Privacy Policy</Link>
+                  I have read, understood and agreed to{' '}
+                  <Link to='/privacy-policies'>Finuncle&apos;s Privacy Policy</Link>
                 </div>
               }
             />

@@ -14,7 +14,6 @@ jest.mock('axios', () => ({
 
 describe('deleteGoalRequest', () => {
   test('successfully deletes a goal', async () => {
-    console.log(mockState)
     render(
       <BrowserRouter>
         <Context.Provider value={mockState}>
@@ -25,13 +24,11 @@ describe('deleteGoalRequest', () => {
 
     fireEvent.click(screen.getAllByPlaceholderText('delete-goal')[0])
     await waitFor(() => {
-      // expect(mockState.deleteGoalRequest).toHaveBeenCalled();
       expect(screen.getByText('Delete')).toBeInTheDocument()
     })
     fireEvent.click(screen.getByText('Delete'))
 
     await waitFor(() => {
-      // expect(mockState.deleteGoalRequest).toHaveBeenCalled();
       expect(mockState.deleteGoalRequest).toHaveBeenCalled()
     })
   })

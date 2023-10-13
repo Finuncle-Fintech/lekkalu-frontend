@@ -63,7 +63,6 @@ const EmiCalculator = () => {
     try {
       await axiosPrivate.post(`${process.env.REACT_APP_API}expenses/`, data)
     } catch (error) {
-      console.error('Error:', error)
       alert('Error occurred during API call.')
     } finally {
       setIsLoading(false)

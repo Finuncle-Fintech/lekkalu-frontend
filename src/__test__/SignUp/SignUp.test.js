@@ -1,4 +1,3 @@
-/* eslint-disable testing-library/no-node-access */
 import '@testing-library/jest-dom/extend-expect'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import Signup from 'pages/Signup/Signup'

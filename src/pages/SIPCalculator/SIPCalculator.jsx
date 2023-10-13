@@ -1,50 +1,50 @@
-import CalculatorSIP from "components/CalculatorSIP/CalculatorSIP";
-import { useContext, useState } from "react";
-import Summary from "components/CalculatorSIP/Summary";
-import { handleShare, isObjectEmpty } from "components/EMI_Components/utils";
-import axios from "axios";
-import { Context } from "provider/Provider";
+import CalculatorSIP from 'components/CalculatorSIP/CalculatorSIP'
+import { useContext, useState } from 'react'
+import Summary from 'components/CalculatorSIP/Summary'
+import { handleShare, isObjectEmpty } from 'components/EMI_Components/utils'
+import axios from 'axios'
+import { Context } from 'provider/Provider'
 
 export default function SIPCalculator() {
-  const { authToken } = useContext(Context);
-  const [summary, setSummary] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isCopied, setIsCopied] = useState(false);
+  const { authToken } = useContext(Context)
+  const [summary, setSummary] = useState([])
+  const [isLoading, setIsLoading] = useState(false)
+  const [isCopied, setIsCopied] = useState(false)
 
   const handleSave = async () => {
-    setIsLoading(true);
+    setIsLoading(true)
     try {
       const headers = {
         Authorization: `Bearer ${authToken}`,
-        "Content-Type": "application/json",
-      };
+        'Content-Type': 'application/json',
+      }
       await axios.post(`${process.env.REACT_APP_API}expenses/`, summary, {
         headers,
-      });
+      })
     } catch (error) {
-      console.error("Error:", error);
-      alert("Error occurred during API call.");
+      console.error('Error:', error)
+      alert('Error occurred during API call.')
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   const handleCopy = (data) => {
-    setIsCopied(true);
-    handleShare(data);
-    setTimeout(() => setIsCopied(false), 3000);
-  };
+    setIsCopied(true)
+    handleShare(data)
+    setTimeout(() => setIsCopied(false), 3000)
+  }
 
   return (
-    <section className="container h-100">
-      <div className="d-flex align-items-center justify-content-between">
+    <section className='container h-100'>
+      <div className='d-flex align-items-center justify-content-between'>
         {!isObjectEmpty(summary) ? (
           <>
-            <button className="save" onClick={handleSave} disabled={isLoading}>
-              {isLoading ? "Saving..." : "Save"}
+            <button className='save' onClick={handleSave} disabled={isLoading}>
+              {isLoading ? 'Saving...' : 'Save'}
             </button>
             <button
-              className="save"
+              className='save'
               onClick={() =>
                 handleCopy({
                   monthlyAmount: summary?.monthlyAmount,
@@ -53,16 +53,16 @@ export default function SIPCalculator() {
                 })
               }
             >
-              {isCopied ? "Copied!" : "Share"}
+              {isCopied ? 'Copied!' : 'Share'}
             </button>
           </>
         ) : null}
       </div>
 
-      <div className="md-p-5 d-flex flex-column flex-md-row gap-4">
-        <div className="d-flex flex-column">
-          <div className="d-flex flex-column text-center">
-            <h2 className="fs-2">SIP Calculator</h2>
+      <div className='md-p-5 d-flex flex-column flex-md-row gap-4'>
+        <div className='d-flex flex-column'>
+          <div className='d-flex flex-column text-center'>
+            <h2 className='fs-2'>SIP Calculator</h2>
             <p>Calculate returns on your SIP investments.</p>
           </div>
           <CalculatorSIP setSummary={setSummary} />
@@ -71,5 +71,5 @@ export default function SIPCalculator() {
         <Summary summary={summary} />
       </div>
     </section>
-  );
+  )
 }

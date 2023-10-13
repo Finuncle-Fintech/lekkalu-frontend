@@ -1,25 +1,25 @@
-import React, { useState, useContext, useEffect } from "react";
-import { Typography, TablePagination, IconButton } from "@mui/material";
-import dayjs from "dayjs";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import Button from "@mui/material/Button";
-import Box from "@mui/material/Box";
-import { SkipNext, SkipPrevious } from "@mui/icons-material";
-import ExpenseFormModal from "./ExpensesModal";
-import { ModalContainer } from "./styled";
-import ExpensesList from "./ExpenseList";
-import { formatDate, getTagNumbers } from "./utils";
-import * as XLSX from "xlsx";
-import Swal from "sweetalert2";
-import { Context } from "provider/Provider";
-import { checkTagsAndLoad } from "./utils";
-import customParseFormat from "dayjs/plugin/customParseFormat";
-import SetBudgetModal from "./SetBudgetModal";
-import { useUserPreferences } from "hooks/useUserPreferences";
-import ViewAllBudgetModal from "./ViewAllBudgetModal";
-dayjs.extend(customParseFormat);
+import React, { useState, useContext, useEffect } from 'react'
+import { Typography, TablePagination, IconButton } from '@mui/material'
+import dayjs from 'dayjs'
+import { DatePicker } from '@mui/x-date-pickers/DatePicker'
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
+import Button from '@mui/material/Button'
+import Box from '@mui/material/Box'
+import { SkipNext, SkipPrevious } from '@mui/icons-material'
+import * as XLSX from 'xlsx'
+import Swal from 'sweetalert2'
+import { Context } from 'provider/Provider'
+import customParseFormat from 'dayjs/plugin/customParseFormat'
+import { useUserPreferences } from 'hooks/useUserPreferences'
+import ExpenseFormModal from './ExpensesModal'
+import { ModalContainer } from './styled'
+import ExpensesList from './ExpenseList'
+import { formatDate, getTagNumbers, checkTagsAndLoad } from './utils'
+
+import SetBudgetModal from './SetBudgetModal'
+import ViewAllBudgetModal from './ViewAllBudgetModal'
+dayjs.extend(customParseFormat)
 
 const Expenses = () => {
   const {
@@ -34,84 +34,76 @@ const Expenses = () => {
     fetchTags,
     authToken,
     budget,
-  } = useContext(Context);
-  const getDate = new Date();
-  const [editIndex, setEditIndex] = useState(null);
-  const [page, setPage] = useState(0);
-  const [loadExcelStatus, setLoadExcelStatus] = useState(false);
-  const [newData, setNewData] = useState([]);
-  const [fromDate, setFromDate] = useState(null);
-  const [toDate, setToDate] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const { preferences } = useUserPreferences();
-  const rowsPerPage = 10;
+  } = useContext(Context)
+  const getDate = new Date()
+  const [editIndex, setEditIndex] = useState(null)
+  const [page, setPage] = useState(0)
+  const [loadExcelStatus, setLoadExcelStatus] = useState(false)
+  const [newData, setNewData] = useState([])
+  const [fromDate, setFromDate] = useState(null)
+  const [toDate, setToDate] = useState(null)
+  const [isLoading, setIsLoading] = useState(false)
+  const { preferences } = useUserPreferences()
+  const rowsPerPage = 10
 
   const currentMonthBudget = budget.find((item) =>
-    dayjs(item.month, "YYYY-MM-DD")
-      .startOf("month")
-      .isSame(dayjs().startOf("month"))
-  );
+    dayjs(item.month, 'YYYY-MM-DD').startOf('month').isSame(dayjs().startOf('month')),
+  )
 
   useEffect(() => {
-    if (!tags.length) fetchTags();
-    fetchExpenses(page, rowsPerPage);
-  }, [page]);
+    if (!tags.length) fetchTags()
+    fetchExpenses(page, rowsPerPage)
+  }, [page])
 
   const getTagObjects = (tagValues) => {
-    return tagValues
-      .map((tagValue) => tags.find((tag) => tag.id === tagValue))
-      .filter((tag) => tag !== undefined);
-  };
+    return tagValues.map((tagValue) => tags.find((tag) => tag.id === tagValue)).filter((tag) => tag !== undefined)
+  }
 
   const getTagNames = (tagValues) => {
     const tagNames =
       tagValues &&
       tagValues
         .map((tagValue) => {
-          const foundTag = tags.find((tag) => tag.id === tagValue);
-          return foundTag ? foundTag.name : null;
+          const foundTag = tags.find((tag) => tag.id === tagValue)
+          return foundTag ? foundTag.name : null
         })
         .filter((tagName) => tagName !== null)
-        .join(", ");
+        .join(', ')
 
-    return tagNames;
-  };
+    return tagNames
+  }
 
   const handleFileUpload = (files) => {
-    const file = files[0];
-    const reader = new FileReader();
+    const file = files[0]
+    const reader = new FileReader()
     reader.onload = async (event) => {
-      const data = event.target.result;
-      const workbook = XLSX.read(data, { type: "binary" });
+      const data = event.target.result
+      const workbook = XLSX.read(data, { type: 'binary' })
 
-      const sheetName = workbook.SheetNames[0];
-      const sheet = workbook.Sheets[sheetName];
+      const sheetName = workbook.SheetNames[0]
+      const sheet = workbook.Sheets[sheetName]
 
-      const parsedData = XLSX.utils.sheet_to_json(sheet);
+      const parsedData = XLSX.utils.sheet_to_json(sheet)
 
       if (parsedData.length > 0) {
-        setNewData([{ excelLength: parsedData.length }]);
+        setNewData([{ excelLength: parsedData.length }])
 
         const loadExcel = () => {
-          setLoadExcelStatus(true);
+          setLoadExcelStatus(true)
 
           const promise = parsedData.map(async (entry) => {
-            const dateFormatted = formatDate(new Date(entry.date));
+            const dateFormatted = formatDate(new Date(entry.date))
 
-            const tagsOfExpenses = entry.tags
-              .split(",")
-              .map((expense) => ({ name: expense.trim() }));
-            const { amount } = entry;
-            delete entry.amount;
-            delete entry.date;
+            const tagsOfExpenses = entry.tags.split(',').map((expense) => ({ name: expense.trim() }))
+            const { amount } = entry
+            delete entry.amount
+            delete entry.date
 
-            const newTagsExpenses = [];
+            const newTagsExpenses = []
 
-            await Promise.resolve(
-              checkTagsAndLoad(newTagsExpenses, tags, tagsOfExpenses, createTag)
-            );
+            await Promise.resolve(checkTagsAndLoad(newTagsExpenses, tags, tagsOfExpenses, createTag))
 
-            const tagsIds = getTagNumbers(newTagsExpenses, tags);
+            const tagsIds = getTagNumbers(newTagsExpenses, tags)
 
             const createStatus = await createExpenseRequest({
               ...entry,
@@ -119,38 +111,38 @@ const Expenses = () => {
               tags: tagsIds,
               time: dateFormatted,
               user: 1,
-            });
+            })
 
-            setNewData((prevData) => [...prevData, createStatus]);
-          });
+            setNewData((prevData) => [...prevData, createStatus])
+          })
 
-          return Promise.all(promise);
-        };
-        await loadExcel();
+          return Promise.all(promise)
+        }
+        await loadExcel()
       }
-      setLoadExcelStatus(false);
+      setLoadExcelStatus(false)
       Swal.fire({
-        icon: "success",
-        title: "The expense was added correctly.",
+        icon: 'success',
+        title: 'The expense was added correctly.',
         timer: 2300,
         timerProgressBar: true,
-      });
-    };
+      })
+    }
 
-    reader.readAsBinaryString(file);
-  };
+    reader.readAsBinaryString(file)
+  }
 
   const deleteExpense = (id) => {
-    deleteExpenseRequest(id);
-  };
+    deleteExpenseRequest(id)
+  }
 
   const createExpense = (expense) => {
-    createExpenseRequest({ ...expense });
-  };
+    createExpenseRequest({ ...expense })
+  }
 
   const updateExpense = (index, expense) => {
-    changeExpenseRequest(index, expense);
-  };
+    changeExpenseRequest(index, expense)
+  }
 
   const returnExpenseToEdit = () => {
     return editIndex !== null
@@ -158,61 +150,54 @@ const Expenses = () => {
           ...expenses[editIndex],
           tags: getTagObjects(expenses[editIndex].tags),
         }
-      : null;
-  };
+      : null
+  }
 
   const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
+    setPage(newPage)
+  }
 
   const clearFilters = async () => {
-    setIsLoading(true);
-    setFromDate(null);
-    setToDate(null);
-    await fetchExpenses(page, rowsPerPage);
-    setIsLoading(false);
-  };
+    setIsLoading(true)
+    setFromDate(null)
+    setToDate(null)
+    await fetchExpenses(page, rowsPerPage)
+    setIsLoading(false)
+  }
 
   const handleFilterSubmit = async (e) => {
-    e.preventDefault();
-    setIsLoading(true);
+    e.preventDefault()
+    setIsLoading(true)
 
     if (fromDate === null && toDate === null) {
-      await fetchExpenses(page, rowsPerPage);
+      await fetchExpenses(page, rowsPerPage)
     } else {
-      const from = new Date(fromDate).toLocaleDateString("en-US");
-      const to = new Date(toDate).toLocaleDateString("en-US");
+      const from = new Date(fromDate).toLocaleDateString('en-US')
+      const to = new Date(toDate).toLocaleDateString('en-US')
 
-      const filterFromDate = dayjs(from).format("YYYY-MM-DD");
-      const filterToDate = dayjs(to).format("YYYY-MM-DD");
+      const filterFromDate = dayjs(from).format('YYYY-MM-DD')
+      const filterToDate = dayjs(to).format('YYYY-MM-DD')
 
-      await filterExpensesByDate(
-        page,
-        rowsPerPage,
-        filterFromDate,
-        filterToDate
-      );
+      await filterExpensesByDate(page, rowsPerPage, filterFromDate, filterToDate)
     }
-    setIsLoading(false);
-  };
+    setIsLoading(false)
+  }
 
   return (
     <ModalContainer>
       <div
-        className="border rounded-2 shadow-sm w-100 p-4 d-flex flex-column align-items-start gap-2"
-        style={{ maxWidth: "400px" }}
+        className='border rounded-2 shadow-sm w-100 p-4 d-flex flex-column align-items-start gap-2'
+        style={{ maxWidth: '400px' }}
       >
-        <div className="text-start fs-3 fw-bold">Budget</div>
-        <div className="d-flex align-items-center gap-2">
-          <div>{dayjs().format("MMMM")}</div>
-          <div className="fw-bold">
-            {currentMonthBudget
-              ? `${currentMonthBudget.limit} ${preferences?.currencyUnit}`
-              : "Not budget set"}
+        <div className='text-start fs-3 fw-bold'>Budget</div>
+        <div className='d-flex align-items-center gap-2'>
+          <div>{dayjs().format('MMMM')}</div>
+          <div className='fw-bold'>
+            {currentMonthBudget ? `${currentMonthBudget.limit} ${preferences?.currencyUnit}` : 'Not budget set'}
           </div>
         </div>
 
-        <div className="d-flex align-items-center gap-2 w-100">
+        <div className='d-flex align-items-center gap-2 w-100'>
           <SetBudgetModal />
           <ViewAllBudgetModal />
         </div>
@@ -232,28 +217,28 @@ const Expenses = () => {
         authToken={authToken}
       />
 
-      <Typography variant="h6">Expense List</Typography>
-      <div className="d-flex justify-content-between align-items-center my-3">
-        <div style={{ display: "flex", alignItems: "center" }}>
+      <Typography variant='h6'>Expense List</Typography>
+      <div className='d-flex justify-content-between align-items-center my-3'>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
           <IconButton
             onClick={() => {
-              setPage((prevPage) => Math.max(prevPage - 3, 0));
+              setPage((prevPage) => Math.max(prevPage - 3, 0))
             }}
           >
             <SkipPrevious />
           </IconButton>
           <TablePagination
-            component="div"
+            component='div'
             count={70}
             page={page}
             onPageChange={handleChangePage}
             rowsPerPage={rowsPerPage}
             rowsPerPageOptions={[]}
-            labelDisplayedRows={() => ""}
+            labelDisplayedRows={() => ''}
           />
           <IconButton
             onClick={() => {
-              setPage((prevPage) => Math.min(prevPage + 3, 6));
+              setPage((prevPage) => Math.min(prevPage + 3, 6))
             }}
           >
             <SkipNext />
@@ -261,47 +246,35 @@ const Expenses = () => {
           {page * 10 + 1} - {page * 10 + 10} of 70
         </div>
 
-        <Box
-          component="form"
-          onSubmit={handleFilterSubmit}
-          className="d-flex justify-content-between"
-        >
+        <Box component='form' onSubmit={handleFilterSubmit} className='d-flex justify-content-between'>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <div>
-              <div
-                components={["DatePicker"]}
-                className="d-flex justify-content-center align-items-center"
-              >
+              <div components={['DatePicker']} className='d-flex justify-content-center align-items-center'>
                 <DatePicker
-                  label="From"
+                  label='From'
                   value={fromDate}
                   maxDate={dayjs(getDate.toLocaleDateString())}
                   onChange={(newValue) => setFromDate(newValue)}
                 />
-                <div className="mx-2">-</div>
+                <div className='mx-2'>-</div>
                 <DatePicker
-                  label="To"
+                  label='To'
                   value={toDate}
                   maxDate={dayjs(getDate.toLocaleDateString())}
                   onChange={(newValue) => setToDate(newValue)}
                 />
               </div>
             </div>
-            <Button
-              type="submit"
-              variant="contained"
-              sx={{ py: 2, px: 4, ml: 1 }}
-              disabled={isLoading}
-            >
+            <Button type='submit' variant='contained' sx={{ py: 2, px: 4, ml: 1 }} disabled={isLoading}>
               Filter
             </Button>
             <Button
-              type="button"
-              variant="contained"
+              type='button'
+              variant='contained'
               sx={{ py: 2, px: 4, ml: 1 }}
               disabled={isLoading}
               onClick={clearFilters}
-              className="bg-danger"
+              className='bg-danger'
             >
               Clear
             </Button>
@@ -316,26 +289,26 @@ const Expenses = () => {
         deleteExpense={deleteExpense}
       />
       {!!expenses.length && (
-        <div style={{ display: "flex", alignItems: "center" }}>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
           <IconButton
             onClick={() => {
-              setPage((prevPage) => Math.max(prevPage - 3, 0));
+              setPage((prevPage) => Math.max(prevPage - 3, 0))
             }}
           >
             <SkipPrevious />
           </IconButton>
           <TablePagination
-            component="div"
+            component='div'
             count={70}
             page={page}
             onPageChange={handleChangePage}
             rowsPerPage={10}
             rowsPerPageOptions={[]}
-            labelDisplayedRows={() => ""}
+            labelDisplayedRows={() => ''}
           />
           <IconButton
             onClick={() => {
-              setPage((prevPage) => Math.min(prevPage + 3, 6));
+              setPage((prevPage) => Math.min(prevPage + 3, 6))
             }}
           >
             <SkipNext />
@@ -344,7 +317,7 @@ const Expenses = () => {
         </div>
       )}
     </ModalContainer>
-  );
-};
+  )
+}
 
-export default Expenses;
+export default Expenses

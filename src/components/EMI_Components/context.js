@@ -1,7 +1,7 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState } from 'react'
 
-const UnitContext = React.createContext();
-const UnitUpdateContext = React.createContext();
+const UnitContext = React.createContext()
+const UnitUpdateContext = React.createContext()
 
 export function useUnit() {
   return useContext(UnitContext)
@@ -10,18 +10,15 @@ export function useUnit() {
 export function useUnitUpdate() {
   return useContext(UnitUpdateContext)
 }
-export function UnitProvider ({ children })  {
-  const [unit, setUnit] = useState("Months");
+export function UnitProvider({ children }) {
+  const [unit, setUnit] = useState('Months')
 
   const handleUnitChange = (val) => {
     setUnit(val)
+  }
+  return (
+    <UnitContext.Provider value={unit}>
+      <UnitUpdateContext.Provider value={handleUnitChange}>{children}</UnitUpdateContext.Provider>
+    </UnitContext.Provider>
+  )
 }
-return (
-<UnitContext.Provider value={unit}>
-  <UnitUpdateContext.Provider value={handleUnitChange}>
-  {children}
-  </UnitUpdateContext.Provider>
-</UnitContext.Provider>
-)
-}
-

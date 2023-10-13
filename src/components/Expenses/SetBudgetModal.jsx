@@ -1,63 +1,57 @@
-import { useContext, useState } from "react";
-import {
-  Button,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  TextField,
-} from "@mui/material";
-import { Context } from "provider/Provider";
-import { DatePicker } from "@mui/x-date-pickers";
-import Swal from "sweetalert2";
-import dayjs from "dayjs";
+import { useContext, useState } from 'react'
+import { Button, Dialog, DialogContent, DialogTitle, TextField } from '@mui/material'
+import { Context } from 'provider/Provider'
+import { DatePicker } from '@mui/x-date-pickers'
+import Swal from 'sweetalert2'
+import dayjs from 'dayjs'
 
 export default function SetBudgetModal() {
-  const [open, setOpen] = useState(false);
-  const { createBudget } = useContext(Context);
-  const [limit, setLimit] = useState("");
-  const [month, setMonth] = useState(dayjs());
+  const [open, setOpen] = useState(false)
+  const { createBudget } = useContext(Context)
+  const [limit, setLimit] = useState('')
+  const [month, setMonth] = useState(dayjs())
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
 
     if (!limit || !month) {
       Swal.fire({
-        icon: "error",
-        title: "Please enter all fields",
+        icon: 'error',
+        title: 'Please enter all fields',
         timer: 2300,
         timerProgressBar: true,
-      });
+      })
     }
 
     try {
       const data = {
         limit,
-        month: month.format("YYYY-MM-DD"),
-      };
+        month: month.format('YYYY-MM-DD'),
+      }
 
-      const response = await createBudget(data);
+      const response = await createBudget(data)
       if (response.status === 201) {
-        setOpen(false);
-        setLimit("");
-        setMonth("");
+        setOpen(false)
+        setLimit('')
+        setMonth('')
 
         Swal.fire({
-          icon: "success",
-          title: "Successfully set the budget",
+          icon: 'success',
+          title: 'Successfully set the budget',
           timer: 2300,
           timerProgressBar: true,
-        });
+        })
       }
     } catch (error) {}
-  };
+  }
 
   return (
     <>
       <Button
-        variant="contained"
-        className="flex-grow-1"
+        variant='contained'
+        className='flex-grow-1'
         onClick={() => {
-          setOpen(true);
+          setOpen(true)
         }}
       >
         Set Budget
@@ -65,40 +59,40 @@ export default function SetBudgetModal() {
       <Dialog
         open={open}
         onClose={() => {
-          setOpen(false);
+          setOpen(false)
         }}
       >
         <DialogTitle>Set Budget</DialogTitle>
         <DialogContent>
-          <form onSubmit={handleSubmit} className="p-4">
+          <form onSubmit={handleSubmit} className='p-4'>
             <TextField
-              className="mb-4"
-              label="Limit"
+              className='mb-4'
+              label='Limit'
               value={limit}
               onChange={(e) => {
-                setLimit(e.target.value);
+                setLimit(e.target.value)
               }}
               required
               fullWidth
             />
             <DatePicker
               onChange={(newValue) => {
-                setMonth(newValue);
+                setMonth(newValue)
               }}
               value={month}
-              views={["month"]}
-              label="Month"
-              className="w-100 mb-4"
+              views={['month']}
+              label='Month'
+              className='w-100 mb-4'
             />
 
-            <div className="d-flex align-items-center gap-2 w-100">
-              <Button type="submit" variant="contained" className="flex-grow">
+            <div className='d-flex align-items-center gap-2 w-100'>
+              <Button type='submit' variant='contained' className='flex-grow'>
                 Set
               </Button>
               <Button
-                className="flex-grow"
+                className='flex-grow'
                 onClick={() => {
-                  setOpen(false);
+                  setOpen(false)
                 }}
               >
                 Cancel
@@ -108,5 +102,5 @@ export default function SetBudgetModal() {
         </DialogContent>
       </Dialog>
     </>
-  );
+  )
 }

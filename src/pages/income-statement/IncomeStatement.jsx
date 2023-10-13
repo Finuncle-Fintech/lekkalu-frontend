@@ -1,37 +1,37 @@
-import React, { useContext, useEffect } from "react";
-import IncomeStatementSummary from "components/income-statement/summary/IncomeStatementSummary";
-import GenericTabs from "components/shared/tabs/Tabs";
+import Colors from 'constants/colors'
+import React, { useContext, useEffect } from 'react'
+import IncomeStatementSummary from 'components/income-statement/summary/IncomeStatementSummary'
+import GenericTabs from 'components/shared/tabs/Tabs'
 // import { incomeStatement } from "constants/income-statement-test-dataset";
-import SummarizeIcon from "@mui/icons-material/Summarize";
-import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
-import MoneyOffIcon from "@mui/icons-material/MoneyOff";
-import Income from "components/income-statement/income/Income";
-import { Expenses } from "components/income-statement/expenses/Expenses";
-import { BeatLoader } from "react-spinners";
-import Colors from "constants/colors";
-import { Context } from "provider/Provider";
+import SummarizeIcon from '@mui/icons-material/Summarize'
+import MonetizationOnIcon from '@mui/icons-material/MonetizationOn'
+import MoneyOffIcon from '@mui/icons-material/MoneyOff'
+import Income from 'components/income-statement/income/Income'
+import { Expenses } from 'components/income-statement/expenses/Expenses'
+import { BeatLoader } from 'react-spinners'
+import { Context } from 'provider/Provider'
 
 const tabsList = [
-  { label: "Summary", icon: <SummarizeIcon /> },
-  { label: "Income", icon: <MonetizationOnIcon /> },
-  { label: "Expenses", icon: <MoneyOffIcon /> },
-];
+  { label: 'Summary', icon: <SummarizeIcon /> },
+  { label: 'Income', icon: <MonetizationOnIcon /> },
+  { label: 'Expenses', icon: <MoneyOffIcon /> },
+]
 
 const IncomeStatement = () => {
-  const { fetchIncomeStatement, incomeStatement } = useContext(Context);
-  const [currentab, setCurrentTab] = React.useState(0);
+  const { fetchIncomeStatement, incomeStatement } = useContext(Context)
+  const [currentab, setCurrentTab] = React.useState(0)
 
   const handleTabChange = (event, newValue) => {
-    setCurrentTab(newValue);
-  };
+    setCurrentTab(newValue)
+  }
   useEffect(() => {
-    fetchIncomeStatement();
-  }, []);
+    fetchIncomeStatement()
+  }, [])
 
   const loadCurrentTab = () => {
     switch (currentab) {
       default:
-        return null;
+        return null
       case 0: {
         return (
           <IncomeStatementSummary
@@ -40,34 +40,21 @@ const IncomeStatement = () => {
             totalExpense={totalExpense}
             difference={difference}
           />
-        );
+        )
       }
       case 1: {
-        return (
-          <Income incomeStatement={incomeStatement} totalIncome={totalIncome} />
-        );
+        return <Income incomeStatement={incomeStatement} totalIncome={totalIncome} />
       }
       case 2: {
-        return (
-          <Expenses
-            incomeStatement={incomeStatement}
-            totalExpense={totalExpense}
-          />
-        );
+        return <Expenses incomeStatement={incomeStatement} totalExpense={totalExpense} />
       }
     }
-  };
+  }
 
-  const totalIncome = incomeStatement.income.reduce(
-    (total, item) => total + item.value,
-    0
-  );
+  const totalIncome = incomeStatement.income.reduce((total, item) => total + item.value, 0)
 
-  const totalExpense = incomeStatement.expenses.reduce(
-    (total, item) => total + item.value,
-    0
-  );
-  const difference = totalIncome - totalExpense;
+  const totalExpense = incomeStatement.expenses.reduce((total, item) => total + item.value, 0)
+  const difference = totalIncome - totalExpense
   return (
     <div>
       {/* <GenericTabs
@@ -75,14 +62,13 @@ const IncomeStatement = () => {
         handleChange={handleTabChange}
         value={currentab}
       /> */}
-      {incomeStatement.income.length === 0 &&
-      incomeStatement.expenses.length === 0 ? (
+      {incomeStatement.income.length === 0 && incomeStatement.expenses.length === 0 ? (
         <div
-          className="section col-md-8 mx-auto pb-5 pt-5 mt-5"
+          className='section col-md-8 mx-auto pb-5 pt-5 mt-5'
           style={{
             backgroundColor: Colors.graphBG,
-            display: "flex",
-            justifyContent: "center",
+            display: 'flex',
+            justifyContent: 'center',
           }}
         >
           <BeatLoader stylecolor={Colors.loaderColor} />
@@ -91,7 +77,7 @@ const IncomeStatement = () => {
         <div>{loadCurrentTab()}</div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default IncomeStatement;
+export default IncomeStatement

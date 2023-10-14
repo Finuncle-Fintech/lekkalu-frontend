@@ -1,10 +1,10 @@
 /* eslint-disable testing-library/no-node-access */
-import "@testing-library/jest-dom/extend-expect";
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import Signup from "pages/Signup/Signup";
-import { createContext } from "react";
-import { BrowserRouter } from "react-router-dom";
-import axiosClient from "components/Axios/Axios";
+import '@testing-library/jest-dom'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import Signup from 'pages/Signup/Signup'
+import { createContext } from 'react'
+import { BrowserRouter } from 'react-router-dom'
+import axiosClient from 'components/Axios/Axios'
 
 jest.mock("axios", () => ({
   post: jest.fn(),

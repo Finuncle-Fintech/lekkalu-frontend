@@ -3,7 +3,7 @@ import { BrowserRouter, MemoryRouter, Route, Routes } from "react-router-dom";
 import HeroHeader from "components/HeroHeader/HeroHeader";
 import { Context } from "provider/Provider";
 import HeroRoute from '../../components/HeroRoute/HeroRoute';
-import '@testing-library/jest-dom/extend-expect';
+import '@testing-library/jest-dom';
 
 jest.mock('react-router-dom', ()=>({
   ...jest.requireActual('react-router-dom'),

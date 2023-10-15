@@ -1,9 +1,9 @@
 import axios from 'axios'
-import CalculatorCAGR from 'components/CAGRCalculator/CalculatorCAGR'
-import SummaryCAGR from 'components/CAGRCalculator/SummaryCAGR'
-import { handleShare } from 'components/EMI_Components/utils'
-import { Context } from 'provider/Provider'
 import { useContext, useState } from 'react'
+import { Context } from '@/provider/Provider'
+import { handleShare } from '@/components/EMI_Components/utils'
+import SummaryCAGR from '@/components/CAGRCalculator/SummaryCAGR'
+import CalculatorCAGR from '@/components/CAGRCalculator/CalculatorCAGR'
 
 export default function CAGRCalculator() {
   const { authToken } = useContext(Context)

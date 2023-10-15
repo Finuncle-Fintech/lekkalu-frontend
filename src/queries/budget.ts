@@ -1,6 +1,6 @@
-import { SetBudgetSchema, UpdateBudgetSchema } from 'schema/budget'
-import { Budget } from 'types/budget'
-import { apiClient } from 'utils/client'
+import { SetBudgetSchema, UpdateBudgetSchema } from '@/schema/budget'
+import { Budget } from '@/types/budget'
+import { apiClient } from '@/utils/client'
 
 export async function fetchBudgets() {
   const { data } = await apiClient.get<Budget[]>('/budget')

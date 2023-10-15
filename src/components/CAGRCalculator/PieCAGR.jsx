@@ -1,5 +1,5 @@
 import { Pie, PieChart, Tooltip, Cell, Legend } from 'recharts'
-import { CustomLabelPie } from 'components/shared/CustomLabelPie/CustomLabelPie'
+import { CustomLabelPie } from '@/components/shared/CustomLabelPie/CustomLabelPie'
 import 'animate.css'
 
 export default function PieCAGR({ data }) {

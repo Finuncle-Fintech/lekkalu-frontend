@@ -1,9 +1,9 @@
 import { Slider, TextField } from '@mui/material'
-import { isObjectEmpty, parseQueryString } from 'components/EMI_Components/utils'
-import { useUserPreferences } from 'hooks/useUserPreferences'
 import { useCallback, useEffect, useState } from 'react'
 import { useLocation } from 'react-router'
-import { parseNumbers } from 'utils/Number'
+import { parseNumbers } from '@/utils/Number'
+import { useUserPreferences } from '@/hooks/useUserPreferences'
+import { isObjectEmpty, parseQueryString } from '@/components/EMI_Components/utils'
 
 const DEFAULT_DATA = {
   initialVal: 5000,

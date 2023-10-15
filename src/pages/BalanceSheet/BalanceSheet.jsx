@@ -1,10 +1,10 @@
 import { useContext, useEffect, useState } from 'react'
-import { Context } from 'provider/Provider'
 import { Box } from '@mui/material'
-import GraphCard from 'components/BalanceSheet/GraphCard'
-import BarGraph from 'components/BalanceSheet/BarGraph'
-import EnhancedTable from 'components/BalanceSheet/AssetTable'
-import LiabilitiesTable from 'components/BalanceSheet/LiabilitiesTable'
+import { Context } from '@/provider/Provider'
+import GraphCard from '@/components/BalanceSheet/GraphCard'
+import BarGraph from '@/components/BalanceSheet/BarGraph'
+import EnhancedTable from '@/components/BalanceSheet/AssetTable'
+import LiabilitiesTable from '@/components/BalanceSheet/LiabilitiesTable'
 
 export default function BalanceSheet() {
   const { assets, liabilities } = useContext(Context)

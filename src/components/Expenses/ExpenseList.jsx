@@ -3,7 +3,7 @@ import { Table, TableBody, TableRow, TableCell, IconButton } from '@mui/material
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
 import Swal from 'sweetalert2'
-import { useUserPreferences } from 'hooks/useUserPreferences'
+import { useUserPreferences } from '@/hooks/useUserPreferences'
 
 const ExpensesList = ({ expenses, getTagNames, setEditIndex, deleteExpense }) => {
   const { preferences } = useUserPreferences()

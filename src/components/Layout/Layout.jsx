@@ -1,9 +1,9 @@
-import Header from 'components/Header/Header'
-import Footer from 'components/Footer/Footer'
-import SupportPopUp from 'components/Support/PopUp/PopUp'
-import { Context } from 'provider/Provider'
 import { useContext } from 'react'
 import { useLocation } from 'react-router-dom'
+import Header from '@/components/Header/Header'
+import Footer from '@/components/Footer/Footer'
+import SupportPopUp from '@/components/Support/PopUp/PopUp'
+import { Context } from '@/provider/Provider'
 
 export default function Layout({ children }) {
   const { authToken } = useContext(Context)

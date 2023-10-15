@@ -6,7 +6,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import dayjs from 'dayjs'
 import ReactFileReader from 'react-file-reader'
 import Swal from 'sweetalert2'
-import useAxiosPrivate from 'hooks/useAxiosPrivate'
+import useAxiosPrivate from '@/hooks/useAxiosPrivate'
 import { ModalContainer } from './styled'
 import {
   formatDate,

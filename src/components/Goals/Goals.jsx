@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react'
-import { Context } from 'provider/Provider'
 import { Typography, TablePagination, IconButton } from '@mui/material'
 import { SkipNext, SkipPrevious } from '@mui/icons-material'
+import { Context } from '@/provider/Provider'
 import GoalFormModal from './GoalsModal'
 import { ModalContainer } from '../Expenses/styled'
 import GoalsList from './GoalsList'

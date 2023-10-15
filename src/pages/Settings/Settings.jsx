@@ -1,8 +1,8 @@
 import { Button, FormControl, InputLabel, MenuItem, Select } from '@mui/material'
-import { useUserPreferences } from 'hooks/useUserPreferences'
 import { getCountryList } from 'country-data-codes'
 import { useMemo } from 'react'
 import { uniqBy } from 'lodash'
+import { useUserPreferences } from '@/hooks/useUserPreferences'
 import styles from './Settings.module.css'
 
 export default function Settings() {

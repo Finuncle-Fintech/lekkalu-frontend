@@ -1,9 +1,9 @@
 import { Slider, TextField } from '@mui/material'
-import { isObjectEmpty, parseQueryString } from 'components/EMI_Components/utils'
-import { useUserPreferences } from 'hooks/useUserPreferences'
 import { useCallback, useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
-import { parseNumbers } from 'utils/Number'
+import { isObjectEmpty, parseQueryString } from '@/components/EMI_Components/utils'
+import { useUserPreferences } from '@/hooks/useUserPreferences'
+import { parseNumbers } from '@/utils/Number'
 
 const DEFAULT_DATA = {
   monthlyAmount: 500,

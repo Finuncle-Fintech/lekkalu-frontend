@@ -1,6 +1,7 @@
-import 'App.css'
-import { Provider } from 'provider/Provider'
-import Router from 'Router'
+import './App.css'
+import Router from './Router'
+import { Provider } from './provider/Provider'
+
 function App() {
   return (
     <div className='App'>

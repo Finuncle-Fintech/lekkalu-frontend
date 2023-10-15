@@ -11,7 +11,7 @@ import {
   DropdownMenu,
   DropdownItem,
 } from 'reactstrap'
-import { Context } from 'provider/Provider'
+import { Context } from '@/provider/Provider'
 
 const FormInput = ({ handleChange, value, name, type, label, symbol, min, max, step, showSlider, visible }) => {
   const [isOpen, setIsOpen] = useState(false)

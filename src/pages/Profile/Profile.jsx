@@ -1,9 +1,9 @@
 import { Button, FormControl, TextField } from '@mui/material'
 import { useForm } from 'react-hook-form'
 import Swal from 'sweetalert2'
-import { EMAIL_REGEX } from 'utils/constants'
 import { useContext } from 'react'
-import { Context } from 'provider/Provider'
+import { EMAIL_REGEX } from '@/utils/constants'
+import { Context } from '@/provider/Provider'
 
 export default function Profile() {
   const { user } = useContext(Context)

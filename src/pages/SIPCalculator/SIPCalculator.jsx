@@ -1,9 +1,9 @@
-import CalculatorSIP from 'components/CalculatorSIP/CalculatorSIP'
 import { useContext, useState } from 'react'
-import Summary from 'components/CalculatorSIP/Summary'
-import { handleShare, isObjectEmpty } from 'components/EMI_Components/utils'
 import axios from 'axios'
-import { Context } from 'provider/Provider'
+import CalculatorSIP from '@/components/CalculatorSIP/CalculatorSIP'
+import Summary from '@/components/CalculatorSIP/Summary'
+import { handleShare, isObjectEmpty } from '@/components/EMI_Components/utils'
+import { Context } from '@/provider/Provider'
 
 export default function SIPCalculator() {
   const { authToken } = useContext(Context)

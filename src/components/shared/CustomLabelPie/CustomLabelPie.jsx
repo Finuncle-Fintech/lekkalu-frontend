@@ -1,4 +1,4 @@
-import { useUserPreferences } from 'hooks/useUserPreferences'
+import { useUserPreferences } from '@/hooks/useUserPreferences'
 
 export const CustomLabelPie = ({ active, payload }) => {
   const { preferences } = useUserPreferences()

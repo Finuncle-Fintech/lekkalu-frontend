@@ -6,10 +6,10 @@ import dayjs from 'dayjs'
 
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { SetBudgetSchema, setBudgetSchema } from 'schema/budget'
 import { useMutation } from '@tanstack/react-query'
-import { setBudget } from 'queries/budget'
-import { DATE_FORMAT } from 'utils/constants'
+import { SetBudgetSchema, setBudgetSchema } from '@/schema/budget'
+import { setBudget } from '@/queries/budget'
+import { DATE_FORMAT } from '@/utils/constants'
 
 export default function SetBudgetModal() {
   const [open, setOpen] = useState(false)

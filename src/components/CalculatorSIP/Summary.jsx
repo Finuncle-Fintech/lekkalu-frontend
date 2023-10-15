@@ -1,7 +1,7 @@
 import { Pie, PieChart, Cell, Tooltip, Legend } from 'recharts'
-import { CustomLabelPie } from 'components/shared/CustomLabelPie/CustomLabelPie'
+import { CustomLabelPie } from '@/components/shared/CustomLabelPie/CustomLabelPie'
+import { useUserPreferences } from '@/hooks/useUserPreferences'
 import 'animate.css'
-import { useUserPreferences } from 'hooks/useUserPreferences'
 
 export default function Summary({ summary }) {
   const { preferences } = useUserPreferences()

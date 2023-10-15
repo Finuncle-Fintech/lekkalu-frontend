@@ -1,4 +1,4 @@
-import { useUserPreferences } from 'hooks/useUserPreferences'
+import { useUserPreferences } from '@/hooks/useUserPreferences'
 import PieCAGR from './PieCAGR'
 import BarChartCAGR from './BarChartCAGR'
 

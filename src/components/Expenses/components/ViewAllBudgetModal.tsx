@@ -14,9 +14,9 @@ import {
 import dayjs from 'dayjs'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { deleteBudget, fetchBudgets } from 'queries/budget'
-import { BUDGET_QUERY_KEYS } from 'utils/query-keys'
 import BeatLoader from 'react-spinners/BeatLoader'
+import { deleteBudget, fetchBudgets } from '@/queries/budget'
+import { BUDGET_QUERY_KEYS } from '@/utils/query-keys'
 import EditBudgetModal from './EditBudgetModal'
 
 dayjs.extend(customParseFormat)

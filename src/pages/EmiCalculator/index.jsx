@@ -1,18 +1,18 @@
 import { useState, useEffect, useContext } from 'react'
 import { useLocation } from 'react-router-dom'
 
-import { optionsPrincipal, optionsInterest, optionsMonth } from 'components/EMI_Components/constant'
+import { optionsPrincipal, optionsInterest, optionsMonth } from '@/components/EMI_Components/constant'
 import {
   parseQueryString,
   handleShare,
   calculateEmiOutputs,
   calculateLoanPrincipalAndInterestPayable,
   isObjectEmpty,
-} from 'components/EMI_Components/utils'
-import FormInput from 'components/EMI_Components/FormInput'
-import DisplayResult from 'components/EMI_Components/DisplayResult'
-import RepaymentTable from 'components/EMI_Components/RepaymentTable'
-import useAxiosPrivate from 'hooks/useAxiosPrivate'
+} from '@/components/EMI_Components/utils'
+import FormInput from '@/components/EMI_Components/FormInput'
+import DisplayResult from '@/components/EMI_Components/DisplayResult'
+import RepaymentTable from '@/components/EMI_Components/RepaymentTable'
+import useAxiosPrivate from '@/hooks/useAxiosPrivate'
 import { AssetsLiabilitiesChart } from '../../components/Charts/AssetsLiabilitiesChart'
 
 import './EmiCalculator.css'

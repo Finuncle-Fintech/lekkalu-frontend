@@ -1,8 +1,8 @@
-import Colors from 'constants/colors'
 import React, { useEffect, useContext } from 'react'
-
-import { Context } from 'provider/Provider'
 import BeatLoader from 'react-spinners/BeatLoader'
+import Colors from '@/constants/colors'
+
+import { Context } from '@/provider/Provider'
 import { WeeklyChart } from './WeeklyChart'
 import { SpentBalanceChart } from './SpentBalanceChart'
 import { CumSumChart } from './CumSumChart'

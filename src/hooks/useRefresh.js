@@ -1,7 +1,7 @@
 import { useContext } from 'react'
-import { Context } from 'provider/Provider'
-import axiosClient from 'components/Axios/Axios'
-import getCookie from 'components/Support/PopUp/utils/GetCookie'
+import { Context } from '@/provider/Provider'
+import axiosClient from '@/components/Axios/Axios'
+import getCookie from '@/components/Support/PopUp/utils/GetCookie'
 
 const useRefreshToken = () => {
   const { setAuthToken } = useContext(Context)

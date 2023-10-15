@@ -1,8 +1,8 @@
 import 'bootstrap/dist/css/bootstrap.min.css'
-import Colors from 'constants/colors'
 import React from 'react'
 import { ResponsiveContainer, ComposedChart, Line, Bar, CartesianGrid, XAxis, YAxis, Tooltip, Legend } from 'recharts'
-import { useUserPreferences } from 'hooks/useUserPreferences'
+import { useUserPreferences } from '@/hooks/useUserPreferences'
+import Colors from '@/constants/colors'
 
 const CustomTooltip = ({ active, payload, label }) => {
   const { preferences } = useUserPreferences()

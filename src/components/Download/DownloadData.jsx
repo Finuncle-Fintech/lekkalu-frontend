@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react'
 import * as ExcelJS from 'exceljs'
 import { saveAs } from 'file-saver'
-import { Context } from 'provider/Provider'
 import { FiDownloadCloud } from 'react-icons/fi'
+import { Context } from '@/provider/Provider'
 import './index.css'
 
 const DownloadData = () => {

@@ -4,14 +4,14 @@ import { Button, Dialog, DialogContent, DialogTitle, IconButton, TextField } fro
 import { DatePicker } from '@mui/x-date-pickers'
 import dayjs from 'dayjs'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
-import { Budget } from 'types/budget'
 import { useForm } from 'react-hook-form'
-import { UpdateBudgetSchema, updateBudgetSchema } from 'schema/budget'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { DATE_FORMAT } from 'utils/constants'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { updateBudget } from 'queries/budget'
-import { BUDGET_QUERY_KEYS } from 'utils/query-keys'
+import { Budget } from '@/types/budget'
+import { UpdateBudgetSchema, updateBudgetSchema } from '@/schema/budget'
+import { DATE_FORMAT } from '@/utils/constants'
+import { updateBudget } from '@/queries/budget'
+import { BUDGET_QUERY_KEYS } from '@/utils/query-keys'
 
 dayjs.extend(customParseFormat)
 

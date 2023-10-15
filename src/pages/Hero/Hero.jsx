@@ -1,6 +1,6 @@
-import HeroHeader from 'components/HeroHeader/HeroHeader'
-import HeroContainer from 'components/HeroContainer/HeroContainer'
-import HeroDescription from 'components/HeroDescription/HeroDescription'
+import HeroHeader from '@/components/HeroHeader/HeroHeader'
+import HeroContainer from '@/components/HeroContainer/HeroContainer'
+import HeroDescription from '@/components/HeroDescription/HeroDescription'
 import styles from './Hero.module.css'
 
 const Hero = () => {

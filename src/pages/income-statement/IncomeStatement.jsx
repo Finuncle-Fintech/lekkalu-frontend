@@ -1,10 +1,10 @@
 import Colors from 'constants/colors'
 import React, { useContext, useEffect } from 'react'
-import IncomeStatementSummary from 'components/income-statement/summary/IncomeStatementSummary'
-import Income from 'components/income-statement/income/Income'
-import { Expenses } from 'components/income-statement/expenses/Expenses'
 import { BeatLoader } from 'react-spinners'
-import { Context } from 'provider/Provider'
+import IncomeStatementSummary from '@/components/income-statement/summary/IncomeStatementSummary'
+import Income from '@/components/income-statement/income/Income'
+import { Expenses } from '@/components/income-statement/expenses/Expenses'
+import { Context } from '@/provider/Provider'
 
 const IncomeStatement = () => {
   const { fetchIncomeStatement, incomeStatement } = useContext(Context)

@@ -13,6 +13,5 @@ root.render(
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <App />
     </LocalizationProvider>
-    ,
   </QueryClientProvider>,
 )

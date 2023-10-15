@@ -401,6 +401,7 @@ const Provider = ({ children }) => {
         .then((response) => {
           setAuthToken(response?.data?.access)
           setCookie('refresh', response?.data?.refresh, 30)
+          setCookie('access', response?.data?.access, 30)
           return response.status
         })
         .catch((error) => {
@@ -932,70 +933,6 @@ const Provider = ({ children }) => {
     }
   }
 
-  const createBudget = async (data) => {
-    try {
-      const headers = {
-        Authorization: `Bearer ${authToken}`,
-        'Content-Type': 'application/json',
-      }
-
-      const response = await axiosPrivate.post(`${process.env.REACT_APP_BACKEND_API}budget/`, data, { headers })
-
-      if (response.status === 201) {
-        dispatch({
-          type: Types.SET_BUDGET,
-          payload: response.data.data,
-        })
-      }
-
-      return response
-    } catch (error) {
-      handleErrors(error)
-    }
-  }
-
-  const updateBudget = async (id, data) => {
-    try {
-      const headers = {
-        Authorization: `Bearer ${authToken}`,
-        'Content-Type': 'application/json',
-      }
-
-      const response = await axiosPrivate.put(`${process.env.REACT_APP_BACKEND_API}budget/${id}`, data, { headers })
-
-      if (response.status === 200) {
-        dispatch({
-          type: Types.EDIT_BUDGET,
-          payload: response.data.data,
-        })
-      }
-
-      return response
-    } catch (error) {
-      handleErrors(error)
-    }
-  }
-
-  const deleteBudget = async (id) => {
-    try {
-      const headers = {
-        Authorization: `Bearer ${authToken}`,
-        'Content-Type': 'application/json',
-      }
-
-      await axiosPrivate.delete(`${process.env.REACT_APP_BACKEND_API}budget/${id}`, {
-        headers,
-      })
-
-      dispatch({
-        type: Types.DELETE_BUDGET,
-        payload: id,
-      })
-    } catch (error) {
-      handleErrors(error)
-    }
-  }
-
   const UnitContext = React.createContext()
   const UnitUpdateContext = React.createContext()
 
@@ -1064,9 +1001,6 @@ const Provider = ({ children }) => {
         fetchAllExpenses,
         fetchUser,
         user,
-        deleteBudget,
-        createBudget,
-        updateBudget,
         addLiabilityRequest,
         editLiabilityRequest,
         fetchLiabilityById,

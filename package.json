@@ -5,6 +5,7 @@
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
+    "@hookform/resolvers": "^3.3.2",
     "@mui/icons-material": "^5.14.12",
     "@mui/material": "^5.14.7",
     "@mui/x-data-grid": "^6.13.0",
@@ -36,7 +37,8 @@
     "recharts": "^2.8.0",
     "sweetalert": "^2.1.2",
     "sweetalert2": "^11.7.27",
-    "xlsx": "^0.18.5"
+    "xlsx": "^0.18.5",
+    "zod": "^3.22.4"
   },
   "scripts": {
     "test": "react-scripts test",

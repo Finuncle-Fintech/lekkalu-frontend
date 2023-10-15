@@ -12,13 +12,17 @@ import Swal from 'sweetalert2'
 import { Context } from 'provider/Provider'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
 import { useUserPreferences } from 'hooks/useUserPreferences'
+import { useQuery } from '@tanstack/react-query'
+import { BUDGET_QUERY_KEYS } from 'utils/query-keys'
+import { fetchBudgets } from 'queries/budget'
 import ExpenseFormModal from './ExpensesModal'
 import { ModalContainer } from './styled'
 import ExpensesList from './ExpenseList'
 import { formatDate, getTagNumbers, checkTagsAndLoad } from './utils'
 
-import SetBudgetModal from './SetBudgetModal'
-import ViewAllBudgetModal from './ViewAllBudgetModal'
+import SetBudgetModal from './components/SetBudgetModal'
+import ViewAllBudgetModal from './components/ViewAllBudgetModal'
+
 dayjs.extend(customParseFormat)
 
 const Expenses = () => {
@@ -33,7 +37,6 @@ const Expenses = () => {
     changeExpenseRequest,
     fetchTags,
     authToken,
-    budget,
   } = useContext(Context)
   const getDate = new Date()
   const [editIndex, setEditIndex] = useState(null)
@@ -46,7 +49,9 @@ const Expenses = () => {
   const { preferences } = useUserPreferences()
   const rowsPerPage = 10
 
-  const currentMonthBudget = budget.find((item) =>
+  const { data: budgets } = useQuery([BUDGET_QUERY_KEYS.BUDGETS], fetchBudgets)
+
+  const currentMonthBudget = budgets?.find((item) =>
     dayjs(item.month, 'YYYY-MM-DD').startOf('month').isSame(dayjs().startOf('month')),
   )
 

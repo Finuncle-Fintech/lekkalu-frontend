@@ -10,7 +10,7 @@ export const apiClient = axios.create({
   },
 })
 
-apiClient.interceptors.request.use((config) => {
+apiClient?.interceptors.request.use((config) => {
   config.headers.Authorization = `Bearer ${getCookie('access')}`
 
   return config

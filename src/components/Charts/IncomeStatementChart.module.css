@@ -1,9 +1,9 @@
-.mainTooltip{
-    display: flex;
-    flex-direction: column;
+.mainTooltip {
+  display: flex;
+  flex-direction: column;
 }
-.detailsContainer{
-    display: flex;
-    flex-direction: column;
-    margin-top: 5px;
+.detailsContainer {
+  display: flex;
+  flex-direction: column;
+  margin-top: 5px;
 }

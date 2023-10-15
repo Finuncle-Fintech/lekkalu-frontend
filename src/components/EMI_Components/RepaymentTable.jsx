@@ -22,7 +22,7 @@ const RepaymentTable = ({ repaymentTable }) => {
         ))}
       </tbody>
     </table>
-  );
-};
+  )
+}
 
-export default RepaymentTable;
+export default RepaymentTable

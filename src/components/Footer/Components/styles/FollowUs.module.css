@@ -1,85 +1,86 @@
-.container{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    width: 20vw;
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 20vw;
 }
 
-    .container > h3 > a{
-        color: white;
-        text-decoration: none;
-        font-weight: bold;
-        font-size: 1.3rem;
-        margin-bottom: 1vw;
-    } .phraseP{
-        color: white;
-        font-weight: normal;
-        font-size: 0.8rem;
-        text-decoration: none;
-    }
-    .containerSN{
-        display: flex;
-        gap: 1vw;
-    }
-        .containerSN > a > img{
-            width: 1.3vw;
-        }
+.container > h3 > a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 1.3rem;
+  margin-bottom: 1vw;
+}
+.phraseP {
+  color: white;
+  font-weight: normal;
+  font-size: 0.8rem;
+  text-decoration: none;
+}
+.containerSN {
+  display: flex;
+  gap: 1vw;
+}
+.containerSN > a > img {
+  width: 1.3vw;
+}
 
-    .containerDownload> a > button{
-        border: 1px white solid;
-        background-color: transparent;
-        border-radius: 1vw;
-        text-align: center;
-        width: 13vw;
-        color: white;
-        font-size: 1rem;
-        transition: .2s;
-    }
-    .containerDownload> a > button:hover{
-        background-color: white;
-        color:#0289C8;
-    }
-    .containerDownload{
-        display: flex;
-        justify-content: start;
-        align-items: center;
-        gap: 1vw;
-    }
-        .containerDownload > div   {
-            background-color: white;
-            padding: .5vw;
-            border-radius: 1vw;
-        }
-        .containerDownload > div > img {
-            width:3vw;
-        }
+.containerDownload > a > button {
+  border: 1px white solid;
+  background-color: transparent;
+  border-radius: 1vw;
+  text-align: center;
+  width: 13vw;
+  color: white;
+  font-size: 1rem;
+  transition: 0.2s;
+}
+.containerDownload > a > button:hover {
+  background-color: white;
+  color: #0289c8;
+}
+.containerDownload {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  gap: 1vw;
+}
+.containerDownload > div {
+  background-color: white;
+  padding: 0.5vw;
+  border-radius: 1vw;
+}
+.containerDownload > div > img {
+  width: 3vw;
+}
 
-        @media (max-width:768px) {
-            .container{
-                width: 70%;
-            }
-            .container > h3 > a{
-                font-size: 1.2rem;
-        
-            } .container > h5 > a{
-                font-size: 3vw;
-    
-            }
-            .containerSN{
-                display: flex;
-                gap: 3vw;
-            }
-            .containerSN > a > img{
-                width: 4vw;
-            }
-            .phraseP{
-                font-size: 0.8rem;
-            }
+@media (max-width: 768px) {
+  .container {
+    width: 70%;
+  }
+  .container > h3 > a {
+    font-size: 1.2rem;
+  }
+  .container > h5 > a {
+    font-size: 3vw;
+  }
+  .containerSN {
+    display: flex;
+    gap: 3vw;
+  }
+  .containerSN > a > img {
+    width: 4vw;
+  }
+  .phraseP {
+    font-size: 0.8rem;
+  }
 
-            .containerDownload> a > button{
-                width: 100%;
-                font-size: 1rem;
-            }   .containerDownload > div > img {
-                width:7vw;
-            }
-        }
+  .containerDownload > a > button {
+    width: 100%;
+    font-size: 1rem;
+  }
+  .containerDownload > div > img {
+    width: 7vw;
+  }
+}

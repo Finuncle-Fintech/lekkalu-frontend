@@ -80,7 +80,7 @@
   text-indent: 15px;
 }
 
-.input-field > input[type="number"]:focus {
+.input-field > input[type='number']:focus {
   outline: 3px solid lightblue;
 }
 .input-field > button {
@@ -93,7 +93,7 @@
   border: none;
 }
 
-input[type="range"] {
+input[type='range'] {
   margin: 0;
   padding: 0;
   height: 50px;
@@ -102,7 +102,7 @@ input[type="range"] {
   cursor: pointer;
   width: 100%;
 }
-input[type="date"] {
+input[type='date'] {
   padding: 0 1rem;
   outline: none;
 }

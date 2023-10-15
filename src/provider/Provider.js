@@ -1,40 +1,39 @@
-import React, { createContext, useReducer, useState, useContext } from "react";
-import axiosClient from "components/Axios/Axios";
-import useAxiosPrivate from "hooks/useAxiosPrivate";
-import { InitialState } from "./Reducer";
-import Reducer from "./Reducer";
-import Types from "./Types";
-import setCookie from "components/Support/PopUp/utils/SetCookie";
-import deleteCookie from "components/Support/PopUp/utils/DeleteCookie";
-import jwtDecode from "jwt-decode";
+import React, { createContext, useReducer, useState, useContext } from 'react'
+import axiosClient from 'components/Axios/Axios'
+import useAxiosPrivate from 'hooks/useAxiosPrivate'
+import setCookie from 'components/Support/PopUp/utils/SetCookie'
+import deleteCookie from 'components/Support/PopUp/utils/DeleteCookie'
+import jwtDecode from 'jwt-decode'
+import Reducer, { InitialState } from './Reducer'
+import Types from './Types'
 
 const Context = createContext({
   ...InitialState,
-});
+})
 
 const Provider = ({ children }) => {
-  const axiosPrivate = useAxiosPrivate();
-  const [authToken, setAuthToken] = useState(null);
-  const [store, dispatch] = useReducer(Reducer, InitialState);
-  let finalDataWeekly = [];
-  let finalLiabilities = [];
-  let finalAssets = [];
+  const axiosPrivate = useAxiosPrivate()
+  const [authToken, setAuthToken] = useState(null)
+  const [store, dispatch] = useReducer(Reducer, InitialState)
+  let finalDataWeekly = []
+  let finalLiabilities = []
+  let finalAssets = []
   const monthNames = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ]
 
-  let weekData = [];
+  let weekData = []
 
   const {
     statusFeedback,
@@ -49,89 +48,83 @@ const Provider = ({ children }) => {
     depreciation,
     user,
     goals,
-  } = store;
+  } = store
 
   const handleErrors = (error) => {
     if (error.response) {
       if (error.response.status === 403) {
-        alert(error.response.data.detail);
+        alert(error.response.data.detail)
       } else if (error.response.status === 500) {
-        alert(error.message);
+        alert(error.message)
       }
     }
-    if (error.message === "Network Error") {
-      alert("Network Error");
+    if (error.message === 'Network Error') {
+      alert('Network Error')
     }
-  };
+  }
 
   const giveFeedback = async (data) => {
-    const statusFeedback = [];
+    const statusFeedback = []
     try {
       const headers = {
         Authorization: `Bearer ${authToken}`,
-        "Content-Type": "application/json",
-      };
+        'Content-Type': 'application/json',
+      }
 
       await axiosPrivate
         .post(`${process.env.REACT_APP_BACKEND_API}feedback/`, data, {
           headers,
         })
         .then((res) => {
-          statusFeedback.push(res.status);
-        });
+          statusFeedback.push(res.status)
+        })
     } catch (err) {
-      statusFeedback.push(err);
-      handleErrors(err);
+      statusFeedback.push(err)
+      handleErrors(err)
     }
 
-    return statusFeedback;
-  };
+    return statusFeedback
+  }
 
   const fetchTags = async () => {
     try {
       const headers = {
         Authorization: `Bearer ${authToken}`,
-        "Content-Type": "application/json",
-      };
+        'Content-Type': 'application/json',
+      }
 
-      await axiosPrivate
-        .get(`${process.env.REACT_APP_BACKEND_API}expense-tag/`, { headers })
-        .then((res) => {
-          dispatch({
-            type: Types.FETCH_TAGS,
-            payload: res.data,
-          });
-        });
+      await axiosPrivate.get(`${process.env.REACT_APP_BACKEND_API}expense-tag/`, { headers }).then((res) => {
+        dispatch({
+          type: Types.FETCH_TAGS,
+          payload: res.data,
+        })
+      })
     } catch (error) {
-      handleErrors(error);
+      handleErrors(error)
     }
-  };
+  }
 
   const createTag = async (tag) => {
     try {
       const headers = {
         Authorization: `Bearer ${authToken}`,
-        "Content-Type": "application/json",
-      };
+        'Content-Type': 'application/json',
+      }
 
-      await axiosPrivate.post(
-        `${process.env.REACT_APP_BACKEND_API}expense-tag/`,
-        tag,
-        {
-          headers,
-        }
-      );
+      await axiosPrivate.post(`${process.env.REACT_APP_BACKEND_API}expense-tag/`, tag, {
+        headers,
+      })
     } catch (error) {
-      handleErrors(error);
+      handleErrors(error)
     }
-  };
+  }
 
   const fetchExpenses = async (page, rowsPerPage) => {
     try {
       const headers = {
         Authorization: `Bearer ${authToken}`,
-        "Content-Type": "application/json",
-      };
+        'Content-Type': 'application/json',
+      }
       await axiosPrivate
         .get(`${process.env.REACT_APP_BACKEND_API}expenses/`, {
           headers,
@@ -144,88 +137,82 @@ const Provider = ({ children }) => {
           dispatch({
             type: Types.FETCH_EXPENSE,
             payload: res.data,
-          });
-        });
+          })
+        })
     } catch (error) {
-      handleErrors(error);
+      handleErrors(error)
     }
-  };
+  }
 
   const fetchAllExpenses = async () => {
     try {
       const headers = {
         Authorization: `Bearer ${authToken}`,
-        "Content-Type": "application/json",
-      };
+        'Content-Type': 'application/json',
+      }
 
-      const response = await axiosPrivate.get(
-        `${process.env.REACT_APP_BACKEND_API}expenses/`,
-        { headers }
-      );
-      return response.data;
+      const response = await axiosPrivate.get(`${process.env.REACT_APP_BACKEND_API}expenses/`, { headers })
+      return response.data
     } catch (error) {
-      handleErrors(error);
-      throw error; // Rethrow the error so it can be caught in the calling function
+      handleErrors(error)
+      throw error // Rethrow the error so it can be caught in the calling function
     }
-  };
+  }
 
   const filterExpensesByDate = async (page, rowsPerPage, fromDate, toDate) => {
     try {
       const headers = {
         Authorization: `Bearer ${authToken}`,
-        "Content-Type": "application/json",
-      };
+        'Content-Type': 'application/json',
+      }
       await axiosPrivate
-        .get(
-          `${process.env.REACT_APP_BACKEND_API}expenses/${fromDate}/${toDate}/`,
-          {
-            headers,
-            params: {
-              page: page + 1,
-              per_page: rowsPerPage,
-            },
-          }
-        )
+        .get(`${process.env.REACT_APP_BACKEND_API}expenses/${fromDate}/${toDate}/`, {
+          headers,
+          params: {
+            page: page + 1,
+            per_page: rowsPerPage,
+          },
+        })
         .then((res) => {
           dispatch({
             type: Types.FETCH_EXPENSE,
             payload: res.data,
-          });
-        });
+          })
+        })
     } catch (error) {
-      handleErrors(error);
+      handleErrors(error)
     }
-  };
+  }
 
   const deleteExpenseRequest = async (id) => {
     try {
       const headers = {
         Authorization: `Bearer ${authToken}`,
-        "Content-Type": "application/json",
-      };
+        'Content-Type': 'application/json',
+      }
 
       await axiosPrivate
         .delete(`${process.env.REACT_APP_BACKEND_API}expenses/${id}`, {
           headers,
         })
-        .then((res) => {
+        .then(() => {
           dispatch({
             type: Types.DELETE_EXPENSE,
             payload: id,
-          });
-        });
+          })
+        })
     } catch (error) {
-      handleErrors(error);
+      handleErrors(error)
     }
-  };
+  }
 
   const createExpenseRequest = async (data) => {
-    const createExpenseStatus = [];
+    const createExpenseStatus = []
     try {
       const headers = {
         Authorization: `Bearer ${authToken}`,
-        "Content-Type": "application/json",
-      };
+        'Content-Type': 'application/json',
+      }
 
       await axiosPrivate
         .post(`${process.env.REACT_APP_BACKEND_API}expenses/`, data, {
@@ -235,46 +222,42 @@ const Provider = ({ children }) => {
           dispatch({
             type: Types.CREATE_EXPENSE,
             payload: { data, id: res.data.data.id },
-          });
+          })
 
-          createExpenseStatus.push(res);
-        });
+          createExpenseStatus.push(res)
+        })
     } catch (error) {
-      handleErrors(error);
+      handleErrors(error)
     }
 
-    return createExpenseStatus;
-  };
+    return createExpenseStatus
+  }
 
   const changeExpenseRequest = async (index, expense) => {
     try {
       const headers = {
         Authorization: `Bearer ${authToken}`,
-        "Content-Type": "application/json",
-      };
+        'Content-Type': 'application/json',
+      }
       await axiosPrivate
-        .put(
-          `${process.env.REACT_APP_BACKEND_API}expenses/${expense.id}`,
-          expense,
-          { headers }
-        )
-        .then((res) => {
+        .put(`${process.env.REACT_APP_BACKEND_API}expenses/${expense.id}`, expense, { headers })
+        .then(() => {
           dispatch({
             type: Types.EDIT_EXPENSE,
             payload: { index, expense },
-          });
-        });
+          })
+        })
     } catch (error) {
-      handleErrors(error);
+      handleErrors(error)
     }
-  };
+  }
 
   const fetchData = async () => {
     try {
       const headers = {
         Authorization: `Bearer ${authToken}`,
-        "Content-Type": "application/json",
-      };
+        'Content-Type': 'application/json',
+      }
 
       await axiosPrivate
         .get(`${process.env.REACT_APP_BACKEND_API}budget/`, {
@@ -284,98 +267,93 @@ const Provider = ({ children }) => {
           dispatch({
             type: Types.FETCH_BUDGET,
             payload: res.data,
-          });
-        });
+          })
+        })
 
       await axiosPrivate
         .get(`${process.env.REACT_APP_BACKEND_API}weekly_expenses/`, {
           headers,
         })
         .then((res) => {
-          weekData = res.data;
-          let totlamount = 0;
-          let i = 0;
-          weekData.map((da) => {
-            totlamount += weekData[i]?.total_amount;
+          weekData = res.data
+          let totlamount = 0
+          let i = 0
+          weekData.forEach((da) => {
+            totlamount += weekData[i]?.total_amount
             if (finalDataWeekly.length >= 4) {
               finalDataWeekly = [
                 ...finalDataWeekly,
                 {
-                  time: da.week.toString() + "_" + da.year.toString(),
+                  time: da.week.toString() + '_' + da.year.toString(),
                   amount: da?.total_amount,
                   roll_avg: parseFloat((totlamount / 5).toFixed(2)),
                 },
-              ];
-              totlamount = totlamount - weekData[i - 4].total_amount;
+              ]
+              totlamount = totlamount - weekData[i - 4].total_amount
             } else {
               finalDataWeekly = [
                 ...finalDataWeekly,
                 {
-                  time: da.week.toString() + " " + da.year.toString(),
+                  time: da.week.toString() + ' ' + da.year.toString(),
                   amount: da?.total_amount,
                 },
-              ];
+              ]
             }
-            i += 1;
-          });
+            i += 1
+          })
           dispatch({
             type: Types.FETCH_WEEKLY_EXPENSE,
             payload: finalDataWeekly,
-          });
-        });
+          })
+        })
 
       await axiosPrivate
         .get(`${process.env.REACT_APP_BACKEND_API}physical_assets/`, {
           headers,
         })
         .then((res) => {
-          let totalVal = 0.000000001;
-          res.data.map((da) => {
-            totalVal += Number(da.market_value);
-            finalAssets = [
-              ...finalAssets,
-              { id: da.id, name: da.name, value: parseFloat(da.market_value) },
-            ];
-          });
+          let totalVal = 0.000000001
+          res.data.forEach((da) => {
+            totalVal += Number(da.market_value)
+            finalAssets = [...finalAssets, { id: da.id, name: da.name, value: parseFloat(da.market_value) }]
+          })
           dispatch({
             type: Types.FETCH_ASSETS,
             payload: { finalAssets, totalVal },
-          });
-        });
+          })
+        })
 
-      await axiosPrivate
-        .get(`${process.env.REACT_APP_BACKEND_API}loans/`, { headers })
-        .then((res) => {
-          let totalVal = 0.000000001;
-          res.data.map((da) => {
-            totalVal += parseFloat(da.balance);
-            finalLiabilities = [
-              ...finalLiabilities,
-              {
-                id: da.id,
-                name: da.name,
-                value: parseFloat(da.balance),
-                principal: parseFloat(da.principal),
-                interest: parseFloat(da.interest_rate),
-                tenure: da.tenure,
-                closure_charges: parseFloat(da.closure_charges),
-                disbursement_date: da.disbursement_date,
-              },
-            ];
-          });
-          dispatch({
-            type: Types.FETCH_LIABILITIES,
-            payload: { finalLiabilities, totalVal },
-          });
-        });
+      await axiosPrivate.get(`${process.env.REACT_APP_BACKEND_API}loans/`, { headers }).then((res) => {
+        let totalVal = 0.000000001
+        res.data.forEach((da) => {
+          totalVal += parseFloat(da.balance)
+          finalLiabilities = [
+            ...finalLiabilities,
+            {
+              id: da.id,
+              name: da.name,
+              value: parseFloat(da.balance),
+              principal: parseFloat(da.principal),
+              interest: parseFloat(da.interest_rate),
+              tenure: da.tenure,
+              closure_charges: parseFloat(da.closure_charges),
+              disbursement_date: da.disbursement_date,
+            },
+          ]
+        })
+        dispatch({
+          type: Types.FETCH_LIABILITIES,
+          payload: { finalLiabilities, totalVal },
+        })
+      })
       await axiosPrivate
         .get(`${process.env.REACT_APP_BACKEND_API}monthly_expenses/`, {
           headers,
         })
         .then((res) => {
-          let finalMonthlyExp = [];
-          let response = res.data;
-          response.map((da) => {
+          let finalMonthlyExp = []
+          const response = res.data
+          response.forEach((da) => {
             finalMonthlyExp = [
               ...finalMonthlyExp,
               {
@@ -384,497 +362,461 @@ const Provider = ({ children }) => {
                 Balance: da.balance,
                 CumSum: da.cum_sum,
               },
-            ];
-          });
+            ]
+          })
 
           dispatch({
             type: Types.FETCH_MONTHLY_EXPENSE,
             payload: finalMonthlyExp,
-          });
-        });
+          })
+        })
 
       await axiosPrivate
         .get(`${process.env.REACT_APP_BACKEND_API}physical_assets/`, {
           headers,
         })
         .then((res) => {
-          const data = res.data;
+          const data = res.data
 
           dispatch({
             type: Types.FETCH_depreciation,
             payload: data,
-          });
-        });
+          })
+        })
     } catch (error) {
-      handleErrors(error.message);
+      handleErrors(error.message)
     }
-  };
+  }
 
   const fetchToken = async (username, password) => {
     try {
       const auth = {
-        username: username,
-        password: password,
-      };
-      //console.log(username, password)
+        username,
+        password,
+      }
+      // console.log(username, password)
 
       return await axiosClient
         .post(`${process.env.REACT_APP_BACKEND_URL}token/`, auth)
         .then((response) => {
-          setAuthToken(response?.data?.access);
-          setCookie("refresh", response?.data?.refresh, 30);
-          return response.status;
+          setAuthToken(response?.data?.access)
+          setCookie('refresh', response?.data?.refresh, 30)
+          setCookie('access', response?.data?.access, 30)
+          return response.status
         })
         .catch((error) => {
-          handleErrors(error);
-        });
+          handleErrors(error)
+        })
     } catch (error) {
-      handleErrors(error);
+      handleErrors(error)
     }
-  };
+  }
 
   const fetchIncomeSources = async () => {
     try {
       const headers = {
         Authorization: `Bearer ${authToken}`,
-        "Content-Type": "application/json",
-      };
+        'Content-Type': 'application/json',
+      }
 
-      return axiosPrivate
-        .get("https://api.finuncle.com/api/income_source/", { headers })
-        .then((response) => {
-          return response.data;
-        });
+      return axiosPrivate.get('https://api.finuncle.com/api/income_source/', { headers }).then((response) => {
+        return response.data
+      })
     } catch (error) {
-      handleErrors(error);
-      return [];
+      handleErrors(error)
+      return []
     }
-  };
+  }
 
   const addIncomeExpense = async (data) => {
     try {
       const headers = {
         Authorization: `Bearer ${authToken}`,
-        "Content-Type": "application/json",
-      };
+        'Content-Type': 'application/json',
+      }
 
       return await axiosPrivate
         .post(`${process.env.REACT_APP_BACKEND_API}income_expense/`, data, {
           headers,
         })
         .then((response) => response)
-        .catch((error) => error);
+        .catch((error) => error)
     } catch (error) {
-      handleErrors(error);
+      handleErrors(error)
     }
-  };
+  }
 
   const updateIncomeExpenseById = async (id, data) => {
     try {
       const headers = {
         Authorization: `Bearer ${authToken}`,
-        "Content-Type": "application/json",
-      };
+        'Content-Type': 'application/json',
+      }
 
       return await axiosPrivate
         .put(`${process.env.REACT_APP_BACKEND_API}income_expense/${id}`, data, {
           headers,
         })
         .then((response) => response)
-        .catch((error) => error);
+        .catch((error) => error)
     } catch (error) {
-      handleErrors(error);
+      handleErrors(error)
     }
-  };
+  }
 
   const deleteIncomeExpenseById = async (id) => {
     try {
       const headers = {
         Authorization: `Bearer ${authToken}`,
-        "Content-Type": "application/json",
-      };
+        'Content-Type': 'application/json',
+      }
 
-      await axiosPrivate.delete(
-        `${process.env.REACT_APP_BACKEND_API}income_expense/${id}`,
-        {
-          headers,
-        }
-      );
+      await axiosPrivate.delete(`${process.env.REACT_APP_BACKEND_API}income_expense/${id}`, {
+        headers,
+      })
     } catch (error) {
-      handleErrors(error);
+      handleErrors(error)
     }
-  };
+  }
 
   const addIncomeSource = async (data) => {
     try {
       const headers = {
         Authorization: `Bearer ${authToken}`,
-        "Content-Type": "application/json",
-      };
+        'Content-Type': 'application/json',
+      }
 
       return await axiosPrivate
         .post(`${process.env.REACT_APP_BACKEND_API}income_source/`, data, {
           headers,
         })
         .then((response) => response)
-        .catch((error) => error);
+        .catch((error) => error)
     } catch (error) {
-      handleErrors(error);
+      handleErrors(error)
     }
-  };
+  }
 
   const updateIncomeSourceById = async (id, data) => {
     try {
       const headers = {
         Authorization: `Bearer ${authToken}`,
-        "Content-Type": "application/json",
-      };
+        'Content-Type': 'application/json',
+      }
 
       return await axiosPrivate
         .put(`${process.env.REACT_APP_BACKEND_API}income_source/${id}`, data, {
           headers,
         })
         .then((response) => response)
-        .catch((error) => error);
+        .catch((error) => error)
     } catch (error) {
-      handleErrors(error);
+      handleErrors(error)
     }
-  };
+  }
 
   const deleteIncomeSourceById = async (id) => {
     try {
       const headers = {
         Authorization: `Bearer ${authToken}`,
-        "Content-Type": "application/json",
-      };
+        'Content-Type': 'application/json',
+      }
 
-      await axiosPrivate.delete(
-        `${process.env.REACT_APP_BACKEND_API}income_source/${id}`,
-        {
-          headers,
-        }
-      );
+      await axiosPrivate.delete(`${process.env.REACT_APP_BACKEND_API}income_source/${id}`, {
+        headers,
+      })
     } catch (error) {
-      handleErrors(error);
+      handleErrors(error)
     }
-  };
+  }
 
   const fetchIncomeExpenses = async () => {
     try {
       const headers = {
         Authorization: `Bearer ${authToken}`,
-        "Content-Type": "application/json",
-      };
+        'Content-Type': 'application/json',
+      }
 
-      return axiosPrivate
-        .get("https://api.finuncle.com/api/income_expense/", { headers })
-        .then((response) => {
-          return response.data;
-        });
+      return axiosPrivate.get('https://api.finuncle.com/api/income_expense/', { headers }).then((response) => {
+        return response.data
+      })
     } catch (error) {
-      handleErrors(error);
-      return [];
+      handleErrors(error)
+      return []
     }
-  };
+  }
 
   const fetchIncomeStatement = async () => {
     try {
-      let populatedIncomeStatement = { income: [], expenses: [] };
-      let transformedIncomeArray = [];
-      let transformedExpensesArray = [];
+      const populatedIncomeStatement = { income: [], expenses: [] }
+      let transformedIncomeArray = []
+      let transformedExpensesArray = []
 
-      const incomeSources = await fetchIncomeSources();
-      const incomeExpenses = await fetchIncomeExpenses();
+      const incomeSources = await fetchIncomeSources()
+      const incomeExpenses = await fetchIncomeExpenses()
 
       if (incomeSources.length) {
-        //API returns [{‘name’: ‘day_job_income’, ‘type’:’salary’,’amount’:50000}]
-        //Transform to [{‘name’: ‘day_job_income’, ‘type’:’salary’,’value’:50000}]
+        // API returns [{‘name’: ‘day_job_income’, ‘type’:’salary’,’amount’:50000}]
+        // Transform to [{‘name’: ‘day_job_income’, ‘type’:’salary’,’value’:50000}]
         transformedIncomeArray = incomeSources.map((each) => {
           return {
             id: each.id,
             name: each.name,
             type: each.type,
             value: parseFloat(each.amount),
-          };
-        });
+          }
+        })
       }
       if (incomeExpenses.length) {
-        //API returns [{‘name’: ‘day_job_income’, ‘type’:’salary’,’amount’:50000}]
-        //Transform to [{‘name’: ‘day_job_income’, ‘type’:’salary’,’value’:50000}]
+        // API returns [{‘name’: ‘day_job_income’, ‘type’:’salary’,’amount’:50000}]
+        // Transform to [{‘name’: ‘day_job_income’, ‘type’:’salary’,’value’:50000}]
         transformedExpensesArray = incomeExpenses.map((each) => {
           return {
             id: each.id,
             name: each.name,
             type: each.type,
             value: parseFloat(each.amount),
-          };
-        });
+          }
+        })
       }
 
-      populatedIncomeStatement.income = transformedIncomeArray;
-      populatedIncomeStatement.expenses = transformedExpensesArray;
+      populatedIncomeStatement.income = transformedIncomeArray
+      populatedIncomeStatement.expenses = transformedExpensesArray
 
       dispatch({
         type: Types.SET_INCOME_STATEMENT,
         payload: populatedIncomeStatement,
-      });
+      })
     } catch (error) {
-      handleErrors(error);
+      handleErrors(error)
     }
-  };
+  }
 
   const addAssetRequest = async (assetData) => {
     try {
       const headers = {
         Authorization: `Bearer ${authToken}`,
-        "Content-Type": "application/json",
-      };
+        'Content-Type': 'application/json',
+      }
 
       await axiosPrivate
-        .post(
-          `${process.env.REACT_APP_BACKEND_API}physical_assets/`,
-          assetData,
-          {
-            headers,
-          }
-        )
-        .then((res) => {
-          fetchAsset();
-        });
+        .post(`${process.env.REACT_APP_BACKEND_API}physical_assets/`, assetData, {
+          headers,
+        })
+        .then(() => {
+          fetchAsset()
+        })
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
-  };
+  }
 
   const editAssetRequest = async (assetId, updatedAssetData) => {
     try {
       const headers = {
         Authorization: `Bearer ${authToken}`,
-        "Content-Type": "application/json",
-      };
+        'Content-Type': 'application/json',
+      }
 
       await axiosPrivate
-        .put(
-          `${process.env.REACT_APP_BACKEND_API}physical_assets/${assetId}`,
-          updatedAssetData,
-          { headers }
-        )
-        .then((res) => {
-          fetchAsset();
-        });
+        .put(`${process.env.REACT_APP_BACKEND_API}physical_assets/${assetId}`, updatedAssetData, { headers })
+        .then(() => {
+          fetchAsset()
+        })
     } catch (error) {
-      handleErrors(error);
+      handleErrors(error)
     }
-  };
+  }
 
   const deleteAssetRequest = async (Ids) => {
     try {
       const headers = {
         Authorization: `Bearer ${authToken}`,
-        "Content-Type": "application/json",
-      };
-
-      for (const Id of Ids) {
-        await axiosPrivate.delete(
-          `${process.env.REACT_APP_BACKEND_API}physical_assets/${Id}`,
-          {
-            headers,
-          }
-        );
+        'Content-Type': 'application/json',
       }
 
-      fetchAsset();
+      for (const Id of Ids) {
+        await axiosPrivate.delete(`${process.env.REACT_APP_BACKEND_API}physical_assets/${Id}`, {
+          headers,
+        })
+      }
+
+      fetchAsset()
     } catch (error) {
-      handleErrors(error);
+      handleErrors(error)
     }
-  };
+  }
 
   const fetchAsset = async () => {
     try {
       const headers = {
         Authorization: `Bearer ${authToken}`,
-        "Content-Type": "application/json",
-      };
+        'Content-Type': 'application/json',
+      }
 
       await axiosPrivate
         .get(`${process.env.REACT_APP_BACKEND_API}physical_assets/`, {
           headers,
         })
         .then((res) => {
-          let totalVal = 0.000000001;
-          res.data.map((da) => {
-            totalVal += da.market_value;
-            finalAssets = [
-              ...finalAssets,
-              { id: da.id, name: da.name, value: parseFloat(da.market_value) },
-            ];
-          });
+          let totalVal = 0.000000001
+          res.data.forEach((da) => {
+            totalVal += da.market_value
+            finalAssets = [...finalAssets, { id: da.id, name: da.name, value: parseFloat(da.market_value) }]
+          })
 
           dispatch({
             type: Types.FETCH_ASSETS,
             payload: { finalAssets, totalVal },
-          });
-        });
+          })
+        })
     } catch (error) {
       // Handle errors
-      handleErrors(error.message);
+      handleErrors(error.message)
     }
-  };
+  }
 
   const fetchAssetById = async (assetId) => {
     try {
       const headers = {
         Authorization: `Bearer ${authToken}`,
-        "Content-Type": "application/json",
-      };
-      const response = await axiosPrivate.get(
-        `${process.env.REACT_APP_BACKEND_API}physical_assets/${assetId}`,
-        { headers }
-      );
+        'Content-Type': 'application/json',
+      }
+      const response = await axiosPrivate.get(`${process.env.REACT_APP_BACKEND_API}physical_assets/${assetId}`, {
+        headers,
+      })
 
-      const assetData = response.data;
+      const assetData = response.data
 
-      return assetData;
+      return assetData
     } catch (error) {
-      handleErrors(error);
-      throw error;
+      handleErrors(error)
+      throw error
     }
-  };
+  }
 
   const fetchLiabilities = async () => {
     try {
       const headers = {
         Authorization: `Bearer ${authToken}`,
-        "Content-Type": "application/json",
-      };
+        'Content-Type': 'application/json',
+      }
 
-      await axiosPrivate
-        .get(`${process.env.REACT_APP_BACKEND_API}loans/`, { headers })
-        .then((res) => {
-          let totalVal = 0.000000001;
+      await axiosPrivate.get(`${process.env.REACT_APP_BACKEND_API}loans/`, { headers }).then((res) => {
+        let totalVal = 0.000000001
 
-          res.data.forEach((da) => {
-            totalVal += parseFloat(da.balance);
+        res.data.forEach((da) => {
+          totalVal += parseFloat(da.balance)
 
-            finalLiabilities = [
-              ...finalLiabilities,
-              {
-                id: da.id,
-                name: da.name,
-                value: parseFloat(da.balance),
-                principal: parseFloat(da.principal),
-                interest: parseFloat(da.interest_rate),
-                tenure: da.tenure,
-                closure_charges: parseFloat(da.closure_charges),
-                disbursement_date: da.disbursement_date,
-              },
-            ];
-          });
-          dispatch({
-            type: Types.FETCH_LIABILITIES,
-            payload: { finalLiabilities, totalVal },
-          });
-        });
+          finalLiabilities = [
+            ...finalLiabilities,
+            {
+              id: da.id,
+              name: da.name,
+              value: parseFloat(da.balance),
+              principal: parseFloat(da.principal),
+              interest: parseFloat(da.interest_rate),
+              tenure: da.tenure,
+              closure_charges: parseFloat(da.closure_charges),
+              disbursement_date: da.disbursement_date,
+            },
+          ]
+        })
+        dispatch({
+          type: Types.FETCH_LIABILITIES,
+          payload: { finalLiabilities, totalVal },
+        })
+      })
     } catch (error) {
       // Handle errors
       // handleErrors(error.message);
-      console.log(error);
+      console.log(error)
     }
-  };
+  }
 
   const addLiabilityRequest = async (liabilityData) => {
     try {
       const headers = {
         Authorization: `Bearer ${authToken}`,
-        "Content-Type": "application/json",
-      };
+        'Content-Type': 'application/json',
+      }
 
       await axiosPrivate
         .post(`${process.env.REACT_APP_BACKEND_API}loans/`, liabilityData, {
           headers,
         })
-        .then((res) => {
-          fetchLiabilities();
-        });
+        .then(() => {
+          fetchLiabilities()
+        })
     } catch (error) {
-      console.log(error.response.data);
+      console.log(error.response.data)
     }
-  };
+  }
 
   const editLiabilityRequest = async (liabilityId, updatedLiabilityData) => {
     try {
       const headers = {
         Authorization: `Bearer ${authToken}`,
-        "Content-Type": "application/json",
-      };
+        'Content-Type': 'application/json',
+      }
 
       await axiosPrivate
-        .put(
-          `${process.env.REACT_APP_BACKEND_API}loans/${liabilityId}`,
-          updatedLiabilityData,
-          { headers }
-        )
-        .then((res) => {
-          fetchLiabilities();
-        });
+        .put(`${process.env.REACT_APP_BACKEND_API}loans/${liabilityId}`, updatedLiabilityData, { headers })
+        .then(() => {
+          fetchLiabilities()
+        })
     } catch (error) {
-      //handleErrors(error);
-      console.log(error);
+      // handleErrors(error);
+      console.log(error)
     }
-  };
+  }
 
   const fetchLiabilityById = async (Id) => {
     try {
       const headers = {
         Authorization: `Bearer ${authToken}`,
-        "Content-Type": "application/json",
-      };
-      const response = await axiosPrivate.get(
-        `${process.env.REACT_APP_BACKEND_API}loans/${Id}`,
-        { headers }
-      );
+        'Content-Type': 'application/json',
+      }
+      const response = await axiosPrivate.get(`${process.env.REACT_APP_BACKEND_API}loans/${Id}`, { headers })
 
-      const assetData = response.data;
+      const assetData = response.data
 
-      return assetData;
+      return assetData
     } catch (error) {
-      handleErrors(error);
-      throw error;
+      handleErrors(error)
+      throw error
     }
-  };
+  }
 
   const deleteLiabilityRequest = async (Ids) => {
     try {
       const headers = {
         Authorization: `Bearer ${authToken}`,
-        "Content-Type": "application/json",
-      };
-
-      for (const Id of Ids) {
-        await axiosPrivate.delete(
-          `${process.env.REACT_APP_BACKEND_API}loans/${Id}`,
-          {
-            headers,
-          }
-        );
+        'Content-Type': 'application/json',
       }
 
-      fetchLiabilities();
+      for (const Id of Ids) {
+        await axiosPrivate.delete(`${process.env.REACT_APP_BACKEND_API}loans/${Id}`, {
+          headers,
+        })
+      }
+
+      fetchLiabilities()
     } catch (error) {
-      handleErrors(error);
+      handleErrors(error)
     }
-  };
+  }
 
   const signOut = () => {
-    setAuthToken(null);
-    deleteCookie("refresh");
-  };
+    setAuthToken(null)
+    deleteCookie('refresh')
+  }
 
   const fetchGoals = async (page, rowsPerPage) => {
     const headers = {
       Authorization: `Bearer ${authToken}`,
-      "Content-Type": "application/json",
-    };
+      'Content-Type': 'application/json',
+    }
 
     await axiosClient
       .get(`${process.env.REACT_APP_BACKEND_URL}api/financial_goal/`, {
@@ -888,19 +830,18 @@ const Provider = ({ children }) => {
         dispatch({
           type: Types.FETCH_GOAL,
           payload: response.data,
-        });
+        })
       })
       .catch((error) => {
-        console.log(error?.response?.data?.detail);
-        handleErrors(error);
-      });
-  };
+        handleErrors(error)
+      })
+  }
 
   const deleteGoalRequest = async (id) => {
     const headers = {
       Authorization: `Bearer ${authToken}`,
-      "Content-Type": "application/json",
-    };
+      'Content-Type': 'application/json',
+    }
     await axiosClient
       .delete(`${process.env.REACT_APP_BACKEND_URL}api/financial_goal/${id}`, {
         headers,
@@ -910,22 +851,21 @@ const Provider = ({ children }) => {
           dispatch({
             type: Types.DELETE_GOAL,
             payload: {
-              id: id,
+              id,
             },
-          });
+          })
         }
       })
       .catch((error) => {
-        console.log(error?.response?.data?.detail);
-        handleErrors(error);
-      });
-  };
+        handleErrors(error)
+      })
+  }
 
   const createGoalRequest = async (data) => {
     const headers = {
       Authorization: `Bearer ${authToken}`,
-      "Content-Type": "application/json",
-    };
+      'Content-Type': 'application/json',
+    }
     try {
       await axiosClient
         .post(`${process.env.REACT_APP_BACKEND_URL}api/financial_goal/`, data, {
@@ -937,159 +877,77 @@ const Provider = ({ children }) => {
             payload: {
               data: response.data.data,
             },
-          });
+          })
         })
         .catch((error) => {
-          console.log(error?.response?.data?.detail);
-          handleErrors(error);
-        });
+          handleErrors(error)
+        })
     } catch (error) {}
-  };
+  }
 
   const changeGoalRequest = async (goal) => {
     const headers = {
       Authorization: `Bearer ${authToken}`,
-      "Content-Type": "application/json",
-    };
+      'Content-Type': 'application/json',
+    }
     try {
       await axiosClient
-        .put(
-          `${process.env.REACT_APP_BACKEND_URL}api/financial_goal/${goal.id}`,
-          goal,
-          {
-            headers,
-          }
-        )
+        .put(`${process.env.REACT_APP_BACKEND_URL}api/financial_goal/${goal.id}`, goal, {
+          headers,
+        })
         .then((response) => {
           dispatch({
             type: Types.EDIT_GOAL,
             payload: {
               goal: JSON.parse(response.config.data),
             },
-          });
+          })
         })
         .catch((error) => {
-          console.log(error?.response?.data?.detail);
-          handleErrors(error);
-        });
+          handleErrors(error)
+        })
     } catch (error) {}
-  };
+  }
 
   const fetchUser = async (authToken) => {
-    if (!authToken) return;
+    if (!authToken) return
 
-    const decodedToken = jwtDecode(authToken);
-    const userId = decodedToken.user_id;
+    const decodedToken = jwtDecode(authToken)
+    const userId = decodedToken.user_id
 
     try {
       const headers = {
         Authorization: `Bearer ${authToken}`,
-        "Content-Type": "application/json",
-      };
+        'Content-Type': 'application/json',
+      }
 
-      const response = await axiosPrivate.get(
-        `${process.env.REACT_APP_BACKEND_URL}users/api/users/${userId}`,
-        { headers }
-      );
+      const response = await axiosPrivate.get(`${process.env.REACT_APP_BACKEND_URL}users/api/users/${userId}`, {
+        headers,
+      })
 
       if (response.status === 200) {
-        dispatch({ type: Types.SET_USER, payload: response.data });
+        dispatch({ type: Types.SET_USER, payload: response.data })
       }
     } catch (error) {
-      handleErrors(error);
+      handleErrors(error)
     }
-  };
+  }
 
-  const createBudget = async (data) => {
-    try {
-      const headers = {
-        Authorization: `Bearer ${authToken}`,
-        "Content-Type": "application/json",
-      };
-
-      const response = await axiosPrivate.post(
-        `${process.env.REACT_APP_BACKEND_API}budget/`,
-        data,
-        { headers }
-      );
-
-      if (response.status === 201) {
-        dispatch({
-          type: Types.SET_BUDGET,
-          payload: response.data.data,
-        });
-      }
-
-      return response;
-    } catch (error) {
-      handleErrors(error);
-    }
-  };
-
-  const updateBudget = async (id, data) => {
-    try {
-      const headers = {
-        Authorization: `Bearer ${authToken}`,
-        "Content-Type": "application/json",
-      };
-
-      const response = await axiosPrivate.put(
-        `${process.env.REACT_APP_BACKEND_API}budget/${id}`,
-        data,
-        { headers }
-      );
-
-      if (response.status === 200) {
-        dispatch({
-          type: Types.EDIT_BUDGET,
-          payload: response.data.data,
-        });
-      }
-
-      return response;
-    } catch (error) {
-      handleErrors(error);
-    }
-  };
-
-  const deleteBudget = async (id) => {
-    try {
-      const headers = {
-        Authorization: `Bearer ${authToken}`,
-        "Content-Type": "application/json",
-      };
-
-      await axiosPrivate.delete(
-        `${process.env.REACT_APP_BACKEND_API}budget/${id}`,
-        {
-          headers,
-        }
-      );
-
-      dispatch({
-        type: Types.DELETE_BUDGET,
-        payload: id,
-      });
-    } catch (error) {
-      handleErrors(error);
-    }
-  };
-
-  const UnitContext = React.createContext();
-  const UnitUpdateContext = React.createContext();
+  const UnitContext = React.createContext()
+  const UnitUpdateContext = React.createContext()
 
   function useUnit() {
-    return useContext(UnitContext);
+    return useContext(UnitContext)
   }
 
   function useUnitUpdate() {
-    return useContext(UnitUpdateContext);
+    return useContext(UnitUpdateContext)
   }
-  const [unit, setUnit] = useState("Months");
+  const [unit, setUnit] = useState('Months')
 
   const handleUnitChange = (val) => {
-    setUnit(val);
-  };
+    setUnit(val)
+  }
 
   return (
     <Context.Provider
@@ -1143,9 +1001,6 @@ const Provider = ({ children }) => {
         fetchAllExpenses,
         fetchUser,
         user,
-        deleteBudget,
-        createBudget,
-        updateBudget,
         addLiabilityRequest,
         editLiabilityRequest,
         fetchLiabilityById,
@@ -1154,7 +1009,7 @@ const Provider = ({ children }) => {
     >
       {children}
     </Context.Provider>
-  );
-};
+  )
+}
 
-export { Context, Provider };
+export { Context, Provider }

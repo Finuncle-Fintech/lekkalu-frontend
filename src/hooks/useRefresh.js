@@ -1,36 +1,34 @@
-import { useContext } from "react";
-import { Context } from "provider/Provider";
-import axiosClient from "components/Axios/Axios";
-import getCookie from "components/Support/PopUp/utils/GetCookie";
+import { useContext } from 'react'
+import { Context } from 'provider/Provider'
+import axiosClient from 'components/Axios/Axios'
+import getCookie from 'components/Support/PopUp/utils/GetCookie'
 
 const useRefreshToken = () => {
-    const { setAuthToken } = useContext(Context)
+  const { setAuthToken } = useContext(Context)
 
-    const refresh = async () => {
-        try {
-            const response = await axiosClient.post('token/refresh/',
-                JSON.stringify({
-                    "refresh": getCookie("refresh")
-                }),
-                {
-                    headers:{
-                        "Content-Type": "application/json"
-                    }
-                }
-            )
+  const refresh = async () => {
+    try {
+      const response = await axiosClient.post(
+        'token/refresh/',
+        JSON.stringify({
+          refresh: getCookie('refresh'),
+        }),
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      )
 
-            setAuthToken(response?.data?.access)
-    
-            return response.data?.access
-    
-        } catch (error) {
-            
-            setAuthToken(null)
-            
-        }
+      setAuthToken(response?.data?.access)
+
+      return response.data?.access
+    } catch (error) {
+      setAuthToken(null)
     }
+  }
 
-    return refresh
+  return refresh
 }
 
 export default useRefreshToken

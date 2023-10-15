@@ -1,40 +1,40 @@
-import React, { useState } from "react";
-import Checkbox from "@mui/material/Checkbox";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import { Link, Link as ReactRouterLink, useNavigate } from "react-router-dom";
-import axiosClient from "components/Axios/Axios";
-import Swal from "sweetalert2";
-import divider from "../../assets/loginImages/Divider.svg";
-import facebookIcon from "../../assets/loginImages/facebook-icon.jpg";
-import googleIcon from "../../assets/loginImages/google-icon.svg";
-import appleIcon from "../../assets/loginImages/apple-icon.svg";
-import styles from "./Signup.module.css";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import { useForm } from "react-hook-form";
-import { EMAIL_REGEX } from "utils/Constants";
+import React, { useState } from 'react'
+import Checkbox from '@mui/material/Checkbox'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import { Link, Link as ReactRouterLink, useNavigate } from 'react-router-dom'
+import axiosClient from 'components/Axios/Axios'
+import Swal from 'sweetalert2'
+import VisibilityIcon from '@mui/icons-material/Visibility'
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
+import { useForm } from 'react-hook-form'
+import { EMAIL_REGEX } from 'utils/constants'
+import divider from '../../assets/loginImages/Divider.svg'
+import facebookIcon from '../../assets/loginImages/facebook-icon.jpg'
+import googleIcon from '../../assets/loginImages/google-icon.svg'
+import appleIcon from '../../assets/loginImages/apple-icon.svg'
+import styles from './Signup.module.css'
 
 export const Signup = () => {
-  const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false)
 
-  const navigate = useNavigate();
-  const [errors, setErrors] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate()
+  const [errors, setErrors] = useState([])
+  const [loading, setLoading] = useState(false)
 
-  const isUnderDevelopment = true;
+  const isUnderDevelopment = true
 
   const {
     register,
     handleSubmit,
     formState: { errors: clientErrors },
-  } = useForm();
+  } = useForm()
 
   const handleSignup = async (data) => {
-    setLoading(true);
+    setLoading(true)
 
     await axiosClient
       .post(
-        "users/api/users",
+        'users/api/users',
         JSON.stringify({
           username: data.username,
           email: data.email,
@@ -42,196 +42,179 @@ export const Signup = () => {
         }),
         {
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
-        }
+        },
       )
       .then((res) => {
         res?.status === 201
-          ? navigate("/signin")
+          ? navigate('/signin')
           : Swal.fire({
-              position: "top-end",
-              icon: "error",
+              position: 'top-end',
+              icon: 'error',
               html: `<p>${res?.data}</p>`,
               showConfirmButton: false,
               timer: 3000,
-            });
+            })
       })
       .catch((error) => {
         if (error.response.status === 500) {
-          setErrors((curr) => [...curr, "Server Error!!! Try again later"]);
+          setErrors((curr) => [...curr, 'Server Error!!! Try again later'])
         } else {
           for (const key in error?.response?.data) {
-            setErrors((curr) => [
-              ...curr,
-              `${key}: ${error?.response?.data[key]}`,
-            ]);
+            setErrors((curr) => [...curr, `${key}: ${error?.response?.data[key]}`])
           }
         }
-      });
+      })
 
-    setLoading(false);
-  };
+    setLoading(false)
+  }
 
   return (
     <div className={styles.authentication}>
       <div className={styles.logo}>
-        <div className={styles.logoCircle}></div>
+        <div className={styles.logoCircle} />
         <p className={styles.logoText}>finuncle</p>
       </div>
 
       <div className={styles.authenticationContainer}>
         <h1 className={styles.title}>Sign up</h1>
-        <div className="my-3">
+        <div className='my-3'>
           {errors.length > 0
             ? errors.map((e, i) => {
                 return (
                   <p key={i} className={styles.error}>
                     {e}
                   </p>
-                );
+                )
               })
             : null}
         </div>
 
         <div className={styles.loginContainer}>
-          <form
-            onSubmit={handleSubmit(handleSignup)}
-            className={styles.loginForm}
-          >
-            <label htmlFor="username" className={styles.loginLabel}>
+          <form onSubmit={handleSubmit(handleSignup)} className={styles.loginForm}>
+            <label htmlFor='username' className={styles.loginLabel}>
               Username
             </label>
             <input
-              id="username"
+              id='username'
               className={styles.loginInput}
-              autoComplete="username"
+              autoComplete='username'
               autoFocus
-              {...register("username", {
-                required: "Username is required!",
+              {...register('username', {
+                required: 'Username is required!',
                 minLength: {
                   value: 6,
-                  message: "Enter at least 6 characters",
+                  message: 'Enter at least 6 characters',
                 },
               })}
             />
-            <p className="errorMessage">{clientErrors?.username?.message}</p>
+            <p className='errorMessage'>{clientErrors?.username?.message}</p>
 
-            <label htmlFor="email" className={styles.loginLabel}>
+            <label htmlFor='email' className={styles.loginLabel}>
               Email Address
             </label>
             <input
-              id="email"
-              type="email"
+              id='email'
+              type='email'
               className={styles.loginInput}
-              autoComplete="email"
-              {...register("email", {
-                required: "Email is required!",
+              autoComplete='email'
+              {...register('email', {
+                required: 'Email is required!',
                 pattern: {
                   value: EMAIL_REGEX,
-                  message: "Please enter a valid email!",
+                  message: 'Please enter a valid email!',
                 },
               })}
             />
-            <p className="errorMessage">{clientErrors?.email?.message}</p>
+            <p className='errorMessage'>{clientErrors?.email?.message}</p>
 
-            <label htmlFor="password" className={styles.loginLabel}>
+            <label htmlFor='password' className={styles.loginLabel}>
               Password
             </label>
             <div className={styles.passwordInputBox}>
               <input
-                id="password"
-                type={showPassword ? "text" : "password"}
+                id='password'
+                type={showPassword ? 'text' : 'password'}
                 className={styles.passwordInput}
-                autoComplete="current-password"
-                {...register("password", {
-                  required: "Password is required!",
+                autoComplete='current-password'
+                {...register('password', {
+                  required: 'Password is required!',
                   minLength: {
                     value: 8,
-                    message: "Please enter at least 8 characters",
+                    message: 'Please enter at least 8 characters',
                   },
                   maxLength: {
                     value: 20,
-                    message: "Please enter at most 20 characters",
+                    message: 'Please enter at most 20 characters',
                   },
                 })}
               />
               <div
                 className={styles.visibilityButton}
                 onClick={() => {
-                  setShowPassword((prev) => !prev);
+                  setShowPassword((prev) => !prev)
                 }}
               >
                 {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
               </div>
             </div>
-            <p className="errorMessage">{clientErrors?.password?.message}</p>
+            <p className='errorMessage'>{clientErrors?.password?.message}</p>
 
             <FormControlLabel
               className={styles.CheckBox}
               control={
                 <Checkbox
-                  data-testid="conditions"
-                  color="success"
-                  {...register("termsAndConditions", {
-                    required: "Please accept terms and conditions!",
+                  data-testid='conditions'
+                  color='success'
+                  {...register('termsAndConditions', {
+                    required: 'Please accept terms and conditions!',
                   })}
                 />
               }
               label={
                 <div>
-                  I have read, understood and agreed to{" "}
-                  <Link to="/terms-and-conditions">
-                    Finuncle's Terms and Conditions
-                  </Link>
+                  I have read, understood and agreed to{' '}
+                  <Link to='/terms-and-conditions'>Finuncle&apos;s Terms and Conditions</Link>
                 </div>
               }
             />
-            <p className="errorMessage">
-              {clientErrors?.termsAndConditions?.message}
-            </p>
+            <p className='errorMessage'>{clientErrors?.termsAndConditions?.message}</p>
 
             <FormControlLabel
               className={styles.CheckBox}
               control={
                 <Checkbox
-                  data-testid="policies"
-                  color="success"
-                  {...register("privacyPolicy", {
-                    required: "Please agree to the privacy policies!",
+                  data-testid='policies'
+                  color='success'
+                  {...register('privacyPolicy', {
+                    required: 'Please agree to the privacy policies!',
                   })}
                 />
               }
               label={
                 <div>
-                  I have read, understood and agreed to{" "}
-                  <Link to="/privacy-policies">Finuncle's Privacy Policy</Link>
+                  I have read, understood and agreed to{' '}
+                  <Link to='/privacy-policies'>Finuncle&apos;s Privacy Policy</Link>
                 </div>
               }
             />
-            <p className="errorMessage">
-              {clientErrors?.privacyPolicy?.message}
-            </p>
+            <p className='errorMessage'>{clientErrors?.privacyPolicy?.message}</p>
 
             <button
-              type="submit"
+              type='submit'
               className={styles.loginButton}
               style={{
-                backgroundColor: loading ? "#BEBEBE" : "#1976D2",
-                cursor: loading ? "not-allowed" : "pointer",
+                backgroundColor: loading ? '#BEBEBE' : '#1976D2',
+                cursor: loading ? 'not-allowed' : 'pointer',
               }}
               disabled={loading}
             >
               Continue
             </button>
           </form>
-          <ReactRouterLink
-            component={ReactRouterLink}
-            to="/signin"
-            variant="body2"
-            className={styles.link}
-          >
-            {"Already have an account? Sign in"}
+          <ReactRouterLink component={ReactRouterLink} to='/signin' variant='body2' className={styles.link}>
+            {'Already have an account? Sign in'}
           </ReactRouterLink>
         </div>
 
@@ -240,32 +223,24 @@ export const Signup = () => {
         ) : (
           <>
             <div className={styles.orBlock}>
-              <img className={styles.orImage} src={divider} alt="" />
+              <img className={styles.orImage} src={divider} alt='' />
               <p className={styles.orText}>OR</p>
-              <img className={styles.orImage} src={divider} alt="" />
+              <img className={styles.orImage} src={divider} alt='' />
             </div>
 
             <div className={styles.authenticationButtons}>
               <button className={styles.authButton}>
-                <img
-                  src={facebookIcon}
-                  alt="facebook"
-                  className={styles.authIcon}
-                />
+                <img src={facebookIcon} alt='facebook' className={styles.authIcon} />
                 <p className={styles.authText}>Continue with Facebook</p>
               </button>
 
               <button className={styles.authButton}>
-                <img
-                  src={googleIcon}
-                  alt="google"
-                  className={styles.authIcon}
-                />
+                <img src={googleIcon} alt='google' className={styles.authIcon} />
                 <p className={styles.authText}>Continue with Google</p>
               </button>
 
               <button className={styles.authButton}>
-                <img src={appleIcon} alt="apple" className={styles.authIcon} />
+                <img src={appleIcon} alt='apple' className={styles.authIcon} />
                 <p className={styles.authText}>Continue with Apple</p>
               </button>
             </div>
@@ -273,7 +248,7 @@ export const Signup = () => {
         )}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Signup;
+export default Signup

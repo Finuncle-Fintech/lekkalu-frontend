@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
 
 .authentication {
   width: 100%;
@@ -8,7 +8,7 @@
   display: flex;
   align-items: center;
   justify-content: space-around;
-  font-family: "Poppins";
+  font-family: 'Poppins';
 }
 
 .logoText {
@@ -126,7 +126,7 @@
 }
 
 .orText {
-  font-family: "Avenir";
+  font-family: 'Avenir';
   font-size: 1rem;
   font-weight: 400;
   line-height: 27px;
@@ -161,7 +161,7 @@
 }
 
 .authText {
-  font-family: "Avenir";
+  font-family: 'Avenir';
   font-size: 1rem;
   font-weight: 400;
   line-height: 2rem;

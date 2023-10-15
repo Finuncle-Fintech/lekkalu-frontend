@@ -1,17 +1,17 @@
-import { useContext, useEffect, useState } from "react";
-import { Context } from "provider/Provider";
-import { Box } from "@mui/material";
-import GraphCard from "components/BalanceSheet/GraphCard";
-import BarGraph from "components/BalanceSheet/BarGraph";
-import EnhancedTable from "components/BalanceSheet/AssetTable";
-import LiabilitiesTable from "components/BalanceSheet/LiabilitiesTable";
+import { useContext, useEffect, useState } from 'react'
+import { Context } from 'provider/Provider'
+import { Box } from '@mui/material'
+import GraphCard from 'components/BalanceSheet/GraphCard'
+import BarGraph from 'components/BalanceSheet/BarGraph'
+import EnhancedTable from 'components/BalanceSheet/AssetTable'
+import LiabilitiesTable from 'components/BalanceSheet/LiabilitiesTable'
 
 export default function BalanceSheet() {
-  const { assets, liabilities } = useContext(Context);
+  const { assets, liabilities } = useContext(Context)
 
-  const [barGraphIsOpen, setBarGraphIsOpen] = useState(false);
-  const [assetDatas, setAssetDatas] = useState([]);
-  const [liabilityDatas, setLiabilityDatas] = useState([]);
+  const [barGraphIsOpen, setBarGraphIsOpen] = useState(false)
+  const [assetDatas, setAssetDatas] = useState([])
+  const [liabilityDatas, setLiabilityDatas] = useState([])
 
   useEffect(() => {
     if (assets.finalAssets && assets.finalAssets.length > 0) {
@@ -19,52 +19,43 @@ export default function BalanceSheet() {
         id: asset.id,
         label: asset.name,
         value: asset.value,
-      }));
-      setAssetDatas(newAssetDatas);
+      }))
+      setAssetDatas(newAssetDatas)
     }
-  }, [assets]);
+  }, [assets])
 
   useEffect(() => {
-    if (
-      liabilities.finalLiabilities &&
-      liabilities.finalLiabilities.length > 0
-    ) {
-      const newLiabilityDatas = liabilities.finalLiabilities.map(
-        (liability) => ({
-          id: liability.id,
-          label: liability.name,
-          value: liability.value,
-          principal: liability.principal,
-          interest: liability.interest,
-          tenure: liability.tenure,
-          closure_charges: liability.closure_charges,
-          disbursement_date: liability.disbursement_date,
-        })
-      );
-      setLiabilityDatas(newLiabilityDatas);
+    if (liabilities.finalLiabilities && liabilities.finalLiabilities.length > 0) {
+      const newLiabilityDatas = liabilities.finalLiabilities.map((liability) => ({
+        id: liability.id,
+        label: liability.name,
+        value: liability.value,
+        principal: liability.principal,
+        interest: liability.interest,
+        tenure: liability.tenure,
+        closure_charges: liability.closure_charges,
+        disbursement_date: liability.disbursement_date,
+      }))
+      setLiabilityDatas(newLiabilityDatas)
     }
-  }, [liabilities]);
+  }, [liabilities])
 
   const handleOpen = () => {
-    setBarGraphIsOpen(true);
-  };
+    setBarGraphIsOpen(true)
+  }
   const handleClose = () => {
-    setBarGraphIsOpen(false);
-  };
+    setBarGraphIsOpen(false)
+  }
 
   return (
     <Box
       sx={{
-        minHeight: "350vh",
-        backgroundColor: "primary.main",
-        padding: "1% 5% 0 5%",
+        minHeight: '350vh',
+        backgroundColor: 'primary.main',
+        padding: '1% 5% 0 5%',
       }}
     >
-      <GraphCard
-        assetDatas={assets}
-        liabilityDatas={liabilities}
-        setBarGraphIsOpen={handleOpen}
-      />
+      <GraphCard assetDatas={assets} liabilityDatas={liabilities} setBarGraphIsOpen={handleOpen} />
       {barGraphIsOpen ? (
         <BarGraph
           setBarGraphIsOpen={handleClose}
@@ -76,5 +67,5 @@ export default function BalanceSheet() {
       <EnhancedTable assetDatas={assetDatas} />
       <LiabilitiesTable liabilityDatas={liabilityDatas} />
     </Box>
-  );
+  )
 }

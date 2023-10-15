@@ -5,16 +5,15 @@ import CalculatorWidget from './Components/CalculatorsWidget'
 import FollowUs from './Components/FollowUs'
 import FeedbackButton from './Components/FeedbackButton'
 
-export default function Footer(){
-    return(
-        <footer className={styles.footer}>
-             <FeedbackButton />
-            <div className={styles.linksFooter}>
-                <AboutUs />
-                <CalculatorWidget />
-                <FollowUs />
-            </div>
-           
-        </footer>
-    )
+export default function Footer() {
+  return (
+    <footer className={styles.footer}>
+      <FeedbackButton />
+      <div className={styles.linksFooter}>
+        <AboutUs />
+        <CalculatorWidget />
+        <FollowUs />
+      </div>
+    </footer>
+  )
 }

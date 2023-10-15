@@ -1,51 +1,45 @@
-import {
-  Button,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-} from "@mui/material";
-import styles from "./Settings.module.css";
-import { useUserPreferences } from "hooks/useUserPreferences";
-import { getCountryList } from "country-data-codes";
-import { useMemo } from "react";
-import { uniqBy } from "lodash";
+import { Button, FormControl, InputLabel, MenuItem, Select } from '@mui/material'
+import { useUserPreferences } from 'hooks/useUserPreferences'
+import { getCountryList } from 'country-data-codes'
+import { useMemo } from 'react'
+import { uniqBy } from 'lodash'
+import styles from './Settings.module.css'
 
 export default function Settings() {
-  const { preferences, setPreferences, savePreferences } = useUserPreferences();
+  const { preferences, setPreferences, savePreferences } = useUserPreferences()
 
   const currencyCodes = useMemo(() => {
-    const countryList = getCountryList();
+    const countryList = getCountryList()
     const currencyList = countryList
       .map((item) => ({
         name: item.currency.name,
         symbol: item.currency.symbol,
       }))
-      .filter((item) => Boolean(item.symbol));
+      .filter((item) => Boolean(item.symbol))
 
-    return uniqBy(currencyList, (currency) => currency.symbol);
-  }, []);
+    return uniqBy(currencyList, (currency) => currency.symbol)
+  }, [])
 
   const handleValueChange = (e) => {
-    setPreferences((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  };
+    setPreferences((prev) => ({ ...prev, [e.target.name]: e.target.value }))
+  }
 
   return (
     <div className={styles.settings_container}>
       <div className={styles.heading}>Manage your preferences</div>
-      <div className={styles.divider}></div>
+      <div className={styles.divider} />
 
       <div className={styles.grid}>
         <FormControl>
           <InputLabel>Currency Unit</InputLabel>
           <Select
             value={preferences.currencyUnit}
-            name="currencyUnit"
-            label="Currency Unit"
+            name='currencyUnit'
+            label='Currency Unit'
             onChange={handleValueChange}
           >
             {currencyCodes.map(({ name, symbol }) => (
-              <MenuItem value={symbol} key={name}>
+              <MenuItem value={symbol} key={`${name}_${symbol}`}>
                 {name} ({symbol})
               </MenuItem>
             ))}
@@ -54,13 +48,13 @@ export default function Settings() {
       </div>
 
       <Button
-        variant="contained"
+        variant='contained'
         onClick={() => {
-          savePreferences();
+          savePreferences()
         }}
       >
         Update
       </Button>
     </div>
-  );
+  )
 }

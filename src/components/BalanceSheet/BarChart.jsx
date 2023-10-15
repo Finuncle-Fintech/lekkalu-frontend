@@ -1,11 +1,11 @@
-import React from 'react';
-import { ResponsiveBar } from '@nivo/bar';
+import React from 'react'
+import { ResponsiveBar } from '@nivo/bar'
 
 const MyResponsiveBar = ({ data }) => (
   <ResponsiveBar
     data={data}
     keys={['value', 'principal', 'interest']} // Adjust the keys based on your data structure
-    indexBy="label" // Assuming 'label' is the category or label for the bars
+    indexBy='label' // Assuming 'label' is the category or label for the bars
     margin={{ top: 50, right: 130, bottom: 50, left: 60 }}
     padding={0.3}
     valueScale={{ type: 'linear' }}
@@ -20,7 +20,7 @@ const MyResponsiveBar = ({ data }) => (
       tickRotation: 0,
       legend: 'Label', // Update to match your data
       legendPosition: 'middle',
-      legendOffset: 32
+      legendOffset: 32,
     }}
     axisLeft={{
       tickSize: 5,
@@ -28,7 +28,7 @@ const MyResponsiveBar = ({ data }) => (
       tickRotation: 0,
       legend: 'Value', // Update to match your data
       legendPosition: 'middle',
-      legendOffset: -40
+      legendOffset: -40,
     }}
     labelSkipWidth={12}
     labelSkipHeight={12}
@@ -51,16 +51,16 @@ const MyResponsiveBar = ({ data }) => (
           {
             on: 'hover',
             style: {
-              itemOpacity: 1
-            }
-          }
-        ]
-      }
+              itemOpacity: 1,
+            },
+          },
+        ],
+      },
     ]}
-    role="application"
-    ariaLabel="Nivo bar chart demo"
-    barAriaLabel={e => `${e.id}: ${e.formattedValue} in label: ${e.indexValue}`}
+    role='application'
+    ariaLabel='Nivo bar chart demo'
+    barAriaLabel={(e) => `${e.id}: ${e.formattedValue} in label: ${e.indexValue}`}
   />
-);
+)
 
-export default MyResponsiveBar;
+export default MyResponsiveBar

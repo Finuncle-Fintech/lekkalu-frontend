@@ -13,7 +13,7 @@ export async function deleteBudget(id: number) {
 }
 
 export async function setBudget(dto: SetBudgetSchema) {
-  const { data } = await apiClient.post<Budget[]>('/budget', dto)
+  const { data } = await apiClient.post<Budget[]>('/budget/', dto)
   return data
 }
 

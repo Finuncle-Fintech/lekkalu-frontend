@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import ProtectedRoutes from "./components/ProtectedRoutes/ProtectedRoutes";
 import Charts from "components/Charts/Charts";
 import Expenses from "components/Expenses/Expenses";
@@ -16,24 +16,23 @@ import CAGRCalculator from "pages/CAGRCalculator/CAGRCalculator";
 import BalanceSheet from "pages/BalanceSheet/BalanceSheet";
 import Settings from "pages/Settings/Settings";
 import PersistGuest from "components/GuestRoutes/PersistGuest";
+// 
+import Goals from "components/Goals/Goals";
 import Hero from "pages/Hero/Hero";
 import HeroRoute from "components/HeroRoute/HeroRoute";
 import Subscription from "pages/Subscription/Subscription";
+import TermsAndConditions from "pages/TermsAndConditions/TermsAndConditions";
+import PrivacyPolicies from "pages/PrivacyPolicies/PrivacyPolicies";
+import Profile from "pages/Profile/Profile";
 
 const RouterComponent = () => {
-
   return (
     <Router>
-
       <Layout>
-
         <Routes>
           <Route path="*" element={<ErrorPage />} />
           <Route element={<PersistGuest />}>
-            <Route
-              path="/" 
-              element={<HeroRoute component={<Hero />} />}
-            />
+            <Route path="/" element={<HeroRoute component={<Hero />} />} />
             <Route
               path="/subscription"
               element={<Subscription/>}
@@ -58,12 +57,24 @@ const RouterComponent = () => {
               path="/loan_emi_calculator"
               element={<GuestRoutes component={<EmiCalculator />} />}
             />
+            <Route
+              path="/terms-and-conditions"
+              element={<GuestRoutes component={<TermsAndConditions />} />}
+            />
+            <Route
+              path="/privacy-policies"
+              element={<GuestRoutes component={<PrivacyPolicies />} />}
+            />
           </Route>
 
           <Route element={<PersistLogin />}>
             <Route
               path="/home"
               element={<ProtectedRoutes component={<Charts />} />}
+            />
+            <Route
+              path="/goals"
+              element={<ProtectedRoutes component={<Goals />} />}
             />
             <Route
               path="/income-statement"
@@ -78,15 +89,16 @@ const RouterComponent = () => {
               element={<ProtectedRoutes component={<BalanceSheet />} />}
             />
             <Route
-                path="/settings"
-                element={<ProtectedRoutes component={<Settings />} />}
+              path="/settings"
+              element={<ProtectedRoutes component={<Settings />} />}
+            />
+            <Route
+              path="/profile"
+              element={<ProtectedRoutes component={<Profile />} />}
             />
           </Route>
-
         </Routes>
-
       </Layout>
-
     </Router>
   );
 };

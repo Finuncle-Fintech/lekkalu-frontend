@@ -1,13 +1,12 @@
-
-import React, { createContext, useReducer, useState, useContext } from 'react';
-import axiosClient from 'components/Axios/Axios';
-import useAxiosPrivate from 'hooks/useAxiosPrivate';
-import { InitialState } from './Reducer';
-import Reducer from './Reducer';
-import Types from './Types';
-import setCookie from 'components/Support/PopUp/utils/SetCookie';
-import deleteCookie from 'components/Support/PopUp/utils/DeleteCookie';
-
+import React, { createContext, useReducer, useState, useContext } from "react";
+import axiosClient from "components/Axios/Axios";
+import useAxiosPrivate from "hooks/useAxiosPrivate";
+import { InitialState } from "./Reducer";
+import Reducer from "./Reducer";
+import Types from "./Types";
+import setCookie from "components/Support/PopUp/utils/SetCookie";
+import deleteCookie from "components/Support/PopUp/utils/DeleteCookie";
+import jwtDecode from "jwt-decode";
 
 const Context = createContext({
   ...InitialState,
@@ -48,6 +47,8 @@ const Provider = ({ children }) => {
     liabilities,
     incomeStatement,
     depreciation,
+    user,
+    goals,
   } = store;
 
   const handleErrors = (error) => {
@@ -58,7 +59,7 @@ const Provider = ({ children }) => {
         alert(error.message);
       }
     }
-    if (error.message == "Network Error") {
+    if (error.message === "Network Error") {
       alert("Network Error");
     }
   };
@@ -113,9 +114,13 @@ const Provider = ({ children }) => {
         "Content-Type": "application/json",
       };
 
-      await axiosPrivate.post(`${process.env.REACT_APP_BACKEND_API}expense-tag/`, tag, {
-        headers,
-      });
+      await axiosPrivate.post(
+        `${process.env.REACT_APP_BACKEND_API}expense-tag/`,
+        tag,
+        {
+          headers,
+        }
+      );
     } catch (error) {
       handleErrors(error);
     }
@@ -143,6 +148,24 @@ const Provider = ({ children }) => {
         });
     } catch (error) {
       handleErrors(error);
+    }
+  };
+
+  const fetchAllExpenses = async () => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      const response = await axiosPrivate.get(
+        `${process.env.REACT_APP_BACKEND_API}expenses/`,
+        { headers }
+      );
+      return response.data;
+    } catch (error) {
+      handleErrors(error);
+      throw error; // Rethrow the error so it can be caught in the calling function
     }
   };
 
@@ -248,7 +271,6 @@ const Provider = ({ children }) => {
 
   const fetchData = async () => {
     try {
-      console.log(`CURRENT TOKEN ${authToken}`);
       const headers = {
         Authorization: `Bearer ${authToken}`,
         "Content-Type": "application/json",
@@ -303,17 +325,16 @@ const Provider = ({ children }) => {
         });
 
       await axiosPrivate
-        .get(`${process.env.REACT_APP_BACKEND_API}assets/`, { headers })
+        .get(`${process.env.REACT_APP_BACKEND_API}physical_assets/`, {
+          headers,
+        })
         .then((res) => {
           let totalVal = 0.000000001;
           res.data.map((da) => {
-            totalVal += da.market_value;
+            totalVal += Number(da.market_value);
             finalAssets = [
               ...finalAssets,
-              {
-                name: da.name,
-                value: parseFloat(da.market_value),
-              },
+              { id: da.id, name: da.name, value: parseFloat(da.market_value) },
             ];
           });
           dispatch({
@@ -331,8 +352,14 @@ const Provider = ({ children }) => {
             finalLiabilities = [
               ...finalLiabilities,
               {
+                id: da.id,
                 name: da.name,
                 value: parseFloat(da.balance),
+                principal: parseFloat(da.principal),
+                interest: parseFloat(da.interest_rate),
+                tenure: da.tenure,
+                closure_charges: parseFloat(da.closure_charges),
+                disbursement_date: da.disbursement_date,
               },
             ];
           });
@@ -367,12 +394,8 @@ const Provider = ({ children }) => {
         });
 
       await axiosPrivate
-        //get assets depreciation
         .get(`${process.env.REACT_APP_BACKEND_API}physical_assets/`, {
-          auth: {
-            username: process.env.REACT_APP_USER,
-            password: process.env.REACT_APP_PASSWORD,
-          },
+          headers,
         })
         .then((res) => {
           const data = res.data;
@@ -383,11 +406,8 @@ const Provider = ({ children }) => {
           });
         });
     } catch (error) {
-      // Handle errors
-      handleErrors(error);
+      handleErrors(error.message);
     }
-
-    //Removed fetch expenses here, because it breaks pagination request on expenses page
   };
 
   const fetchToken = async (username, password) => {
@@ -396,6 +416,7 @@ const Provider = ({ children }) => {
         username: username,
         password: password,
       };
+      //console.log(username, password)
 
       return await axiosClient
         .post(`${process.env.REACT_APP_BACKEND_URL}token/`, auth)
@@ -405,7 +426,6 @@ const Provider = ({ children }) => {
           return response.status;
         })
         .catch((error) => {
-          console.log(error?.response?.data?.detail);
           handleErrors(error);
         });
     } catch (error) {
@@ -428,6 +448,114 @@ const Provider = ({ children }) => {
     } catch (error) {
       handleErrors(error);
       return [];
+    }
+  };
+
+  const addIncomeExpense = async (data) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      return await axiosPrivate
+        .post(`${process.env.REACT_APP_BACKEND_API}income_expense/`, data, {
+          headers,
+        })
+        .then((response) => response)
+        .catch((error) => error);
+    } catch (error) {
+      handleErrors(error);
+    }
+  };
+
+  const updateIncomeExpenseById = async (id, data) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      return await axiosPrivate
+        .put(`${process.env.REACT_APP_BACKEND_API}income_expense/${id}`, data, {
+          headers,
+        })
+        .then((response) => response)
+        .catch((error) => error);
+    } catch (error) {
+      handleErrors(error);
+    }
+  };
+
+  const deleteIncomeExpenseById = async (id) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      await axiosPrivate.delete(
+        `${process.env.REACT_APP_BACKEND_API}income_expense/${id}`,
+        {
+          headers,
+        }
+      );
+    } catch (error) {
+      handleErrors(error);
+    }
+  };
+
+  const addIncomeSource = async (data) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      return await axiosPrivate
+        .post(`${process.env.REACT_APP_BACKEND_API}income_source/`, data, {
+          headers,
+        })
+        .then((response) => response)
+        .catch((error) => error);
+    } catch (error) {
+      handleErrors(error);
+    }
+  };
+
+  const updateIncomeSourceById = async (id, data) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      return await axiosPrivate
+        .put(`${process.env.REACT_APP_BACKEND_API}income_source/${id}`, data, {
+          headers,
+        })
+        .then((response) => response)
+        .catch((error) => error);
+    } catch (error) {
+      handleErrors(error);
+    }
+  };
+
+  const deleteIncomeSourceById = async (id) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      await axiosPrivate.delete(
+        `${process.env.REACT_APP_BACKEND_API}income_source/${id}`,
+        {
+          headers,
+        }
+      );
+    } catch (error) {
+      handleErrors(error);
     }
   };
 
@@ -463,6 +591,7 @@ const Provider = ({ children }) => {
         //Transform to [{‘name’: ‘day_job_income’, ‘type’:’salary’,’value’:50000}]
         transformedIncomeArray = incomeSources.map((each) => {
           return {
+            id: each.id,
             name: each.name,
             type: each.type,
             value: parseFloat(each.amount),
@@ -473,11 +602,8 @@ const Provider = ({ children }) => {
         //API returns [{‘name’: ‘day_job_income’, ‘type’:’salary’,’amount’:50000}]
         //Transform to [{‘name’: ‘day_job_income’, ‘type’:’salary’,’value’:50000}]
         transformedExpensesArray = incomeExpenses.map((each) => {
-          console.log({
-            original: each.amount,
-            value: parseFloat(each.amount),
-          });
           return {
+            id: each.id,
             name: each.name,
             type: each.type,
             value: parseFloat(each.amount),
@@ -497,26 +623,473 @@ const Provider = ({ children }) => {
     }
   };
 
+  const addAssetRequest = async (assetData) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      await axiosPrivate
+        .post(
+          `${process.env.REACT_APP_BACKEND_API}physical_assets/`,
+          assetData,
+          {
+            headers,
+          }
+        )
+        .then((res) => {
+          fetchAsset();
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const editAssetRequest = async (assetId, updatedAssetData) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      await axiosPrivate
+        .put(
+          `${process.env.REACT_APP_BACKEND_API}physical_assets/${assetId}`,
+          updatedAssetData,
+          { headers }
+        )
+        .then((res) => {
+          fetchAsset();
+        });
+    } catch (error) {
+      handleErrors(error);
+    }
+  };
+
+  const deleteAssetRequest = async (Ids) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      for (const Id of Ids) {
+        await axiosPrivate.delete(
+          `${process.env.REACT_APP_BACKEND_API}physical_assets/${Id}`,
+          {
+            headers,
+          }
+        );
+      }
+
+      fetchAsset();
+    } catch (error) {
+      handleErrors(error);
+    }
+  };
+
+  const fetchAsset = async () => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      await axiosPrivate
+        .get(`${process.env.REACT_APP_BACKEND_API}physical_assets/`, {
+          headers,
+        })
+        .then((res) => {
+          let totalVal = 0.000000001;
+          res.data.map((da) => {
+            totalVal += da.market_value;
+            finalAssets = [
+              ...finalAssets,
+              { id: da.id, name: da.name, value: parseFloat(da.market_value) },
+            ];
+          });
+
+          dispatch({
+            type: Types.FETCH_ASSETS,
+            payload: { finalAssets, totalVal },
+          });
+        });
+    } catch (error) {
+      // Handle errors
+      handleErrors(error.message);
+    }
+  };
+
+  const fetchAssetById = async (assetId) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+      const response = await axiosPrivate.get(
+        `${process.env.REACT_APP_BACKEND_API}physical_assets/${assetId}`,
+        { headers }
+      );
+
+      const assetData = response.data;
+
+      return assetData;
+    } catch (error) {
+      handleErrors(error);
+      throw error;
+    }
+  };
+
+  const fetchLiabilities = async () => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      await axiosPrivate
+        .get(`${process.env.REACT_APP_BACKEND_API}loans/`, { headers })
+        .then((res) => {
+          let totalVal = 0.000000001;
+
+          res.data.forEach((da) => {
+            totalVal += parseFloat(da.balance);
+
+            finalLiabilities = [
+              ...finalLiabilities,
+              {
+                id: da.id,
+                name: da.name,
+                value: parseFloat(da.balance),
+                principal: parseFloat(da.principal),
+                interest: parseFloat(da.interest_rate),
+                tenure: da.tenure,
+                closure_charges: parseFloat(da.closure_charges),
+                disbursement_date: da.disbursement_date,
+              },
+            ];
+          });
+          dispatch({
+            type: Types.FETCH_LIABILITIES,
+            payload: { finalLiabilities, totalVal },
+          });
+        });
+    } catch (error) {
+      // Handle errors
+      // handleErrors(error.message);
+      console.log(error);
+    }
+  };
+
+  const addLiabilityRequest = async (liabilityData) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      await axiosPrivate
+        .post(`${process.env.REACT_APP_BACKEND_API}loans/`, liabilityData, {
+          headers,
+        })
+        .then((res) => {
+          fetchLiabilities();
+        });
+    } catch (error) {
+      console.log(error.response.data);
+    }
+  };
+
+  const editLiabilityRequest = async (liabilityId, updatedLiabilityData) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      await axiosPrivate
+        .put(
+          `${process.env.REACT_APP_BACKEND_API}loans/${liabilityId}`,
+          updatedLiabilityData,
+          { headers }
+        )
+        .then((res) => {
+          fetchLiabilities();
+        });
+    } catch (error) {
+      //handleErrors(error);
+      console.log(error);
+    }
+  };
+
+  const fetchLiabilityById = async (Id) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+      const response = await axiosPrivate.get(
+        `${process.env.REACT_APP_BACKEND_API}loans/${Id}`,
+        { headers }
+      );
+
+      const assetData = response.data;
+
+      return assetData;
+    } catch (error) {
+      handleErrors(error);
+      throw error;
+    }
+  };
+
+  const deleteLiabilityRequest = async (Ids) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      for (const Id of Ids) {
+        await axiosPrivate.delete(
+          `${process.env.REACT_APP_BACKEND_API}loans/${Id}`,
+          {
+            headers,
+          }
+        );
+      }
+
+      fetchLiabilities();
+    } catch (error) {
+      handleErrors(error);
+    }
+  };
+
   const signOut = () => {
     setAuthToken(null);
     deleteCookie("refresh");
   };
 
+  const fetchGoals = async (page, rowsPerPage) => {
+    const headers = {
+      Authorization: `Bearer ${authToken}`,
+      "Content-Type": "application/json",
+    };
+
+    await axiosClient
+      .get(`${process.env.REACT_APP_BACKEND_URL}api/financial_goal/`, {
+        headers,
+        params: {
+          page: page + 1,
+          per_page: rowsPerPage,
+        },
+      })
+      .then((response) => {
+        dispatch({
+          type: Types.FETCH_GOAL,
+          payload: response.data,
+        });
+      })
+      .catch((error) => {
+        console.log(error?.response?.data?.detail);
+        handleErrors(error);
+      });
+  };
+
+  const deleteGoalRequest = async (id) => {
+    const headers = {
+      Authorization: `Bearer ${authToken}`,
+      "Content-Type": "application/json",
+    };
+    await axiosClient
+      .delete(`${process.env.REACT_APP_BACKEND_URL}api/financial_goal/${id}`, {
+        headers,
+      })
+      .then((response) => {
+        if (response.status === 204) {
+          dispatch({
+            type: Types.DELETE_GOAL,
+            payload: {
+              id: id,
+            },
+          });
+        }
+      })
+      .catch((error) => {
+        console.log(error?.response?.data?.detail);
+        handleErrors(error);
+      });
+  };
+
+  const createGoalRequest = async (data) => {
+    const headers = {
+      Authorization: `Bearer ${authToken}`,
+      "Content-Type": "application/json",
+    };
+    try {
+      await axiosClient
+        .post(`${process.env.REACT_APP_BACKEND_URL}api/financial_goal/`, data, {
+          headers,
+        })
+        .then((response) => {
+          dispatch({
+            type: Types.CREATE_GOAL,
+            payload: {
+              data: response.data.data,
+            },
+          });
+        })
+        .catch((error) => {
+          console.log(error?.response?.data?.detail);
+          handleErrors(error);
+        });
+    } catch (error) {}
+  };
+
+  const changeGoalRequest = async (goal) => {
+    const headers = {
+      Authorization: `Bearer ${authToken}`,
+      "Content-Type": "application/json",
+    };
+    try {
+      await axiosClient
+        .put(
+          `${process.env.REACT_APP_BACKEND_URL}api/financial_goal/${goal.id}`,
+          goal,
+          {
+            headers,
+          }
+        )
+        .then((response) => {
+          dispatch({
+            type: Types.EDIT_GOAL,
+            payload: {
+              goal: JSON.parse(response.config.data),
+            },
+          });
+        })
+        .catch((error) => {
+          console.log(error?.response?.data?.detail);
+          handleErrors(error);
+        });
+    } catch (error) {}
+  };
+
+  const fetchUser = async (authToken) => {
+    if (!authToken) return;
+
+    const decodedToken = jwtDecode(authToken);
+    const userId = decodedToken.user_id;
+
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      const response = await axiosPrivate.get(
+        `${process.env.REACT_APP_BACKEND_URL}users/api/users/${userId}`,
+        { headers }
+      );
+
+      if (response.status === 200) {
+        dispatch({ type: Types.SET_USER, payload: response.data });
+      }
+    } catch (error) {
+      handleErrors(error);
+    }
+  };
+
+  const createBudget = async (data) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      const response = await axiosPrivate.post(
+        `${process.env.REACT_APP_BACKEND_API}budget/`,
+        data,
+        { headers }
+      );
+
+      if (response.status === 201) {
+        dispatch({
+          type: Types.SET_BUDGET,
+          payload: response.data.data,
+        });
+      }
+
+      return response;
+    } catch (error) {
+      handleErrors(error);
+    }
+  };
+
+  const updateBudget = async (id, data) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      const response = await axiosPrivate.put(
+        `${process.env.REACT_APP_BACKEND_API}budget/${id}`,
+        data,
+        { headers }
+      );
+
+      if (response.status === 200) {
+        dispatch({
+          type: Types.EDIT_BUDGET,
+          payload: response.data.data,
+        });
+      }
+
+      return response;
+    } catch (error) {
+      handleErrors(error);
+    }
+  };
+
+  const deleteBudget = async (id) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      };
+
+      await axiosPrivate.delete(
+        `${process.env.REACT_APP_BACKEND_API}budget/${id}`,
+        {
+          headers,
+        }
+      );
+
+      dispatch({
+        type: Types.DELETE_BUDGET,
+        payload: id,
+      });
+    } catch (error) {
+      handleErrors(error);
+    }
+  };
+
   const UnitContext = React.createContext();
-   const UnitUpdateContext = React.createContext();
+  const UnitUpdateContext = React.createContext();
 
-   function useUnit() {
-      return useContext(UnitContext)
-    }
+  function useUnit() {
+    return useContext(UnitContext);
+  }
 
-    function useUnitUpdate() {
-      return useContext(UnitUpdateContext)
-    }   
-      const [unit, setUnit] = useState("Months");
-    
-      const handleUnitChange = (val) => {
-        setUnit(val)
-    }
+  function useUnitUpdate() {
+    return useContext(UnitUpdateContext);
+  }
+  const [unit, setUnit] = useState("Months");
+
+  const handleUnitChange = (val) => {
+    setUnit(val);
+  };
 
   return (
     <Context.Provider
@@ -533,6 +1106,11 @@ const Provider = ({ children }) => {
         liabilities,
         incomeStatement,
         statusFeedback,
+        goals,
+        fetchGoals,
+        createGoalRequest,
+        deleteGoalRequest,
+        changeGoalRequest,
         depreciation,
         giveFeedback,
         fetchData,
@@ -547,16 +1125,36 @@ const Provider = ({ children }) => {
         fetchIncomeExpenses,
         fetchIncomeStatement,
         filterExpensesByDate,
+        addAssetRequest,
+        editAssetRequest,
+        deleteAssetRequest,
+        fetchAssetById,
+        fetchAsset,
+        addIncomeExpense,
+        updateIncomeExpenseById,
+        deleteIncomeExpenseById,
+        addIncomeSource,
+        updateIncomeSourceById,
+        deleteIncomeSourceById,
         useUnit,
         useUnitUpdate,
         unit,
-        handleUnitChange 
+        handleUnitChange,
+        fetchAllExpenses,
+        fetchUser,
+        user,
+        deleteBudget,
+        createBudget,
+        updateBudget,
+        addLiabilityRequest,
+        editLiabilityRequest,
+        fetchLiabilityById,
+        deleteLiabilityRequest,
       }}
     >
       {children}
     </Context.Provider>
   );
-
 };
 
 export { Context, Provider };

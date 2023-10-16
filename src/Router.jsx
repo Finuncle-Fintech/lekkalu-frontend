@@ -11,7 +11,6 @@ import CAGRCalculator from '@/pages/CAGRCalculator/CAGRCalculator'
 import BalanceSheet from '@/pages/BalanceSheet/BalanceSheet'
 import Settings from '@/pages/Settings/Settings'
 import PersistGuest from '@/components/GuestRoutes/PersistGuest'
-//
 import Goals from '@/components/Goals/Goals'
 import Hero from '@/pages/Hero/Hero'
 import HeroRoute from '@/components/HeroRoute/HeroRoute'

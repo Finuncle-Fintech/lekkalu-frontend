@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 // import IncomeStatement from "pages/income-statement/IncomeStatement";
 import IncomeStatementPage from '@/pages/income-statement/IncomeStatementPage'
-import EmiCalculator from '@/pages/EmiCalculator'
+import EmiCalculator from '@/pages/EmiCalculator/EmiCalculator'
 import PersistLogin from '@/components/PersistLogin/PersistLogin'
 import GuestRoutes from '@/components/GuestRoutes/GuestRoutes'
 import ErrorPage from '@/components/ErrorPage/ErrorPage'

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -21,28 +21,16 @@ import colors from 'tailwindcss/colors'
 import { Button } from '@/components/ui/button'
 import { useToast } from '@/components/ui/use-toast'
 import { useUserPreferences } from '@/hooks/use-user-preferences'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { Form } from '@/components/ui/form'
 import { cagrCalculatorSchema } from '@/schema/calculators'
 import { parseQueryString } from '@/utils/query-string'
-import { Input } from '@/components/ui/input'
-import { Slider } from '@/components/ui/slider'
 import { calculateCagr } from '@/utils/calculators'
 import { handleShare } from '@/utils/clipboard'
 import When from '@/components/When/When'
 import { CustomLabelPie } from '@/components/shared/CustomLabelPie/CustomLabelPie'
+import InputFieldsRenderer, { InputField } from '@/components/InputFieldsRenderer/InputFieldsRenderer'
 
 type CagrValues = z.infer<typeof cagrCalculatorSchema>
-
-type CagrSummary = {
-  absoluteCAGR: string
-  absoluteReturns: string
-  percentageCAGR: string
-  durationOfInvestment: number
-  barChartData: {
-    name: string
-    value: number
-  }[]
-}
 
 const DEFAULT_DATA = {
   initialValue: 5000,
@@ -63,18 +51,12 @@ export default function CAGRCalculator() {
   })
   const values = form.watch()
 
-  const [summary, setSummary] = useState<CagrSummary | undefined>(undefined)
-
-  const inputs: Array<{
-    id: keyof CagrValues
-    label: string
-    type: string
-    range: { min: number; max: number; step: number }
-  }> = [
+  const inputs: Array<InputField> = [
     {
       id: 'initialValue',
       label: `Initial value (${preferences?.currencyUnit})`,
       type: 'number',
+      hasRange: true,
       range: {
         min: 1000,
         max: 100_000_00,
@@ -85,6 +67,7 @@ export default function CAGRCalculator() {
       id: 'finalValue',
       label: `Final Value Costs (${preferences?.currencyUnit})`,
       type: 'number',
+      hasRange: true,
       range: {
         min: 1000,
         max: 100_000_00,
@@ -95,6 +78,7 @@ export default function CAGRCalculator() {
       id: 'durationOfInvestment',
       label: 'Duration of Investment (Years)',
       type: 'number',
+      hasRange: true,
       range: {
         min: 1,
         max: 40,
@@ -109,20 +93,12 @@ export default function CAGRCalculator() {
     setTimeout(() => setIsCopied(false), 3000)
   }
 
-  const calculateFinalCagr = useCallback(() => {
-    const results = calculateCagr(values.initialValue, values.finalValue, values.durationOfInvestment)
-    setSummary(results)
-  }, [values.durationOfInvestment, values.finalValue, values.initialValue])
-
-  useEffect(() => {
-    calculateFinalCagr()
-  }, [calculateFinalCagr])
-
-  const { pieChartData, barChartData } = useMemo(() => {
-    if (!summary) {
-      return { pieChartData: [], barChartData: [] }
+  const result = useMemo(() => {
+    if (!values.durationOfInvestment || !values.finalValue || !values.initialValue) {
+      return undefined
     }
 
+    const summary = calculateCagr(values.initialValue, values.finalValue, values.durationOfInvestment)
     const pieChartData = [
       {
         name: 'Initial Value',
@@ -134,8 +110,8 @@ export default function CAGRCalculator() {
       },
     ]
 
-    return { pieChartData, barChartData: summary.barChartData }
-  }, [summary, values])
+    return { summary, pieChartData, barChartData: summary.barChartData }
+  }, [values.durationOfInvestment, values.finalValue, values.initialValue])
 
   return (
     <section className='max-w-screen-xl mx-auto p-4 space-y-4'>
@@ -161,44 +137,18 @@ export default function CAGRCalculator() {
           </div>
           <Form {...form}>
             <form className='grid gap-4'>
-              {inputs.map((input) => (
-                <FormField
-                  key={input.id}
-                  control={form.control}
-                  name={input.id}
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{input.label}</FormLabel>
-                      <FormControl>
-                        <div className='space-y-2'>
-                          <Input placeholder={input.label} {...field} />
-                          <Slider
-                            defaultValue={[field.value]}
-                            min={input.range.min}
-                            max={input.range.max}
-                            step={input.range.step}
-                            onValueChange={(value) => {
-                              field.onChange(value[0])
-                            }}
-                          />
-                        </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              ))}
+              <InputFieldsRenderer control={form.control} inputs={inputs} />
             </form>
           </Form>
         </div>
 
-        <When truthy={typeof summary !== 'undefined'}>
+        <When truthy={typeof result !== 'undefined'}>
           <div>
             <div className='text-xl text-center'>Summary</div>
             <div className='w-full p-4 flex flex-col gap-4 items-center'>
               <PieChart width={400} height={200}>
-                <Pie dataKey='value' data={pieChartData} outerRadius={80} labelLine={false}>
-                  {pieChartData.map((entry, index) => (
+                <Pie dataKey='value' data={result?.pieChartData} outerRadius={80} labelLine={false}>
+                  {result?.pieChartData.map((entry, index) => (
                     <Cell
                       key={index}
                       fill={entry.name.includes('Initial Value') ? colors.blue['500'] : colors.orange['500']}
@@ -211,7 +161,7 @@ export default function CAGRCalculator() {
 
               <ResponsiveContainer width={500} height={300} className='p-4 my-5'>
                 <BarChart
-                  data={barChartData}
+                  data={result?.barChartData}
                   margin={{
                     right: 30,
                   }}
@@ -233,18 +183,18 @@ export default function CAGRCalculator() {
               <div className='flex gap-2 border-b'>
                 <div>You absolute returns: </div>
                 <div className='font-medium'>
-                  {summary?.absoluteReturns} {preferences.currencyUnit}
+                  {result?.summary?.absoluteReturns} {preferences.currencyUnit}
                 </div>
               </div>
               <div className='flex gap-2 border-b'>
                 <div>You absolute CAGR: </div>
                 <div className='font-medium'>
-                  {summary?.absoluteCAGR} {preferences.currencyUnit}
+                  {result?.summary?.absoluteCAGR} {preferences.currencyUnit}
                 </div>
               </div>
               <div className='flex gap-2 border-b'>
                 <div>You CAGR percentage: </div>
-                <div className='font-medium'>{summary?.percentageCAGR} %</div>
+                <div className='font-medium'>{result?.summary?.percentageCAGR} %</div>
               </div>
             </div>
           </div>

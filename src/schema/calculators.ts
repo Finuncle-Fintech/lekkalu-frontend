@@ -11,3 +11,11 @@ export const cagrCalculatorSchema = z.object({
   finalValue: z.coerce.number(),
   durationOfInvestment: z.coerce.number(),
 })
+
+export const emiCalculatorSchema = z.object({
+  loanPrincipal: z.coerce.number().min(0).max(10000000),
+  loanInterest: z.coerce.number(),
+  loanTenure: z.coerce.number(),
+  disbursementDate: z.date(),
+  emiDay: z.coerce.number().min(1).max(31),
+})

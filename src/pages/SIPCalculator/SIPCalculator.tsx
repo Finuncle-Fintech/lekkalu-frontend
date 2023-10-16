@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { useLocation } from 'react-router'
 import { isEmpty } from 'lodash'
 import { useForm } from 'react-hook-form'
@@ -7,16 +7,15 @@ import { Pie, PieChart, Cell, Tooltip, Legend } from 'recharts'
 import { z } from 'zod'
 import { Button } from '@/components/ui/button'
 import { parseQueryString } from '@/utils/query-string'
-import { Input } from '@/components/ui/input'
 import { sipCalculatorSchema } from '@/schema/calculators'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
-import { Slider } from '@/components/ui/slider'
+import { Form } from '@/components/ui/form'
 import { calculateSip } from '@/utils/calculators'
 import { CustomLabelPie } from '@/components/shared/CustomLabelPie/CustomLabelPie'
 import When from '@/components/When/When'
 import { useToast } from '@/components/ui/use-toast'
 import { handleShare } from '@/utils/clipboard'
 import { useUserPreferences } from '@/hooks/use-user-preferences'
+import InputFieldsRenderer, { InputField } from '@/components/InputFieldsRenderer/InputFieldsRenderer'
 
 const DEFAULT_DATA = {
   monthlyAmount: 500,
@@ -26,16 +25,9 @@ const DEFAULT_DATA = {
 
 type SipValues = z.infer<typeof sipCalculatorSchema>
 
-type SipSummary = {
-  finalValue: number
-  totalInvested: number
-  wealthGained: number
-}
-
 export default function SIPCalculator() {
   const location = useLocation()
   const parsedObject = parseQueryString(location.search)
-  const [summary, setSummary] = useState<SipSummary | undefined>(undefined)
   const [isCopied, setIsCopied] = useState(false)
   const { toast } = useToast()
   const { preferences } = useUserPreferences()
@@ -46,16 +38,12 @@ export default function SIPCalculator() {
   })
   const values = form.watch()
 
-  const inputs: Array<{
-    id: keyof SipValues
-    label: string
-    type: string
-    range: { min: number; max: number; step: number }
-  }> = [
+  const inputs: Array<InputField> = [
     {
       id: 'monthlyAmount',
       label: `Monthly investment amount ${preferences.currencyUnit}`,
       type: 'number',
+      hasRange: true,
       range: {
         min: 500,
         max: 100_000,
@@ -66,6 +54,7 @@ export default function SIPCalculator() {
       id: 'durationInvestment',
       label: 'Duration of the investment (Yr)',
       type: 'number',
+      hasRange: true,
       range: {
         min: 1,
         max: 40,
@@ -76,6 +65,7 @@ export default function SIPCalculator() {
       id: 'rateReturn',
       label: 'Expected annual return (%)',
       type: 'number',
+      hasRange: true,
       range: {
         min: 1,
         max: 30,
@@ -84,25 +74,19 @@ export default function SIPCalculator() {
     },
   ]
 
-  const calculateFinalSip = useCallback(() => {
-    const results = calculateSip(values.monthlyAmount, values.durationInvestment, values.rateReturn)
-    setSummary(results)
-  }, [values.durationInvestment, values.monthlyAmount, values.rateReturn])
-
-  useEffect(() => {
-    calculateFinalSip()
-  }, [calculateFinalSip])
-
-  const pieData = useMemo(() => {
-    if (!summary) {
-      return []
+  const result = useMemo(() => {
+    if (!values.durationInvestment || !values.monthlyAmount || !values.rateReturn) {
+      return undefined
     }
 
-    return [
+    const summary = calculateSip(values.monthlyAmount, values.durationInvestment, values.rateReturn)
+    const pieData = [
       { name: 'Total Invested', value: summary.totalInvested },
       { name: 'Wealth Gained', value: summary.wealthGained },
     ]
-  }, [summary])
+
+    return { summary, pieData }
+  }, [values.durationInvestment, values.monthlyAmount, values.rateReturn])
 
   const handleCopy = () => {
     setIsCopied(true)
@@ -135,38 +119,12 @@ export default function SIPCalculator() {
 
           <Form {...form}>
             <form className='grid gap-4'>
-              {inputs.map((input) => (
-                <FormField
-                  key={input.id}
-                  control={form.control}
-                  name={input.id}
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{input.label}</FormLabel>
-                      <FormControl>
-                        <div className='space-y-2'>
-                          <Input placeholder={input.label} {...field} />
-                          <Slider
-                            defaultValue={[field.value]}
-                            min={input.range.min}
-                            max={input.range.max}
-                            step={input.range.step}
-                            onValueChange={(value) => {
-                              field.onChange(value[0])
-                            }}
-                          />
-                        </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              ))}
+              <InputFieldsRenderer control={form.control} inputs={inputs} />
             </form>
           </Form>
         </div>
 
-        <When truthy={typeof summary !== 'undefined'}>
+        <When truthy={typeof result !== 'undefined'}>
           <div>
             <div className='text-xl text-center'>Summary</div>
 
@@ -174,25 +132,25 @@ export default function SIPCalculator() {
               <div className='flex gap-2 border-b'>
                 <div>Total invested: </div>
                 <div className='font-medium'>
-                  {summary?.totalInvested} {preferences.currencyUnit}
+                  {result?.summary?.totalInvested} {preferences.currencyUnit}
                 </div>
               </div>
               <div className='flex gap-2 border-b'>
                 <div>Final value: </div>
                 <div className='font-medium'>
-                  {summary?.finalValue} {preferences.currencyUnit}
+                  {result?.summary?.finalValue} {preferences.currencyUnit}
                 </div>
               </div>
               <div className='flex gap-2 border-b'>
                 <div>Wealth gained: </div>
                 <div className='font-medium'>
-                  {summary?.wealthGained} {preferences.currencyUnit}
+                  {result?.summary?.wealthGained} {preferences.currencyUnit}
                 </div>
               </div>
 
               <PieChart width={200} height={220}>
-                <Pie dataKey='value' data={pieData} outerRadius={80} labelLine={false}>
-                  {pieData.map((item, index) => (
+                <Pie dataKey='value' data={result?.pieData} outerRadius={80} labelLine={false}>
+                  {result?.pieData.map((item, index) => (
                     <Cell key={index} fill={item.name.includes('Total Invested') ? '#099fea' : '#09ea49'} />
                   ))}
                 </Pie>

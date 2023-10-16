@@ -1,7 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css'
 import React from 'react'
 import { ResponsiveContainer, ComposedChart, Line, Bar, CartesianGrid, XAxis, YAxis, Tooltip, Legend } from 'recharts'
-import { useUserPreferences } from '@/hooks/useUserPreferences'
+import { useUserPreferences } from '@/hooks/use-user-preferences'
 import Colors from '@/constants/colors'
 
 // export const handleMouseOver = jest.fn();

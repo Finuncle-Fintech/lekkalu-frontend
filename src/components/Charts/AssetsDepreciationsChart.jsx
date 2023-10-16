@@ -1,7 +1,7 @@
 import { LineChart, Line, Brush, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } from 'recharts'
 import { useRef } from 'react'
 import Colors from '@/constants/colors'
-import { useUserPreferences } from '@/hooks/useUserPreferences'
+import { useUserPreferences } from '@/hooks/use-user-preferences'
 
 export default function AssetsdepreciationChart({ data }) {
   const { preferences } = useUserPreferences()

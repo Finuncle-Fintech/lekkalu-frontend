@@ -4,28 +4,6 @@ import { useUserPreferences } from '@/hooks/useUserPreferences'
 import 'animate.css'
 
 export default function Summary({ summary }) {
-  const { preferences } = useUserPreferences()
-
-  const data = [
-    { name: 'Total Invested', value: summary.totalInvested },
-    { name: 'Wealth Gained', value: summary.wealthGained },
-  ]
-
-  const labels = [
-    {
-      title: 'Total invested:',
-      value: summary.totalInvested,
-    },
-    {
-      title: 'Final value:',
-      value: summary.finalValue,
-    },
-    {
-      title: 'Wealth gained:',
-      value: summary.wealthGained,
-    },
-  ]
-
   return (
     <>
       {summary.length !== 0 && (

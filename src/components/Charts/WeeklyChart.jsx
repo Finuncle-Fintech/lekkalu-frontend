@@ -3,7 +3,7 @@ import React from 'react'
 import './WeeklyChart.css'
 import { ResponsiveContainer, LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend } from 'recharts'
 import Colors from '@/constants/colors'
-import { useUserPreferences } from '@/hooks/useUserPreferences'
+import { useUserPreferences } from '@/hooks/use-user-preferences'
 
 export const WeeklyChart = (WeekData) => {
   const { preferences } = useUserPreferences()

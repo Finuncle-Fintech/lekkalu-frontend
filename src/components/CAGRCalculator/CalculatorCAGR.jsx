@@ -2,7 +2,7 @@ import { Slider, TextField } from '@mui/material'
 import { useCallback, useEffect, useState } from 'react'
 import { useLocation } from 'react-router'
 import { parseNumbers } from '@/utils/Number'
-import { useUserPreferences } from '@/hooks/useUserPreferences'
+import { useUserPreferences } from '@/hooks/use-user-preferences'
 import { isObjectEmpty, parseQueryString } from '@/components/EMI_Components/utils'
 
 const DEFAULT_DATA = {

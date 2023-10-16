@@ -5,3 +5,9 @@ export const sipCalculatorSchema = z.object({
   durationInvestment: z.coerce.number(),
   rateReturn: z.coerce.number(),
 })
+
+export const cagrCalculatorSchema = z.object({
+  initialValue: z.coerce.number(),
+  finalValue: z.coerce.number(),
+  durationOfInvestment: z.coerce.number(),
+})

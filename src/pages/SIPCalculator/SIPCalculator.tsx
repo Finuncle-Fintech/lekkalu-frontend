@@ -4,6 +4,7 @@ import { isEmpty } from 'lodash'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Pie, PieChart, Cell, Tooltip, Legend } from 'recharts'
+import { z } from 'zod'
 import { Button } from '@/components/ui/button'
 import { parseQueryString } from '@/utils/query-string'
 import { Input } from '@/components/ui/input'
@@ -23,6 +24,8 @@ const DEFAULT_DATA = {
   rateReturn: 1,
 }
 
+type SipValues = z.infer<typeof sipCalculatorSchema>
+
 type SipSummary = {
   finalValue: number
   totalInvested: number
@@ -37,13 +40,18 @@ export default function SIPCalculator() {
   const { toast } = useToast()
   const { preferences } = useUserPreferences()
 
-  const form = useForm({
+  const form = useForm<SipValues>({
     resolver: zodResolver(sipCalculatorSchema),
     defaultValues: !isEmpty(parsedObject) ? parsedObject : DEFAULT_DATA,
   })
-  const values = form.watch() as Record<string, number>
+  const values = form.watch()
 
-  const inputs = [
+  const inputs: Array<{
+    id: keyof SipValues
+    label: string
+    type: string
+    range: { min: number; max: number; step: number }
+  }> = [
     {
       id: 'monthlyAmount',
       label: `Monthly investment amount ${preferences.currencyUnit}`,
@@ -83,7 +91,7 @@ export default function SIPCalculator() {
 
   useEffect(() => {
     calculateFinalSip()
-  }, [form, calculateFinalSip])
+  }, [calculateFinalSip])
 
   const pieData = useMemo(() => {
     if (!summary) {
@@ -118,7 +126,7 @@ export default function SIPCalculator() {
         <Button onClick={handleCopy}>{isCopied ? 'Copied!' : 'Share'}</Button>
       </div>
 
-      <div className='flex flex-col gap-4 items-center'>
+      <div className='flex flex-col md:flex-row gap-4 items-center justify-center'>
         <div className='space-y-4'>
           <div className='text-center'>
             <h2 className='text-2xl font-bold'>SIP Calculator</h2>
@@ -139,10 +147,13 @@ export default function SIPCalculator() {
                         <div className='space-y-2'>
                           <Input placeholder={input.label} {...field} />
                           <Slider
+                            defaultValue={[field.value]}
                             min={input.range.min}
                             max={input.range.max}
                             step={input.range.step}
-                            onValueChange={field.onChange}
+                            onValueChange={(value) => {
+                              field.onChange(value[0])
+                            }}
                           />
                         </div>
                       </FormControl>

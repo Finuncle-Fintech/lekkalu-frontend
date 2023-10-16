@@ -1,10 +1,10 @@
 import React from 'react'
 import { render, fireEvent, waitFor, screen } from '@testing-library/react'
-import Goals from 'components/Goals/Goals'
-import '@testing-library/jest-dom'
-import { Context } from 'provider/Provider'
-import { mockState } from '__test__/data/Goals'
 import { BrowserRouter } from 'react-router-dom'
+import Goals from '@/components/Goals/Goals'
+import '@testing-library/jest-dom'
+import { Context } from '@/provider/Provider'
+import { mockState } from '@/__test__/data/Goals'
 
 jest.mock('axios', () => ({
   post: jest.fn(),

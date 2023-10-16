@@ -51,14 +51,14 @@
     "zod": "^3.22.4"
   },
   "scripts": {
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "start:dev": "env-cmd -f ./environments/.dev.env react-scripts start",
-    "build:dev": "env-cmd -f ./environments/.dev.env npm run-script build",
-    "start:qa": "env-cmd -f ./environments/.qa.env react-scripts start",
-    "build:qa": "env-cmd -f ./environments/.qa.env npm run-script build",
+    "test": "craco test",
+    "eject": "craco eject",
+    "start:dev": "env-cmd -f ./environments/.dev.env craco start",
+    "build:dev": "env-cmd -f ./environments/.dev.env craco build",
+    "start:qa": "env-cmd -f ./environments/.qa.env craco start",
+    "build:qa": "env-cmd -f ./environments/.qa.env craco build",
     "start:prod": "env-cmd -f ./environments/.prod.env craco start",
-    "build:prod": "env-cmd -f ./environments/.prod.env npm run-script build",
+    "build:prod": "env-cmd -f ./environments/.prod.env craco build",
     "start": "npm run start:prod",
     "format": "prettier --write src/**/*.{js,jsx,ts,tsx,css,md,json,scss} --config ./.prettierrc",
     "lint": "eslint --fix --no-error-on-unmatched-pattern --ignore-path .gitignore --ext ts,tsx,js,jsx ."
@@ -106,6 +106,7 @@
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
     "prettier": "3.0.3",
+    "resize-observer-polyfill": "^1.5.1",
     "tailwindcss": "^3.3.3",
     "typescript": "^5.1.6"
   },

@@ -142,7 +142,7 @@ export default function Signup() {
             />
 
             <Button type='submit' loading={signupMutation.isLoading}>
-              Signup
+              Continue
             </Button>
           </form>
         </Form>

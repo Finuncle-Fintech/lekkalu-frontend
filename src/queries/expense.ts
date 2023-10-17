@@ -16,3 +16,8 @@ export async function deleteExpense(id: number) {
   const { data } = await apiClient.delete(`expenses/${id}`)
   return data
 }
+
+export async function updateExpense(id: number, dto: Omit<AddExpenseSchema, 'tags'> & { tags: number[] }) {
+  const { data } = await apiClient.put(`expenses/${id}`, dto)
+  return data
+}

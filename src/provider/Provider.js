@@ -119,31 +119,6 @@ const Provider = ({ children }) => {
     }
   }
 
-  const fetchExpenses = async (page, rowsPerPage) => {
-    try {
-      const headers = {
-        Authorization: `Bearer ${authToken}`,
-        'Content-Type': 'application/json',
-      }
-      await axiosPrivate
-        .get(`${process.env.REACT_APP_BACKEND_API}expenses/`, {
-          headers,
-          params: {
-            page: page + 1,
-            per_page: rowsPerPage,
-          },
-        })
-        .then((res) => {
-          dispatch({
-            type: Types.FETCH_EXPENSE,
-            payload: res.data,
-          })
-        })
-    } catch (error) {
-      handleErrors(error)
-    }
-  }
-
   const fetchAllExpenses = async () => {
     try {
       const headers = {
@@ -177,25 +152,6 @@ const Provider = ({ children }) => {
           dispatch({
             type: Types.FETCH_EXPENSE,
             payload: res.data,
-          })
-        })
-    } catch (error) {
-      handleErrors(error)
-    }
-  }
-
-  const changeExpenseRequest = async (index, expense) => {
-    try {
-      const headers = {
-        Authorization: `Bearer ${authToken}`,
-        'Content-Type': 'application/json',
-      }
-      await axiosPrivate
-        .put(`${process.env.REACT_APP_BACKEND_API}expenses/${expense.id}`, expense, { headers })
-        .then(() => {
-          dispatch({
-            type: Types.EDIT_EXPENSE,
-            payload: { index, expense },
           })
         })
     } catch (error) {
@@ -923,8 +879,6 @@ const Provider = ({ children }) => {
         depreciation,
         giveFeedback,
         fetchData,
-        fetchExpenses,
-        changeExpenseRequest,
         fetchTags,
         createTag,
         fetchToken,

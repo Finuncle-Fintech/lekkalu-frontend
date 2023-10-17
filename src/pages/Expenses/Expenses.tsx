@@ -11,7 +11,7 @@ import ViewAllBudgetModal from '@/components/Expenses/components/ViewAllBudgetMo
 import { BUDGET_QUERY_KEYS } from '@/utils/query-keys'
 import { fetchBudgets } from '@/queries/budget'
 import { useUserPreferences } from '@/hooks/use-user-preferences'
-import AddExpenseDialog from './components/AddExpenseDialog'
+import AddOrEditExpenseDialog from './components/AddOrEditExpenseDialog'
 import { Button } from '@/components/ui/button'
 import { ExpenseFiltersSchema, expenseFiltersSchema } from '@/schema/expense'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
@@ -57,7 +57,7 @@ export default function Expenses() {
       </div>
 
       <div className='flex items-center justify-center'>
-        <AddExpenseDialog />
+        <AddOrEditExpenseDialog trigger={<Button>Add Expense</Button>} />
       </div>
 
       <div className='text-2xl font-bold my-4 text-center'>Expense List</div>

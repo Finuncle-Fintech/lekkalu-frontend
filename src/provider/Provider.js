@@ -184,28 +184,6 @@ const Provider = ({ children }) => {
     }
   }
 
-  const deleteExpenseRequest = async (id) => {
-    try {
-      const headers = {
-        Authorization: `Bearer ${authToken}`,
-        'Content-Type': 'application/json',
-      }
-
-      await axiosPrivate
-        .delete(`${process.env.REACT_APP_BACKEND_API}expenses/${id}`, {
-          headers,
-        })
-        .then(() => {
-          dispatch({
-            type: Types.DELETE_EXPENSE,
-            payload: id,
-          })
-        })
-    } catch (error) {
-      handleErrors(error)
-    }
-  }
-
   const changeExpenseRequest = async (index, expense) => {
     try {
       const headers = {
@@ -946,7 +924,6 @@ const Provider = ({ children }) => {
         giveFeedback,
         fetchData,
         fetchExpenses,
-        deleteExpenseRequest,
         changeExpenseRequest,
         fetchTags,
         createTag,

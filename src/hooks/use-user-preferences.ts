@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useState } from 'react'
-import Swal from 'sweetalert2'
 import { DEFAULT_CURRENCY } from '@/utils/constants'
+import { useToast } from '@/components/ui/use-toast'
 
 const USER_PREFERENCE_KEY = 'user-preferences'
 
 export function useUserPreferences() {
+  const { toast } = useToast()
   const [preferences, setPreferences] = useState({
     currencyUnit: DEFAULT_CURRENCY,
   })
@@ -19,11 +20,8 @@ export function useUserPreferences() {
   const savePreferences = useCallback(() => {
     localStorage.setItem(USER_PREFERENCE_KEY, JSON.stringify(preferences))
 
-    Swal.fire({
-      title: 'Successfully updated your preferences.',
-      icon: 'success',
-    })
-  }, [preferences])
+    toast({ title: 'Successfully updated your preferences.' })
+  }, [preferences, toast])
 
   return {
     preferences,

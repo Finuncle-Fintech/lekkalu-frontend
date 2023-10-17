@@ -1,39 +1,22 @@
 /* eslint-disable */
-import React, { useState, useContext, useEffect } from 'react'
-import { Typography, TablePagination, IconButton } from '@mui/material'
+import React, { useState, useContext } from 'react'
 import dayjs from 'dayjs'
-import { DatePicker } from '@mui/x-date-pickers/DatePicker'
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import Button from '@mui/material/Button'
-import Box from '@mui/material/Box'
-import { SkipNext, SkipPrevious } from '@mui/icons-material'
 import * as XLSX from 'xlsx'
 import Swal from 'sweetalert2'
-import { useQuery } from '@tanstack/react-query'
-import { BUDGET_QUERY_KEYS } from '@/utils/query-keys'
-import { fetchBudgets } from '@/queries/budget'
-import { useUserPreferences } from '@/hooks/use-user-preferences'
 import { Context } from '@/provider/Provider'
 import { ModalContainer } from './styled'
 import { formatDate, getTagNumbers, checkTagsAndLoad } from './utils'
 
 const Expenses = () => {
-  const { expenses, tags, createTag, fetchExpenses, filterExpensesByDate, changeExpenseRequest, fetchTags, authToken } =
-    useContext(Context)
-  const getDate = new Date()
-  const [page, setPage] = useState(0)
-  const [loadExcelStatus, setLoadExcelStatus] = useState(false)
-  const [newData, setNewData] = useState([])
+  const { tags, createTag, fetchExpenses, filterExpensesByDate, fetchTags } = useContext(Context)
+  const [page] = useState(0)
+  const [, setLoadExcelStatus] = useState(false)
+  const [, setNewData] = useState([])
   const [fromDate, setFromDate] = useState(null)
   const [toDate, setToDate] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
   const rowsPerPage = 10
-
-  useEffect(() => {
-    if (!tags.length) fetchTags()
-    fetchExpenses(page, rowsPerPage)
-  }, [page])
 
   const handleFileUpload = (files) => {
     const file = files[0]
@@ -94,10 +77,6 @@ const Expenses = () => {
     reader.readAsBinaryString(file)
   }
 
-  const updateExpense = (index, expense) => {
-    changeExpenseRequest(index, expense)
-  }
-
   const clearFilters = async () => {
     setIsLoading(true)
     setFromDate(null)
@@ -136,35 +115,6 @@ const Expenses = () => {
       >
         Clear
       </Button>
-
-      {!!expenses.length && (
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <IconButton
-            onClick={() => {
-              setPage((prevPage) => Math.max(prevPage - 3, 0))
-            }}
-          >
-            <SkipPrevious />
-          </IconButton>
-          <TablePagination
-            component='div'
-            count={70}
-            page={page}
-            onPageChange={handleChangePage}
-            rowsPerPage={10}
-            rowsPerPageOptions={[]}
-            labelDisplayedRows={() => ''}
-          />
-          <IconButton
-            onClick={() => {
-              setPage((prevPage) => Math.min(prevPage + 3, 6))
-            }}
-          >
-            <SkipNext />
-          </IconButton>
-          {page * 10 + 1} - {page * 10 + 10} of 70
-        </div>
-      )}
     </ModalContainer>
   )
 }

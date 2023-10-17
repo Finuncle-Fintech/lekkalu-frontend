@@ -10,6 +10,7 @@ import { fetchTags } from '@/queries/tag'
 import { useUserPreferences } from '@/hooks/use-user-preferences'
 import { Button } from '@/components/ui/button'
 import DeleteExpense from './DeleteExpense'
+import AddOrEditExpenseDialog from './AddOrEditExpenseDialog'
 
 export default function ExpensesTable() {
   const [searchParams] = useSearchParams()
@@ -61,9 +62,14 @@ export default function ExpensesTable() {
             <TableCell>{getTagNames(expense.tags)}</TableCell>
             <TableCell>{dayjs(expense.time).format('ddd MMM DD, YYYY')}</TableCell>
             <TableCell className='flex'>
-              <Button size='sm' variant='ghost'>
-                <EditIcon className='w-4 h-4' />
-              </Button>
+              <AddOrEditExpenseDialog
+                expense={expense}
+                trigger={
+                  <Button size='sm' variant='ghost'>
+                    <EditIcon className='w-4 h-4' />
+                  </Button>
+                }
+              />
               <DeleteExpense id={expense.id} />
             </TableCell>
           </TableRow>

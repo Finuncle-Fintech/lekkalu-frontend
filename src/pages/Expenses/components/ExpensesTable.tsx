@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react'
 import { useQueries } from '@tanstack/react-query'
 import dayjs from 'dayjs'
-import { EditIcon, TrashIcon } from 'lucide-react'
+import { EditIcon } from 'lucide-react'
 import { useSearchParams } from 'react-router-dom'
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { EXPENSES, TAGS } from '@/utils/query-keys'
@@ -9,6 +9,7 @@ import { fetchExpenses } from '@/queries/expense'
 import { fetchTags } from '@/queries/tag'
 import { useUserPreferences } from '@/hooks/use-user-preferences'
 import { Button } from '@/components/ui/button'
+import DeleteExpense from './DeleteExpense'
 
 export default function ExpensesTable() {
   const [searchParams] = useSearchParams()
@@ -63,9 +64,7 @@ export default function ExpensesTable() {
               <Button size='sm' variant='ghost'>
                 <EditIcon className='w-4 h-4' />
               </Button>
-              <Button size='sm' variant='ghost'>
-                <TrashIcon className='w-4 h-4 text-red-500' />
-              </Button>
+              <DeleteExpense id={expense.id} />
             </TableCell>
           </TableRow>
         ))}

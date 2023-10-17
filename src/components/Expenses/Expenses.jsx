@@ -19,17 +19,8 @@ import { ModalContainer } from './styled'
 import { formatDate, getTagNumbers, checkTagsAndLoad } from './utils'
 
 const Expenses = () => {
-  const {
-    expenses,
-    tags,
-    createTag,
-    fetchExpenses,
-    filterExpensesByDate,
-    deleteExpenseRequest,
-    changeExpenseRequest,
-    fetchTags,
-    authToken,
-  } = useContext(Context)
+  const { expenses, tags, createTag, fetchExpenses, filterExpensesByDate, changeExpenseRequest, fetchTags, authToken } =
+    useContext(Context)
   const getDate = new Date()
   const [page, setPage] = useState(0)
   const [loadExcelStatus, setLoadExcelStatus] = useState(false)
@@ -43,8 +34,6 @@ const Expenses = () => {
     if (!tags.length) fetchTags()
     fetchExpenses(page, rowsPerPage)
   }, [page])
-
-
 
   const handleFileUpload = (files) => {
     const file = files[0]
@@ -105,10 +94,6 @@ const Expenses = () => {
     reader.readAsBinaryString(file)
   }
 
-  const deleteExpense = (id) => {
-    deleteExpenseRequest(id)
-  }
-
   const updateExpense = (index, expense) => {
     changeExpenseRequest(index, expense)
   }
@@ -141,69 +126,16 @@ const Expenses = () => {
 
   return (
     <ModalContainer>
-      <div className='d-flex justify-content-between align-items-center my-3'>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <IconButton
-            onClick={() => {
-              setPage((prevPage) => Math.max(prevPage - 3, 0))
-            }}
-          >
-            <SkipPrevious />
-          </IconButton>
-          <TablePagination
-            component='div'
-            count={70}
-            page={page}
-            onPageChange={handleChangePage}
-            rowsPerPage={rowsPerPage}
-            rowsPerPageOptions={[]}
-            labelDisplayedRows={() => ''}
-          />
-          <IconButton
-            onClick={() => {
-              setPage((prevPage) => Math.min(prevPage + 3, 6))
-            }}
-          >
-            <SkipNext />
-          </IconButton>
-          {page * 10 + 1} - {page * 10 + 10} of 70
-        </div>
-
-        <Box component='form' onSubmit={handleFilterSubmit} className='d-flex justify-content-between'>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <div>
-              <div className='d-flex justify-content-center align-items-center'>
-                <DatePicker
-                  label='From'
-                  value={fromDate}
-                  maxDate={dayjs(getDate.toLocaleDateString())}
-                  onChange={(newValue) => setFromDate(newValue)}
-                />
-                <div className='mx-2'>-</div>
-                <DatePicker
-                  label='To'
-                  value={toDate}
-                  maxDate={dayjs(getDate.toLocaleDateString())}
-                  onChange={(newValue) => setToDate(newValue)}
-                />
-              </div>
-            </div>
-            <Button type='submit' variant='contained' sx={{ py: 2, px: 4, ml: 1 }} disabled={isLoading}>
-              Filter
-            </Button>
-            <Button
-              type='button'
-              variant='contained'
-              sx={{ py: 2, px: 4, ml: 1 }}
-              disabled={isLoading}
-              onClick={clearFilters}
-              className='bg-danger'
-            >
-              Clear
-            </Button>
-          </LocalizationProvider>
-        </Box>
-      </div>
+      <Button
+        type='button'
+        variant='contained'
+        sx={{ py: 2, px: 4, ml: 1 }}
+        disabled={isLoading}
+        onClick={clearFilters}
+        className='bg-danger'
+      >
+        Clear
+      </Button>
 
       {!!expenses.length && (
         <div style={{ display: 'flex', alignItems: 'center' }}>

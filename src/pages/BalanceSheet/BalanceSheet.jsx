@@ -1,29 +1,40 @@
-import { useContext, useEffect, useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
+import { useContext, useEffect, useMemo, useState } from 'react'
 import { Box } from '@mui/material'
 import { Context } from '@/provider/Provider'
 import GraphCard from '@/components/BalanceSheet/GraphCard'
 import BarGraph from '@/components/BalanceSheet/BarGraph'
 import EnhancedTable from '@/components/BalanceSheet/AssetTable'
 import LiabilitiesTable from '@/components/BalanceSheet/LiabilitiesTable'
+import { PHYSICAL_ASSETS_QUERY_KEYS } from '@/utils/query-keys'
+import { fetchPhysicalAssets } from '@/queries/physical_assets'
+import When from './../../components/When/When'
 
 export default function BalanceSheet() {
-  const { assets, liabilities } = useContext(Context)
+  const { liabilities } = useContext(Context)
+  // assets
+  const { data: physical_assets, isLoading } = useQuery(
+    [PHYSICAL_ASSETS_QUERY_KEYS.PHYSICAL_ASSETS],
+    fetchPhysicalAssets,
+  )
 
   const [barGraphIsOpen, setBarGraphIsOpen] = useState(false)
-  const [assetDatas, setAssetDatas] = useState([])
+  // const [assetDatas, setAssetDatas] = useState(physical_assets)
   const [liabilityDatas, setLiabilityDatas] = useState([])
 
-  useEffect(() => {
-    if (assets.finalAssets && assets.finalAssets.length > 0) {
-      const newAssetDatas = assets.finalAssets.map((asset) => ({
-        id: asset.id,
-        label: asset.name,
-        value: asset.value,
-      }))
-      setAssetDatas(newAssetDatas)
+  const assetDatas = useMemo(() => {
+    let totalVal = 0.00001
+    let finalAssets = []
+    if (physical_assets?.length > 0) {
+      physical_assets.forEach((da) => {
+        totalVal += parseFloat(da.market_value)
+        finalAssets = [...finalAssets, { id: da.id, name: da.name, value: parseFloat(da.market_value) }]
+      })
     }
-  }, [assets])
+    return { finalAssets, totalVal }
+  }, [physical_assets, isLoading])
 
+  console.log('assetDatas', assetDatas)
   useEffect(() => {
     if (liabilities.finalLiabilities && liabilities.finalLiabilities.length > 0) {
       const newLiabilityDatas = liabilities.finalLiabilities.map((liability) => ({
@@ -48,24 +59,26 @@ export default function BalanceSheet() {
   }
 
   return (
-    <Box
-      sx={{
-        minHeight: '350vh',
-        backgroundColor: 'primary.main',
-        padding: '1% 5% 0 5%',
-      }}
-    >
-      <GraphCard assetDatas={assets} liabilityDatas={liabilities} setBarGraphIsOpen={handleOpen} />
-      {barGraphIsOpen ? (
-        <BarGraph
-          setBarGraphIsOpen={handleClose}
-          barGraphIsOpen={barGraphIsOpen}
-          dataAsset={assetDatas}
-          dataLiability={liabilityDatas}
-        />
-      ) : null}
-      <EnhancedTable assetDatas={assetDatas} />
-      <LiabilitiesTable liabilityDatas={liabilityDatas} />
-    </Box>
+    <When truthy={Boolean(assetDatas.finalAssets.length > 0)}>
+      <Box
+        sx={{
+          minHeight: '350vh',
+          backgroundColor: 'primary.main',
+          padding: '1% 5% 0 5%',
+        }}
+      >
+        <GraphCard assetDatas={assetDatas} liabilityDatas={liabilities} setBarGraphIsOpen={handleOpen} />
+        {barGraphIsOpen ? (
+          <BarGraph
+            setBarGraphIsOpen={handleClose}
+            barGraphIsOpen={barGraphIsOpen}
+            dataAsset={assetDatas}
+            dataLiability={liabilityDatas}
+          />
+        ) : null}
+        <EnhancedTable assetDatas={assetDatas.finalAssets} />
+        <LiabilitiesTable liabilityDatas={liabilityDatas} />
+      </Box>
+    </When>
   )
 }

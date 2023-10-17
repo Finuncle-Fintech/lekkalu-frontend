@@ -16,7 +16,6 @@ import { fetchBudgets } from '@/queries/budget'
 import { useUserPreferences } from '@/hooks/use-user-preferences'
 import { Context } from '@/provider/Provider'
 import { ModalContainer } from './styled'
-import ExpensesList from './ExpenseList'
 import { formatDate, getTagNumbers, checkTagsAndLoad } from './utils'
 
 const Expenses = () => {
@@ -236,12 +235,6 @@ const Expenses = () => {
         </Box>
       </div>
 
-      <ExpensesList
-        expenses={expenses}
-        getTagNames={getTagNames}
-        setEditIndex={setEditIndex}
-        deleteExpense={deleteExpense}
-      />
       {!!expenses.length && (
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <IconButton

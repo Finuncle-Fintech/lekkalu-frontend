@@ -1,5 +1,5 @@
 import { useState, useRef, useContext } from 'react'
-import { Context } from 'provider/Provider'
+import { Context } from '@/provider/Provider'
 import closeImage from './static/close.png'
 import styles from './PopUp.module.css'
 import checkEmail from './utils/checkEmail'

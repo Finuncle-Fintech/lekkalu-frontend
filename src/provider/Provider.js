@@ -1,9 +1,9 @@
 import React, { createContext, useReducer, useState, useContext } from 'react'
-import axiosClient from 'components/Axios/Axios'
-import useAxiosPrivate from 'hooks/useAxiosPrivate'
-import setCookie from 'components/Support/PopUp/utils/SetCookie'
-import deleteCookie from 'components/Support/PopUp/utils/DeleteCookie'
 import jwtDecode from 'jwt-decode'
+import axiosClient from '@/components/Axios/Axios'
+import useAxiosPrivate from '@/hooks/useAxiosPrivate'
+import setCookie from '@/components/Support/PopUp/utils/SetCookie'
+import deleteCookie from '@/components/Support/PopUp/utils/DeleteCookie'
 import Reducer, { InitialState } from './Reducer'
 import Types from './Types'
 

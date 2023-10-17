@@ -1,8 +1,8 @@
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import NorthEastIcon from '@mui/icons-material/NorthEast'
-import BasicMenu from 'components/Header/HeaderComponents/BasicMenu'
-import { AssetsLiabilitiesChart } from 'components/Charts/AssetsLiabilitiesChart'
 import { Box, Typography, Button } from '@mui/material'
+import { AssetsLiabilitiesChart } from '@/components/Charts/AssetsLiabilitiesChart'
+import BasicMenu from '@/components/Header/HeaderComponents/BasicMenu'
 import Pie from './Pie'
 
 export default function GraphCard(props) {

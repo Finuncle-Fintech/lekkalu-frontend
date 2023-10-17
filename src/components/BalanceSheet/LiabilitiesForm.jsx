@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { Context } from 'provider/Provider'
 import Backdrop from '@mui/material/Backdrop'
 
 import CloseIcon from '@mui/icons-material/Close'
 import { Box, IconButton, TextField, Button, Typography } from '@mui/material'
 import jwt_decode from 'jwt-decode'
+import { Context } from '@/provider/Provider'
 import Loading from './Loading'
 
 export default function SimpleBackdrop(props) {

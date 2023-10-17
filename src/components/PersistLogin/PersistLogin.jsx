@@ -1,8 +1,7 @@
-import useRefreshToken from 'hooks/useRefresh'
 import React, { useContext, useEffect, useState } from 'react'
-import { Context } from 'provider/Provider'
-
 import { Outlet } from 'react-router-dom'
+import useRefreshToken from '@/hooks/useRefresh'
+import { Context } from '@/provider/Provider'
 
 const PersistLogin = () => {
   const { authToken, fetchUser } = useContext(Context)

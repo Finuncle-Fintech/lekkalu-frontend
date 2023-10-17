@@ -1,6 +1,13 @@
-import { useUserPreferences } from 'hooks/useUserPreferences'
+import React from 'react'
+import { useUserPreferences } from '@/hooks/use-user-preferences'
 
-export const CustomLabelPie = ({ active, payload }) => {
+type Props = {
+  active?: boolean
+  // @TODO: Find out correct types
+  payload?: any
+}
+
+export const CustomLabelPie = ({ active, payload }: Props) => {
   const { preferences } = useUserPreferences()
 
   if (active && payload && payload.length) {

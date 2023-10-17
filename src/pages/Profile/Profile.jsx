@@ -1,10 +1,9 @@
 import { Button, FormControl, TextField } from '@mui/material'
 import { useForm } from 'react-hook-form'
 import Swal from 'sweetalert2'
-import { EMAIL_REGEX } from 'utils/constants'
 import { useContext } from 'react'
-import { Context } from 'provider/Provider'
-import styles from './Profile.module.css'
+import { EMAIL_REGEX } from '@/utils/constants'
+import { Context } from '@/provider/Provider'
 
 export default function Profile() {
   const { user } = useContext(Context)
@@ -38,12 +37,12 @@ export default function Profile() {
   }
 
   return (
-    <div className={styles.container}>
-      <div className={styles.heading}>Update your info</div>
-      <div className={styles.divider} />
+    <div className='max-w-screen-xl mx-auto align-self-start min-h-[80vh] p-4'>
+      <div className='text-lg font-bold'>Update your info</div>
+      <div className='w-full h-[1px] bg-gray-500/20 my-4' />
 
-      <form onSubmit={handleSubmit(handleUserProfileUpdate)}>
-        <div className={styles.grid}>
+      <form onSubmit={handleSubmit(handleUserProfileUpdate)} className='space-y-4 mb-4'>
+        <div className='grid md:grid-cols-2 gap-4'>
           <FormControl>
             <TextField
               label='First Name'
@@ -101,11 +100,11 @@ export default function Profile() {
         </Button>
       </form>
 
-      <div className={styles.heading}>Update your password</div>
-      <div className={styles.divider} />
+      <div className='text-lg font-bold'>Update your password</div>
+      <div className='w-full h-[1px] bg-gray-500/20 my-4' />
 
-      <form onSubmit={passwordForm.handleSubmit(handlePasswordChange)}>
-        <div className={styles.grid}>
+      <form onSubmit={passwordForm.handleSubmit(handlePasswordChange)} className='space-y-4 mb-4'>
+        <div className='grid md:grid-cols-2 gap-4'>
           <FormControl>
             <TextField
               label='Current Password'

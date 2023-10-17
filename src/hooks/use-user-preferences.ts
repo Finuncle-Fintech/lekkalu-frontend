@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
-import { DEFAULT_CURRENCY } from 'utils/constants'
 import Swal from 'sweetalert2'
+import { DEFAULT_CURRENCY } from '@/utils/constants'
 
 const USER_PREFERENCE_KEY = 'user-preferences'
 

@@ -1,6 +1,6 @@
-import Colors from 'constants/colors'
-import { useUserPreferences } from 'hooks/useUserPreferences'
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts'
+import Colors from '@/constants/colors'
+import { useUserPreferences } from '@/hooks/use-user-preferences'
 
 export const AssetsLiabilitiesChart = (props) => {
   const totalValue = props.data.totalVal

@@ -1,6 +1,6 @@
-import { axiosPrivateClient } from 'components/Axios/Axios'
 import { useEffect, useContext } from 'react'
-import { Context } from 'provider/Provider'
+import { axiosPrivateClient } from '@/components/Axios/Axios'
+import { Context } from '@/provider/Provider'
 import useRefreshToken from './useRefresh'
 
 const useAxiosPrivate = () => {

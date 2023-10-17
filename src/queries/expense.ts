@@ -2,8 +2,8 @@ import { AddExpenseSchema } from '@/schema/expense'
 import { Expense } from '@/types/expense'
 import { apiClient } from '@/utils/client'
 
-export async function fetchExpenses() {
-  const { data } = await apiClient.get<Expense[]>('expenses/')
+export async function fetchExpenses(params?: { page?: number; per_page?: number }) {
+  const { data } = await apiClient.get<Expense[]>('expenses/', { params: { ...params, page: (params?.page ?? 0) + 1 } })
   return data
 }
 

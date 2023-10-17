@@ -18,7 +18,7 @@ export default function AddExpenseDialog() {
   const { toast } = useToast()
 
   const { data: tags } = useQuery([TAGS.TAGS], fetchTags, { enabled: !!isDialogOpen })
-  const { data: expenses } = useQuery([EXPENSES.EXPENSES], fetchExpenses, { enabled: !!isDialogOpen })
+  const { data: expenses } = useQuery([EXPENSES.EXPENSES], () => fetchExpenses(), { enabled: !!isDialogOpen })
 
   const form = useForm<AddExpenseSchema>({
     resolver: zodResolver(addExpenseSchema),

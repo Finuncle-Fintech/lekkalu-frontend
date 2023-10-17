@@ -2,6 +2,7 @@ import React, { useCallback } from 'react'
 import { useQueries } from '@tanstack/react-query'
 import dayjs from 'dayjs'
 import { EditIcon, TrashIcon } from 'lucide-react'
+import { useSearchParams } from 'react-router-dom'
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { EXPENSES, TAGS } from '@/utils/query-keys'
 import { fetchExpenses } from '@/queries/expense'
@@ -10,12 +11,15 @@ import { useUserPreferences } from '@/hooks/use-user-preferences'
 import { Button } from '@/components/ui/button'
 
 export default function ExpensesTable() {
+  const [searchParams] = useSearchParams()
+  const page = searchParams.get('page') ? Number(searchParams.get('page')) : 0
+
   const { preferences } = useUserPreferences()
   const [expenseQuery, tagsQuery] = useQueries({
     queries: [
       {
-        queryKey: [EXPENSES.EXPENSES],
-        queryFn: fetchExpenses,
+        queryKey: [EXPENSES.EXPENSES, page],
+        queryFn: () => fetchExpenses({ page }),
       },
       {
         queryKey: [TAGS.TAGS],

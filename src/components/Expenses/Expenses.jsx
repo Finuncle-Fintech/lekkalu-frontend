@@ -10,21 +10,14 @@ import Box from '@mui/material/Box'
 import { SkipNext, SkipPrevious } from '@mui/icons-material'
 import * as XLSX from 'xlsx'
 import Swal from 'sweetalert2'
-import customParseFormat from 'dayjs/plugin/customParseFormat'
 import { useQuery } from '@tanstack/react-query'
 import { BUDGET_QUERY_KEYS } from '@/utils/query-keys'
 import { fetchBudgets } from '@/queries/budget'
 import { useUserPreferences } from '@/hooks/use-user-preferences'
 import { Context } from '@/provider/Provider'
-import ExpenseFormModal from './ExpensesModal'
 import { ModalContainer } from './styled'
 import ExpensesList from './ExpenseList'
 import { formatDate, getTagNumbers, checkTagsAndLoad } from './utils'
-
-import SetBudgetModal from './components/SetBudgetModal'
-import ViewAllBudgetModal from './components/ViewAllBudgetModal'
-
-dayjs.extend(customParseFormat)
 
 const Expenses = () => {
   const {
@@ -46,7 +39,6 @@ const Expenses = () => {
   const [fromDate, setFromDate] = useState(null)
   const [toDate, setToDate] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
-  const { preferences } = useUserPreferences()
   const rowsPerPage = 10
 
   useEffect(() => {
@@ -180,20 +172,6 @@ const Expenses = () => {
 
   return (
     <ModalContainer>
-      <ExpenseFormModal
-        onUpdateExpense={updateExpense}
-        expenseToEdit={returnExpenseToEdit()}
-        editIndex={editIndex}
-        onCancelEdit={() => setEditIndex(null)}
-        loadExcelStatus={loadExcelStatus}
-        handleFileUpload={handleFileUpload}
-        createExpenseExcelStatus={newData}
-        expenses={expenses}
-        Context={Context}
-        authToken={authToken}
-      />
-
-      <Typography variant='h6'>Expense List</Typography>
       <div className='d-flex justify-content-between align-items-center my-3'>
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <IconButton

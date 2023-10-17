@@ -31,7 +31,6 @@ const Expenses = () => {
     authToken,
   } = useContext(Context)
   const getDate = new Date()
-  const [editIndex, setEditIndex] = useState(null)
   const [page, setPage] = useState(0)
   const [loadExcelStatus, setLoadExcelStatus] = useState(false)
   const [newData, setNewData] = useState([])
@@ -45,23 +44,7 @@ const Expenses = () => {
     fetchExpenses(page, rowsPerPage)
   }, [page])
 
-  const getTagObjects = (tagValues) => {
-    return tagValues.map((tagValue) => tags.find((tag) => tag.id === tagValue)).filter((tag) => tag !== undefined)
-  }
 
-  const getTagNames = (tagValues) => {
-    const tagNames =
-      tagValues &&
-      tagValues
-        .map((tagValue) => {
-          const foundTag = tags.find((tag) => tag.id === tagValue)
-          return foundTag ? foundTag.name : null
-        })
-        .filter((tagName) => tagName !== null)
-        .join(', ')
-
-    return tagNames
-  }
 
   const handleFileUpload = (files) => {
     const file = files[0]
@@ -128,19 +111,6 @@ const Expenses = () => {
 
   const updateExpense = (index, expense) => {
     changeExpenseRequest(index, expense)
-  }
-
-  const returnExpenseToEdit = () => {
-    return editIndex !== null
-      ? {
-          ...expenses[editIndex],
-          tags: getTagObjects(expenses[editIndex].tags),
-        }
-      : null
-  }
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage)
   }
 
   const clearFilters = async () => {

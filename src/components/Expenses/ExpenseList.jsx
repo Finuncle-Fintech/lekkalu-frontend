@@ -1,39 +1,28 @@
-import React from "react";
-import {
-  Table,
-  TableBody,
-  TableRow,
-  TableCell,
-  IconButton,
-} from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
-import Swal from "sweetalert2";
-import { useUserPreferences } from "hooks/useUserPreferences";
+import React from 'react'
+import { Table, TableBody, TableRow, TableCell, IconButton } from '@mui/material'
+import DeleteIcon from '@mui/icons-material/Delete'
+import EditIcon from '@mui/icons-material/Edit'
+import Swal from 'sweetalert2'
+import { useUserPreferences } from '@/hooks/use-user-preferences'
 
-const ExpensesList = ({
-  expenses,
-  getTagNames,
-  setEditIndex,
-  deleteExpense,
-}) => {
-  const { preferences } = useUserPreferences();
+const ExpensesList = ({ expenses, getTagNames, setEditIndex, deleteExpense }) => {
+  const { preferences } = useUserPreferences()
   const deleteHandler = (expense) => {
     Swal.fire({
-      title: "Are you sure?",
-      text: `You won't be able to revert this`,
-      icon: "warning",
+      title: 'Are you sure?',
+      text: "You won't be able to revert this",
+      icon: 'warning',
       showConfirmButton: true,
       showCancelButton: true,
-      confirmButtonText: "Delete",
-      confirmButtonColor: "Red",
+      confirmButtonText: 'Delete',
+      confirmButtonColor: 'Red',
     }).then((res) => {
       if (res.isConfirmed) {
-        deleteExpense(expense.id);
-        Swal.fire("Deleted", "Your expense deleted successfully.", "success");
+        deleteExpense(expense.id)
+        Swal.fire('Deleted', 'Your expense deleted successfully.', 'success')
       }
-    });
-  };
+    })
+  }
 
   return (
     <Table>
@@ -41,7 +30,7 @@ const ExpensesList = ({
         {expenses &&
           Boolean(expenses.length) &&
           expenses.map((expense, index) => {
-            const expenseOfExpenses = expense?.data || expense;
+            const expenseOfExpenses = expense?.data || expense
 
             return (
               <TableRow key={`${expenseOfExpenses.id}_${index}`}>
@@ -49,33 +38,27 @@ const ExpensesList = ({
                   {expenseOfExpenses.amount} {preferences?.currencyUnit}
                 </TableCell>
                 <TableCell>{getTagNames(expenseOfExpenses.tags)}</TableCell>
+                <TableCell>{new Date(expenseOfExpenses.time).toDateString(0)}</TableCell>
                 <TableCell>
-                  {new Date(expenseOfExpenses.time).toDateString(0)}
-                </TableCell>
-                <TableCell>
-                  <IconButton
-                    placeholder="edit-expense"
-                    edge="end"
-                    onClick={() => setEditIndex(index)}
-                  >
+                  <IconButton placeholder='edit-expense' edge='end' onClick={() => setEditIndex(index)}>
                     <EditIcon />
                   </IconButton>
                   <IconButton
-                    placeholder="delete-expense"
-                    edge="end"
+                    placeholder='delete-expense'
+                    edge='end'
                     onClick={() => {
-                      deleteHandler(expense);
+                      deleteHandler(expense)
                     }}
                   >
                     <DeleteIcon />
                   </IconButton>
                 </TableCell>
               </TableRow>
-            );
+            )
           })}
       </TableBody>
     </Table>
-  );
-};
+  )
+}
 
-export default ExpensesList;
+export default ExpensesList

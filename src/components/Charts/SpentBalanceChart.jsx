@@ -1,55 +1,39 @@
-import "bootstrap/dist/css/bootstrap.min.css";
-import React from "react";
-import {
-  ResponsiveContainer,
-  ComposedChart,
-  Line,
-  Bar,
-  CartesianGrid,
-  XAxis,
-  YAxis,
-  Tooltip,
-  Legend,
-} from "recharts";
-import Colors from "constants/colors";
-import { useUserPreferences } from "hooks/useUserPreferences";
+import 'bootstrap/dist/css/bootstrap.min.css'
+import React from 'react'
+import { ResponsiveContainer, ComposedChart, Line, Bar, CartesianGrid, XAxis, YAxis, Tooltip, Legend } from 'recharts'
+import { useUserPreferences } from '@/hooks/use-user-preferences'
+import Colors from '@/constants/colors'
 
 const CustomTooltip = ({ active, payload, label }) => {
-  const { preferences } = useUserPreferences();
+  const { preferences } = useUserPreferences()
 
   if (active && payload && payload.length) {
     return (
-      <div
-        className="sb-tooltip"
-        style={{ backgroundColor: Colors.white, padding: 10 }}
-      >
-        <p className="sb-tooltip-month">{`${label}`}</p>
+      <div className='sb-tooltip' style={{ backgroundColor: Colors.white, padding: 10 }}>
+        <p className='sb-tooltip-month'>{`${label}`}</p>
         <p
-          className="sb-tooltip-spent"
+          className='sb-tooltip-spent'
           style={{ color: Colors.orange }}
         >{`${payload[0].name} : ${preferences.currencyUnit} ${payload[0].value}`}</p>
         <p
-          className="sb-tooltip-balance"
+          className='sb-tooltip-balance'
           style={{ color: Colors.blue }}
         >{`${payload[2].name} : ${preferences.currencyUnit} ${payload[2].value}`}</p>
       </div>
-    );
+    )
   }
 
-  return null;
-};
+  return null
+}
 
 export const SpentBalanceChart = (spentBalance) => {
-  const { preferences } = useUserPreferences();
+  const { preferences } = useUserPreferences()
 
   return (
-    <div
-      className="section-outer-wrapper col-md-8 mx-auto"
-      style={{ backgroundColor: Colors.graphBG }}
-    >
-      <h3 className="section-title text-white text-center">Monthly</h3>
-      <div className="section-inner-wrapper">
-        <ResponsiveContainer width="100%" aspect={2}>
+    <div className='section-outer-wrapper col-md-8 mx-auto' style={{ backgroundColor: Colors.graphBG }}>
+      <h3 className='section-title text-white text-center'>Monthly</h3>
+      <div className='section-inner-wrapper'>
+        <ResponsiveContainer width='100%' aspect={2}>
           <ComposedChart
             width={500}
             height={400}
@@ -63,45 +47,32 @@ export const SpentBalanceChart = (spentBalance) => {
           >
             <CartesianGrid
               stroke={Colors.cartesianStroke}
-              strokeDasharray="0 0"
+              strokeDasharray='0 0'
               fill={Colors.graphBG}
               vertical={false}
             />
-            <XAxis dataKey="name" dy={10} tick={{ fill: Colors.white }} />
+            <XAxis dataKey='name' dy={10} tick={{ fill: Colors.white }} />
             <YAxis
               tickFormatter={(tick) => {
-                return `${preferences.currencyUnit} ${tick}`;
+                return `${preferences.currencyUnit} ${tick}`
               }}
               tick={{ fill: Colors.white }}
             />
-            <Tooltip
-              content={<CustomTooltip />}
-              cursor={{ fill: Colors.white }}
-            />
+            <Tooltip content={<CustomTooltip />} cursor={{ fill: Colors.white }} />
             <Legend
-              layout="horizontal"
-              align="center"
+              layout='horizontal'
+              align='center'
               wrapperStyle={{
-                position: "relative",
+                position: 'relative',
               }}
             />
-            <Bar dataKey="Spent" barSize={150} fill={Colors.orange} />
-            <Line
-              type="monotone"
-              dataKey="Spent"
-              stroke={Colors.orange}
-              strokeWidth={2}
-            />
-            <Bar dataKey="Balance" barSize={150} fill={Colors.blue} />
-            <Line
-              type="monotone"
-              dataKey="Balance"
-              stroke={Colors.blue}
-              strokeWidth={2}
-            />
+            <Bar dataKey='Spent' barSize={150} fill={Colors.orange} />
+            <Line type='monotone' dataKey='Spent' stroke={Colors.orange} strokeWidth={2} />
+            <Bar dataKey='Balance' barSize={150} fill={Colors.blue} />
+            <Line type='monotone' dataKey='Balance' stroke={Colors.blue} strokeWidth={2} />
           </ComposedChart>
         </ResponsiveContainer>
       </div>
     </div>
-  );
-};
+  )
+}

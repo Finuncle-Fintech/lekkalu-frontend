@@ -2,189 +2,189 @@
 @import url('https://fonts.googleapis.com/css2?family=Lexend+Deca&display=swap');
 
 .heroDescription {
-    font-family: 'Urbanist';
-    background-color: #FAFAFA;
-    margin-top: 9rem;
-    margin-bottom: 28.625rem;
-    padding: 5.625rem;
+  font-family: 'Urbanist';
+  background-color: #fafafa;
+  margin-top: 9rem;
+  margin-bottom: 28.625rem;
+  padding: 5.625rem;
 }
 
 .descriptionSection {
-    display: flex;
-    justify-content: center;
-    align-items: top;
-    gap: 4rem;
-    width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: top;
+  gap: 4rem;
+  width: 100%;
 }
 
 .whyChooseUs {
-    font-size: 1.5rem;
-    color: #FF450D;
-    font-weight: 700;
-    line-height: 60px;
-    letter-spacing: -0.03em;
+  font-size: 1.5rem;
+  color: #ff450d;
+  font-weight: 700;
+  line-height: 60px;
+  letter-spacing: -0.03em;
 }
 
 .title {
-    font-size: 4rem;
-    color: #000000;
-    font-weight: 700;
-    line-height: 77px;
-    letter-spacing: -0.03em;
+  font-size: 4rem;
+  color: #000000;
+  font-weight: 700;
+  line-height: 77px;
+  letter-spacing: -0.03em;
 }
 
 .descriptionText {
-    font-size: 1rem;
-    color: #808080;
-    font-weight: 300;
-    line-height: 28px;
-    letter-spacing: 0em;
+  font-size: 1rem;
+  color: #808080;
+  font-weight: 300;
+  line-height: 28px;
+  letter-spacing: 0em;
 }
 
 .descriptionButton {
-    background-color: #FF450D;
-    border: none;
-    outline: none;
-    border-radius: 8px;
-    margin-top: 2rem;
-    width: 10rem;
-    height: 4rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  background-color: #ff450d;
+  border: none;
+  outline: none;
+  border-radius: 8px;
+  margin-top: 2rem;
+  width: 10rem;
+  height: 4rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .buttonText {
-    margin: 0 0.5rem 0;
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: #FFFFFF;
+  margin: 0 0.5rem 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #ffffff;
 }
 
 .buttonImage {
-    width: 1.5rem;
-    height: 1.5rem;
+  width: 1.5rem;
+  height: 1.5rem;
 }
 
 .userAassistance {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(auto, 22rem));
-    justify-content: center;
-    gap: 2rem;
-    margin-top: 4rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(auto, 22rem));
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 4rem;
 }
 
 .userAssistanceElement {
-    background-color: #FFFFFF;
-    position: relative;
-    padding: 2rem 1rem 1.5rem 1rem;
-    text-align: center;
+  background-color: #ffffff;
+  position: relative;
+  padding: 2rem 1rem 1.5rem 1rem;
+  text-align: center;
 }
 
 .userAssistanceElement::after {
-    content: "";
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 0.375rem;
-    background-color: #FB8600;
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 0.375rem;
+  background-color: #fb8600;
 }
 
 .userAssistanceTitle {
-    font-size: 24px;
-    font-weight: 600;
-    line-height: 29px;
-    letter-spacing: -0.02em;
-    text-align: left;
-    margin-top: 2rem;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 29px;
+  letter-spacing: -0.02em;
+  text-align: left;
+  margin-top: 2rem;
 }
 
 .userAssistanceImage {
-    width: 146px;
-    height: 130px;
+  width: 146px;
+  height: 130px;
 }
 
 .userAssistanceText {
-    font-family: 'Lexend+Deca';
-    font-size: 16px;
-    font-weight: 300;
-    line-height: 20px;
-    letter-spacing: -0.02em;
-    text-align: left;
+  font-family: 'Lexend+Deca';
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 20px;
+  letter-spacing: -0.02em;
+  text-align: left;
 }
 
 @media (max-width: 768px) {
-    .heroDescription {
-        padding: 2rem;
-        margin-bottom: 4rem;
-    }
+  .heroDescription {
+    padding: 2rem;
+    margin-bottom: 4rem;
+  }
 
-    .descriptionSection {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-        gap: 2rem;
-    }
+  .descriptionSection {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 2rem;
+  }
 
-    .whyChooseUs {
-        font-size: 1.25rem;
-        line-height: 1.5;
-    }
+  .whyChooseUs {
+    font-size: 1.25rem;
+    line-height: 1.5;
+  }
 
-    .title {
-        font-size: 2rem;
-        line-height: 2;
-    }
+  .title {
+    font-size: 2rem;
+    line-height: 2;
+  }
 
-    .descriptionText {
-        font-size: 1rem;
-        line-height: 1.5;
-        text-align: center;
-    }
+  .descriptionText {
+    font-size: 1rem;
+    line-height: 1.5;
+    text-align: center;
+  }
 
-    .descriptionButton {
-        width: 100%;
-        margin-top: 1rem;
-    }
+  .descriptionButton {
+    width: 100%;
+    margin-top: 1rem;
+  }
 
-    .buttonText {
-        margin: 0;
-    }
+  .buttonText {
+    margin: 0;
+  }
 
-    .buttonImage {
-        display: none;
-    }
+  .buttonImage {
+    display: none;
+  }
 
-    .userAassistance {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-        margin-top: 2rem;
-    }
+  .userAassistance {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
 
-    .userAssistanceElement {
-        padding: 1rem;
-        text-align: center;
-    }
+  .userAssistanceElement {
+    padding: 1rem;
+    text-align: center;
+  }
 
-    .userAssistanceElement::after {
-        content: "";
-        display: none;
-    }
+  .userAssistanceElement::after {
+    content: '';
+    display: none;
+  }
 
-    .userAssistanceTitle {
-        font-size: 1.25rem;
-        margin-top: 1rem;
-    }
+  .userAssistanceTitle {
+    font-size: 1.25rem;
+    margin-top: 1rem;
+  }
 
-    .userAssistanceImage {
-        width: 100px;
-        height: 90px;
-        margin: 1rem auto;
-    }
+  .userAssistanceImage {
+    width: 100px;
+    height: 90px;
+    margin: 1rem auto;
+  }
 
-    .userAssistanceText {
-        font-size: 0.875rem;
-        margin-top: 1rem;
-    }
+  .userAssistanceText {
+    font-size: 0.875rem;
+    margin-top: 1rem;
+  }
 }

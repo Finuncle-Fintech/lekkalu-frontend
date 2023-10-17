@@ -1,24 +1,14 @@
-import "bootstrap/dist/css/bootstrap.min.css";
-import React from "react";
-import {
-  ResponsiveContainer,
-  ComposedChart,
-  Line,
-  Bar,
-  CartesianGrid,
-  XAxis,
-  YAxis,
-  Tooltip,
-  Legend,
-} from "recharts";
-import Colors from "constants/colors";
-import { useUserPreferences } from "hooks/useUserPreferences";
+import 'bootstrap/dist/css/bootstrap.min.css'
+import React from 'react'
+import { ResponsiveContainer, ComposedChart, Line, Bar, CartesianGrid, XAxis, YAxis, Tooltip, Legend } from 'recharts'
+import { useUserPreferences } from '@/hooks/use-user-preferences'
+import Colors from '@/constants/colors'
 
-//export const handleMouseOver = jest.fn();
-//export const handleSyncMethod = jest.fn();
+// export const handleMouseOver = jest.fn();
+// export const handleSyncMethod = jest.fn();
 
 const CustomTooltip = ({ active, payload, label }) => {
-  const { preferences } = useUserPreferences();
+  const { preferences } = useUserPreferences()
 
   if (active && payload && payload.length) {
     return (
@@ -28,23 +18,20 @@ const CustomTooltip = ({ active, payload, label }) => {
           style={{ color: Colors.cumSum, margin: 2 }}
         >{`${payload[0].name} : ${preferences.currencyUnit} ${payload[0].value}`}</p>
       </div>
-    );
+    )
   }
 
-  return null;
-};
+  return null
+}
 
 export const CumSumChart = (cumSumData) => {
-  const { preferences } = useUserPreferences();
+  const { preferences } = useUserPreferences()
 
   return (
-    <div
-      className="section-outer-wrapper col-md-8 mx-auto"
-      style={{ backgroundColor: Colors.graphBG }}
-    >
-      <h3 className="section-title text-white text-center">Monthly</h3>
-      <div className="section-inner-wrapper">
-        <ResponsiveContainer width="100%" aspect={2}>
+    <div className='section-outer-wrapper col-md-8 mx-auto' style={{ backgroundColor: Colors.graphBG }}>
+      <h3 className='section-title text-white text-center'>Monthly</h3>
+      <div className='section-inner-wrapper'>
+        <ResponsiveContainer width='100%' aspect={2}>
           <ComposedChart
             width={500}
             height={400}
@@ -58,45 +45,30 @@ export const CumSumChart = (cumSumData) => {
           >
             <CartesianGrid
               stroke={Colors.cartesianStroke}
-              strokeDasharray="0 0"
+              strokeDasharray='0 0'
               fill={Colors.graphBG}
               vertical={false}
             />
-            <XAxis dataKey="name" dy={10} tick={{ fill: Colors.white }} />
+            <XAxis dataKey='name' dy={10} tick={{ fill: Colors.white }} />
             <YAxis
               tickFormatter={(tick) => {
-                return `${preferences.currencyUnit} ${tick}`;
+                return `${preferences.currencyUnit} ${tick}`
               }}
               tick={{ fill: Colors.white }}
             />
-            <Tooltip
-              content={<CustomTooltip />}
-              cursor={{ fill: Colors.white }}
-              data-testid="tooltip-1"
-            />
+            <Tooltip content={<CustomTooltip />} cursor={{ fill: Colors.white }} data-testid='tooltip-1' />
             <Legend
-              layout="horizontal"
-              align="center"
+              layout='horizontal'
+              align='center'
               wrapperStyle={{
-                position: "relative",
+                position: 'relative',
               }}
             />
-            <Bar
-              dataKey="CumSum"
-              barSize={160}
-              fill={Colors.cumSum}
-              syncId="test"
-            />
-            <Line
-              type="monotone"
-              dataKey="CumSum"
-              stroke={Colors.cumSum}
-              strokeWidth={3}
-              syncId="test"
-            />
+            <Bar dataKey='CumSum' barSize={160} fill={Colors.cumSum} syncId='test' />
+            <Line type='monotone' dataKey='CumSum' stroke={Colors.cumSum} strokeWidth={3} syncId='test' />
           </ComposedChart>
         </ResponsiveContainer>
       </div>
     </div>
-  );
-};
+  )
+}

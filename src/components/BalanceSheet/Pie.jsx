@@ -1,8 +1,7 @@
-import ContainerBalanceCard from "./ContainerBalanceCard";
-import { Spinner } from "reactstrap";
+import ContainerBalanceCard from './ContainerBalanceCard'
 
-export default function BalanceCard({ component, title }) {
-  const { props } = component;
+export default function BalanceCard({ component }) {
+  const { props } = component
 
   return (
     <ContainerBalanceCard>
@@ -10,15 +9,9 @@ export default function BalanceCard({ component, title }) {
         {props.data.length !== 0 ? (
           component
         ) : (
-          <div
-            style={{ width: "100%", height: "100%",  display: "grid", placeContent: "center" }}
-          >
-          { component}
-          </div>
+          <div style={{ width: '100%', height: '100%', display: 'grid', placeContent: 'center' }}>{component}</div>
         )}
-
-      
       </div>
     </ContainerBalanceCard>
-  );
+  )
 }

@@ -1,14 +1,17 @@
-import 'App.css';
-import { Provider } from 'provider/Provider';
-import Router from 'Router';
-function App() {   
-   return (
-      <div className='App'>
-         <Provider>
-            <Router />
-         </Provider>
-      </div>
-   );
+import './App.css'
+import Router from './Router'
+import { Provider } from './provider/Provider'
+import { Toaster } from '@/components/ui/toaster'
+
+function App() {
+  return (
+    <div className='App'>
+      <Toaster />
+      <Provider>
+        <Router />
+      </Provider>
+    </div>
+  )
 }
 
-export default App;
+export default App

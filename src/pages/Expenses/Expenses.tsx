@@ -7,24 +7,21 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import SetBudgetModal from '@/components/Expenses/components/SetBudgetModal'
 import ViewAllBudgetModal from '@/components/Expenses/components/ViewAllBudgetModal'
-import { BUDGET_QUERY_KEYS, EXPENSES } from '@/utils/query-keys'
+import { BUDGET_QUERY_KEYS } from '@/utils/query-keys'
 import { fetchBudgets } from '@/queries/budget'
 import { useUserPreferences } from '@/hooks/use-user-preferences'
 import AddExpenseDialog from './components/AddExpenseDialog'
-import { fetchExpenses } from '@/queries/expense'
 import { Button } from '@/components/ui/button'
 import { ExpenseFiltersSchema, expenseFiltersSchema } from '@/schema/expense'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import DatePicker from '@/components/DatePicker/DatePicker'
+import ExpensesTable from './components/ExpensesTable'
 
 dayjs.extend(customParseFormat)
 
 export default function Expenses() {
   const { preferences } = useUserPreferences()
   const { data: budgets } = useQuery([BUDGET_QUERY_KEYS.BUDGETS], fetchBudgets)
-
-  const { data: expenses } = useQuery([EXPENSES.EXPENSES], fetchExpenses)
-  console.log(expenses)
 
   const filtersForm = useForm<ExpenseFiltersSchema>({
     resolver: zodResolver(expenseFiltersSchema),
@@ -71,6 +68,7 @@ export default function Expenses() {
           </Button>
         </div>
 
+        {/* Filters */}
         <Form {...filtersForm}>
           <form onSubmit={filtersForm.handleSubmit(handleFilters)} className='flex  gap-2'>
             <FormField
@@ -103,6 +101,8 @@ export default function Expenses() {
           </form>
         </Form>
       </div>
+
+      <ExpensesTable />
     </div>
   )
 }

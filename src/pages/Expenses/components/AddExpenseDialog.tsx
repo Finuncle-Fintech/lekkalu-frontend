@@ -32,7 +32,7 @@ export default function AddExpenseDialog() {
     },
   })
 
-  const inputs: InputField[] = useMemo(() => {
+  const inputs = useMemo(() => {
     return [
       {
         id: 'amount',
@@ -43,14 +43,14 @@ export default function AddExpenseDialog() {
         id: 'tags',
         label: 'Select tags',
         type: 'multi-select',
-        options: !tags ? [] : tags?.map((tag) => ({ id: tag.id, label: tag.name })),
+        options: tags?.map((tag) => ({ id: tag.id, label: tag.name })) ?? [],
       },
       {
         id: 'time',
         label: 'Choose the Date',
         type: 'date',
       },
-    ]
+    ] as InputField[]
   }, [tags])
 
   const handleAddOrEditExpense = (values: AddExpenseSchema) => {

@@ -11,18 +11,11 @@ export type DatePickerProps = Omit<CalendarProps, 'onSelect'> & {
   style?: React.CSSProperties
   onChange?: (date: Date | undefined) => void
   placeholder?: string
-  defaultDate?: Date
+  value?: Date
 }
 
-export default function DatePicker({
-  className,
-  style,
-  onChange,
-  placeholder,
-  defaultDate,
-  ...props
-}: DatePickerProps) {
-  const [date, setDate] = React.useState<Date | undefined>(defaultDate)
+export default function DatePicker({ className, style, onChange, placeholder, value, ...props }: DatePickerProps) {
+  const [date, setDate] = React.useState<Date | undefined>(value)
 
   return (
     <Popover>

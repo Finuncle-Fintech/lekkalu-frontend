@@ -66,7 +66,7 @@ export default function InputFieldsRenderer({ inputs, control }: Props) {
       }
 
       case 'date': {
-        return <DatePicker placeholder={input.label} defaultDate={input.defaultDate} {...field} />
+        return <DatePicker placeholder={input.label} {...field} />
       }
 
       // @TODO: Create multi select input

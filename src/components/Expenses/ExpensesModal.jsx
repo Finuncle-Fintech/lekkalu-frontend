@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useState, useEffect, useContext } from 'react'
 import { TextField, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from '@mui/material'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
@@ -67,24 +68,7 @@ const ExpenseFormModal = ({
     }
   }
 
-  const handleDateChange = async (date) => {
-    setSelectedDate(date)
-  }
-
   const handleSubmit = async (e) => {
-    e.preventDefault()
-
-    if (myTags.length === 0) {
-      setErrorTag(true)
-      return
-    } else {
-      setErrorTag(false)
-    }
-
-    const newMyTags = []
-    await Promise.resolve(checkTagsAndLoad(newMyTags, tags, myTags, createTag))
-    const tagIDs = getTagNumbers(newMyTags, tags)
-
     const newExpense = {
       amount,
       tags: tagIDs,
@@ -95,22 +79,7 @@ const ExpenseFormModal = ({
     if (editIndex !== null) {
       onUpdateExpense(editIndex, { ...expenseToEdit, ...newExpense })
     } else {
-      setDefaultLoadStatus(true)
-      const exist = await checkExpensesDoesNotRepeat(newExpense, axiosPrivate, authToken)
-      if (exist) {
-        handleClose()
-        Swal.fire({
-          title: 'This expense already exist.',
-          background: 'white',
-          icon: 'warning',
-          timer: 2000,
-          showConfirmButton: false,
-        }).then(() => {
-          handleClickOpen()
-          setDefaultLoadStatus(false)
-        })
-        return
-      }
+      
 
       onAddExpense({ ...newExpense })
     }
@@ -125,19 +94,6 @@ const ExpenseFormModal = ({
     setMyTags('')
     setDefaultLoadStatus(false)
     handleClose()
-  }
-
-  const isAmountValid = (value) => {
-    const regex = /^(0|[1-9]\d*)(\.\d{0,2})?$/
-    return regex.test(value)
-  }
-
-  const handleAmountChange = (event) => {
-    const newValue = event.target.value
-
-    if (newValue === '' || isAmountValid(newValue)) {
-      setAmount(newValue)
-    }
   }
 
   return (
@@ -156,23 +112,7 @@ const ExpenseFormModal = ({
           <DialogTitle>{editIndex !== null ? 'Edit Expense' : 'Add Expense'}</DialogTitle>
           <DialogContent>
             <form onSubmit={handleSubmit}>
-              <Typography variant='p'>Provide the amount:</Typography>
-              <TextField
-                value={amount}
-                onChange={handleAmountChange}
-                onKeyPress={preventPropagationOnEnter}
-                required
-                fullWidth
-                data-testid='amount-expense'
-              />
-              <Typography variant='p'>Select tags:</Typography>
               <TagInput myTags={myTags} setTags={setMyTags} Context={Context} errorTag={errorTag} />
-              <Typography variant='p'>Choose the date:</Typography>
-              <div>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DatePicker defaultValue={dayjs(selectedDate)} onChange={handleDateChange} />
-                </LocalizationProvider>
-              </div>
               <DialogActions>
                 <ReactFileReader
                   fileTypes={['.xls', '.xlsx']}

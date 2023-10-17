@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useState, useContext, useEffect } from 'react'
 import { Typography, TablePagination, IconButton } from '@mui/material'
 import dayjs from 'dayjs'
@@ -33,7 +34,6 @@ const Expenses = () => {
     fetchExpenses,
     filterExpensesByDate,
     deleteExpenseRequest,
-    createExpenseRequest,
     changeExpenseRequest,
     fetchTags,
     authToken,
@@ -48,12 +48,6 @@ const Expenses = () => {
   const [isLoading, setIsLoading] = useState(false)
   const { preferences } = useUserPreferences()
   const rowsPerPage = 10
-
-  const { data: budgets } = useQuery([BUDGET_QUERY_KEYS.BUDGETS], fetchBudgets)
-
-  const currentMonthBudget = budgets?.find((item) =>
-    dayjs(item.month, 'YYYY-MM-DD').startOf('month').isSame(dayjs().startOf('month')),
-  )
 
   useEffect(() => {
     if (!tags.length) fetchTags()
@@ -141,10 +135,6 @@ const Expenses = () => {
     deleteExpenseRequest(id)
   }
 
-  const createExpense = (expense) => {
-    createExpenseRequest({ ...expense })
-  }
-
   const updateExpense = (index, expense) => {
     changeExpenseRequest(index, expense)
   }
@@ -190,26 +180,7 @@ const Expenses = () => {
 
   return (
     <ModalContainer>
-      <div
-        className='border rounded-2 shadow-sm w-100 p-4 d-flex flex-column align-items-start gap-2'
-        style={{ maxWidth: '400px' }}
-      >
-        <div className='text-start fs-3 fw-bold'>Budget</div>
-        <div className='d-flex align-items-center gap-2'>
-          <div>{dayjs().format('MMMM')}</div>
-          <div className='fw-bold'>
-            {currentMonthBudget ? `${currentMonthBudget.limit} ${preferences?.currencyUnit}` : 'Not budget set'}
-          </div>
-        </div>
-
-        <div className='d-flex align-items-center gap-2 w-100'>
-          <SetBudgetModal />
-          <ViewAllBudgetModal />
-        </div>
-      </div>
-
       <ExpenseFormModal
-        onAddExpense={createExpense}
         onUpdateExpense={updateExpense}
         expenseToEdit={returnExpenseToEdit()}
         editIndex={editIndex}

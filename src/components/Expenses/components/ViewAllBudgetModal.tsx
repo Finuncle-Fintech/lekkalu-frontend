@@ -1,16 +1,6 @@
 import React, { useMemo, useState } from 'react'
 import { Delete } from '@mui/icons-material'
-import {
-  Button,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  IconButton,
-  Table,
-  TableBody,
-  TableCell,
-  TableRow,
-} from '@mui/material'
+import { Dialog, DialogContent, DialogTitle, IconButton, Table, TableBody, TableCell, TableRow } from '@mui/material'
 import dayjs from 'dayjs'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -18,6 +8,7 @@ import BeatLoader from 'react-spinners/BeatLoader'
 import { deleteBudget, fetchBudgets } from '@/queries/budget'
 import { BUDGET_QUERY_KEYS } from '@/utils/query-keys'
 import EditBudgetModal from './EditBudgetModal'
+import { Button } from '@/components/ui/button'
 
 dayjs.extend(customParseFormat)
 
@@ -71,7 +62,7 @@ export default function ViewAllBudgetModal() {
   return (
     <>
       <Button
-        variant='outlined'
+        variant='outline'
         className='flex-grow-1'
         onClick={() => {
           setOpen(true)

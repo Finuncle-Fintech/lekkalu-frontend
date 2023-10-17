@@ -1,15 +1,15 @@
 import React, { useState } from 'react'
-import { Button, Dialog, DialogContent, DialogTitle, TextField } from '@mui/material'
+import { Dialog, DialogContent, DialogTitle, TextField } from '@mui/material'
 import { DatePicker } from '@mui/x-date-pickers'
 import Swal from 'sweetalert2'
 import dayjs from 'dayjs'
-
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
 import { SetBudgetSchema, setBudgetSchema } from '@/schema/budget'
 import { setBudget } from '@/queries/budget'
 import { DATE_FORMAT } from '@/utils/constants'
+import { Button } from '@/components/ui/button'
 
 export default function SetBudgetModal() {
   const [open, setOpen] = useState(false)
@@ -52,7 +52,6 @@ export default function SetBudgetModal() {
   return (
     <>
       <Button
-        variant='contained'
         className='flex-grow-1'
         onClick={() => {
           setOpen(true)
@@ -100,10 +99,11 @@ export default function SetBudgetModal() {
             />
 
             <div className='d-flex align-items-center gap-2 w-100'>
-              <Button type='submit' variant='contained' className='flex-grow' disabled={setBudgetMutation.isLoading}>
+              <Button type='submit' className='flex-grow' disabled={setBudgetMutation.isLoading}>
                 Set
               </Button>
               <Button
+                variant='outline'
                 className='flex-grow'
                 onClick={() => {
                   setOpen(false)

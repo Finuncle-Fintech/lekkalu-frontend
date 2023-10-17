@@ -18,10 +18,10 @@ import TermsAndConditions from '@/pages/TermsAndConditions/TermsAndConditions'
 import PrivacyPolicies from '@/pages/PrivacyPolicies/PrivacyPolicies'
 import Profile from '@/pages/Profile/Profile'
 import Expenses from '@/components/Expenses/Expenses'
-import Charts from '@/components/Charts/Charts'
 import Signup from '@/pages/Signup/Signup'
 import Signin from '@/pages/Signin/Signin'
 import ProtectedRoutes from '@/components/ProtectedRoutes/ProtectedRoutes'
+import Home from './pages/Home/Home'
 
 const RouterComponent = () => {
   return (
@@ -41,7 +41,7 @@ const RouterComponent = () => {
           </Route>
 
           <Route element={<PersistLogin />}>
-            <Route path='/home' element={<ProtectedRoutes component={<Charts />} />} />
+            <Route path='/home' element={<ProtectedRoutes component={<Home />} />} />
             <Route path='/goals' element={<ProtectedRoutes component={<Goals />} />} />
             <Route path='/income-statement' element={<ProtectedRoutes component={<IncomeStatementPage />} />} />
             <Route path='/expenses' element={<ProtectedRoutes component={<Expenses />} />} />

@@ -22,6 +22,7 @@ import Charts from '@/components/Charts/Charts'
 import Signup from '@/pages/Signup/Signup'
 import Signin from '@/pages/Signin/Signin'
 import ProtectedRoutes from '@/components/ProtectedRoutes/ProtectedRoutes'
+import ExpensesNew from '@/pages/Expenses/Expenses'
 
 const RouterComponent = () => {
   return (
@@ -45,6 +46,7 @@ const RouterComponent = () => {
             <Route path='/goals' element={<ProtectedRoutes component={<Goals />} />} />
             <Route path='/income-statement' element={<ProtectedRoutes component={<IncomeStatementPage />} />} />
             <Route path='/expenses' element={<ProtectedRoutes component={<Expenses />} />} />
+            <Route path='/expenses-new' element={<ProtectedRoutes component={<ExpensesNew />} />} />
             <Route path='/balance' element={<ProtectedRoutes component={<BalanceSheet />} />} />
             <Route path='/settings' element={<ProtectedRoutes component={<Settings />} />} />
             <Route path='/profile' element={<ProtectedRoutes component={<Profile />} />} />

@@ -3,7 +3,6 @@ import { Typography, TablePagination, IconButton } from '@mui/material'
 import { SkipNext, SkipPrevious } from '@mui/icons-material'
 import { Context } from '@/provider/Provider'
 import GoalFormModal from './GoalsModal'
-import { ModalContainer } from '../Expenses/styled'
 import GoalsList from './GoalsList'
 
 export default function Goals() {
@@ -39,7 +38,7 @@ export default function Goals() {
   }
 
   return (
-    <ModalContainer>
+    <div className='px-6 py-4'>
       <GoalFormModal
         onAddGoal={createGoal}
         onUpdateGoal={updateGoal}
@@ -107,6 +106,6 @@ export default function Goals() {
           {page * 10 + 1} - {page * 10 + 10} of {goals.length}
         </div>
       )}
-    </ModalContainer>
+    </div>
   )
 }

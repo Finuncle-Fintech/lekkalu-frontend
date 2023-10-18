@@ -5,6 +5,7 @@ import { Input } from '../ui/input'
 import { Slider } from '../ui/slider'
 import When from '../When/When'
 import DatePicker from '../DatePicker/DatePicker'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
 
 // @TODO: Add extraContent prop
 type BaseInput = {
@@ -12,6 +13,7 @@ type BaseInput = {
   label: string
   className?: string
   style?: React.CSSProperties
+  initialValue?: any
 }
 
 type NumberInput = BaseInput & {
@@ -29,7 +31,13 @@ type DateInput = BaseInput & {
   defaultDate?: Date
 }
 
-export type InputField = NumberInput | DateInput
+type MultiSelectInput = BaseInput & {
+  type: 'multi-select'
+  options: Array<{ id: string; label: string }>
+  valueFormatter?: (value: string | number) => string | number
+}
+
+export type InputField = NumberInput | DateInput | MultiSelectInput
 
 type Props = {
   control: Control<any>
@@ -59,7 +67,35 @@ export default function InputFieldsRenderer({ inputs, control }: Props) {
       }
 
       case 'date': {
-        return <DatePicker placeholder={input.label} defaultDate={input.defaultDate} {...field} />
+        return <DatePicker placeholder={input.label} {...field} />
+      }
+
+      // @TODO: Create multi select input
+      case 'multi-select': {
+        return (
+          <Select
+            onValueChange={(value) => {
+              if (typeof input.valueFormatter === 'function') {
+                const _value = input.valueFormatter(value)
+                field.onChange(_value)
+              } else {
+                field.onChange(value)
+              }
+            }}
+            {...field}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder={input.label} />
+            </SelectTrigger>
+            <SelectContent className='max-h-72'>
+              {input.options.map(({ id, label }) => (
+                <SelectItem value={id} key={id}>
+                  {label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        )
       }
 
       default: {

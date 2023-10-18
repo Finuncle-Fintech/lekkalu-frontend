@@ -40,7 +40,6 @@ const Provider = ({ children }) => {
     expenses,
     tags,
     weeklyExpense,
-    budget,
     monthlyExpenses,
     assets,
     liabilities,
@@ -119,31 +118,6 @@ const Provider = ({ children }) => {
     }
   }
 
-  const fetchExpenses = async (page, rowsPerPage) => {
-    try {
-      const headers = {
-        Authorization: `Bearer ${authToken}`,
-        'Content-Type': 'application/json',
-      }
-      await axiosPrivate
-        .get(`${process.env.REACT_APP_BACKEND_API}expenses/`, {
-          headers,
-          params: {
-            page: page + 1,
-            per_page: rowsPerPage,
-          },
-        })
-        .then((res) => {
-          dispatch({
-            type: Types.FETCH_EXPENSE,
-            payload: res.data,
-          })
-        })
-    } catch (error) {
-      handleErrors(error)
-    }
-  }
-
   const fetchAllExpenses = async () => {
     try {
       const headers = {
@@ -159,116 +133,12 @@ const Provider = ({ children }) => {
     }
   }
 
-  const filterExpensesByDate = async (page, rowsPerPage, fromDate, toDate) => {
-    try {
-      const headers = {
-        Authorization: `Bearer ${authToken}`,
-        'Content-Type': 'application/json',
-      }
-      await axiosPrivate
-        .get(`${process.env.REACT_APP_BACKEND_API}expenses/${fromDate}/${toDate}/`, {
-          headers,
-          params: {
-            page: page + 1,
-            per_page: rowsPerPage,
-          },
-        })
-        .then((res) => {
-          dispatch({
-            type: Types.FETCH_EXPENSE,
-            payload: res.data,
-          })
-        })
-    } catch (error) {
-      handleErrors(error)
-    }
-  }
-
-  const deleteExpenseRequest = async (id) => {
-    try {
-      const headers = {
-        Authorization: `Bearer ${authToken}`,
-        'Content-Type': 'application/json',
-      }
-
-      await axiosPrivate
-        .delete(`${process.env.REACT_APP_BACKEND_API}expenses/${id}`, {
-          headers,
-        })
-        .then(() => {
-          dispatch({
-            type: Types.DELETE_EXPENSE,
-            payload: id,
-          })
-        })
-    } catch (error) {
-      handleErrors(error)
-    }
-  }
-
-  const createExpenseRequest = async (data) => {
-    const createExpenseStatus = []
-    try {
-      const headers = {
-        Authorization: `Bearer ${authToken}`,
-        'Content-Type': 'application/json',
-      }
-
-      await axiosPrivate
-        .post(`${process.env.REACT_APP_BACKEND_API}expenses/`, data, {
-          headers,
-        })
-        .then((res) => {
-          dispatch({
-            type: Types.CREATE_EXPENSE,
-            payload: { data, id: res.data.data.id },
-          })
-
-          createExpenseStatus.push(res)
-        })
-    } catch (error) {
-      handleErrors(error)
-    }
-
-    return createExpenseStatus
-  }
-
-  const changeExpenseRequest = async (index, expense) => {
-    try {
-      const headers = {
-        Authorization: `Bearer ${authToken}`,
-        'Content-Type': 'application/json',
-      }
-      await axiosPrivate
-        .put(`${process.env.REACT_APP_BACKEND_API}expenses/${expense.id}`, expense, { headers })
-        .then(() => {
-          dispatch({
-            type: Types.EDIT_EXPENSE,
-            payload: { index, expense },
-          })
-        })
-    } catch (error) {
-      handleErrors(error)
-    }
-  }
-
   const fetchData = async () => {
     try {
       const headers = {
         Authorization: `Bearer ${authToken}`,
         'Content-Type': 'application/json',
       }
-
-      await axiosPrivate
-        .get(`${process.env.REACT_APP_BACKEND_API}budget/`, {
-          headers,
-        })
-        .then((res) => {
-          dispatch({
-            type: Types.FETCH_BUDGET,
-            payload: res.data,
-          })
-        })
 
       await axiosPrivate
         .get(`${process.env.REACT_APP_BACKEND_API}weekly_expenses/`, {
@@ -922,7 +792,6 @@ const Provider = ({ children }) => {
         signOut,
         expenses,
         tags,
-        budget,
         weeklyExpense,
         monthlyExpenses,
         assets,
@@ -937,17 +806,12 @@ const Provider = ({ children }) => {
         depreciation,
         giveFeedback,
         fetchData,
-        fetchExpenses,
-        deleteExpenseRequest,
-        createExpenseRequest,
-        changeExpenseRequest,
         fetchTags,
         createTag,
         fetchToken,
         fetchIncomeSources,
         fetchIncomeExpenses,
         fetchIncomeStatement,
-        filterExpensesByDate,
         addAssetRequest,
         editAssetRequest,
         fetchAssetById,

@@ -7,8 +7,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import dayjs from 'dayjs'
 import Swal from 'sweetalert2'
-import { ModalContainer } from '../Expenses/styled'
-import { preventPropagationOnEnter } from '../Expenses/utils'
+import { preventPropagationOnEnter } from '@/utils/utils'
 import { handleAmountChange, handleFinishedDateChange, isReachabilityValid } from './GoalsFunctions'
 
 const GoalFormModal = ({
@@ -137,7 +136,7 @@ const GoalFormModal = ({
 
   return (
     <>
-      <ModalContainer>
+      <div className='px-6 py-4'>
         <Button variant='contained' color='primary' onClick={handleClickOpen} data-testid='add-goal'>
           Add Goal
         </Button>
@@ -293,7 +292,7 @@ const GoalFormModal = ({
             </form>
           </DialogContent>
         </Dialog>
-      </ModalContainer>
+      </div>
     </>
   )
 }

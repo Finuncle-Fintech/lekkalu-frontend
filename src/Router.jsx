@@ -17,11 +17,11 @@ import HeroRoute from '@/components/HeroRoute/HeroRoute'
 import TermsAndConditions from '@/pages/TermsAndConditions/TermsAndConditions'
 import PrivacyPolicies from '@/pages/PrivacyPolicies/PrivacyPolicies'
 import Profile from '@/pages/Profile/Profile'
-import Expenses from '@/components/Expenses/Expenses'
 import Signup from '@/pages/Signup/Signup'
 import Signin from '@/pages/Signin/Signin'
 import ProtectedRoutes from '@/components/ProtectedRoutes/ProtectedRoutes'
 import Home from './pages/Home/Home'
+import Expenses from '@/pages/Expenses/Expenses'
 
 const RouterComponent = () => {
   return (

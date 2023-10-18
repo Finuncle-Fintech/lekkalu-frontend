@@ -1,5 +1,7 @@
 import dayjs from 'dayjs'
 import { Expense } from '@/types/expense'
+import { Tag } from '@/types/tag'
+import { createTag } from '@/queries/tag'
 
 export function checkIsExpenseExists(allExpenses: Expense[], newExpense: Pick<Expense, 'amount' | 'tags' | 'time'>) {
   let isExists = false
@@ -22,4 +24,34 @@ export function checkIsExpenseExists(allExpenses: Expense[], newExpense: Pick<Ex
   })
 
   return isExists
+}
+
+export const EXPENSE_FILE_VALID_COLUMNS = ['amount', 'tags', 'date']
+export function validateFileColumns(columns: string[]) {
+  return columns.every((column) => EXPENSE_FILE_VALID_COLUMNS.includes(column.toLowerCase().trim()))
+}
+
+export async function getOrCreateTag(newTags: string[], existingTags: Tag[]) {
+  const newTagsCopy = Array.from(existingTags)
+  const existingOrCreatedTagIds: number[] = []
+
+  for (const tag of newTags) {
+    const tagName = tag.replace(tag[0], tag[0].toUpperCase()).trim()
+    const existingTag = newTagsCopy.find((tag) => tag.name === tagName)
+
+    if (existingTag) {
+      existingOrCreatedTagIds.push(existingTag.id)
+    } else {
+      try {
+        const { data } = await createTag({ name: tagName })
+        existingOrCreatedTagIds.push(data.id)
+        newTagsCopy.push(data)
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.log(error)
+      }
+    }
+  }
+
+  return existingOrCreatedTagIds
 }

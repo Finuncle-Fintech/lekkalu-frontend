@@ -134,31 +134,6 @@ const Provider = ({ children }) => {
     }
   }
 
-  const filterExpensesByDate = async (page, rowsPerPage, fromDate, toDate) => {
-    try {
-      const headers = {
-        Authorization: `Bearer ${authToken}`,
-        'Content-Type': 'application/json',
-      }
-      await axiosPrivate
-        .get(`${process.env.REACT_APP_BACKEND_API}expenses/${fromDate}/${toDate}/`, {
-          headers,
-          params: {
-            page: page + 1,
-            per_page: rowsPerPage,
-          },
-        })
-        .then((res) => {
-          dispatch({
-            type: Types.FETCH_EXPENSE,
-            payload: res.data,
-          })
-        })
-    } catch (error) {
-      handleErrors(error)
-    }
-  }
-
   const fetchData = async () => {
     try {
       const headers = {
@@ -885,7 +860,6 @@ const Provider = ({ children }) => {
         fetchIncomeSources,
         fetchIncomeExpenses,
         fetchIncomeStatement,
-        filterExpensesByDate,
         addAssetRequest,
         editAssetRequest,
         deleteAssetRequest,

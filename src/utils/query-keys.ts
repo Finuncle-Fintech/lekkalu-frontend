@@ -8,4 +8,5 @@ export const TAGS = {
 
 export const EXPENSES = {
   EXPENSES: 'EXPENSES',
+  DATE_RANGE: 'DATE_RANGE',
 } as const

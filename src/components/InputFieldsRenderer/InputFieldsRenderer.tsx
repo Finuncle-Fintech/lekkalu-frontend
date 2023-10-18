@@ -34,6 +34,7 @@ type DateInput = BaseInput & {
 type MultiSelectInput = BaseInput & {
   type: 'multi-select'
   options: Array<{ id: string; label: string }>
+  valueFormatter?: (value: string | number) => string | number
 }
 
 export type InputField = NumberInput | DateInput | MultiSelectInput
@@ -72,7 +73,17 @@ export default function InputFieldsRenderer({ inputs, control }: Props) {
       // @TODO: Create multi select input
       case 'multi-select': {
         return (
-          <Select onValueChange={field.onChange} {...field}>
+          <Select
+            onValueChange={(value) => {
+              if (typeof input.valueFormatter === 'function') {
+                const _value = input.valueFormatter(value)
+                field.onChange(_value)
+              } else {
+                field.onChange(value)
+              }
+            }}
+            {...field}
+          >
             <SelectTrigger>
               <SelectValue placeholder={input.label} />
             </SelectTrigger>

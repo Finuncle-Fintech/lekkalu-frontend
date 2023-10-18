@@ -9,14 +9,7 @@ import { ModalContainer } from './styled'
 import { formatDate, getTagNumbers, checkTagsAndLoad } from './utils'
 
 const Expenses = () => {
-  const { tags, createTag, fetchExpenses, filterExpensesByDate, fetchTags } = useContext(Context)
-  const [page] = useState(0)
-  const [, setLoadExcelStatus] = useState(false)
-  const [, setNewData] = useState([])
-  const [fromDate, setFromDate] = useState(null)
-  const [toDate, setToDate] = useState(null)
-  const [isLoading, setIsLoading] = useState(false)
-  const rowsPerPage = 10
+  const { tags, createTag, fetchExpenses } = useContext(Context)
 
   const handleFileUpload = (files) => {
     const file = files[0]
@@ -76,47 +69,6 @@ const Expenses = () => {
 
     reader.readAsBinaryString(file)
   }
-
-  const clearFilters = async () => {
-    setIsLoading(true)
-    setFromDate(null)
-    setToDate(null)
-    await fetchExpenses(page, rowsPerPage)
-    setIsLoading(false)
-  }
-
-  const handleFilterSubmit = async (e) => {
-    e.preventDefault()
-    setIsLoading(true)
-
-    if (fromDate === null && toDate === null) {
-      await fetchExpenses(page, rowsPerPage)
-    } else {
-      const from = new Date(fromDate).toLocaleDateString('en-US')
-      const to = new Date(toDate).toLocaleDateString('en-US')
-
-      const filterFromDate = dayjs(from).format('YYYY-MM-DD')
-      const filterToDate = dayjs(to).format('YYYY-MM-DD')
-
-      await filterExpensesByDate(page, rowsPerPage, filterFromDate, filterToDate)
-    }
-    setIsLoading(false)
-  }
-
-  return (
-    <ModalContainer>
-      <Button
-        type='button'
-        variant='contained'
-        sx={{ py: 2, px: 4, ml: 1 }}
-        disabled={isLoading}
-        onClick={clearFilters}
-        className='bg-danger'
-      >
-        Clear
-      </Button>
-    </ModalContainer>
-  )
 }
 
 export default Expenses

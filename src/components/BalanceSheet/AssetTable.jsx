@@ -19,12 +19,13 @@ import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { visuallyHidden } from '@mui/utils'
+import Swal from 'sweetalert2'
 import IosShareIcon from '@mui/icons-material/IosShare'
 import LocalPrintshopIcon from '@mui/icons-material/LocalPrintshop'
-import { useContext } from 'react'
 import AddIcon from '@mui/icons-material/Add'
-import Swal from 'sweetalert2'
-import { Context } from '@/provider/Provider'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { PHYSICAL_ASSETS_QUERY_KEYS } from '@/utils/query-keys'
+import { deletePhysicalAssets } from '@/queries/physical_assets'
 import Menu from './Menu'
 import AssetForm from './AssetForm'
 import Loading from './Loading'
@@ -182,7 +183,14 @@ EnhancedTableHead.propTypes = {
 
 function EnhancedTableToolbar(props) {
   const { numSelected, selectedAssetIds, handleSelectAfterDelete } = props
-  const { deleteAssetRequest } = useContext(Context)
+
+  const queryClient = useQueryClient()
+
+  const deletePhysicalAssetsMutation = useMutation(deletePhysicalAssets, {
+    onSuccess: () => {
+      queryClient.invalidateQueries([PHYSICAL_ASSETS_QUERY_KEYS.PHYSICAL_ASSETS])
+    },
+  })
 
   const handleAssetDelete = async () => {
     if (selectedAssetIds.length > 0) {
@@ -198,7 +206,8 @@ function EnhancedTableToolbar(props) {
         if (res.isConfirmed) {
           try {
             props.setLoading(true)
-            await deleteAssetRequest(selectedAssetIds)
+            deletePhysicalAssetsMutation.mutate(selectedAssetIds)
+            Swal.fire('Success', 'Deleted successfully', 'success')
           } catch (error) {
             Swal.fire('Failure', 'Something went wrong while deleting asset!.', 'error')
           } finally {
@@ -244,7 +253,7 @@ function EnhancedTableToolbar(props) {
 
       {numSelected > 0 ? (
         <Tooltip title='Delete'>
-          <IconButton onClick={handleAssetDelete}>
+          <IconButton onClick={handleAssetDelete} disabled={deletePhysicalAssetsMutation.isLoading}>
             <DeleteIcon />
           </IconButton>
         </Tooltip>

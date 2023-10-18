@@ -58,7 +58,6 @@ export default function GraphCard(props) {
             width: '100%',
           }}
         >
-          {' '}
           <Box
             sx={{
               display: 'flex',

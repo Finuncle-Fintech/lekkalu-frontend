@@ -34,7 +34,6 @@ export default function BalanceSheet() {
     return { finalAssets, totalVal }
   }, [physical_assets, isLoading])
 
-  console.log('assetDatas', assetDatas)
   useEffect(() => {
     if (liabilities.finalLiabilities && liabilities.finalLiabilities.length > 0) {
       const newLiabilityDatas = liabilities.finalLiabilities.map((liability) => ({

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import dayjs from 'dayjs'
 import { useQuery } from '@tanstack/react-query'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
@@ -23,6 +23,8 @@ dayjs.extend(customParseFormat)
 export default function Expenses() {
   const { preferences } = useUserPreferences()
   const [searchParams, setSearchParams] = useSearchParams()
+  const [dateRangeEnabled, setDateRangeEnabled] = useState(false)
+
   const page = searchParams.get('page') ? Number(searchParams.get('page')) : 0
 
   const { data: budgets } = useQuery([BUDGET_QUERY_KEYS.BUDGETS], fetchBudgets)
@@ -30,13 +32,19 @@ export default function Expenses() {
   const filtersForm = useForm<ExpenseFiltersSchema>({
     resolver: zodResolver(expenseFiltersSchema),
   })
+  const filters = filtersForm.watch()
 
   const currentMonthBudget = budgets?.find((item) =>
     dayjs(item.month, 'YYYY-MM-DD').startOf('month').isSame(dayjs().startOf('month')),
   )
 
-  const handleFilters = (filters: ExpenseFiltersSchema) => {
-    console.log(filters)
+  const handleFilters = () => {
+    setDateRangeEnabled(true)
+  }
+
+  const handleClearFilters = () => {
+    filtersForm.reset()
+    setDateRangeEnabled(false)
   }
 
   return (
@@ -123,18 +131,20 @@ export default function Expenses() {
 
         {/* Filters */}
         <Form {...filtersForm}>
-          <form onSubmit={filtersForm.handleSubmit(handleFilters)} className='flex  gap-2'>
+          <form onSubmit={filtersForm.handleSubmit(handleFilters)} className='flex gap-2'>
             <FormField
               control={filtersForm.control}
               name='from'
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <DatePicker placeholder='From' {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              render={({ field }) => {
+                return (
+                  <FormItem>
+                    <FormControl>
+                      <DatePicker placeholder='From' {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )
+              }}
             />
             <FormField
               control={filtersForm.control}
@@ -149,13 +159,23 @@ export default function Expenses() {
               )}
             />
 
-            <Button type='submit'>Filter</Button>
-            <Button variant='destructive'>Clear</Button>
+            <Button type='submit' disabled={!filtersForm.formState.isValid}>
+              Filter
+            </Button>
+            <Button variant='destructive' onClick={handleClearFilters}>
+              Clear
+            </Button>
           </form>
         </Form>
       </div>
 
-      <ExpensesTable />
+      <ExpensesTable
+        dateRangeEnabled={dateRangeEnabled}
+        filters={{
+          from: dayjs(filters.from).format('YYYY-MM-DD'),
+          to: dayjs(filters.to).format('YYYY-MM-DD'),
+        }}
+      />
     </div>
   )
 }

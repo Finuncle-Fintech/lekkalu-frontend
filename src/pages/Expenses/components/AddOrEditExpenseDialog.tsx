@@ -68,6 +68,7 @@ export default function AddOrEditExpenseDialog({ expense, trigger }: Props) {
         label: 'Select tags',
         type: 'multi-select',
         options: tags?.map((tag) => ({ id: tag.id, label: tag.name })) ?? [],
+        valueFormatter: (value) => Number(value),
       },
       {
         id: 'time',

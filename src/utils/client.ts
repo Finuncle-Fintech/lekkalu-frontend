@@ -14,7 +14,9 @@ export const apiClient = axios.create({
 })
 
 apiClient?.interceptors.request.use((config) => {
-  config.headers.Authorization = `Bearer ${getCookie('access')}`
+  if (!config.headers.Authorization) {
+    config.headers.Authorization = `Bearer ${getCookie('access')}`
+  }
 
   return config
 })

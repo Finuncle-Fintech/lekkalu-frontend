@@ -40,7 +40,6 @@ const Provider = ({ children }) => {
     expenses,
     tags,
     weeklyExpense,
-    budget,
     monthlyExpenses,
     assets,
     liabilities,
@@ -140,17 +139,6 @@ const Provider = ({ children }) => {
         Authorization: `Bearer ${authToken}`,
         'Content-Type': 'application/json',
       }
-
-      await axiosPrivate
-        .get(`${process.env.REACT_APP_BACKEND_API}budget/`, {
-          headers,
-        })
-        .then((res) => {
-          dispatch({
-            type: Types.FETCH_BUDGET,
-            payload: res.data,
-          })
-        })
 
       await axiosPrivate
         .get(`${process.env.REACT_APP_BACKEND_API}weekly_expenses/`, {
@@ -839,7 +827,6 @@ const Provider = ({ children }) => {
         signOut,
         expenses,
         tags,
-        budget,
         weeklyExpense,
         monthlyExpenses,
         assets,

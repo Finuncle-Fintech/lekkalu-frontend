@@ -6,8 +6,6 @@ import { ChevronLeftIcon, ChevronRightIcon, SkipBackIcon, SkipForwardIcon } from
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useSearchParams } from 'react-router-dom'
-import SetBudgetModal from '@/components/Expenses/components/SetBudgetModal'
-import ViewAllBudgetModal from '@/components/Expenses/components/ViewAllBudgetModal'
 import { BUDGET_QUERY_KEYS } from '@/utils/query-keys'
 import { fetchBudgets } from '@/queries/budget'
 import { useUserPreferences } from '@/hooks/use-user-preferences'
@@ -17,6 +15,8 @@ import { ExpenseFiltersSchema, expenseFiltersSchema } from '@/schema/expense'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import DatePicker from '@/components/DatePicker/DatePicker'
 import ExpensesTable from './components/ExpensesTable'
+import ViewAllBudgetModal from './components/ViewAllBudgetModal'
+import SetBudgetModal from './components/SetBudgetModal'
 
 dayjs.extend(customParseFormat)
 

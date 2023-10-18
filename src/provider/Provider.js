@@ -307,22 +307,6 @@ const Provider = ({ children }) => {
           })
         })
 
-      await axiosPrivate
-        .get(`${process.env.REACT_APP_BACKEND_API}physical_assets/`, {
-          headers,
-        })
-        .then((res) => {
-          let totalVal = 0.000000001
-          res.data.forEach((da) => {
-            totalVal += Number(da.market_value)
-            finalAssets = [...finalAssets, { id: da.id, name: da.name, value: parseFloat(da.market_value) }]
-          })
-          dispatch({
-            type: Types.FETCH_ASSETS,
-            payload: { finalAssets, totalVal },
-          })
-        })
-
       await axiosPrivate.get(`${process.env.REACT_APP_BACKEND_API}loans/`, { headers }).then((res) => {
         let totalVal = 0.000000001
         res.data.forEach((da) => {
@@ -623,25 +607,6 @@ const Provider = ({ children }) => {
         .then(() => {
           fetchAsset()
         })
-    } catch (error) {
-      handleErrors(error)
-    }
-  }
-
-  const deleteAssetRequest = async (Ids) => {
-    try {
-      const headers = {
-        Authorization: `Bearer ${authToken}`,
-        'Content-Type': 'application/json',
-      }
-
-      for (const Id of Ids) {
-        await axiosPrivate.delete(`${process.env.REACT_APP_BACKEND_API}physical_assets/${Id}`, {
-          headers,
-        })
-      }
-
-      fetchAsset()
     } catch (error) {
       handleErrors(error)
     }
@@ -985,7 +950,6 @@ const Provider = ({ children }) => {
         filterExpensesByDate,
         addAssetRequest,
         editAssetRequest,
-        deleteAssetRequest,
         fetchAssetById,
         fetchAsset,
         addIncomeExpense,

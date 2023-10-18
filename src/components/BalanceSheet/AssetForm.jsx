@@ -24,7 +24,7 @@ function monthOrYearToSeconds(number, isMonth) {
     return number * secondsInMinute * minutesInHour * hoursInDay * daysInYear
   }
 }
-export default function SimpleBackdrop(props) {
+export default function AssetForm(props) {
   const [open, setOpen] = React.useState(false)
   const [year, setYear] = React.useState('0')
   const [month, setMonth] = React.useState('1')

@@ -19,8 +19,8 @@ import Charts from '@/components/Charts/Charts'
 import Signup from '@/pages/Signup/Signup'
 import Signin from '@/pages/Signin/Signin'
 import ProtectedRoutes from '@/components/ProtectedRoutes/ProtectedRoutes'
-import Expenses from '@/pages/Expenses/Expenses'
 import IncomeStatement from '@/pages/IncomeStatement/IncomeStatement'
+import Expenses from '@/pages/Expenses/Expenses'
 
 const RouterComponent = () => {
   return (

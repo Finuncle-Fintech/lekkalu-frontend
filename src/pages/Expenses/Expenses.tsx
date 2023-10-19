@@ -17,6 +17,8 @@ import DatePicker from '@/components/DatePicker/DatePicker'
 import ExpensesTable from './components/ExpensesTable'
 import ViewAllBudgetModal from './components/ViewAllBudgetModal'
 import SetBudgetModal from './components/SetBudgetModal'
+import { DATE_FORMAT } from '@/utils/constants'
+import Page from '@/components/Page/Page'
 
 dayjs.extend(customParseFormat)
 
@@ -35,7 +37,7 @@ export default function Expenses() {
   const filters = filtersForm.watch()
 
   const currentMonthBudget = budgets?.find((item) =>
-    dayjs(item.month, 'YYYY-MM-DD').startOf('month').isSame(dayjs().startOf('month')),
+    dayjs(item.month, DATE_FORMAT).startOf('month').isSame(dayjs().startOf('month')),
   )
 
   const handleFilters = () => {
@@ -48,7 +50,7 @@ export default function Expenses() {
   }
 
   return (
-    <div className='max-w-screen-xl mx-auto align-self-start min-h-[80vh] p-4 space-y-4'>
+    <Page className='space-y-4'>
       <div className='border rounded-2 shadow-sm w-100 p-4 flex flex-col gap-2 max-w-md'>
         <div className='text-2xl font-bold'>Budget</div>
         <div className='flex items-center gap-2'>
@@ -176,6 +178,6 @@ export default function Expenses() {
           to: dayjs(filters.to).format('YYYY-MM-DD'),
         }}
       />
-    </div>
+    </Page>
   )
 }

@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useContext, useEffect } from 'react'
 import { Typography, Container, Grid, Box, Tabs, Tab } from '@mui/material'
 import Card from '@mui/material/Card'
@@ -112,189 +113,19 @@ const IncomeStatementPage = () => {
   return (
     <div style={{ backgroundColor: '#1976D2', paddingBottom: '30px' }}>
       <Container sx={{ paddingTop: '50px' }}>
-        <Typography className='header-text' component='div' variant='h5'>
-          Income statement
-        </Typography>
-        <Grid container spacing={{ xs: 1, sm: 1, md: 3 }} style={{ marginBottom: '50px', marginTop: '0' }}>
-          <Grid item xs={12} sm={6} md={3}>
-            <Card
-              sx={{
-                display: 'flex',
-                '.css-4t2aqu-MuiPaper-root-MuiCard-root': {
-                  borderRadius: '12px',
-                },
-              }}
-            >
-              <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                <CardContent sx={{ flex: '1 0 auto', paddingBottom: '16px !important  ' }}>
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      gap: 2,
-                    }}
-                  >
-                    <img src={IncomePercentage} width={64} alt='' />
-                    <div>
-                      <Typography
-                        component='div'
-                        variant='h5'
-                        sx={{
-                          color: 'rgba(0, 0, 0, 0.75)',
-                          fontSize: '34px',
-                          fontWeight: 500,
-                          lineHeight: '40px',
-                        }}
-                      >
-                        {!Number.isNaN(salaryPercentage) ? salaryPercentage : 0}
-                      </Typography>
-                      <Typography variant='subtitle1' color='text.secondary' component='div' className='sub-text'>
-                        Salary
-                      </Typography>
-                    </div>
-                  </Box>
-                </CardContent>
-              </Box>
-            </Card>
-          </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <Card sx={{ display: 'flex' }}>
-              <Box
-                sx={{
-                  display: 'flex',
-                  borderRadius: '12px',
-                  flexDirection: 'column',
-                }}
-              >
-                <CardContent sx={{ flex: '1 0 auto', paddingBottom: '16px !important  ' }}>
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      gap: 2,
-                    }}
-                  >
-                    <img src={IncomePercentage} width={64} alt='' />
-                    <div>
-                      <Typography
-                        component='div'
-                        variant='h5'
-                        sx={{
-                          color: 'rgba(0, 0, 0, 0.75)',
-                          fontSize: '34px',
-                          fontWeight: 500,
-                          lineHeight: '40px',
-                        }}
-                      >
-                        {!Number.isNaN(personalPercentage) ? `${personalPercentage.toFixed(2)}%` : 0}
-                      </Typography>
-                      <Typography variant='subtitle1' color='text.secondary' component='div' className='sub-text'>
-                        Personal
-                      </Typography>
-                    </div>
-                  </Box>
-                </CardContent>
-              </Box>
-            </Card>
-          </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <Card sx={{ display: 'flex' }}>
-              <Box
-                sx={{
-                  display: 'flex',
-                  borderRadius: '12px',
-                  flexDirection: 'column',
-                }}
-              >
-                <CardContent sx={{ flex: '1 0 auto', paddingBottom: '16px !important  ' }}>
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      gap: 2,
-                    }}
-                  >
-                    <img src={IncomePercentage} width={64} alt='' />
-                    <div>
-                      <Typography
-                        component='div'
-                        variant='h5'
-                        sx={{
-                          color: 'rgba(0, 0, 0, 0.75)',
-                          fontSize: '34px',
-                          fontWeight: 500,
-                          lineHeight: '40px',
-                        }}
-                      >
-                        {!Number.isNaN(loanRepaymentPercentage) ? `${loanRepaymentPercentage.toFixed(2)}%` : 0}
-                      </Typography>
-                      <Typography variant='subtitle1' color='text.secondary' component='div' className='sub-text'>
-                        Loan_repayment
-                      </Typography>
-                    </div>
-                  </Box>
-                </CardContent>
-              </Box>
-            </Card>
-          </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <Card sx={{ display: 'flex' }}>
-              <Box
-                sx={{
-                  display: 'flex',
-                  borderRadius: '12px',
-                  flexDirection: 'column',
-                }}
-              >
-                <CardContent sx={{ flex: '1 0 auto', paddingBottom: '16px !important' }}>
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      gap: 2,
-                    }}
-                  >
-                    <img src={IncomePercentage} width={64} alt='' />
-                    <div>
-                      <Typography
-                        component='div'
-                        variant='h5'
-                        sx={{
-                          color: 'rgba(0, 0, 0, 0.75)',
-                          fontSize: '34px',
-                          fontWeight: 500,
-                          lineHeight: '40px',
-                        }}
-                      >
-                        {!Number.isNaN(investmentPercentage) ? `${investmentPercentage.toFixed(2)}%` : 0}
-                      </Typography>
-                      <Typography variant='subtitle1' color='text.secondary' component='div' className='sub-text'>
-                        Investment
-                      </Typography>
-                    </div>
-                  </Box>
-                </CardContent>
-              </Box>
-            </Card>
-          </Grid>
-        </Grid>
-        <Tabs sx={tabsStyle} value={value} variant='fullWidth' onChange={handleChange} aria-label='basic tabs example'>
-          <Tab sx={tabStyle} label='Income' {...a11yProps(0)} />
-          <Tab sx={tabStyle} label='Expense' {...a11yProps(1)} />
-        </Tabs>
-        <CustomTabPanel style={tabPanelStyle} className='custom-tab-container' value={value} index={0}>
-          <IncomeExpenseTable
-            incomeStatement={incomeStatement.income}
-            addfield={addIncomeSource}
-            updateField={updateIncomeSourceById}
-            deleteField={deleteIncomeSourceById}
-            incomeTable
-          />
-        </CustomTabPanel>
+        {/* {!Number.isNaN(salaryPercentage) ? salaryPercentage : 0}
+{!Number.isNaN(personalPercentage) ? `${personalPercentage.toFixed(2)}%` : 0}
+{!Number.isNaN(loanRepaymentPercentage) ? `${loanRepaymentPercentage.toFixed(2)}%` : 0}
+{!Number.isNaN(investmentPercentage) ? `${investmentPercentage.toFixed(2)}%` : 0}
+*/}
+
+        <IncomeExpenseTable
+          incomeStatement={incomeStatement.income}
+          addfield={addIncomeSource}
+          updateField={updateIncomeSourceById}
+          deleteField={deleteIncomeSourceById}
+          incomeTable
+        />
         <CustomTabPanel style={tabPanelStyle} className='custom-tab-container' value={value} index={1}>
           <IncomeExpenseTable
             incomeStatement={incomeStatement.expenses}

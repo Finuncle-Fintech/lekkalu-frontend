@@ -1,5 +1,4 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
-// import IncomeStatement from "pages/income-statement/IncomeStatement";
 import IncomeStatementPage from '@/pages/income-statement/IncomeStatementPage'
 import EmiCalculator from '@/pages/EmiCalculator/EmiCalculator'
 import PersistLogin from '@/components/PersistLogin/PersistLogin'
@@ -22,6 +21,7 @@ import Signup from '@/pages/Signup/Signup'
 import Signin from '@/pages/Signin/Signin'
 import ProtectedRoutes from '@/components/ProtectedRoutes/ProtectedRoutes'
 import Expenses from '@/pages/Expenses/Expenses'
+import IncomeStatementNew from '@/pages/IncomeStatement/IncomeStatement'
 
 const RouterComponent = () => {
   return (
@@ -44,6 +44,7 @@ const RouterComponent = () => {
             <Route path='/home' element={<ProtectedRoutes component={<Charts />} />} />
             <Route path='/goals' element={<ProtectedRoutes component={<Goals />} />} />
             <Route path='/income-statement' element={<ProtectedRoutes component={<IncomeStatementPage />} />} />
+            <Route path='/income-statement-new' element={<ProtectedRoutes component={<IncomeStatementNew />} />} />
             <Route path='/expenses' element={<ProtectedRoutes component={<Expenses />} />} />
             <Route path='/balance' element={<ProtectedRoutes component={<BalanceSheet />} />} />
             <Route path='/settings' element={<ProtectedRoutes component={<Settings />} />} />

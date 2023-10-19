@@ -231,13 +231,6 @@ const EditToolbar = (props) => {
   )
 }
 
-const CustomNoRowsOverlay = (props) => {
-  const { incomeTable } = props
-  return (
-    <Box sx={{ mt: 1, textAlign: 'center' }}>{incomeTable ? 'No Incomes in Records!' : 'No Expenses in Records!'}</Box>
-  )
-}
-
 const IncomeExpenseTable = ({ incomeStatement, addfield, updateField, deleteField, incomeTable }) => {
   const [rows, setRows] = useState([])
   const [rowModesModel, setRowModesModel] = useState({})
@@ -435,7 +428,6 @@ const IncomeExpenseTable = ({ incomeStatement, addfield, updateField, deleteFiel
           }}
           slots={{
             toolbar: EditToolbar,
-            noRowsOverlay: CustomNoRowsOverlay,
           }}
           slotProps={{
             toolbar: { setRows, setRowModesModel, incomeTable, selectedRows },

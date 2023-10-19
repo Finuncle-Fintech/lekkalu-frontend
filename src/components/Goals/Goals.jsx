@@ -2,13 +2,12 @@ import React, { useState, useContext, useEffect } from 'react'
 import { Context } from 'provider/Provider'
 import { Typography, TablePagination, IconButton } from '@mui/material'
 import { SkipNext, SkipPrevious } from '@mui/icons-material'
-import GoalFormModal from './GoalsModal'
 import { ModalContainer } from '../Expenses/styled'
 import GoalsList from './GoalsList'
+import GoalsModal from './GoalsModal'
 
 export default function Goals() {
   const { goals, fetchGoals, deleteGoalRequest, createGoalRequest, changeGoalRequest } = useContext(Context)
-
   const [open, setOpen] = useState(false)
   const [editIndex, setEditIndex] = useState(null)
   const [page, setPage] = useState(0)
@@ -40,13 +39,12 @@ export default function Goals() {
 
   return (
     <ModalContainer>
-      <GoalFormModal
+      <GoalsModal
         onAddGoal={createGoal}
         onUpdateGoal={updateGoal}
         goalToEdit={returnGoalToEdit(editIndex)}
         handlerCancelEdit={() => setEditIndex(null)}
         editIndex={editIndex}
-        Context={Context}
         statusModal={open}
         setStatusModal={setOpen}
       />

@@ -1,5 +1,5 @@
-export const formatDate = (date) => {
-  const pad = (n) => (n < 10 ? '0' + n : n)
+export const formatDate = (date: Date): string => {
+  const pad = (n: number): string => (n < 10 ? '0' + n : String(n))
   const year = date.getFullYear()
   const month = pad(date.getMonth() + 1)
   const day = pad(date.getDate())
@@ -14,14 +14,14 @@ export const formatDate = (date) => {
   return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}${sign}${offsetHours}:${offsetMinutes}`
 }
 
-export const preventPropagationOnEnter = (event) => {
+export const preventPropagationOnEnter:React.KeyboardEventHandler<HTMLDivElement> = (event) => {
   if (event.key === 'Enter') event.preventDefault()
 }
 
-export const checkExpensesDoesNotRepeat = async (newExpense, axiosPrivate, authToken) => {
-  let response = null
-  // If the amount of the new expense does not contain a decimals, this conditional adds .00 for compare it with others
-  !(newExpense.amount % 1 !== 0) && (newExpense.amount = `${newExpense.amount}.00`)
+export const checkExpensesDoesNotRepeat = async (newExpense: any, axiosPrivate: any, authToken: string): Promise<boolean> => {
+  let response: boolean | null = null
+  // If the amount of the new expense does not contain decimals, this conditional adds .00 to compare it with others
+  if (newExpense.amount % 1 !== 0) newExpense.amount = `${newExpense.amount}.00`
   try {
     const headers = {
       Authorization: `Bearer ${authToken}`,
@@ -31,12 +31,12 @@ export const checkExpensesDoesNotRepeat = async (newExpense, axiosPrivate, authT
       .get(`${process.env.REACT_APP_BACKEND_API}expenses/`, {
         headers,
       })
-      .then((res) => {
-        res?.data.forEach((expenses) => {
+      .then((res: any) => {
+        res?.data.forEach((expenses: any) => {
           if (expenses.amount === newExpense.amount) {
-            const existingsTags = expenses.tags.sort()
+            const existingTags = expenses.tags.sort()
             const newTags = newExpense.tags.sort()
-            const sameTags = existingsTags.map((data, index) => {
+            const sameTags = existingTags.map((data: any, index: number) => {
               if (data === newTags[index]) return true
               return false
             })
@@ -69,15 +69,15 @@ export const checkExpensesDoesNotRepeat = async (newExpense, axiosPrivate, authT
   return response || false
 }
 
-export const checkTagsAndLoad = (newMyTags, tags, nameOfTagsExpenses, createTag) => {
-  const getNewId = () => {
+export const checkTagsAndLoad = async (newMyTags: any[], tags: any[], nameOfTagsExpenses: any[], createTag: (tag: any) => Promise<void>): Promise<any[]> => {
+  const getNewId = (): number => {
     const maxId = tags.map((tag) => tag.id)
     return Math.max(...maxId) + 1
   }
 
   const copyTagsOfExpense = Array.from(nameOfTagsExpenses)
 
-  const promises = copyTagsOfExpense.map(async (newTag) => {
+  const promises = copyTagsOfExpense.map(async (newTag: any) => {
     const newTagName = newTag.name
     const newTagNameUpperCase = newTagName.replace(newTagName[0], newTagName[0].toUpperCase())
 
@@ -104,12 +104,12 @@ export const checkTagsAndLoad = (newMyTags, tags, nameOfTagsExpenses, createTag)
   return Promise.all(promises)
 }
 
-export const getTagNumbers = (tagValues, tags) => {
+export const getTagNumbers = (tagValues: any[], tags: any[]): number[] => {
   return tagValues
-    .map((tagValue) => {
+    .map((tagValue: any) => {
       const foundTag = tags.find((tag) => tag.name === tagValue.name)
 
       return foundTag ? foundTag.id : null
     })
-    .filter((tag) => tag !== undefined)
+    .filter((tag) => tag !== undefined) as number[]
 }

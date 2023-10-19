@@ -4,6 +4,7 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
 import Swal from 'sweetalert2'
 import './Goals.css'
+
 const GoalsList = ({ goals, setEditIndex, deleteGoal, setStatusModal }) => {
   const columns = [
     { id: 'goals', label: 'Goals', align: 'right' },

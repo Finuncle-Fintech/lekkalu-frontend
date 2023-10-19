@@ -1,24 +1,34 @@
 import {
   GridDeleteIcon,
+  GridRowId,
+  GridRowModes,
   GridToolbarContainer,
   GridToolbarExport,
   GridToolbarFilterButton,
   GridToolbarQuickFilter,
+  GridValidRowModel,
 } from '@mui/x-data-grid'
 import React, { useState } from 'react'
 import { Button, IconButton, Menu, MenuItem } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
 import DeleteIcon from '@mui/icons-material/DeleteOutlined'
 import MoreVertIcon from '@mui/icons-material/MoreVert'
+import { randomId } from '@mui/x-data-grid-generator'
+import { useQueryClient } from '@tanstack/react-query'
 import When from '@/components/When/When'
+import { IncomeStatement } from '@/types/income-statement'
+import { INCOME_STATEMENT } from '@/utils/query-keys'
 
 type Props = {
-  isIncomeTable: boolean
+  type: 'EXPENSE' | 'INCOME'
+  setRowModesModel: React.Dispatch<React.SetStateAction<GridValidRowModel>>
+  selectedRows: GridRowId[]
 }
 
 // @TODO: Update from mui to shadcn/ui components
-export default function TableToolbar({ isIncomeTable }: Props) {
+export default function TableToolbar({ type, setRowModesModel, selectedRows }: Props) {
   const isMobile = window.innerWidth <= 768
+  const qc = useQueryClient()
 
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null)
   const open = Boolean(anchorEl)
@@ -31,6 +41,42 @@ export default function TableToolbar({ isIncomeTable }: Props) {
     setAnchorEl(null)
   }
 
+  const addRowButton = () => {
+    const id = randomId()
+
+    qc.setQueryData<IncomeStatement[]>([INCOME_STATEMENT.INCOME_STATEMENT], (prev) => {
+      if (!prev) {
+        return []
+      }
+
+      return [
+        ...prev,
+        {
+          id,
+          name: '',
+          type: type === 'INCOME' ? 'Salary' : 'Personal',
+          amount: '',
+          isNew: true,
+        },
+      ]
+    })
+
+    setRowModesModel((oldModel) => ({
+      ...oldModel,
+      [id]: { mode: GridRowModes.Edit, fieldToFocus: 'name' },
+    }))
+  }
+
+  const handleTemporaryRowDelete = () => {
+    qc.setQueryData<IncomeStatement[]>([INCOME_STATEMENT.INCOME_STATEMENT], (prev) => {
+      if (!prev) {
+        return prev
+      }
+
+      return prev.filter((item) => !selectedRows.includes(item.id))
+    })
+  }
+
   return (
     <GridToolbarContainer>
       <GridToolbarQuickFilter size='small' />
@@ -40,10 +86,8 @@ export default function TableToolbar({ isIncomeTable }: Props) {
         fallback={
           <div>
             <IconButton
-              // disabled={selectedRows?.length === 0}
-              onClick={() => {
-                // setRows((r) => r.filter((x) => !selectedRows.includes(x.id)))
-              }}
+              disabled={selectedRows?.length === 0}
+              onClick={handleTemporaryRowDelete}
               className='table-button'
               sx={{
                 color: '#344054',
@@ -98,9 +142,9 @@ export default function TableToolbar({ isIncomeTable }: Props) {
               }}
               className='table-button'
               startIcon={<AddIcon className='table-button-icon' sx={{ color: '#ffffff', width: 20, height: 20 }} />}
-              // onClick={addRowButton}
+              onClick={addRowButton}
             >
-              Add {isIncomeTable ? 'Income' : 'Expense'}
+              Add {type === 'INCOME' ? 'Income' : 'Expense'}
             </Button>
           </div>
         }
@@ -127,9 +171,7 @@ export default function TableToolbar({ isIncomeTable }: Props) {
         >
           <MenuItem onClick={handleClose}>
             <IconButton
-              onClick={() => {
-                // setRows((r) => r.filter((x) => !selectedRows.includes(x.id)))
-              }}
+              onClick={handleTemporaryRowDelete}
               className='table-button'
               sx={{
                 color: '#344054',
@@ -188,9 +230,9 @@ export default function TableToolbar({ isIncomeTable }: Props) {
               }}
               className='table-button'
               startIcon={<AddIcon className='table-button-icon' sx={{ color: '#000000', width: 20, height: 20 }} />}
-              // onClick={addRowButton}
+              onClick={addRowButton}
             >
-              Add {isIncomeTable ? 'Income' : 'Expense'}
+              Add {type === 'INCOME' ? 'Income' : 'Expense'}
             </Button>
           </MenuItem>
         </Menu>

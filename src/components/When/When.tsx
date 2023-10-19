@@ -6,6 +6,5 @@ type Props = {
 }
 
 export default function When({ truthy, children, fallback = null }: PropsWithChildren<Props>) {
-  console.log(truthy)
   return truthy ? children : fallback
 }

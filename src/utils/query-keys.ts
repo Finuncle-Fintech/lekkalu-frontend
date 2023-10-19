@@ -10,3 +10,9 @@ export const EXPENSES = {
   EXPENSES: 'EXPENSES',
   DATE_RANGE: 'DATE_RANGE',
 } as const
+
+export const INCOME_STATEMENT = {
+  INCOME_STATEMENT: 'INCOME_STATEMENT',
+  SOURCES: 'SOURCES',
+  EXPENSES: 'EXPENSES',
+} as const

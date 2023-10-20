@@ -16,6 +16,7 @@ import { ASSET_INPUTS } from '@/utils/balance-sheet'
 import { DATE_FORMAT } from '@/utils/constants'
 import { PhysicalAsset } from '@/types/balance-sheet'
 import { monthsToSeconds, yearsToSeconds } from '@/utils/time'
+import { useAuthContext } from '@/hooks/use-auth'
 
 type Props = {
   trigger: React.ReactElement
@@ -23,6 +24,7 @@ type Props = {
 }
 
 export default function AddOrEditAssetDialog({ trigger, asset }: Props) {
+  const { userData } = useAuthContext()
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const { toast } = useToast()
   const qc = useQueryClient()
@@ -38,7 +40,7 @@ export default function AddOrEditAssetDialog({ trigger, asset }: Props) {
       sell_date: asset?.sell_date ? dayjs(asset.sell_date).toDate() : undefined,
       tags: [],
       type: 1,
-      user: 2,
+      user: userData?.id,
     },
   })
 

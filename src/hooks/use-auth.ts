@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useCallback } from 'react'
 import constate from 'constate'
 import { useNavigate } from 'react-router'
-import { login, refreshToken, signup } from '@/queries/auth'
+import { fetchUser, login, refreshToken, signup } from '@/queries/auth'
 import { deleteCookie, setCookie } from '@/utils/cookie'
 import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from '@/utils/constants'
 import { AUTH } from '@/utils/query-keys'
@@ -13,6 +13,8 @@ export function useAuth() {
   const { toast } = useToast()
   const navigate = useNavigate()
 
+  const { mutate: fetchUserData, data: userData } = useMutation(fetchUser)
+
   const {
     isLoading: isAuthenticationInProgress,
     data: tokenData,
@@ -21,6 +23,7 @@ export function useAuth() {
     onSuccess: (data) => {
       setCookie(REFRESH_TOKEN_KEY, data.refresh, 30)
       setCookie(ACCESS_TOKEN_KEY, data.access, 30)
+      fetchUserData()
     },
   })
 
@@ -34,6 +37,8 @@ export function useAuth() {
 
       /** updating the data in queryClient */
       qc.setQueryData([AUTH.LOGGED_IN], data)
+
+      fetchUserData()
     },
     onError: () => {
       toast({
@@ -67,6 +72,7 @@ export function useAuth() {
     loginMutation,
     logout,
     signupMutation,
+    userData,
   }
 }
 

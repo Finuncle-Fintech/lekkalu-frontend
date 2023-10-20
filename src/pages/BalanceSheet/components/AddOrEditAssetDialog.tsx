@@ -11,12 +11,13 @@ import { addPhysicalAsset, editPhysicalAsset } from '@/queries/balance-sheet'
 import { BALANCE_SHEET } from '@/utils/query-keys'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
-import { Form } from '@/components/ui/form'
-import { ASSET_INPUTS } from '@/utils/balance-sheet'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { ASSET_INPUTS, ASSET_MONTHS } from '@/utils/balance-sheet'
 import { DATE_FORMAT } from '@/utils/constants'
 import { PhysicalAsset } from '@/types/balance-sheet'
 import { monthsToSeconds, yearsToSeconds } from '@/utils/time'
 import { useAuthContext } from '@/hooks/use-auth'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
 type Props = {
   trigger: React.ReactElement
@@ -94,6 +95,60 @@ export default function AddOrEditAssetDialog({ trigger, asset }: Props) {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(handleAddOrEditPhysicalAsset)} className='grid md:grid-cols-2 gap-4'>
             <InputFieldsRenderer control={form.control} inputs={ASSET_INPUTS} />
+
+            <div className='md:col-span-2 space-y-2'>
+              <FormLabel>Depreciation Frequency</FormLabel>
+              <div className='flex gap-2 w-full'>
+                <FormField
+                  control={form.control}
+                  name='months'
+                  render={({ field }) => (
+                    <FormItem className='flex-1'>
+                      <FormLabel>Months</FormLabel>
+                      <FormControl>
+                        <Select onValueChange={field.onChange} {...field} value={field.value?.toString()}>
+                          <SelectTrigger>
+                            <SelectValue placeholder='Select Months' />
+                          </SelectTrigger>
+                          <SelectContent className='max-h-72'>
+                            {ASSET_MONTHS.map(({ id, label }) => (
+                              <SelectItem value={id} key={id}>
+                                {label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name='years'
+                  render={({ field }) => (
+                    <FormItem className='flex-1'>
+                      <FormLabel>Months</FormLabel>
+                      <FormControl>
+                        <Select onValueChange={field.onChange} {...field} value={field.value?.toString()}>
+                          <SelectTrigger>
+                            <SelectValue placeholder='Select Months' />
+                          </SelectTrigger>
+                          <SelectContent className='max-h-72'>
+                            {ASSET_MONTHS.map(({ id, label }) => (
+                              <SelectItem value={id} key={id}>
+                                {label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </div>
 
             <DialogFooter className='gap-2 md:col-span-2'>
               <Button

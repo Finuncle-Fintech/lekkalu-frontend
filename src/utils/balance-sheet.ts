@@ -15,6 +15,7 @@ export const ASSET_INPUTS: InputField[] = [
     id: 'purchase_date',
     label: 'Choose the purchase date',
     type: 'date',
+    defaultDate: undefined,
   },
   {
     id: 'sell_value',
@@ -25,6 +26,7 @@ export const ASSET_INPUTS: InputField[] = [
     id: 'sell_date',
     label: 'Choose the sell date',
     type: 'date',
+    defaultDate: undefined,
   },
   {
     id: 'depreciation_percent',
@@ -68,6 +70,7 @@ export const LIABILITY_INPUTS: InputField[] = [
     id: 'disbursement_date',
     label: 'Disbursement Date',
     type: 'date',
+    defaultDate: undefined,
   },
   {
     id: 'emi_day',

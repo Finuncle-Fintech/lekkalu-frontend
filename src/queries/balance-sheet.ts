@@ -32,3 +32,13 @@ export async function addLiability(dto: AddLiabilitySchema) {
   const { data } = await apiClient.post('loans/', dto)
   return data
 }
+
+export async function editLiability(id: number, dto: Partial<AddLiabilitySchema>) {
+  const { data } = await apiClient.put(`loans/${id}`, dto)
+  return data
+}
+
+export async function deleteLiability(id: number) {
+  const { data } = await apiClient.delete(`loans/${id}`)
+  return data
+}

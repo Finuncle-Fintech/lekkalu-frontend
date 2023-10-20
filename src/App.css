@@ -1,6 +1,3 @@
-.App {
-  min-height: 100vh;
-}
 .sb-tooltip {
   border: 0 none #ccc;
   border: 1px solid #ccc;
@@ -14,27 +11,4 @@
 }
 .sb-tooltip-balance {
   margin: 2px;
-}
-
-.close-btn {
-  margin-left: 360px;
-  font-size: 28px;
-  background-color: white;
-}
-
-.loginbtn {
-  width: 200px;
-  margin-left: 75%;
-}
-
-.errorMessage {
-  color: red;
-}
-
-@media (max-width: 600px) {
-  .loginbtn {
-    width: 200px;
-    font-size: smaller;
-    margin-left: 35%;
-  }
 }

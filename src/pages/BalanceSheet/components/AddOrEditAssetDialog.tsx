@@ -1,44 +1,43 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import React, { useState } from 'react'
+import React, { cloneElement, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { PlusIcon } from 'lucide-react'
 import dayjs from 'dayjs'
+import { omit } from 'lodash'
 import { useToast } from '@/components/ui/use-toast'
 import { AddPhysicalAssetSchema, addPhysicalAssetSchema } from '@/schema/balance-sheet'
 import InputFieldsRenderer from '@/components/InputFieldsRenderer/InputFieldsRenderer'
-import { addPhysicalAsset } from '@/queries/balance-sheet'
+import { addPhysicalAsset, editPhysicalAsset } from '@/queries/balance-sheet'
 import { BALANCE_SHEET } from '@/utils/query-keys'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Form } from '@/components/ui/form'
 import { ASSET_INPUTS } from '@/utils/balance-sheet'
 import { DATE_FORMAT } from '@/utils/constants'
+import { PhysicalAsset } from '@/types/balance-sheet'
 
 type Props = {
-  isEdit?: boolean
+  trigger: React.ReactElement
+  asset?: PhysicalAsset
 }
 
-export default function AddOrEditAssetDialog({ isEdit = false }: Props) {
+export default function AddOrEditAssetDialog({ trigger, asset }: Props) {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const { toast } = useToast()
   const qc = useQueryClient()
+  const isEdit = Boolean(asset)
 
   const form = useForm<AddPhysicalAssetSchema>({
     resolver: zodResolver(addPhysicalAssetSchema),
     defaultValues: {
-      name: '',
-      purchase_value: undefined,
-      purchase_date: undefined,
-      sell_value: undefined,
-      sell_date: undefined,
-      depreciation_percent: undefined,
-      depreciation_frequency: 0,
-      init_dep: 1,
-      market_value: 0,
-      user: 2,
-      type: 1,
+      ...omit(asset, 'id'),
+      // @ts-expect-error
+      purchase_date: asset?.purchase_date ? dayjs(asset.purchase_date).toDate() : undefined,
+      // @ts-expect-error
+      sell_date: asset?.sell_date ? dayjs(asset.sell_date).toDate() : undefined,
       tags: [],
+      type: 1,
+      user: 2,
     },
   })
 
@@ -50,8 +49,27 @@ export default function AddOrEditAssetDialog({ isEdit = false }: Props) {
     },
   })
 
+  const editPhysicalAssetMutation = useMutation((dto: AddPhysicalAssetSchema) => editPhysicalAsset(asset?.id!, dto), {
+    onSuccess: () => {
+      qc.invalidateQueries([BALANCE_SHEET.ASSETS])
+      toast({ title: 'Asset updated successfully!' })
+      setIsDialogOpen(false)
+    },
+  })
+
   const handleAddOrEditPhysicalAsset = (values: AddPhysicalAssetSchema) => {
-    addPhysicalAssetMutation.mutate({ ...values, purchase_date: dayjs(values.purchase_date).format(DATE_FORMAT) })
+    const valuesToSubmit = {
+      ...values,
+      purchase_date: dayjs(values.purchase_date).format(DATE_FORMAT),
+      sell_date: dayjs(values.sell_date).format(DATE_FORMAT),
+    }
+
+    if (typeof asset !== 'undefined') {
+      editPhysicalAssetMutation.mutate(valuesToSubmit)
+      return
+    }
+
+    addPhysicalAssetMutation.mutate(valuesToSubmit)
   }
 
   return (
@@ -62,10 +80,7 @@ export default function AddOrEditAssetDialog({ isEdit = false }: Props) {
           setIsDialogOpen(true)
         }}
       >
-        <Button>
-          <PlusIcon className='mr-2 w-4 h-4' />
-          <span>{isEdit ? 'Edit' : 'Add'} Asset</span>
-        </Button>
+        {cloneElement(trigger)}
       </DialogTrigger>
       <DialogContent className='max-h-[800px] overflow-auto'>
         <DialogHeader>
@@ -78,6 +93,7 @@ export default function AddOrEditAssetDialog({ isEdit = false }: Props) {
 
             <DialogFooter className='gap-2 md:col-span-2'>
               <Button
+                loading={addPhysicalAssetMutation.isLoading || editPhysicalAssetMutation.isLoading}
                 type='button'
                 variant='outline'
                 onClick={() => {
@@ -86,7 +102,7 @@ export default function AddOrEditAssetDialog({ isEdit = false }: Props) {
               >
                 Cancel
               </Button>
-              <Button type='submit' loading={addPhysicalAssetMutation.isLoading}>
+              <Button type='submit' loading={addPhysicalAssetMutation.isLoading || editPhysicalAssetMutation.isLoading}>
                 {isEdit ? 'Edit' : 'Add'} Asset
               </Button>
             </DialogFooter>

@@ -22,6 +22,11 @@ export async function addPhysicalAsset(dto: AddPhysicalAssetSchema) {
   return data
 }
 
+export async function editPhysicalAsset(id: number, dto: Partial<AddPhysicalAssetSchema>) {
+  const { data } = await apiClient.put(`physical_assets/${id}`, dto)
+  return data
+}
+
 /** Liabilities */
 export async function fetchLiabilities() {
   const { data } = await apiClient.get<Liability[]>('loans/')

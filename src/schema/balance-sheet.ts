@@ -15,8 +15,9 @@ export const addPhysicalAssetSchema = z.object({
   tags: z.array(z.string()),
 })
 
-export type AddPhysicalAssetSchema = Omit<z.infer<typeof addPhysicalAssetSchema>, 'purchase_date'> & {
+export type AddPhysicalAssetSchema = Omit<z.infer<typeof addPhysicalAssetSchema>, 'purchase_date' | 'sell_date'> & {
   purchase_date: string
+  sell_date: string
 }
 
 export const addLiabilitySchema = z.object({

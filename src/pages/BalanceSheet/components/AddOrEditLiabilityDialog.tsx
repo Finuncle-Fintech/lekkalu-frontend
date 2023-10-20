@@ -101,7 +101,11 @@ export default function AddOrEditLiabilityDialog({ trigger, liability }: Props) 
               >
                 Cancel
               </Button>
-              <Button type='submit' loading={addLiabilityMutation.isLoading || editLiabilityMutation.isLoading}>
+              <Button
+                disabled={!form.formState.isValid}
+                type='submit'
+                loading={addLiabilityMutation.isLoading || editLiabilityMutation.isLoading}
+              >
                 {isEdit ? 'Edit' : 'Add'} Liability
               </Button>
             </DialogFooter>

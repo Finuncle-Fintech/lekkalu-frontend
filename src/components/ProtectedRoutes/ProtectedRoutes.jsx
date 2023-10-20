@@ -1,15 +1,21 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import { Navigate } from 'react-router-dom'
-import { Context } from '@/provider/Provider'
 import DownloadData from '@/components/Download/DownloadData'
+import { useAuthContext } from '@/hooks/use-auth'
 
-// High order component
 export const ProtectedRoutes = ({ component }) => {
-  const { authToken } = useContext(Context)
+  const { isAuthenticationInProgress, isAuthenticated } = useAuthContext()
 
-  if (!authToken) {
+  console.log({ isAuthenticationInProgress, isAuthenticated })
+
+  if (isAuthenticationInProgress) {
+    return <p className='text-center mt-5'>Loading...</p>
+  }
+
+  if (!isAuthenticated) {
     return <Navigate to='/signin' replace />
   }
+
   return (
     <>
       <DownloadData />

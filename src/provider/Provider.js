@@ -2,7 +2,6 @@ import React, { createContext, useReducer, useState, useContext } from 'react'
 import jwtDecode from 'jwt-decode'
 import axiosClient from '@/components/Axios/Axios'
 import useAxiosPrivate from '@/hooks/useAxiosPrivate'
-import setCookie from '@/components/Support/PopUp/utils/SetCookie'
 import deleteCookie from '@/components/Support/PopUp/utils/DeleteCookie'
 import Reducer, { InitialState } from './Reducer'
 import Types from './Types'
@@ -255,30 +254,6 @@ const Provider = ({ children }) => {
         })
     } catch (error) {
       handleErrors(error.message)
-    }
-  }
-
-  const fetchToken = async (username, password) => {
-    try {
-      const auth = {
-        username,
-        password,
-      }
-      // console.log(username, password)
-
-      return await axiosClient
-        .post(`${process.env.REACT_APP_BACKEND_URL}token/`, auth)
-        .then((response) => {
-          setAuthToken(response?.data?.access)
-          setCookie('refresh', response?.data?.refresh, 30)
-          setCookie('access', response?.data?.access, 30)
-          return response.status
-        })
-        .catch((error) => {
-          handleErrors(error)
-        })
-    } catch (error) {
-      handleErrors(error)
     }
   }
 
@@ -663,7 +638,6 @@ const Provider = ({ children }) => {
         fetchData,
         fetchTags,
         createTag,
-        fetchToken,
         addAssetRequest,
         editAssetRequest,
         deleteAssetRequest,

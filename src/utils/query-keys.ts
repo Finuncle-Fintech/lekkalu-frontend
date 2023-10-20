@@ -1,3 +1,7 @@
+export const AUTH = {
+  LOGGED_IN: 'LOGGED_IN',
+} as const
+
 export const BUDGET_QUERY_KEYS = {
   BUDGETS: 'BUDGETS',
 } as const

@@ -17,7 +17,7 @@ export default function PercentageCard({ className, style, value, title }: Props
       </div>
       <div>
         <div className='text-xl font-medium'>{value} %</div>
-        <div className='text-muted text-lg'>{title}</div>
+        <div className='text-muted-foreground text-lg'>{title}</div>
       </div>
     </div>
   )

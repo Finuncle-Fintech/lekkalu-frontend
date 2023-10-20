@@ -1,10 +1,10 @@
 // import { SetBudgetSchema, UpdateBudgetSchema } from 'schema/budget'
 import { GoalDataInterface } from 'components/Goals/GoalsInterfaces'
 import { GoalsType } from 'types/goals'
-import { apiClient } from 'utils/client'
+import { apiClient, createPaginatedAPIClient } from 'utils/client'
 
-export async function fetchGoals() {
-  const { data } = await apiClient.get<GoalsType[]>('/financial_goal')
+export async function fetchGoals(page:number, rows:number) {
+  const { data } = await createPaginatedAPIClient(page, rows).get<GoalsType[]>('/financial_goal')
   return data
 }
 

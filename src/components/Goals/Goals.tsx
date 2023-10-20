@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { ModalContainer } from 'components/Expenses/styled'
 import { fetchGoals, setGoal, updateGoal, deleteGoal } from 'queries/goals'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { GOALS_QUERY_KEYS } from 'utils/query-keys'
 import Swal from 'sweetalert2'
 import { IconButton, TablePagination, Typography } from '@mui/material'
@@ -11,7 +11,7 @@ import { GoalDataInterface } from './GoalsInterfaces'
 import GoalsList from './GoalsList'
 
 export default function Goals() {
-  const { data: goals } = useQuery([GOALS_QUERY_KEYS.GOALS], fetchGoals)
+  const { data: goals } = useQuery([GOALS_QUERY_KEYS.GOALS], () => fetchGoals(page, rowsPerPage))
 
   const [open, setOpen] = useState(false)
   const [editIndex, setEditIndex] = useState<number | null>(null)
@@ -21,6 +21,10 @@ export default function Goals() {
   const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
     setPage(newPage) // Update the page state
   }
+
+  useEffect(() => {
+    fetchGoals(page, rowsPerPage)
+  }, [page])
 
   const setGoalMutation = useMutation(setGoal, {
     onSuccess: () => {

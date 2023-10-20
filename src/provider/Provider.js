@@ -2,7 +2,6 @@ import React, { createContext, useReducer, useState, useContext } from 'react'
 import jwtDecode from 'jwt-decode'
 import axiosClient from '@/components/Axios/Axios'
 import useAxiosPrivate from '@/hooks/useAxiosPrivate'
-import setCookie from '@/components/Support/PopUp/utils/SetCookie'
 import deleteCookie from '@/components/Support/PopUp/utils/DeleteCookie'
 import Reducer, { InitialState } from './Reducer'
 import Types from './Types'
@@ -239,210 +238,6 @@ const Provider = ({ children }) => {
         })
     } catch (error) {
       handleErrors(error.message)
-    }
-  }
-
-  const fetchToken = async (username, password) => {
-    try {
-      const auth = {
-        username,
-        password,
-      }
-      // console.log(username, password)
-
-      return await axiosClient
-        .post(`${process.env.REACT_APP_BACKEND_URL}token/`, auth)
-        .then((response) => {
-          setAuthToken(response?.data?.access)
-          setCookie('refresh', response?.data?.refresh, 30)
-          setCookie('access', response?.data?.access, 30)
-          return response.status
-        })
-        .catch((error) => {
-          handleErrors(error)
-        })
-    } catch (error) {
-      handleErrors(error)
-    }
-  }
-
-  const fetchIncomeSources = async () => {
-    try {
-      const headers = {
-        Authorization: `Bearer ${authToken}`,
-        'Content-Type': 'application/json',
-      }
-
-      return axiosPrivate.get('https://api.finuncle.com/api/income_source/', { headers }).then((response) => {
-        return response.data
-      })
-    } catch (error) {
-      handleErrors(error)
-      return []
-    }
-  }
-
-  const addIncomeExpense = async (data) => {
-    try {
-      const headers = {
-        Authorization: `Bearer ${authToken}`,
-        'Content-Type': 'application/json',
-      }
-
-      return await axiosPrivate
-        .post(`${process.env.REACT_APP_BACKEND_API}income_expense/`, data, {
-          headers,
-        })
-        .then((response) => response)
-        .catch((error) => error)
-    } catch (error) {
-      handleErrors(error)
-    }
-  }
-
-  const updateIncomeExpenseById = async (id, data) => {
-    try {
-      const headers = {
-        Authorization: `Bearer ${authToken}`,
-        'Content-Type': 'application/json',
-      }
-
-      return await axiosPrivate
-        .put(`${process.env.REACT_APP_BACKEND_API}income_expense/${id}`, data, {
-          headers,
-        })
-        .then((response) => response)
-        .catch((error) => error)
-    } catch (error) {
-      handleErrors(error)
-    }
-  }
-
-  const deleteIncomeExpenseById = async (id) => {
-    try {
-      const headers = {
-        Authorization: `Bearer ${authToken}`,
-        'Content-Type': 'application/json',
-      }
-
-      await axiosPrivate.delete(`${process.env.REACT_APP_BACKEND_API}income_expense/${id}`, {
-        headers,
-      })
-    } catch (error) {
-      handleErrors(error)
-    }
-  }
-
-  const addIncomeSource = async (data) => {
-    try {
-      const headers = {
-        Authorization: `Bearer ${authToken}`,
-        'Content-Type': 'application/json',
-      }
-
-      return await axiosPrivate
-        .post(`${process.env.REACT_APP_BACKEND_API}income_source/`, data, {
-          headers,
-        })
-        .then((response) => response)
-        .catch((error) => error)
-    } catch (error) {
-      handleErrors(error)
-    }
-  }
-
-  const updateIncomeSourceById = async (id, data) => {
-    try {
-      const headers = {
-        Authorization: `Bearer ${authToken}`,
-        'Content-Type': 'application/json',
-      }
-
-      return await axiosPrivate
-        .put(`${process.env.REACT_APP_BACKEND_API}income_source/${id}`, data, {
-          headers,
-        })
-        .then((response) => response)
-        .catch((error) => error)
-    } catch (error) {
-      handleErrors(error)
-    }
-  }
-
-  const deleteIncomeSourceById = async (id) => {
-    try {
-      const headers = {
-        Authorization: `Bearer ${authToken}`,
-        'Content-Type': 'application/json',
-      }
-
-      await axiosPrivate.delete(`${process.env.REACT_APP_BACKEND_API}income_source/${id}`, {
-        headers,
-      })
-    } catch (error) {
-      handleErrors(error)
-    }
-  }
-
-  const fetchIncomeExpenses = async () => {
-    try {
-      const headers = {
-        Authorization: `Bearer ${authToken}`,
-        'Content-Type': 'application/json',
-      }
-
-      return axiosPrivate.get('https://api.finuncle.com/api/income_expense/', { headers }).then((response) => {
-        return response.data
-      })
-    } catch (error) {
-      handleErrors(error)
-      return []
-    }
-  }
-
-  const fetchIncomeStatement = async () => {
-    try {
-      const populatedIncomeStatement = { income: [], expenses: [] }
-      let transformedIncomeArray = []
-      let transformedExpensesArray = []
-
-      const incomeSources = await fetchIncomeSources()
-      const incomeExpenses = await fetchIncomeExpenses()
-
-      if (incomeSources.length) {
-        // API returns [{‘name’: ‘day_job_income’, ‘type’:’salary’,’amount’:50000}]
-        // Transform to [{‘name’: ‘day_job_income’, ‘type’:’salary’,’value’:50000}]
-        transformedIncomeArray = incomeSources.map((each) => {
-          return {
-            id: each.id,
-            name: each.name,
-            type: each.type,
-            value: parseFloat(each.amount),
-          }
-        })
-      }
-      if (incomeExpenses.length) {
-        // API returns [{‘name’: ‘day_job_income’, ‘type’:’salary’,’amount’:50000}]
-        // Transform to [{‘name’: ‘day_job_income’, ‘type’:’salary’,’value’:50000}]
-        transformedExpensesArray = incomeExpenses.map((each) => {
-          return {
-            id: each.id,
-            name: each.name,
-            type: each.type,
-            value: parseFloat(each.amount),
-          }
-        })
-      }
-
-      populatedIncomeStatement.income = transformedIncomeArray
-      populatedIncomeStatement.expenses = transformedExpensesArray
-
-      dispatch({
-        type: Types.SET_INCOME_STATEMENT,
-        payload: populatedIncomeStatement,
-      })
-    } catch (error) {
-      handleErrors(error)
     }
   }
 
@@ -808,20 +603,10 @@ const Provider = ({ children }) => {
         fetchData,
         fetchTags,
         createTag,
-        fetchToken,
-        fetchIncomeSources,
-        fetchIncomeExpenses,
-        fetchIncomeStatement,
         addAssetRequest,
         editAssetRequest,
         fetchAssetById,
         fetchAsset,
-        addIncomeExpense,
-        updateIncomeExpenseById,
-        deleteIncomeExpenseById,
-        addIncomeSource,
-        updateIncomeSourceById,
-        deleteIncomeSourceById,
         useUnit,
         useUnitUpdate,
         unit,

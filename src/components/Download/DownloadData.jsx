@@ -5,13 +5,14 @@ import { FiDownloadCloud } from 'react-icons/fi'
 import { Context } from '@/provider/Provider'
 import './index.css'
 
+// @TODO: Implement fetchIncomeStatement
 const DownloadData = () => {
   const { assets, liabilities, fetchData } = useContext(Context)
   const assetsData = assets.finalAssets
   const assetsValue = assets.totalVal
   const liabilitiesData = liabilities.finalLiabilities
   const liabilitiesValue = liabilities.totalVal
-  const { fetchIncomeStatement, fetchAllExpenses, incomeStatement, tags, fetchTags } = useContext(Context)
+  const { fetchAllExpenses, incomeStatement, tags, fetchTags } = useContext(Context)
   const [allexpensess, setAllexpensess] = useState([])
   const [loading, setLoading] = useState(false)
 
@@ -29,7 +30,7 @@ const DownloadData = () => {
 
   useEffect(() => {
     fetchAndLogExpenses()
-    fetchIncomeStatement()
+    // fetchIncomeStatement()
     fetchData()
     fetchTags()
   }, [])

@@ -1,6 +1,8 @@
+import React from 'react'
+
 export default function TermsAndConditions() {
   return (
-    <div className='d-flex align-items-center justify-content-center min-vh-100 h1 text-muted font-weight-bold'>
+    <div className='flex items-center justify-center h-screen text-muted font-bold'>
       Terms and conditions page is under implementation
     </div>
   )

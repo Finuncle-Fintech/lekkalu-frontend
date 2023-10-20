@@ -1,19 +1,20 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import React from 'react'
 import { useForm } from 'react-hook-form'
-import { Link } from 'react-router-dom'
-import { useMutation } from '@tanstack/react-query'
+import { Link, Navigate, useSearchParams } from 'react-router-dom'
 import { Input } from '@/components/ui/input'
 import { SignupSchema, signupSchema } from '@/schema/auth'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import Password from '@/components/ui/password'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Button } from '@/components/ui/button'
-import { signup } from '@/queries/auth'
-import { useToast } from '@/components/ui/use-toast'
+import { useAuthContext } from '@/hooks/use-auth'
 
 export default function Signup() {
-  const { toast } = useToast()
+  const { tokenData, signupMutation } = useAuthContext()
+  const [searchParams] = useSearchParams()
+  const redirectTo = searchParams.get('redirectTo') ?? '/home'
+
   const form = useForm<SignupSchema>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
@@ -25,15 +26,12 @@ export default function Signup() {
     },
   })
 
-  const signupMutation = useMutation(signup, {
-    onSuccess: () => {
-      form.reset()
-      toast({ title: 'Success', description: 'Your account has been created successfully!' })
-    },
-  })
-
   const handleSignup = (values: SignupSchema) => {
     signupMutation.mutate({ username: values.username, email: values.email, password: values.password })
+  }
+
+  if (tokenData) {
+    return <Navigate to={{ pathname: redirectTo }} replace />
   }
 
   return (

@@ -1,5 +1,15 @@
 import { InputField } from '@/components/InputFieldsRenderer/InputFieldsRenderer'
 
+const months = Array.from({ length: 12 }, (_, index) => ({
+  id: `${index + 1}`,
+  label: index + 1,
+}))
+
+const years = Array.from({ length: 41 }, (_, index) => ({
+  id: index.toString(),
+  label: index,
+}))
+
 export const ASSET_INPUTS: InputField[] = [
   {
     id: 'name',
@@ -34,9 +44,16 @@ export const ASSET_INPUTS: InputField[] = [
     type: 'number',
   },
   {
-    id: 'depreciation_frequency',
-    label: 'Depreciation Frequency',
-    type: 'number',
+    id: 'months',
+    label: 'Months',
+    type: 'select',
+    options: months,
+  },
+  {
+    id: 'years',
+    label: 'Years',
+    type: 'select',
+    options: years,
   },
   {
     id: 'init_dep',

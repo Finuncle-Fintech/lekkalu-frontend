@@ -7,17 +7,19 @@ export const addPhysicalAssetSchema = z.object({
   sell_value: z.coerce.number().optional(),
   sell_date: z.date().optional(),
   depreciation_percent: z.coerce.number().min(1, 'Depreciation % is required!'),
-  depreciation_frequency: z.coerce.number(),
   init_dep: z.coerce.number({ required_error: 'Initial depreciation is required!' }),
   market_value: z.coerce.number({ required_error: 'Market value is required!' }),
   user: z.coerce.number(),
   type: z.coerce.number(),
   tags: z.array(z.string()),
+  months: z.coerce.number(),
+  years: z.coerce.number(),
 })
 
 export type AddPhysicalAssetSchema = Omit<z.infer<typeof addPhysicalAssetSchema>, 'purchase_date' | 'sell_date'> & {
   purchase_date: string
   sell_date: string
+  depreciation_frequency: number
 }
 
 export const addLiabilitySchema = z.object({

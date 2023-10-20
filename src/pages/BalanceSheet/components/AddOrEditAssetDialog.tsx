@@ -15,6 +15,7 @@ import { Form } from '@/components/ui/form'
 import { ASSET_INPUTS } from '@/utils/balance-sheet'
 import { DATE_FORMAT } from '@/utils/constants'
 import { PhysicalAsset } from '@/types/balance-sheet'
+import { monthsToSeconds, yearsToSeconds } from '@/utils/time'
 
 type Props = {
   trigger: React.ReactElement
@@ -62,6 +63,7 @@ export default function AddOrEditAssetDialog({ trigger, asset }: Props) {
       ...values,
       purchase_date: dayjs(values.purchase_date).format(DATE_FORMAT),
       sell_date: dayjs(values.sell_date).format(DATE_FORMAT),
+      depreciation_frequency: monthsToSeconds(values.months) + yearsToSeconds(values.years),
     }
 
     if (typeof asset !== 'undefined') {

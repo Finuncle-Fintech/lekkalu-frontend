@@ -9,6 +9,21 @@ export const apiClient = axios.create({
     'Content-Type': 'application/json',
   },
 })
+export const createPaginatedAPIClient = (page:number, perPage:number) => {
+  const apiClientPaginate = axios.create({
+    baseURL: process.env.REACT_APP_API_BASE_URL,
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    params: {
+      page: page + 1,
+      per_page: perPage,
+    },
+  })
+
+  return apiClientPaginate
+}
 
 apiClient?.interceptors.request.use((config) => {
   config.headers.Authorization = `Bearer ${getCookie('access')}`

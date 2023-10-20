@@ -15,7 +15,7 @@ export default function AuthProtection({ children }: Props) {
     return (
       <div className='w-full h-screen z-40 flex items-center justify-center gap-2'>
         <LoaderIcon className='w-4 h-4 animate-spin' />
-        <div>Loading please wait...</div>
+        <div>Authentication in progress...</div>
       </div>
     )
   }

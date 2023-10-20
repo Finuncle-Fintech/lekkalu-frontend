@@ -12,9 +12,7 @@ const Home = lazy(() => import('@/pages/Home/Home'))
 const Goals = lazy(() => import('@/components/Goals/Goals'))
 const IncomeStatement = lazy(() => import('@/pages/IncomeStatement/IncomeStatement'))
 const Expenses = lazy(() => import('@/pages/Expenses/Expenses'))
-// @ts-expect-error (no-type-definitions)
-const BalanceSheet = lazy(() => import('@/pages/BalanceSheetOld/BalanceSheet'))
-const BalanceSheetNew = lazy(() => import('@/pages/BalanceSheet/BalanceSheet'))
+const BalanceSheet = lazy(() => import('@/pages/BalanceSheet/BalanceSheet'))
 const Settings = lazy(() => import('@/pages/Settings/Settings'))
 const Profile = lazy(() => import('@/pages/Profile/Profile'))
 
@@ -55,7 +53,6 @@ function App() {
           <Route path='/income-statement' element={<IncomeStatement />} />
           <Route path='/expenses' element={<Expenses />} />
           <Route path='/balance-sheet' element={<BalanceSheet />} />
-          <Route path='/balance-sheet-new' element={<BalanceSheetNew />} />
           <Route path='/settings' element={<Settings />} />
           <Route path='/profile' element={<Profile />} />
         </Route>

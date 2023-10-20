@@ -37,7 +37,11 @@ type MultiSelectInput = BaseInput & {
   valueFormatter?: (value: string | number) => string | number
 }
 
-export type InputField = NumberInput | DateInput | MultiSelectInput
+type TextInput = BaseInput & {
+  type: 'text'
+}
+
+export type InputField = NumberInput | DateInput | MultiSelectInput | TextInput
 
 type Props = {
   control: Control<any>
@@ -64,6 +68,9 @@ export default function InputFieldsRenderer({ inputs, control }: Props) {
             </When>
           </div>
         )
+      }
+      case 'text': {
+        return <Input type='text' placeholder={input.label} {...field} />
       }
 
       case 'date': {

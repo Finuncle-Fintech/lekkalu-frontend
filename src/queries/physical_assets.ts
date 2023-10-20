@@ -1,4 +1,4 @@
-import { setPhysicalAssetsSchema } from '@/schema/physical_assets'
+import { AddPhysicalAssetSchema } from '@/schema/physical_assets'
 import { PhysicalAsset } from '@/types/physical_assets'
 import { apiClient } from '@/utils/client'
 
@@ -12,12 +12,12 @@ export async function fetchPhysicalAssetsById(id: number) {
   return data
 }
 
-export async function deletePhysicalAssets(id: number) {
+export async function deletePhysicalAsset(id: number) {
   const { data } = await apiClient.delete<{ message: string }>(`/physical_assets/${id}`)
   return data
 }
 
-export async function setPhysicalAssets(dto: setPhysicalAssetsSchema) {
+export async function addPhysicalAsset(dto: AddPhysicalAssetSchema) {
   const { data } = await apiClient.post<PhysicalAsset[]>('/physical_assets/', dto)
   return data
 }

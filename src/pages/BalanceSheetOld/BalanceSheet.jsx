@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import { useQuery } from '@tanstack/react-query'
 import { useContext, useEffect, useMemo, useState } from 'react'
 import { Box } from '@mui/material'
@@ -6,17 +8,14 @@ import GraphCard from '@/components/BalanceSheet/GraphCard'
 import BarGraph from '@/components/BalanceSheet/BarGraph'
 import EnhancedTable from '@/components/BalanceSheet/AssetTable'
 import LiabilitiesTable from '@/components/BalanceSheet/LiabilitiesTable'
-import { PHYSICAL_ASSETS_QUERY_KEYS } from '@/utils/query-keys'
-import { fetchPhysicalAssets } from '@/queries/physical_assets'
-import When from './../../components/When/When'
+import { BALANCE_SHEET } from '@/utils/query-keys'
+import { fetchPhysicalAssets } from '@/queries/balance-sheet'
+import When from '../../components/When/When'
 
 export default function BalanceSheet() {
   const { liabilities } = useContext(Context)
   // assets
-  const { data: physical_assets, isLoading } = useQuery(
-    [PHYSICAL_ASSETS_QUERY_KEYS.PHYSICAL_ASSETS],
-    fetchPhysicalAssets,
-  )
+  const { data: physical_assets, isLoading } = useQuery([BALANCE_SHEET.ASSETS], fetchPhysicalAssets)
 
   const [barGraphIsOpen, setBarGraphIsOpen] = useState(false)
   // const [assetDatas, setAssetDatas] = useState(physical_assets)

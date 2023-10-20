@@ -54,7 +54,14 @@ export default function InputFieldsRenderer({ inputs, control }: Props) {
       case 'number': {
         return (
           <div className='space-y-2'>
-            <Input type='number' placeholder={input.label} {...field} />
+            <Input
+              type='number'
+              placeholder={input.label}
+              {...field}
+              onChange={(e) => {
+                field.onChange(e.target?.valueAsNumber)
+              }}
+            />
             <When truthy={Boolean(input.hasRange)}>
               <Slider
                 defaultValue={[field.value]}

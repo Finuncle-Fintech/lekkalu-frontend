@@ -5,8 +5,8 @@ import { useQuery } from '@tanstack/react-query'
 import CloseIcon from '@mui/icons-material/Close'
 import { Box, IconButton, TextField, Button, Typography, MenuItem } from '@mui/material'
 import { Context } from '@/provider/Provider'
-import { PHYSICAL_ASSETS_QUERY_KEYS } from '@/utils/query-keys'
-import { fetchPhysicalAssets } from '@/queries/physical_assets'
+import { BALANCE_SHEET } from '@/utils/query-keys'
+import { fetchPhysicalAssets } from '@/queries/balance-sheet'
 import Loading from './Loading'
 
 function monthOrYearToSeconds(number, isMonth) {
@@ -53,7 +53,7 @@ export default function AssetForm(props) {
   }))
 
   const { addAssetRequest, editAssetRequest, fetchAssetById, authToken } = useContext(Context)
-  const { data: physical_assets } = useQuery([PHYSICAL_ASSETS_QUERY_KEYS.PHYSICAL_ASSETS], fetchPhysicalAssets)
+  const { data: physical_assets } = useQuery([BALANCE_SHEET.ASSETS], fetchPhysicalAssets)
   console.log('physical dat', physical_assets)
 
   const handleChange = (event) => {

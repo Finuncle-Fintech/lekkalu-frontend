@@ -1,4 +1,4 @@
-import { AddPhysicalAssetSchema } from '@/schema/physical_assets'
+import { AddPhysicalAssetSchema } from '@/schema/balance-sheet'
 import { PhysicalAsset } from '@/types/physical_assets'
 import { apiClient } from '@/utils/client'
 

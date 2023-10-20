@@ -24,8 +24,8 @@ import IosShareIcon from '@mui/icons-material/IosShare'
 import LocalPrintshopIcon from '@mui/icons-material/LocalPrintshop'
 // import AddIcon from '@mui/icons-material/Add'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { PHYSICAL_ASSETS_QUERY_KEYS } from '@/utils/query-keys'
-import { deletePhysicalAsset } from '@/queries/physical_assets'
+import { BALANCE_SHEET } from '@/utils/query-keys'
+import { deletePhysicalAsset } from '@/queries/balance-sheet'
 import Menu from './Menu'
 import AddOrEditPhysicalAssetDialog from './AddOrEditPhysicalAssetDialog'
 import Loading from './Loading'
@@ -188,7 +188,7 @@ function EnhancedTableToolbar(props) {
 
   const deletePhysicalAssetMutation = useMutation(deletePhysicalAsset, {
     onSuccess: () => {
-      queryClient.invalidateQueries([PHYSICAL_ASSETS_QUERY_KEYS.PHYSICAL_ASSETS])
+      queryClient.invalidateQueries([BALANCE_SHEET.ASSETS])
     },
   })
 

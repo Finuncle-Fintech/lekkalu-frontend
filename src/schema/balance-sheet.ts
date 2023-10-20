@@ -8,7 +8,7 @@ export const addPhysicalAssetSchema = z.object({
   sell_date: z.date().optional(),
   depreciation_percent: z.coerce.number().min(1, 'Depreciation % is required!'),
   init_dep: z.coerce.number({ required_error: 'Initial depreciation is required!' }),
-  market_value: z.coerce.number({ required_error: 'Market value is required!' }),
+  market_value: z.coerce.number().optional(),
   user: z.coerce.number(),
   type: z.coerce.number(),
   tags: z.array(z.string()),

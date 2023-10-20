@@ -44,22 +44,25 @@ export default function TableToolbar({ type, setRowModesModel, selectedRows }: P
   const addRowButton = () => {
     const id = randomId()
 
-    qc.setQueryData<IncomeStatement[]>([INCOME_STATEMENT.INCOME_STATEMENT], (prev) => {
-      if (!prev) {
-        return []
-      }
+    qc.setQueryData<IncomeStatement[]>(
+      [type === 'INCOME' ? INCOME_STATEMENT.SOURCES : INCOME_STATEMENT.EXPENSES],
+      (prev) => {
+        if (!prev) {
+          return []
+        }
 
-      return [
-        ...prev,
-        {
-          id,
-          name: '',
-          type: type === 'INCOME' ? 'Salary' : 'Personal',
-          amount: '',
-          isNew: true,
-        },
-      ]
-    })
+        return [
+          ...prev,
+          {
+            id,
+            name: '',
+            type: type === 'INCOME' ? 'Salary' : 'Personal',
+            amount: '',
+            isNew: true,
+          },
+        ]
+      },
+    )
 
     setRowModesModel((oldModel) => ({
       ...oldModel,

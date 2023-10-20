@@ -16,7 +16,7 @@ import SaveIcon from '@mui/icons-material/Save'
 import CancelIcon from '@mui/icons-material/Close'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/DeleteOutlined'
-import { omit } from 'lodash'
+import { capitalize, omit } from 'lodash'
 import TableToolbar from './TableToolbar'
 import { CreateIncomeStatementDto, IncomeStatement } from '@/types/income-statement'
 import { INCOME_STATEMENT } from '@/utils/query-keys'
@@ -59,7 +59,7 @@ export default function IncomeExpenseTable({
     {
       onSuccess: () => {
         refetch()
-        toast({ title: `${type} updated successfully!` })
+        toast({ title: `${capitalize(type)} updated successfully!` })
       },
     },
   )
@@ -67,7 +67,7 @@ export default function IncomeExpenseTable({
   const deleteMutation = useMutation(deleteMutationFn, {
     onSuccess: () => {
       refetch()
-      toast({ title: `${type} deleted successfully!` })
+      toast({ title: `${capitalize(type)} deleted successfully!` })
     },
   })
 

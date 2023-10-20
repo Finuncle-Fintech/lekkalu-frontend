@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react'
 import Backdrop from '@mui/material/Backdrop'
-
+import jwt_decode from 'jwt-decode'
+import { useQuery } from '@tanstack/react-query'
 import CloseIcon from '@mui/icons-material/Close'
 import { Box, IconButton, TextField, Button, Typography, MenuItem } from '@mui/material'
-import jwt_decode from 'jwt-decode'
 import { Context } from '@/provider/Provider'
+import { PHYSICAL_ASSETS_QUERY_KEYS } from '@/utils/query-keys'
+import { fetchPhysicalAssets } from '@/queries/physical_assets'
 import Loading from './Loading'
 
 function monthOrYearToSeconds(number, isMonth) {
@@ -22,7 +24,7 @@ function monthOrYearToSeconds(number, isMonth) {
     return number * secondsInMinute * minutesInHour * hoursInDay * daysInYear
   }
 }
-export default function SimpleBackdrop(props) {
+export default function AssetForm(props) {
   const [open, setOpen] = React.useState(false)
   const [year, setYear] = React.useState('0')
   const [month, setMonth] = React.useState('1')
@@ -51,6 +53,8 @@ export default function SimpleBackdrop(props) {
   }))
 
   const { addAssetRequest, editAssetRequest, fetchAssetById, authToken } = useContext(Context)
+  const { data: physical_assets } = useQuery([PHYSICAL_ASSETS_QUERY_KEYS.PHYSICAL_ASSETS], fetchPhysicalAssets)
+  console.log('physical dat', physical_assets)
 
   const handleChange = (event) => {
     const { name, value } = event.target

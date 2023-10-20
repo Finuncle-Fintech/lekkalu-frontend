@@ -3,14 +3,13 @@ import BeatLoader from 'react-spinners/BeatLoader'
 import Colors from '@/constants/colors'
 
 import { Context } from '@/provider/Provider'
-import { WeeklyChart } from './WeeklyChart'
-import { SpentBalanceChart } from './SpentBalanceChart'
-import { CumSumChart } from './CumSumChart'
-import { AssetsLiabilitiesChart } from './AssetsLiabilitiesChart'
-import AssetsdepreciationChart from './AssetsDepreciationsChart'
+import { WeeklyChart } from '../../components/Charts/WeeklyChart'
+import { SpentBalanceChart } from '../../components/Charts/SpentBalanceChart'
+import { CumSumChart } from '../../components/Charts/CumSumChart'
+import AssetsdepreciationChart from '../../components/Charts/AssetsDepreciationsChart'
 
-const Test = () => {
-  const { weeklyExpense, fetchData, monthlyExpenses, assets, liabilities, depreciation } = useContext(Context)
+const Home = () => {
+  const { weeklyExpense, fetchData, monthlyExpenses, depreciation } = useContext(Context)
 
   const fetchAPI = async () => {
     await fetchData().then(() => {})
@@ -48,12 +47,10 @@ const Test = () => {
           <SpentBalanceChart data={monthlyExpenses} />
           <CumSumChart data={monthlyExpenses} />
           <AssetsdepreciationChart data={depreciation} />
-          <AssetsLiabilitiesChart data={assets} type={'assets'} />
-          <AssetsLiabilitiesChart data={liabilities} type={'liabilities'} />
         </div>
       )}
     </div>
   )
 }
 
-export default Test
+export default Home

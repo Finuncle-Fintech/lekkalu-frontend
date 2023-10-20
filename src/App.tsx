@@ -7,7 +7,7 @@ import AuthProtection from './components/AuthProtection/AuthProtection'
 
 /** Authenticated Routes */
 // @ts-expect-error (no-type-definitions)
-const Charts = lazy(() => import('@/components/Charts/Charts'))
+const Home = lazy(() => import('@/pages/Home/Home'))
 // @ts-expect-error (no-type-definitions)
 const Goals = lazy(() => import('@/components/Goals/Goals'))
 const IncomeStatement = lazy(() => import('@/pages/IncomeStatement/IncomeStatement'))
@@ -49,7 +49,7 @@ function App() {
             </AuthProtection>
           }
         >
-          <Route path='/home' element={<Charts />} />
+          <Route path='/home' element={<Home />} />
           <Route path='/goals' element={<Goals />} />
           <Route path='/income-statement' element={<IncomeStatement />} />
           <Route path='/expenses' element={<Expenses />} />

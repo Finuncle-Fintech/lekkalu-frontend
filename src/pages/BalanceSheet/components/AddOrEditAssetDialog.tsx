@@ -42,6 +42,7 @@ export default function AddOrEditAssetDialog({ trigger, asset }: Props) {
       tags: [],
       type: 1,
       user: userData?.id,
+      init_dep: asset?.depreciation_percent ? Number(asset?.depreciation_percent) : 1,
     },
   })
 

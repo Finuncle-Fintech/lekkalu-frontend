@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import React, { useState, useEffect, useContext } from 'react'
 import Backdrop from '@mui/material/Backdrop'
 
@@ -141,110 +143,6 @@ export default function LiabilitiesForm(props) {
           </Box>
           <Box sx={{ padding: '1rem 5rem 5rem 5rem' }}>
             <form onSubmit={handleSubmit}>
-              <TextField
-                label='Name'
-                name='name'
-                value={formData.name}
-                onChange={handleChange}
-                required
-                fullWidth
-                sx={{ margin: '1em 0 ' }}
-              />
-              <TextField
-                label='Balance'
-                name='balance'
-                type='number'
-                value={formData.balance}
-                onChange={handleChange}
-                required
-                fullWidth
-                sx={{ margin: '1em 0 ' }}
-              />
-
-              <TextField
-                label='Principal'
-                name='principal'
-                type='number'
-                value={formData.principal}
-                onChange={handleChange}
-                required
-                fullWidth
-                sx={{ margin: '1em 0 ' }}
-              />
-              <TextField
-                label='Disbursement Date'
-                name='disbursement_date'
-                type='date'
-                value={formData.disbursement_date}
-                onChange={handleChange}
-                fullWidth
-                required
-                sx={{ margin: '1em 0 ' }}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                InputProps={{
-                  sx: { height: '56px' },
-                }}
-              />
-
-              <TextField
-                label='Emi Date'
-                name='emi_day'
-                type='number'
-                value={formData.emi_day}
-                onChange={handleChange}
-                fullWidth
-                required
-                height='50px'
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                sx={{ margin: '1em 0 ' }}
-                inputProps={{ inputMode: 'numeric', min: 1, max: 30 }}
-              />
-              <TextField
-                label='Emi'
-                name='emi'
-                type='number'
-                value={formData.emi}
-                onChange={handleChange}
-                fullWidth
-                // required
-                sx={{ margin: '1em 0 ' }}
-              />
-              <TextField
-                label='Tenure'
-                name='tenure'
-                type='number'
-                value={formData.tenure}
-                onChange={handleChange}
-                fullWidth
-                required
-                sx={{ margin: '1em 0 ' }}
-              />
-              <TextField
-                label='Interest Rate'
-                name='interest_rate'
-                type='number'
-                value={formData.interest_rate}
-                onChange={handleChange}
-                fullWidth
-                required
-                sx={{ margin: '1em 0 ' }}
-              />
-
-              <TextField
-                label='Closure Charges'
-                name='closure_charges'
-                type='number'
-                value={formData.closure_charges}
-                onChange={handleChange}
-                fullWidth
-                sx={{ margin: '1em 0 ' }}
-                required
-              />
-
               <Button variant='contained' type='submit' color='primary' fullWidth>
                 Submit
               </Button>

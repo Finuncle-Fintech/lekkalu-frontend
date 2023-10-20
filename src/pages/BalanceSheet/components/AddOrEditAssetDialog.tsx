@@ -12,7 +12,7 @@ import { BALANCE_SHEET } from '@/utils/query-keys'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Form } from '@/components/ui/form'
-import { BALANCE_SHEET_INPUTS } from '@/utils/balance-sheet'
+import { ASSET_INPUTS } from '@/utils/balance-sheet'
 import { DATE_FORMAT } from '@/utils/constants'
 
 type Props = {
@@ -34,7 +34,7 @@ export default function AddOrEditAssetDialog({ isEdit = false }: Props) {
       sell_date: undefined,
       depreciation_percent: undefined,
       depreciation_frequency: 0,
-      init_dep: 0,
+      init_dep: 1,
       market_value: 0,
       user: 2,
       type: 1,
@@ -74,7 +74,7 @@ export default function AddOrEditAssetDialog({ isEdit = false }: Props) {
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(handleAddOrEditPhysicalAsset)} className='grid md:grid-cols-2 gap-4'>
-            <InputFieldsRenderer control={form.control} inputs={BALANCE_SHEET_INPUTS} />
+            <InputFieldsRenderer control={form.control} inputs={ASSET_INPUTS} />
 
             <DialogFooter className='gap-2 md:col-span-2'>
               <Button
@@ -87,7 +87,7 @@ export default function AddOrEditAssetDialog({ isEdit = false }: Props) {
                 Cancel
               </Button>
               <Button type='submit' loading={addPhysicalAssetMutation.isLoading}>
-                {isEdit ? 'Edit' : 'Add'}
+                {isEdit ? 'Edit' : 'Add'} Asset
               </Button>
             </DialogFooter>
           </form>

@@ -2,6 +2,7 @@ import React from 'react'
 // import { useQuery } from '@tanstack/react-query'
 import Page from '@/components/Page/Page'
 import AssetsTable from './components/AssetsTable'
+import LiabilitiesTable from './components/LiabilitiesTable'
 // import { BALANCE_SHEET } from '@/utils/query-keys'
 // import { fetchPhysicalAssets } from '@/queries/physical_assets'
 
@@ -22,7 +23,11 @@ export default function BalanceSheet() {
   return (
     <Page>
       {/* <GraphCard assetDatas={graphData.finalAssets} liabilityDatas={liabilities} setBarGraphIsOpen={handleOpen} /> */}
+      <div className='text-2xl font-bold my-2'>Assets</div>
       <AssetsTable />
+
+      <div className='text-2xl font-bold my-2'>Liabilities</div>
+      <LiabilitiesTable />
     </Page>
   )
 }

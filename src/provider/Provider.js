@@ -364,25 +364,6 @@ const Provider = ({ children }) => {
     }
   }
 
-  const addLiabilityRequest = async (liabilityData) => {
-    try {
-      const headers = {
-        Authorization: `Bearer ${authToken}`,
-        'Content-Type': 'application/json',
-      }
-
-      await axiosPrivate
-        .post(`${process.env.REACT_APP_BACKEND_API}loans/`, liabilityData, {
-          headers,
-        })
-        .then(() => {
-          fetchLiabilities()
-        })
-    } catch (error) {
-      console.log(error.response.data)
-    }
-  }
-
   const editLiabilityRequest = async (liabilityId, updatedLiabilityData) => {
     try {
       const headers = {
@@ -614,7 +595,6 @@ const Provider = ({ children }) => {
         fetchAllExpenses,
         fetchUser,
         user,
-        addLiabilityRequest,
         editLiabilityRequest,
         fetchLiabilityById,
         deleteLiabilityRequest,

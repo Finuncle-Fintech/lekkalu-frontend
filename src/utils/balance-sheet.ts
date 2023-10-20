@@ -1,6 +1,6 @@
 import { InputField } from '@/components/InputFieldsRenderer/InputFieldsRenderer'
 
-export const BALANCE_SHEET_INPUTS: InputField[] = [
+export const ASSET_INPUTS: InputField[] = [
   {
     id: 'name',
     label: 'Asset name',
@@ -44,6 +44,54 @@ export const BALANCE_SHEET_INPUTS: InputField[] = [
   {
     id: 'market_value',
     label: 'Market Value',
+    type: 'number',
+  },
+]
+
+export const LIABILITY_INPUTS: InputField[] = [
+  {
+    id: 'name',
+    label: 'Liability Name',
+    type: 'text',
+  },
+  {
+    id: 'balance',
+    label: 'Balance',
+    type: 'number',
+  },
+  {
+    id: 'principal',
+    label: 'Principal',
+    type: 'number',
+  },
+  {
+    id: 'disbursement_date',
+    label: 'Disbursement Date',
+    type: 'date',
+  },
+  {
+    id: 'emi_day',
+    label: 'EMI Day',
+    type: 'number',
+  },
+  {
+    id: 'emi',
+    label: 'EMI',
+    type: 'number',
+  },
+  {
+    id: 'tenure',
+    label: 'Tenure',
+    type: 'number',
+  },
+  {
+    id: 'interest_rate',
+    label: 'Interest Rate',
+    type: 'number',
+  },
+  {
+    id: 'closure_charges',
+    label: 'Closure Charges',
     type: 'number',
   },
 ]

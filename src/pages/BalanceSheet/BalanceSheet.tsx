@@ -57,15 +57,14 @@ export default function BalanceSheet() {
   return (
     <Page>
       <GraphCard assetDatas={assetsData} liabilityDatas={liabilitiesData} setBarGraphIsOpen={handleOpen} />
-      <div className='text-2xl font-bold my-2'>Assets</div>
-      <AssetsTable />
-
       <BarGraph
         setBarGraphIsOpen={handleClose}
         barGraphIsOpen={barGraphIsOpen}
-        dataAsset={assetsData}
-        dataLiability={liabilitiesData.finalLiabilities}
+        dataLiability={liabilitiesData.finalLiabilities ?? []}
       />
+
+      <div className='text-2xl font-bold my-2'>Assets</div>
+      <AssetsTable />
 
       <div className='text-2xl font-bold my-2'>Liabilities</div>
       <LiabilitiesTable />

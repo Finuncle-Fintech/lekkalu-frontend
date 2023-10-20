@@ -7,7 +7,7 @@ import jwt_decode from 'jwt-decode'
 import { Context } from '@/provider/Provider'
 import Loading from './Loading'
 
-export default function SimpleBackdrop(props) {
+export default function LiabilitiesForm(props) {
   const [open, setOpen] = React.useState(false)
   const [formData, setFormData] = useState({
     name: '',

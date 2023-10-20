@@ -3,7 +3,6 @@ import NorthEastIcon from '@mui/icons-material/NorthEast'
 import { Box, Typography, Button } from '@mui/material'
 import { AssetsLiabilitiesChart } from '@/components/Charts/AssetsLiabilitiesChart'
 import BasicMenu from '@/components/Header/HeaderComponents/BasicMenu'
-import Pie from './Pie'
 
 export default function GraphCard(props) {
   const isUnderDevelopment = true
@@ -59,7 +58,6 @@ export default function GraphCard(props) {
             width: '100%',
           }}
         >
-          {' '}
           <Box
             sx={{
               display: 'flex',
@@ -69,14 +67,14 @@ export default function GraphCard(props) {
             }}
           >
             <Box sx={{ width: '50%' }}>
-              <Pie component={<AssetsLiabilitiesChart data={props.assetDatas} type={'assets'} />} />
+              <AssetsLiabilitiesChart data={props.assetDatas} type={'assets'} />
             </Box>
             <Box
               sx={{
                 width: '50%',
               }}
             >
-              <Pie component={<AssetsLiabilitiesChart data={props.liabilityDatas} type={'liabilities'} />} />
+              <AssetsLiabilitiesChart data={props.liabilityDatas} type={'liabilities'} />
             </Box>
           </Box>
           <Box sx={{ width: '100%', display: 'flex' }}>
@@ -242,7 +240,7 @@ export default function GraphCard(props) {
           <BasicMenu Menu={userSetting} />
         </Box>
         <Box sx={{ width: '100%' }}>
-          <Pie title={'Liabilities'} component={<AssetsLiabilitiesChart data={props.assetDatas} type={'assets'} />} />
+          <AssetsLiabilitiesChart data={props.assetDatas} type={'assets'} />
         </Box>
       </Box>
       <Box
@@ -279,10 +277,7 @@ export default function GraphCard(props) {
           <BasicMenu Menu={userSetting} />
         </Box>
         <Box sx={{ width: '100%' }}>
-          <Pie
-            title={'Liabilities'}
-            component={<AssetsLiabilitiesChart data={props.liabilityDatas} type={'liabilities'} />}
-          />
+          <AssetsLiabilitiesChart data={props.liabilityDatas} type={'liabilities'} />
         </Box>
       </Box>
     </>

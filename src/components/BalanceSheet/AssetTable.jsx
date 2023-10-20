@@ -19,14 +19,15 @@ import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { visuallyHidden } from '@mui/utils'
+import Swal from 'sweetalert2'
 import IosShareIcon from '@mui/icons-material/IosShare'
 import LocalPrintshopIcon from '@mui/icons-material/LocalPrintshop'
-import { useContext } from 'react'
-import AddIcon from '@mui/icons-material/Add'
-import Swal from 'sweetalert2'
-import { Context } from '@/provider/Provider'
+// import AddIcon from '@mui/icons-material/Add'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { PHYSICAL_ASSETS_QUERY_KEYS } from '@/utils/query-keys'
+import { deletePhysicalAsset } from '@/queries/physical_assets'
 import Menu from './Menu'
-import AssetForm from './AssetForm'
+import AddOrEditPhysicalAssetDialog from './AddOrEditPhysicalAssetDialog'
 import Loading from './Loading'
 
 function descendingComparator(a, b, orderBy) {
@@ -182,7 +183,14 @@ EnhancedTableHead.propTypes = {
 
 function EnhancedTableToolbar(props) {
   const { numSelected, selectedAssetIds, handleSelectAfterDelete } = props
-  const { deleteAssetRequest } = useContext(Context)
+
+  const queryClient = useQueryClient()
+
+  const deletePhysicalAssetMutation = useMutation(deletePhysicalAsset, {
+    onSuccess: () => {
+      queryClient.invalidateQueries([PHYSICAL_ASSETS_QUERY_KEYS.PHYSICAL_ASSETS])
+    },
+  })
 
   const handleAssetDelete = async () => {
     if (selectedAssetIds.length > 0) {
@@ -198,7 +206,8 @@ function EnhancedTableToolbar(props) {
         if (res.isConfirmed) {
           try {
             props.setLoading(true)
-            await deleteAssetRequest(selectedAssetIds)
+            deletePhysicalAssetMutation.mutate(selectedAssetIds)
+            Swal.fire('Success', 'Deleted successfully', 'success')
           } catch (error) {
             Swal.fire('Failure', 'Something went wrong while deleting asset!.', 'error')
           } finally {
@@ -244,7 +253,7 @@ function EnhancedTableToolbar(props) {
 
       {numSelected > 0 ? (
         <Tooltip title='Delete'>
-          <IconButton onClick={handleAssetDelete}>
+          <IconButton onClick={handleAssetDelete} disabled={deletePhysicalAssetMutation.isLoading}>
             <DeleteIcon />
           </IconButton>
         </Tooltip>
@@ -277,7 +286,7 @@ export default function EnhancedTable(props) {
   const [page, setPage] = React.useState(0)
   const [dense] = React.useState(false)
   const [rowsPerPage, setRowsPerPage] = React.useState(5)
-  const [showForm, setForm] = React.useState(false)
+  // const [showForm, setForm] = React.useState(false)
   const [isLoading, setIsLoading] = React.useState(false)
 
   const handleRequestSort = (event, property) => {
@@ -285,9 +294,9 @@ export default function EnhancedTable(props) {
     setOrder(isAsc ? 'desc' : 'asc')
     setOrderBy(property)
   }
-  const handleRequestForm = () => {
-    setForm(!showForm)
-  }
+  // const handleRequestForm = () => {
+  //   setForm(!showForm)
+  // }
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
@@ -341,9 +350,10 @@ export default function EnhancedTable(props) {
   return (
     <>
       {isLoading && <Loading open={isLoading} />}
-      {showForm && (
-        <AssetForm handleRequestForm={handleRequestForm} showForm={showForm} setForm={setForm} title='Add' />
-      )}
+
+      {/* {showForm && (
+         <AssetForm handleRequestForm={handleRequestForm} showForm={showForm} setForm={setForm} title='Add' />
+      )} */}
       {props.assetDatas && Object.keys(props.assetDatas).length >= 0 ? (
         <Box sx={{ width: '100%' }}>
           <Paper sx={{ width: '100%', mb: 2 }}>
@@ -362,7 +372,7 @@ export default function EnhancedTable(props) {
                   justifyContent: 'center',
                 }}
               >
-                <Button variant='contained' onClick={handleRequestForm} sx={{ marginLeft: '20px' }}>
+                {/* <Button variant='contained' onClick={handleRequestForm} sx={{ marginLeft: '20px' }}>
                   <AddIcon />
                   <Typography
                     sx={{
@@ -374,7 +384,10 @@ export default function EnhancedTable(props) {
                   >
                     Add
                   </Typography>
-                </Button>{' '}
+                </Button>{' '} */}
+                <div className='justify-center'>
+                  <AddOrEditPhysicalAssetDialog trigger={<Button>Add Asset</Button>} />
+                </div>
               </Box>
               <Box sx={{ display: 'flex', marginRight: '2vw' }}>
                 <Typography

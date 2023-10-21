@@ -25,8 +25,9 @@ const CagrCalculator = lazy(() => import('@/pages/CAGRCalculator/CAGRCalculator'
 const EmiCalculator = lazy(() => import('@/pages/EmiCalculator/EmiCalculator'))
 const TermsAndConditions = lazy(() => import('@/pages/TermsAndConditions/TermsAndConditions'))
 const PrivacyPolicies = lazy(() => import('@/pages/PrivacyPolicies/PrivacyPolicies'))
-// @ts-expect-error (no-type-definitions)
-const ErrorPage = lazy(() => import('@/components/ErrorPage/ErrorPage'))
+const NotFound = lazy(() => import('@/pages/NotFound/NotFound'))
+
+// const ErrorPage = lazy(() => import('@/components/ErrorPage/ErrorPage'))
 
 function App() {
   return (
@@ -63,7 +64,7 @@ function App() {
         <Route path='/emi-calculator' element={<EmiCalculator />} />
         <Route path='/terms-and-conditions' element={<TermsAndConditions />} />
         <Route path='/privacy-policies' element={<PrivacyPolicies />} />
-        <Route path='*' element={<ErrorPage />} />
+        <Route path='*' element={<NotFound />} />
       </Routes>
     </Suspense>
   )

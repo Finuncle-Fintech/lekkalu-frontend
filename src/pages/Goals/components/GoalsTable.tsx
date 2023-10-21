@@ -41,7 +41,7 @@ export default function GoalsTable() {
           />
 
           <div>
-            {page * 10 + 1} - {page * 10 + 10} of {goals?.length}
+            {page * 10 + 1} - {page * 10 + 10}
           </div>
         </div>
 

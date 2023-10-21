@@ -24,7 +24,7 @@ const Home = () => {
     'November',
     'December',
   ]
-  const { fetchData, monthlyExpenses, depreciation } = useContext(Context)
+  const { fetchData, depreciation } = useContext(Context)
 
   const { data: weekly_expenses, isLoading: isLoadingWeeklyExpense } = useQuery([EXPENSES.WEEKLY_EXPENSES], fetchWeeklyExpenses)
   const { data: monthly_expenses, isLoading: isLoadingMonthlyExpense } = useQuery([EXPENSES.MONTHLY_EXPENSES], fetchMonthlyExpenses)

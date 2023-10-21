@@ -13,7 +13,6 @@ const Provider = ({ children }) => {
   const axiosPrivate = useAxiosPrivate()
   const [authToken, setAuthToken] = useState(null)
   const [store, dispatch] = useReducer(Reducer, InitialState)
-
   const {
     statusFeedback,
     expenses,
@@ -94,7 +93,7 @@ const Provider = ({ children }) => {
       throw error // Rethrow the error so it can be caught in the calling function
     }
   }
-
+  const fetchData = async () => {}
   const signOut = () => {
     setAuthToken(null)
     deleteCookie('refresh')

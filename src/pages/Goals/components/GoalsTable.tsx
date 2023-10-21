@@ -1,11 +1,14 @@
 import { useQuery } from '@tanstack/react-query'
 import React, { useState } from 'react'
-import { LoaderIcon } from 'lucide-react'
+import { LoaderIcon, PencilIcon, PlusIcon } from 'lucide-react'
 import { GOALS } from '@/utils/query-keys'
 import { fetchGoals } from '@/queries/goals'
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import When from '@/components/When/When'
 import Pagination from '@/components/Pagination/Pagination'
+import AddOrEditGoal from './AddOrEditGoal'
+import { Button } from '@/components/ui/button'
+import DeleteGoal from './DeleteGoal'
 
 export default function GoalsTable() {
   const [page, setPage] = useState(0)
@@ -41,6 +44,15 @@ export default function GoalsTable() {
             {page * 10 + 1} - {page * 10 + 10} of {goals?.length}
           </div>
         </div>
+
+        <AddOrEditGoal
+          trigger={
+            <Button>
+              <PlusIcon className='w-4 h-4 mr-2' />
+              <span>Add Goal</span>
+            </Button>
+          }
+        />
       </div>
       <Table className='border rounded'>
         <TableCaption className='text-center'>A list of all your financial goals</TableCaption>
@@ -78,7 +90,18 @@ export default function GoalsTable() {
               <TableCell>{goal.finished}</TableCell>
               <TableCell>{goal.planned_start}</TableCell>
               <TableCell>N/A</TableCell>
-              <TableCell>Actions</TableCell>
+              <TableCell className='flex items-center gap-1'>
+                <DeleteGoal id={goal.id} />
+
+                <AddOrEditGoal
+                  goal={goal}
+                  trigger={
+                    <Button size='sm' variant='outline'>
+                      <PencilIcon className='w-4 h-4' />
+                    </Button>
+                  }
+                />
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>

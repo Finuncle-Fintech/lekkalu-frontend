@@ -8,7 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
 import { SetBudgetSchema, setBudgetSchema } from '@/schema/budget'
 import { setBudget } from '@/queries/budget'
-import { DATE_FORMAT } from '@/utils/constants'
+import { SERVER_DATE_FORMAT } from '@/utils/constants'
 import { Button } from '@/components/ui/button'
 
 export default function SetBudgetModal() {
@@ -23,7 +23,7 @@ export default function SetBudgetModal() {
   } = useForm<SetBudgetSchema>({
     resolver: zodResolver(setBudgetSchema),
     defaultValues: {
-      month: dayjs().format(DATE_FORMAT),
+      month: dayjs().format(SERVER_DATE_FORMAT),
     },
   })
 
@@ -44,7 +44,7 @@ export default function SetBudgetModal() {
   const handleCreateBudget = (values: SetBudgetSchema) => {
     const dataToSubmit = {
       ...values,
-      month: dayjs(values.month).format(DATE_FORMAT),
+      month: dayjs(values.month).format(SERVER_DATE_FORMAT),
     }
     setBudgetMutation.mutate(dataToSubmit)
   }
@@ -86,7 +86,7 @@ export default function SetBudgetModal() {
               onChange={(date) => {
                 const dayjsDate = date as dayjs.Dayjs
                 if (dayjsDate) {
-                  setValue('month', dayjsDate.format(DATE_FORMAT))
+                  setValue('month', dayjsDate.format(SERVER_DATE_FORMAT))
                 }
               }}
               slotProps={{

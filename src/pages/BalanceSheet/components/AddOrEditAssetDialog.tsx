@@ -13,7 +13,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogT
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { ASSET_INPUTS, ASSET_MONTHS, ASSET_YEARS } from '@/utils/balance-sheet'
-import { DATE_FORMAT } from '@/utils/constants'
+import { SERVER_DATE_FORMAT } from '@/utils/constants'
 import { PhysicalAsset } from '@/types/balance-sheet'
 import { monthsToSeconds, yearsToSeconds } from '@/utils/time'
 import { useAuthContext } from '@/hooks/use-auth'
@@ -65,8 +65,8 @@ export default function AddOrEditAssetDialog({ trigger, asset }: Props) {
   const handleAddOrEditPhysicalAsset = (values: AddPhysicalAssetSchema) => {
     const valuesToSubmit = {
       ...values,
-      purchase_date: dayjs(values.purchase_date).format(DATE_FORMAT),
-      sell_date: dayjs(values.sell_date).format(DATE_FORMAT),
+      purchase_date: dayjs(values.purchase_date).format(SERVER_DATE_FORMAT),
+      sell_date: dayjs(values.sell_date).format(SERVER_DATE_FORMAT),
       depreciation_frequency: monthsToSeconds(values.months) + yearsToSeconds(values.years),
     }
 
@@ -90,7 +90,7 @@ export default function AddOrEditAssetDialog({ trigger, asset }: Props) {
       </DialogTrigger>
       <DialogContent className='max-h-[800px] overflow-auto'>
         <DialogHeader>
-          <DialogTitle>Add Asset</DialogTitle>
+          <DialogTitle>{isEdit ? 'Edit' : 'Add'} Asset</DialogTitle>
         </DialogHeader>
 
         <Form {...form}>

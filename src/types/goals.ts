@@ -10,5 +10,6 @@ export type Goal = {
   started: string
   finished: string
   planned_start: string
+  planned_finish: string
   sub_goal: string
 }

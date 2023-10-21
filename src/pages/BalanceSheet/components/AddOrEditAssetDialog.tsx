@@ -12,7 +12,7 @@ import { BALANCE_SHEET } from '@/utils/query-keys'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
-import { ASSET_INPUTS, ASSET_MONTHS } from '@/utils/balance-sheet'
+import { ASSET_INPUTS, ASSET_MONTHS, ASSET_YEARS } from '@/utils/balance-sheet'
 import { DATE_FORMAT } from '@/utils/constants'
 import { PhysicalAsset } from '@/types/balance-sheet'
 import { monthsToSeconds, yearsToSeconds } from '@/utils/time'
@@ -129,14 +129,14 @@ export default function AddOrEditAssetDialog({ trigger, asset }: Props) {
                   name='years'
                   render={({ field }) => (
                     <FormItem className='flex-1'>
-                      <FormLabel>Months</FormLabel>
+                      <FormLabel>Years</FormLabel>
                       <FormControl>
                         <Select onValueChange={field.onChange} {...field} value={field.value?.toString()}>
                           <SelectTrigger>
-                            <SelectValue placeholder='Select Months' />
+                            <SelectValue placeholder='Select Years' />
                           </SelectTrigger>
                           <SelectContent className='max-h-72'>
-                            {ASSET_MONTHS.map(({ id, label }) => (
+                            {ASSET_YEARS.map(({ id, label }) => (
                               <SelectItem value={id} key={id}>
                                 {label}
                               </SelectItem>

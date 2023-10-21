@@ -17,7 +17,7 @@ import { useAuthContext } from '@/hooks/use-auth'
 export const Signin = () => {
   const { tokenData, loginMutation } = useAuthContext()
   const [searchParams] = useSearchParams()
-  const redirectTo = searchParams.get('redirectTo') ?? '/home'
+  const redirectTo = searchParams.get('redirectTo') ?? '/dashboard'
 
   const isUnderDevelopment = true
 

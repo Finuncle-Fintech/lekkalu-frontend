@@ -13,7 +13,7 @@ import { useAuthContext } from '@/hooks/use-auth'
 export default function Signup() {
   const { tokenData, signupMutation } = useAuthContext()
   const [searchParams] = useSearchParams()
-  const redirectTo = searchParams.get('redirectTo') ?? '/home'
+  const redirectTo = searchParams.get('redirectTo') ?? '/dashboard'
 
   const form = useForm<SignupSchema>({
     resolver: zodResolver(signupSchema),

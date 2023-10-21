@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useMemo } from 'react'
+import React, { useContext, useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
 
 import { Context } from '@/provider/Provider'
@@ -24,17 +24,10 @@ const Home = () => {
     'November',
     'December',
   ]
-  const { fetchData, depreciation } = useContext(Context)
+  const { depreciation } = useContext(Context)
 
   const { data: weekly_expenses, isLoading: isLoadingWeeklyExpense } = useQuery([EXPENSES.WEEKLY_EXPENSES], fetchWeeklyExpenses)
   const { data: monthly_expenses, isLoading: isLoadingMonthlyExpense } = useQuery([EXPENSES.MONTHLY_EXPENSES], fetchMonthlyExpenses)
-
-  const fetchAPI = async () => {
-    await fetchData().then(() => {})
-  }
-  useEffect(() => {
-    fetchAPI()
-  }, [])
 
   const final_weekly_expense = useMemo(() => {
     let finalDataWeekly = []
@@ -101,8 +94,8 @@ const Home = () => {
       }}
     >
       <WeeklyChart final_weekly_expense={final_weekly_expense} />
-      <SpentBalanceChart data={final_monthly_expense} />
-      <CumSumChart data={monthlyExpenses} />
+      <SpentBalanceChart final_monthly_expense={final_monthly_expense} />
+      <CumSumChart final_monthly_expense={final_monthly_expense} />
       <AssetsdepreciationChart data={depreciation} />
     </div>
   )

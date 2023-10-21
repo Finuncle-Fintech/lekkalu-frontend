@@ -1,12 +1,20 @@
 import 'bootstrap/dist/css/bootstrap.min.css'
 import React from 'react'
-import { ResponsiveContainer, ComposedChart, Line, Bar, CartesianGrid, XAxis, YAxis, Tooltip, Legend } from 'recharts'
+import { ResponsiveContainer, TooltipProps, ComposedChart, Line, Bar, CartesianGrid, XAxis, YAxis, Tooltip, Legend } from 'recharts'
+import {
+  ValueType,
+  NameType,
+} from 'recharts/types/component/DefaultTooltipContent'
 import { useUserPreferences } from '@/hooks/use-user-preferences'
 import Colors from '@/constants/colors'
+import { MonthlyExpense } from '@/types/expense'
 
-const CustomTooltip = ({ active, payload, label }) => {
+const CustomTooltip = ({
+  active,
+  payload,
+  label,
+}:TooltipProps<ValueType, NameType>) => {
   const { preferences } = useUserPreferences()
-
   if (active && payload && payload.length) {
     return (
       <div className='sb-tooltip' style={{ backgroundColor: Colors.white, padding: 10 }}>
@@ -26,7 +34,11 @@ const CustomTooltip = ({ active, payload, label }) => {
   return null
 }
 
-export const SpentBalanceChart = (spentBalance) => {
+type Props = {
+  final_monthly_expense : MonthlyExpense[]
+}
+
+export const SpentBalanceChart = ({ final_monthly_expense } : Props) => {
   const { preferences } = useUserPreferences()
 
   return (
@@ -37,7 +49,7 @@ export const SpentBalanceChart = (spentBalance) => {
           <ComposedChart
             width={500}
             height={400}
-            data={spentBalance.data}
+            data={final_monthly_expense}
             margin={{
               top: 20,
               right: 20,

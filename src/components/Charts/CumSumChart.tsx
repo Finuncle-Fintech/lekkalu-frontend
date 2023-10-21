@@ -1,13 +1,22 @@
 import 'bootstrap/dist/css/bootstrap.min.css'
 import React from 'react'
-import { ResponsiveContainer, ComposedChart, Line, Bar, CartesianGrid, XAxis, YAxis, Tooltip, Legend } from 'recharts'
+import { ResponsiveContainer, TooltipProps, ComposedChart, Line, Bar, CartesianGrid, XAxis, YAxis, Tooltip, Legend } from 'recharts'
+import {
+  ValueType,
+  NameType,
+} from 'recharts/types/component/DefaultTooltipContent'
 import { useUserPreferences } from '@/hooks/use-user-preferences'
 import Colors from '@/constants/colors'
+import { MonthlyExpense } from '@/types/expense'
 
 // export const handleMouseOver = jest.fn();
 // export const handleSyncMethod = jest.fn();
 
-const CustomTooltip = ({ active, payload, label }) => {
+const CustomTooltip = ({
+  active,
+  payload,
+  label,
+} : TooltipProps<ValueType, NameType>) => {
   const { preferences } = useUserPreferences()
 
   if (active && payload && payload.length) {
@@ -24,7 +33,11 @@ const CustomTooltip = ({ active, payload, label }) => {
   return null
 }
 
-export const CumSumChart = (cumSumData) => {
+type Props = {
+  final_monthly_expense: MonthlyExpense[]
+}
+
+export const CumSumChart = ({ final_monthly_expense } : Props) => {
   const { preferences } = useUserPreferences()
 
   return (
@@ -35,7 +48,7 @@ export const CumSumChart = (cumSumData) => {
           <ComposedChart
             width={500}
             height={400}
-            data={cumSumData.data}
+            data={final_monthly_expense}
             margin={{
               top: 20,
               right: 20,
@@ -64,8 +77,8 @@ export const CumSumChart = (cumSumData) => {
                 position: 'relative',
               }}
             />
-            <Bar dataKey='CumSum' barSize={160} fill={Colors.cumSum} syncId='test' />
-            <Line type='monotone' dataKey='CumSum' stroke={Colors.cumSum} strokeWidth={3} syncId='test' />
+            <Bar dataKey='CumSum' barSize={160} fill={Colors.cumSum} />
+            <Line type='monotone' dataKey='CumSum' stroke={Colors.cumSum} strokeWidth={3} />
           </ComposedChart>
         </ResponsiveContainer>
       </div>

@@ -4,16 +4,20 @@ import './WeeklyChart.css'
 import { ResponsiveContainer, LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend } from 'recharts'
 import Colors from '@/constants/colors'
 import { useUserPreferences } from '@/hooks/use-user-preferences'
+import { WeeklyExpense } from '@/types/expense'
 
-export const WeeklyChart = (WeekData) => {
+type Props = {
+  final_weekly_expense: WeeklyExpense[]
+}
+
+export const WeeklyChart = ({ final_weekly_expense } : Props) => {
   const { preferences } = useUserPreferences()
-
   return (
     <div className='section-outer-wrapper col-md-8 mx-auto' style={{ backgroundColor: Colors.graphBG }}>
       <h3 className='section-title text-white text-center'>Weekly Spend Analysis</h3>
       <div className='section-inner-wrapper'>
         <ResponsiveContainer width='100%' aspect={2}>
-          <LineChart data={WeekData.data} margin={{ top: 5, right: 0, bottom: 25, left: 10 }}>
+          <LineChart data={final_weekly_expense} margin={{ top: 5, right: 0, bottom: 25, left: 10 }}>
             <Tooltip />
             <XAxis
               dataKey='time'

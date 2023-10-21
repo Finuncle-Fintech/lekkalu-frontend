@@ -13,23 +13,6 @@ const Provider = ({ children }) => {
   const axiosPrivate = useAxiosPrivate()
   const [authToken, setAuthToken] = useState(null)
   const [store, dispatch] = useReducer(Reducer, InitialState)
-  let finalDataWeekly = []
-  const monthNames = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
-  ]
-
-  let weekData = []
 
   const {
     statusFeedback,
@@ -109,79 +92,6 @@ const Provider = ({ children }) => {
     } catch (error) {
       handleErrors(error)
       throw error // Rethrow the error so it can be caught in the calling function
-    }
-  }
-
-  const fetchData = async () => {
-    try {
-      const headers = {
-        Authorization: `Bearer ${authToken}`,
-        'Content-Type': 'application/json',
-      }
-
-      await axiosPrivate
-        .get(`${process.env.REACT_APP_BACKEND_API}weekly_expenses/`, {
-          headers,
-        })
-        .then((res) => {
-          weekData = res.data
-          let totlamount = 0
-          let i = 0
-          weekData.forEach((da) => {
-            totlamount += weekData[i]?.total_amount
-            if (finalDataWeekly.length >= 4) {
-              finalDataWeekly = [
-                ...finalDataWeekly,
-                {
-                  time: da.week.toString() + '_' + da.year.toString(),
-                  amount: da?.total_amount,
-                  roll_avg: parseFloat((totlamount / 5).toFixed(2)),
-                },
-              ]
-              totlamount = totlamount - weekData[i - 4].total_amount
-            } else {
-              finalDataWeekly = [
-                ...finalDataWeekly,
-                {
-                  time: da.week.toString() + ' ' + da.year.toString(),
-                  amount: da?.total_amount,
-                },
-              ]
-            }
-            i += 1
-          })
-          dispatch({
-            type: Types.FETCH_WEEKLY_EXPENSE,
-            payload: finalDataWeekly,
-          })
-        })
-
-      await axiosPrivate
-        .get(`${process.env.REACT_APP_BACKEND_API}monthly_expenses/`, {
-          headers,
-        })
-        .then((res) => {
-          let finalMonthlyExp = []
-          const response = res.data
-          response.forEach((da) => {
-            finalMonthlyExp = [
-              ...finalMonthlyExp,
-              {
-                name: monthNames[da.month - 1],
-                Spent: da.spent,
-                Balance: da.balance,
-                CumSum: da.cum_sum,
-              },
-            ]
-          })
-
-          dispatch({
-            type: Types.FETCH_MONTHLY_EXPENSE,
-            payload: finalMonthlyExp,
-          })
-        })
-    } catch (error) {
-      handleErrors(error.message)
     }
   }
 

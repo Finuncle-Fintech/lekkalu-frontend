@@ -1,5 +1,5 @@
 import { AddExpenseSchema } from '@/schema/expense'
-import { Expense } from '@/types/expense'
+import { Expense, MonthlyExpense, WeeklyExpense } from '@/types/expense'
 import { apiClient } from '@/utils/client'
 
 type PageParams = {
@@ -11,6 +11,16 @@ export async function fetchExpenses(params?: PageParams) {
   const { data } = await apiClient.get<Expense[]>('expenses/', {
     params: { per_page: params?.per_page ?? 10, page: (params?.page ?? 0) + 1 },
   })
+  return data
+}
+
+export async function fetchWeeklyExpenses() {
+  const { data } = await apiClient.get<WeeklyExpense[]>('/weekly_expenses')
+  return data
+}
+
+export async function fetchMonthlyExpenses() {
+  const { data } = await apiClient.get<MonthlyExpense[]>('/monthly_expenses')
   return data
 }
 

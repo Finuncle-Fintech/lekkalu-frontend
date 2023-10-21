@@ -9,7 +9,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Budget } from '@/types/budget'
 import { UpdateBudgetSchema, updateBudgetSchema } from '@/schema/budget'
-import { DATE_FORMAT } from '@/utils/constants'
+import { SERVER_DATE_FORMAT } from '@/utils/constants'
 import { updateBudget } from '@/queries/budget'
 import { BUDGET_QUERY_KEYS } from '@/utils/query-keys'
 
@@ -33,7 +33,7 @@ export default function EditBudgetModal({ budget }: Props) {
     resolver: zodResolver(updateBudgetSchema),
     defaultValues: {
       limit: budget.limit,
-      month: dayjs(budget.month, DATE_FORMAT).format(DATE_FORMAT),
+      month: dayjs(budget.month, SERVER_DATE_FORMAT).format(SERVER_DATE_FORMAT),
     },
   })
 
@@ -48,7 +48,7 @@ export default function EditBudgetModal({ budget }: Props) {
   const handleUpdateBudget = (values: UpdateBudgetSchema) => {
     const dataToSubmit = {
       ...values,
-      month: dayjs(values.month).format(DATE_FORMAT),
+      month: dayjs(values.month).format(SERVER_DATE_FORMAT),
     }
     updateBudgetMutation.mutate(dataToSubmit)
   }
@@ -85,12 +85,12 @@ export default function EditBudgetModal({ budget }: Props) {
               views={['month']}
               label='Month'
               className='w-100 mb-4'
-              defaultValue={dayjs(budget.month, DATE_FORMAT)}
+              defaultValue={dayjs(budget.month, SERVER_DATE_FORMAT)}
               {...register('month')}
               onChange={(date) => {
                 const dayjsDate = date as dayjs.Dayjs
                 if (dayjsDate) {
-                  setValue('month', dayjsDate.format(DATE_FORMAT))
+                  setValue('month', dayjsDate.format(SERVER_DATE_FORMAT))
                 }
               }}
               slotProps={{

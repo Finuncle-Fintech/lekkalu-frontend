@@ -8,8 +8,7 @@ import AuthProtection from './components/AuthProtection/AuthProtection'
 /** Authenticated Routes */
 // @ts-expect-error (no-type-definitions)
 const Home = lazy(() => import('@/pages/Home/Home'))
-// @ts-expect-error (no-type-definitions)
-const Goals = lazy(() => import('@/components/Goals/Goals'))
+const Goals = lazy(() => import('@/pages/Goals/Goals'))
 const IncomeStatement = lazy(() => import('@/pages/IncomeStatement/IncomeStatement'))
 const Expenses = lazy(() => import('@/pages/Expenses/Expenses'))
 const BalanceSheet = lazy(() => import('@/pages/BalanceSheet/BalanceSheet'))

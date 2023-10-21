@@ -6,6 +6,7 @@ import { Slider } from '../ui/slider'
 import When from '../When/When'
 import DatePicker from '../DatePicker/DatePicker'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
+import { RadioGroup, RadioGroupItem } from '../ui/radio-group'
 
 // @TODO: Add extraContent prop
 type BaseInput = {
@@ -52,7 +53,12 @@ type TextInput = BaseInput & {
   type: 'text'
 }
 
-export type InputField = NumberInput | DateInput | MultiSelectInput | TextInput | SelectInput
+type RadioInput = BaseInput & {
+  type: 'radio'
+  options: Option[]
+}
+
+export type InputField = NumberInput | DateInput | MultiSelectInput | TextInput | SelectInput | RadioInput
 
 type Props = {
   control: Control<any>
@@ -147,6 +153,21 @@ export default function InputFieldsRenderer({ inputs, control }: Props) {
               ))}
             </SelectContent>
           </Select>
+        )
+      }
+
+      case 'radio': {
+        return (
+          <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className={input.className}>
+            {input.options.map((option) => (
+              <FormItem key={option.id} className='flex items-center space-x-3 space-y-0'>
+                <FormControl>
+                  <RadioGroupItem value={option.id} />
+                </FormControl>
+                <FormLabel>{option.label}</FormLabel>
+              </FormItem>
+            ))}
+          </RadioGroup>
         )
       }
 

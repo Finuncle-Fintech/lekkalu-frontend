@@ -14,7 +14,7 @@ import { addLiability, editLiability } from '@/queries/balance-sheet'
 import { LIABILITY_INPUTS } from '@/utils/balance-sheet'
 import { Liability } from '@/types/balance-sheet'
 import { BALANCE_SHEET } from '@/utils/query-keys'
-import { DATE_FORMAT } from '@/utils/constants'
+import { SERVER_DATE_FORMAT } from '@/utils/constants'
 
 type Props = {
   trigger: React.ReactElement
@@ -60,7 +60,7 @@ export default function AddOrEditLiabilityDialog({ trigger, liability }: Props) 
   })
 
   const handleCreateOrEdit = (values: AddLiabilitySchema) => {
-    const valuesToSubmit = { ...values, disbursement_date: dayjs(values.disbursement_date).format(DATE_FORMAT) }
+    const valuesToSubmit = { ...values, disbursement_date: dayjs(values.disbursement_date).format(SERVER_DATE_FORMAT) }
     /** Handling the case of editing */
     if (typeof liability !== 'undefined') {
       editLiabilityMutation.mutate(valuesToSubmit)

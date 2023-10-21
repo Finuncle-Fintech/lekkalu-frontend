@@ -12,3 +12,17 @@ export type PhysicalAsset = {
   type: number
   tags: []
 }
+
+export type Liability = {
+  id: number
+  balance: string
+  closure_charges: string
+  disbursement_date: string
+  emi: string
+  emi_day: string
+  interest_rate: string
+  name: string
+  principal: string
+  tenure: number
+  user: number
+}

@@ -1,5 +1,4 @@
 import React, { createContext, useReducer, useState, useContext } from 'react'
-import jwtDecode from 'jwt-decode'
 import axiosClient from '@/components/Axios/Axios'
 import useAxiosPrivate from '@/hooks/useAxiosPrivate'
 import deleteCookie from '@/components/Support/PopUp/utils/DeleteCookie'
@@ -15,8 +14,6 @@ const Provider = ({ children }) => {
   const [authToken, setAuthToken] = useState(null)
   const [store, dispatch] = useReducer(Reducer, InitialState)
   let finalDataWeekly = []
-  let finalLiabilities = []
-  let finalAssets = []
   const monthNames = [
     'January',
     'February',
@@ -40,11 +37,9 @@ const Provider = ({ children }) => {
     tags,
     weeklyExpense,
     monthlyExpenses,
-    assets,
     liabilities,
     incomeStatement,
     depreciation,
-    user,
     goals,
   } = store
 
@@ -96,21 +91,6 @@ const Provider = ({ children }) => {
           type: Types.FETCH_TAGS,
           payload: res.data,
         })
-      })
-    } catch (error) {
-      handleErrors(error)
-    }
-  }
-
-  const createTag = async (tag) => {
-    try {
-      const headers = {
-        Authorization: `Bearer ${authToken}`,
-        'Content-Type': 'application/json',
-      }
-
-      await axiosPrivate.post(`${process.env.REACT_APP_BACKEND_API}expense-tag/`, tag, {
-        headers,
       })
     } catch (error) {
       handleErrors(error)
@@ -176,29 +156,6 @@ const Provider = ({ children }) => {
           })
         })
 
-      await axiosPrivate.get(`${process.env.REACT_APP_BACKEND_API}loans/`, { headers }).then((res) => {
-        let totalVal = 0.000000001
-        res.data.forEach((da) => {
-          totalVal += parseFloat(da.balance)
-          finalLiabilities = [
-            ...finalLiabilities,
-            {
-              id: da.id,
-              name: da.name,
-              value: parseFloat(da.balance),
-              principal: parseFloat(da.principal),
-              interest: parseFloat(da.interest_rate),
-              tenure: da.tenure,
-              closure_charges: parseFloat(da.closure_charges),
-              disbursement_date: da.disbursement_date,
-            },
-          ]
-        })
-        dispatch({
-          type: Types.FETCH_LIABILITIES,
-          payload: { finalLiabilities, totalVal },
-        })
-      })
       await axiosPrivate
         .get(`${process.env.REACT_APP_BACKEND_API}monthly_expenses/`, {
           headers,
@@ -223,217 +180,8 @@ const Provider = ({ children }) => {
             payload: finalMonthlyExp,
           })
         })
-
-      await axiosPrivate
-        .get(`${process.env.REACT_APP_BACKEND_API}physical_assets/`, {
-          headers,
-        })
-        .then((res) => {
-          const data = res.data
-
-          dispatch({
-            type: Types.FETCH_depreciation,
-            payload: data,
-          })
-        })
     } catch (error) {
       handleErrors(error.message)
-    }
-  }
-
-  const addAssetRequest = async (assetData) => {
-    try {
-      const headers = {
-        Authorization: `Bearer ${authToken}`,
-        'Content-Type': 'application/json',
-      }
-
-      await axiosPrivate
-        .post(`${process.env.REACT_APP_BACKEND_API}physical_assets/`, assetData, {
-          headers,
-        })
-        .then(() => {
-          fetchAsset()
-        })
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  const editAssetRequest = async (assetId, updatedAssetData) => {
-    try {
-      const headers = {
-        Authorization: `Bearer ${authToken}`,
-        'Content-Type': 'application/json',
-      }
-
-      await axiosPrivate
-        .put(`${process.env.REACT_APP_BACKEND_API}physical_assets/${assetId}`, updatedAssetData, { headers })
-        .then(() => {
-          fetchAsset()
-        })
-    } catch (error) {
-      handleErrors(error)
-    }
-  }
-
-  const fetchAsset = async () => {
-    try {
-      const headers = {
-        Authorization: `Bearer ${authToken}`,
-        'Content-Type': 'application/json',
-      }
-
-      await axiosPrivate
-        .get(`${process.env.REACT_APP_BACKEND_API}physical_assets/`, {
-          headers,
-        })
-        .then((res) => {
-          let totalVal = 0.000000001
-          res.data.forEach((da) => {
-            totalVal += da.market_value
-            finalAssets = [...finalAssets, { id: da.id, name: da.name, value: parseFloat(da.market_value) }]
-          })
-
-          dispatch({
-            type: Types.FETCH_ASSETS,
-            payload: { finalAssets, totalVal },
-          })
-        })
-    } catch (error) {
-      // Handle errors
-      handleErrors(error.message)
-    }
-  }
-
-  const fetchAssetById = async (assetId) => {
-    try {
-      const headers = {
-        Authorization: `Bearer ${authToken}`,
-        'Content-Type': 'application/json',
-      }
-      const response = await axiosPrivate.get(`${process.env.REACT_APP_BACKEND_API}physical_assets/${assetId}`, {
-        headers,
-      })
-
-      const assetData = response.data
-
-      return assetData
-    } catch (error) {
-      handleErrors(error)
-      throw error
-    }
-  }
-
-  const fetchLiabilities = async () => {
-    try {
-      const headers = {
-        Authorization: `Bearer ${authToken}`,
-        'Content-Type': 'application/json',
-      }
-
-      await axiosPrivate.get(`${process.env.REACT_APP_BACKEND_API}loans/`, { headers }).then((res) => {
-        let totalVal = 0.000000001
-
-        res.data.forEach((da) => {
-          totalVal += parseFloat(da.balance)
-
-          finalLiabilities = [
-            ...finalLiabilities,
-            {
-              id: da.id,
-              name: da.name,
-              value: parseFloat(da.balance),
-              principal: parseFloat(da.principal),
-              interest: parseFloat(da.interest_rate),
-              tenure: da.tenure,
-              closure_charges: parseFloat(da.closure_charges),
-              disbursement_date: da.disbursement_date,
-            },
-          ]
-        })
-        dispatch({
-          type: Types.FETCH_LIABILITIES,
-          payload: { finalLiabilities, totalVal },
-        })
-      })
-    } catch (error) {
-      // Handle errors
-      // handleErrors(error.message);
-      console.log(error)
-    }
-  }
-
-  const addLiabilityRequest = async (liabilityData) => {
-    try {
-      const headers = {
-        Authorization: `Bearer ${authToken}`,
-        'Content-Type': 'application/json',
-      }
-
-      await axiosPrivate
-        .post(`${process.env.REACT_APP_BACKEND_API}loans/`, liabilityData, {
-          headers,
-        })
-        .then(() => {
-          fetchLiabilities()
-        })
-    } catch (error) {
-      console.log(error.response.data)
-    }
-  }
-
-  const editLiabilityRequest = async (liabilityId, updatedLiabilityData) => {
-    try {
-      const headers = {
-        Authorization: `Bearer ${authToken}`,
-        'Content-Type': 'application/json',
-      }
-
-      await axiosPrivate
-        .put(`${process.env.REACT_APP_BACKEND_API}loans/${liabilityId}`, updatedLiabilityData, { headers })
-        .then(() => {
-          fetchLiabilities()
-        })
-    } catch (error) {
-      // handleErrors(error);
-      console.log(error)
-    }
-  }
-
-  const fetchLiabilityById = async (Id) => {
-    try {
-      const headers = {
-        Authorization: `Bearer ${authToken}`,
-        'Content-Type': 'application/json',
-      }
-      const response = await axiosPrivate.get(`${process.env.REACT_APP_BACKEND_API}loans/${Id}`, { headers })
-
-      const assetData = response.data
-
-      return assetData
-    } catch (error) {
-      handleErrors(error)
-      throw error
-    }
-  }
-
-  const deleteLiabilityRequest = async (Ids) => {
-    try {
-      const headers = {
-        Authorization: `Bearer ${authToken}`,
-        'Content-Type': 'application/json',
-      }
-
-      for (const Id of Ids) {
-        await axiosPrivate.delete(`${process.env.REACT_APP_BACKEND_API}loans/${Id}`, {
-          headers,
-        })
-      }
-
-      fetchLiabilities()
-    } catch (error) {
-      handleErrors(error)
     }
   }
 
@@ -539,30 +287,6 @@ const Provider = ({ children }) => {
     } catch (error) {}
   }
 
-  const fetchUser = async (authToken) => {
-    if (!authToken) return
-
-    const decodedToken = jwtDecode(authToken)
-    const userId = decodedToken.user_id
-
-    try {
-      const headers = {
-        Authorization: `Bearer ${authToken}`,
-        'Content-Type': 'application/json',
-      }
-
-      const response = await axiosPrivate.get(`${process.env.REACT_APP_BACKEND_URL}users/api/users/${userId}`, {
-        headers,
-      })
-
-      if (response.status === 200) {
-        dispatch({ type: Types.SET_USER, payload: response.data })
-      }
-    } catch (error) {
-      handleErrors(error)
-    }
-  }
-
   const UnitContext = React.createContext()
   const UnitUpdateContext = React.createContext()
 
@@ -589,7 +313,6 @@ const Provider = ({ children }) => {
         tags,
         weeklyExpense,
         monthlyExpenses,
-        assets,
         liabilities,
         incomeStatement,
         statusFeedback,
@@ -602,22 +325,11 @@ const Provider = ({ children }) => {
         giveFeedback,
         fetchData,
         fetchTags,
-        createTag,
-        addAssetRequest,
-        editAssetRequest,
-        fetchAssetById,
-        fetchAsset,
         useUnit,
         useUnitUpdate,
         unit,
         handleUnitChange,
         fetchAllExpenses,
-        fetchUser,
-        user,
-        addLiabilityRequest,
-        editLiabilityRequest,
-        fetchLiabilityById,
-        deleteLiabilityRequest,
       }}
     >
       {children}

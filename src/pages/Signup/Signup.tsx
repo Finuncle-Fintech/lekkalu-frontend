@@ -142,6 +142,10 @@ export default function Signup() {
             <Button type='submit' loading={signupMutation.isLoading}>
               Continue
             </Button>
+
+            <Link to='/signin' className='block text-sm text-muted-foreground my-2'>
+              Already have an account? Login
+            </Link>
           </form>
         </Form>
       </div>

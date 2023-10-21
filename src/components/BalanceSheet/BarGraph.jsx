@@ -60,6 +60,7 @@ export default function SimpleBackdrop(props) {
               <CloseIcon />
             </IconButton>
           </Box>
+
           <BarChart data={props.dataLiability} />
         </Box>
       </Backdrop>

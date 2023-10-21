@@ -16,6 +16,7 @@ import {
   updateIncomeSource,
 } from '@/queries/income-statement'
 import { INCOME_STATEMENT } from '@/utils/query-keys'
+import { normalizeNumber } from '@/utils/number'
 
 export default function IncomeStatement() {
   const { data: incomeSources } = useQuery([INCOME_STATEMENT.SOURCES], fetchIncomeSources)
@@ -66,10 +67,10 @@ export default function IncomeStatement() {
       <div className='text-2xl font-bold'>Income Statement</div>
 
       <div className='grid sm:grid-cols-2 lg:grid-cols-4 gap-2'>
-        <PercentageCard value={stats?.salaryPercentage ?? 0} title='Salary' />
-        <PercentageCard value={stats?.personalPercentage ?? 0} title='Personal' />
-        <PercentageCard value={stats?.loanRepaymentPercentage ?? 0} title='Loan Repayment' />
-        <PercentageCard value={stats?.investmentPercentage ?? 0} title='Investment' />
+        <PercentageCard value={normalizeNumber(stats?.salaryPercentage)} title='Salary' />
+        <PercentageCard value={normalizeNumber(stats?.personalPercentage)} title='Personal' />
+        <PercentageCard value={normalizeNumber(stats?.loanRepaymentPercentage)} title='Loan Repayment' />
+        <PercentageCard value={normalizeNumber(stats?.investmentPercentage)} title='Investment' />
       </div>
 
       <Tabs defaultValue='income'>

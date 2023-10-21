@@ -31,9 +31,20 @@ type DateInput = BaseInput & {
   defaultDate?: Date
 }
 
+type Option = {
+  id: string
+  label: string | number
+}
+
 type MultiSelectInput = BaseInput & {
   type: 'multi-select'
-  options: Array<{ id: string; label: string }>
+  options: Option[]
+  valueFormatter?: (value: string | number) => string | number
+}
+
+type SelectInput = BaseInput & {
+  type: 'select'
+  options: Option[]
   valueFormatter?: (value: string | number) => string | number
 }
 
@@ -41,7 +52,7 @@ type TextInput = BaseInput & {
   type: 'text'
 }
 
-export type InputField = NumberInput | DateInput | MultiSelectInput | TextInput
+export type InputField = NumberInput | DateInput | MultiSelectInput | TextInput | SelectInput
 
 type Props = {
   control: Control<any>
@@ -54,7 +65,14 @@ export default function InputFieldsRenderer({ inputs, control }: Props) {
       case 'number': {
         return (
           <div className='space-y-2'>
-            <Input type='number' placeholder={input.label} {...field} />
+            <Input
+              type='number'
+              placeholder={input.label}
+              {...field}
+              onChange={(e) => {
+                field.onChange(e.target?.valueAsNumber)
+              }}
+            />
             <When truthy={Boolean(input.hasRange)}>
               <Slider
                 defaultValue={[field.value]}
@@ -79,6 +97,33 @@ export default function InputFieldsRenderer({ inputs, control }: Props) {
 
       // @TODO: Create multi select input
       case 'multi-select': {
+        return (
+          <Select
+            onValueChange={(value) => {
+              if (typeof input.valueFormatter === 'function') {
+                const _value = input.valueFormatter(value)
+                field.onChange(_value)
+              } else {
+                field.onChange(value)
+              }
+            }}
+            {...field}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder={input.label} />
+            </SelectTrigger>
+            <SelectContent className='max-h-72'>
+              {input.options.map(({ id, label }) => (
+                <SelectItem value={id} key={id}>
+                  {label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        )
+      }
+
+      case 'select': {
         return (
           <Select
             onValueChange={(value) => {

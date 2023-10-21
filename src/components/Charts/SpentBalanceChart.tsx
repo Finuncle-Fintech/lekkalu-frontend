@@ -1,22 +1,32 @@
 import 'bootstrap/dist/css/bootstrap.min.css'
 import React from 'react'
-import { ResponsiveContainer, ComposedChart, Line, Bar, CartesianGrid, XAxis, YAxis, Tooltip, Legend } from 'recharts'
+import { ResponsiveContainer, TooltipProps, ComposedChart, Line, Bar, CartesianGrid, XAxis, YAxis, Tooltip, Legend } from 'recharts'
+import {
+  ValueType,
+  NameType,
+} from 'recharts/types/component/DefaultTooltipContent'
 import { useUserPreferences } from '@/hooks/use-user-preferences'
 import Colors from '@/constants/colors'
+import { MonthlyExpense } from '@/types/expense'
 
-// export const handleMouseOver = jest.fn();
-// export const handleSyncMethod = jest.fn();
-
-const CustomTooltip = ({ active, payload, label }) => {
+const CustomTooltip = ({
+  active,
+  payload,
+  label,
+}:TooltipProps<ValueType, NameType>) => {
   const { preferences } = useUserPreferences()
-
   if (active && payload && payload.length) {
     return (
-      <div style={{ backgroundColor: Colors.white, padding: 8 }}>
-        <p>{`${label}`}</p>
+      <div className='sb-tooltip' style={{ backgroundColor: Colors.white, padding: 10 }}>
+        <p className='sb-tooltip-month'>{`${label}`}</p>
         <p
-          style={{ color: Colors.cumSum, margin: 2 }}
+          className='sb-tooltip-spent'
+          style={{ color: Colors.orange }}
         >{`${payload[0].name} : ${preferences.currencyUnit} ${payload[0].value}`}</p>
+        <p
+          className='sb-tooltip-balance'
+          style={{ color: Colors.blue }}
+        >{`${payload[2].name} : ${preferences.currencyUnit} ${payload[2].value}`}</p>
       </div>
     )
   }
@@ -24,7 +34,11 @@ const CustomTooltip = ({ active, payload, label }) => {
   return null
 }
 
-export const CumSumChart = (cumSumData) => {
+type Props = {
+  final_monthly_expense : MonthlyExpense[]
+}
+
+export const SpentBalanceChart = ({ final_monthly_expense } : Props) => {
   const { preferences } = useUserPreferences()
 
   return (
@@ -35,7 +49,7 @@ export const CumSumChart = (cumSumData) => {
           <ComposedChart
             width={500}
             height={400}
-            data={cumSumData.data}
+            data={final_monthly_expense}
             margin={{
               top: 20,
               right: 20,
@@ -56,7 +70,7 @@ export const CumSumChart = (cumSumData) => {
               }}
               tick={{ fill: Colors.white }}
             />
-            <Tooltip content={<CustomTooltip />} cursor={{ fill: Colors.white }} data-testid='tooltip-1' />
+            <Tooltip content={<CustomTooltip />} cursor={{ fill: Colors.white }} />
             <Legend
               layout='horizontal'
               align='center'
@@ -64,8 +78,10 @@ export const CumSumChart = (cumSumData) => {
                 position: 'relative',
               }}
             />
-            <Bar dataKey='CumSum' barSize={160} fill={Colors.cumSum} syncId='test' />
-            <Line type='monotone' dataKey='CumSum' stroke={Colors.cumSum} strokeWidth={3} syncId='test' />
+            <Bar dataKey='Spent' barSize={150} fill={Colors.orange} />
+            <Line type='monotone' dataKey='Spent' stroke={Colors.orange} strokeWidth={2} />
+            <Bar dataKey='Balance' barSize={150} fill={Colors.blue} />
+            <Line type='monotone' dataKey='Balance' stroke={Colors.blue} strokeWidth={2} />
           </ComposedChart>
         </ResponsiveContainer>
       </div>

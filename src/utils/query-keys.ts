@@ -25,3 +25,7 @@ export const BALANCE_SHEET = {
   ASSETS: 'ASSETS',
   LIABILITIES: 'LIABILITIES',
 } as const
+
+export const GOALS = {
+  GOALS: 'GOALS',
+} as const

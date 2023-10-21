@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import dayjs from 'dayjs'
 import { useQuery } from '@tanstack/react-query'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
-import { ChevronLeftIcon, ChevronRightIcon, SkipBackIcon, SkipForwardIcon } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useSearchParams } from 'react-router-dom'
@@ -17,6 +16,7 @@ import DatePicker from '@/components/DatePicker/DatePicker'
 import ExpensesTable from './components/ExpensesTable'
 import ViewAllBudgetModal from './components/ViewAllBudgetModal'
 import SetBudgetModal from './components/SetBudgetModal'
+import Pagination from '@/components/Pagination/Pagination'
 
 dayjs.extend(customParseFormat)
 
@@ -71,59 +71,37 @@ export default function Expenses() {
       <div className='text-2xl font-bold my-4 text-center'>Expense List</div>
       <div className='flex justify-between items-center my-2'>
         {/* Pagination */}
-        <div className='flex items-center'>
-          <Button
-            size='sm'
-            variant='ghost'
-            disabled={page === 0}
-            onClick={() => {
+        <div className='flex items-center gap-2'>
+          <Pagination
+            showSkipButtons
+            disablePrevious={page === 0}
+            disableNext={page === 6}
+            onSkipPrevious={() => {
               setSearchParams((prev) => {
                 prev.set('page', Math.max(page - 3, 0).toString())
                 return prev
               })
             }}
-          >
-            <SkipBackIcon className='w-4 h-4' />
-          </Button>
-          <Button
-            size='sm'
-            variant='ghost'
-            disabled={page === 0}
-            onClick={() => {
+            onPrevious={() => {
               setSearchParams((prev) => {
                 prev.set('page', Math.max(page - 1, 0).toString())
                 return prev
               })
             }}
-          >
-            <ChevronLeftIcon className='w-4 h-4' />
-          </Button>
-          <Button
-            size='sm'
-            variant='ghost'
-            disabled={page === 6}
-            onClick={() => {
+            onNext={() => {
               setSearchParams((prev) => {
                 prev.set('page', Math.min(page + 1, 6).toString())
                 return prev
               })
             }}
-          >
-            <ChevronRightIcon className='w-4 h-4' />
-          </Button>
-          <Button
-            size='sm'
-            variant='ghost'
-            disabled={page === 6}
-            onClick={() => {
+            onSkipNext={() => {
               setSearchParams((prev) => {
                 prev.set('page', Math.min(page + 3, 6).toString())
                 return prev
               })
             }}
-          >
-            <SkipForwardIcon className='w-4 h-4' />
-          </Button>
+          />
+
           <div>
             {page * 10 + 1} - {page * 10 + 10} of 70
           </div>

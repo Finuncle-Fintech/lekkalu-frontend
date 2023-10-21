@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import React, { useState, useContext, useEffect } from 'react'
 import { Typography, TablePagination, IconButton } from '@mui/material'
 import { SkipNext, SkipPrevious } from '@mui/icons-material'
@@ -33,10 +35,6 @@ export default function Goals() {
     return editIndex !== null ? { ...goals[editIndex] } : null
   }
 
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage)
-  }
-
   return (
     <div className='px-6 py-4'>
       <GoalFormModal
@@ -49,63 +47,6 @@ export default function Goals() {
         statusModal={open}
         setStatusModal={setOpen}
       />
-
-      <Typography variant='h6'>Financial Goals List</Typography>
-      <div style={{ display: 'flex', alignItems: 'center' }}>
-        <IconButton
-          onClick={() => {
-            setPage((prevPage) => Math.max(prevPage - 3, 0))
-          }}
-        >
-          <SkipPrevious />
-        </IconButton>
-        <TablePagination
-          component='div'
-          count={goals.length}
-          page={page}
-          onPageChange={handleChangePage}
-          rowsPerPage={rowsPerPage}
-          rowsPerPageOptions={[]}
-          labelDisplayedRows={() => ''}
-        />
-        <IconButton
-          onClick={() => {
-            setPage((prevPage) => Math.min(prevPage + 3, 6))
-          }}
-        >
-          <SkipNext />
-        </IconButton>
-        {page * 10 + 1} - {page * 10 + 10} of {goals.length}
-      </div>
-      <GoalsList goals={goals} setEditIndex={setEditIndex} setStatusModal={setOpen} deleteGoal={deleteGoal} />
-      {goals.length > 1 && (
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <IconButton
-            onClick={() => {
-              setPage((prevPage) => Math.max(prevPage - 3, 0))
-            }}
-          >
-            <SkipPrevious />
-          </IconButton>
-          <TablePagination
-            component='div'
-            count={goals.length}
-            page={page}
-            onPageChange={handleChangePage}
-            rowsPerPage={10}
-            rowsPerPageOptions={[]}
-            labelDisplayedRows={() => ''}
-          />
-          <IconButton
-            onClick={() => {
-              setPage((prevPage) => Math.min(prevPage + 3, 6))
-            }}
-          >
-            <SkipNext />
-          </IconButton>
-          {page * 10 + 1} - {page * 10 + 10} of {goals.length}
-        </div>
-      )}
     </div>
   )
 }

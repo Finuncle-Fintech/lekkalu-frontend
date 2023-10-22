@@ -45,7 +45,6 @@ const DownloadAllData = () => {
     ],
   })
 
-  console.log('expenseQuery.data===.', expenseQuery.data, tagsQuery.data)
   const totalIncomeExpenses = incomeExpenses?.reduce((acc, curr) => (acc += Number(curr.amount)), 0)
   const totalIncomeSources = incomeSources?.reduce((acc, curr) => (acc += Number(curr.amount)), 0)
   const totalPhysicalAssets = physicalAssets?.reduce((acc, curr) => (acc += parseFloat(curr.market_value)), 0)

@@ -4,6 +4,7 @@ import { Routes, Route, Outlet } from 'react-router-dom'
 import { LoaderIcon } from 'lucide-react'
 import { Toaster } from '@/components/ui/toaster'
 import AuthProtection from './components/AuthProtection/AuthProtection'
+import Header from './components/Header/Header'
 
 /** Authenticated Routes */
 // @ts-expect-error (no-type-definitions)
@@ -49,23 +50,27 @@ function App() {
             </AuthProtection>
           }
         >
-          <Route path='/home' element={<Home />} />
-          <Route path='/goals' element={<Goals />} />
-          <Route path='/income-statement' element={<IncomeStatement />} />
-          <Route path='/expenses' element={<Expenses />} />
-          <Route path='/balance-sheet' element={<BalanceSheet />} />
-          <Route path='/settings' element={<Settings />} />
-          <Route path='/profile' element={<Profile />} />
+          <Route element={<Header />}>
+            <Route path='/home' element={<Home />} />
+            <Route path='/goals' element={<Goals />} />
+            <Route path='/income-statement' element={<IncomeStatement />} />
+            <Route path='/expenses' element={<Expenses />} />
+            <Route path='/balance' element={<BalanceSheet />} />
+            <Route path='/settings' element={<Settings />} />
+            <Route path='/profile' element={<Profile />} />
+          </Route>
         </Route>
         <Route path='/' element={<Hero />} />
-        <Route path='/signin' element={<Signin />} />
-        <Route path='/signup' element={<Signup />} />
-        <Route path='/sip-calculator' element={<SipCalculator />} />
-        <Route path='/cagr-calculator' element={<CagrCalculator />} />
-        <Route path='/emi-calculator' element={<EmiCalculator />} />
-        <Route path='/terms-and-conditions' element={<TermsAndConditions />} />
-        <Route path='/privacy-policies' element={<PrivacyPolicies />} />
-        <Route path='*' element={<ErrorPage />} />
+        <Route element={<Header />}>
+          <Route path='/signin' element={<Signin />} />
+          <Route path='/signup' element={<Signup />} />
+          <Route path='/sipcalculator' element={<SipCalculator />} />
+          <Route path='/cagrcalculator' element={<CagrCalculator />} />
+          <Route path='/loan_emi_calculator' element={<EmiCalculator />} />
+          <Route path='/terms-and-conditions' element={<TermsAndConditions />} />
+          <Route path='/privacy-policies' element={<PrivacyPolicies />} />
+          <Route path='*' element={<ErrorPage />} />
+        </Route>
       </Routes>
     </Suspense>
   )

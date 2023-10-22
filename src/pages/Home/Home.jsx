@@ -7,6 +7,7 @@ import { SpentBalanceChart } from '../../components/Charts/SpentBalanceChart'
 import { CumSumChart } from '../../components/Charts/CumSumChart'
 import { fetchWeeklyExpenses, fetchMonthlyExpenses } from '@/queries/expense'
 import { EXPENSES } from '@/utils/query-keys'
+import DownloadAllData from '../../components/Download/DownloadAllData'
 import AssetsdepreciationChart from '../../components/Charts/AssetsDepreciationsChart'
 
 const Home = () => {
@@ -26,8 +27,14 @@ const Home = () => {
   ]
   const { depreciation } = useContext(Context)
 
-  const { data: weekly_expenses, isLoading: isLoadingWeeklyExpense } = useQuery([EXPENSES.WEEKLY_EXPENSES], fetchWeeklyExpenses)
-  const { data: monthly_expenses, isLoading: isLoadingMonthlyExpense } = useQuery([EXPENSES.MONTHLY_EXPENSES], fetchMonthlyExpenses)
+  const { data: weekly_expenses, isLoading: isLoadingWeeklyExpense } = useQuery(
+    [EXPENSES.WEEKLY_EXPENSES],
+    fetchWeeklyExpenses,
+  )
+  const { data: monthly_expenses, isLoading: isLoadingMonthlyExpense } = useQuery(
+    [EXPENSES.MONTHLY_EXPENSES],
+    fetchMonthlyExpenses,
+  )
 
   const final_weekly_expense = useMemo(() => {
     let finalDataWeekly = []
@@ -78,7 +85,7 @@ const Home = () => {
         ]
       })
       return finalMonthlyExp
-     }
+    }
   }, [isLoadingMonthlyExpense])
 
   return (
@@ -97,6 +104,7 @@ const Home = () => {
       <SpentBalanceChart final_monthly_expense={final_monthly_expense} />
       <CumSumChart final_monthly_expense={final_monthly_expense} />
       <AssetsdepreciationChart data={depreciation} />
+      <DownloadAllData />
     </div>
   )
 }

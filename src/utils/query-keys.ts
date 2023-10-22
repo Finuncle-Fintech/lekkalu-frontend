@@ -20,7 +20,7 @@ export const EXPENSES = {
 export const INCOME_STATEMENT = {
   INCOME_STATEMENT: 'INCOME_STATEMENT',
   SOURCES: 'SOURCES',
-  EXPENSES: 'EXPENSES',
+  IS_EXPENSES: 'IS_EXPENSES',
 } as const
 
 export const BALANCE_SHEET = {

@@ -16,6 +16,7 @@ import { useToast } from '@/components/ui/use-toast'
 import { handleShare } from '@/utils/clipboard'
 import { useUserPreferences } from '@/hooks/use-user-preferences'
 import InputFieldsRenderer, { InputField } from '@/components/InputFieldsRenderer/InputFieldsRenderer'
+import Page from '@/components/Page/Page'
 
 const DEFAULT_DATA = {
   monthlyAmount: 500,
@@ -95,7 +96,7 @@ export default function SIPCalculator() {
   }
 
   return (
-    <div className='max-w-screen-xl mx-auto p-4 space-y-4'>
+    <Page className='space-y-4'>
       <div className='flex items-center justify-between'>
         <Button
           onClick={() => {
@@ -110,13 +111,13 @@ export default function SIPCalculator() {
         <Button onClick={handleCopy}>{isCopied ? 'Copied!' : 'Share'}</Button>
       </div>
 
-      <div className='flex flex-col md:flex-row gap-4 items-center justify-center'>
-        <div className='space-y-4'>
-          <div className='text-center'>
-            <h2 className='text-2xl font-bold'>SIP Calculator</h2>
-            <p>Calculate returns on your SIP investments.</p>
-          </div>
+      <div className='text-center'>
+        <h2 className='text-2xl font-bold'>SIP Calculator</h2>
+        <p>Calculate returns on your SIP investments.</p>
+      </div>
 
+      <div className='flex flex-col md:flex-row gap-4 items-center justify-center w-full'>
+        <div className='space-y-4'>
           <Form {...form}>
             <form className='grid gap-4'>
               <InputFieldsRenderer control={form.control} inputs={inputs} />
@@ -161,6 +162,6 @@ export default function SIPCalculator() {
           </div>
         </When>
       </div>
-    </div>
+    </Page>
   )
 }

@@ -4,6 +4,8 @@ import { LoaderIcon } from 'lucide-react'
 import { Toaster } from '@/components/ui/toaster'
 import AuthProtection from './components/AuthProtection/AuthProtection'
 import AppShell from './components/AppShell/AppShell'
+import UnAuthenticatedHeader from './components/UnAuthenticatedHeader/UnAuthenticatedHeader'
+import Footer from './components/Footer/Footer'
 
 /** Authenticated Routes */
 const Dashboard = lazy(() => import('@/pages/Dashboard/Dashboard'))
@@ -54,14 +56,27 @@ function App() {
           <Route path='/settings' element={<Settings />} />
           <Route path='/profile' element={<Profile />} />
         </Route>
-        <Route path='/' element={<Home />} />
-        <Route path='/signin' element={<Signin />} />
-        <Route path='/signup' element={<Signup />} />
-        <Route path='/sip-calculator' element={<SipCalculator />} />
-        <Route path='/cagr-calculator' element={<CagrCalculator />} />
-        <Route path='/emi-calculator' element={<EmiCalculator />} />
-        <Route path='/terms-and-conditions' element={<TermsAndConditions />} />
-        <Route path='/privacy-policies' element={<PrivacyPolicies />} />
+
+        <Route
+          element={
+            <>
+              <UnAuthenticatedHeader />
+              <div className='min-h-screen mt-16'>
+                <Outlet />
+              </div>
+              <Footer />
+            </>
+          }
+        >
+          <Route path='/' element={<Home />} />
+          <Route path='/signin' element={<Signin />} />
+          <Route path='/signup' element={<Signup />} />
+          <Route path='/sip-calculator' element={<SipCalculator />} />
+          <Route path='/cagr-calculator' element={<CagrCalculator />} />
+          <Route path='/emi-calculator' element={<EmiCalculator />} />
+          <Route path='/terms-and-conditions' element={<TermsAndConditions />} />
+          <Route path='/privacy-policies' element={<PrivacyPolicies />} />
+        </Route>
         <Route path='*' element={<NotFound />} />
       </Routes>
     </Suspense>

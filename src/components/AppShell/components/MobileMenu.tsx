@@ -3,7 +3,7 @@ import { LogOutIcon, MenuIcon } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { Button } from '@/components/ui/button'
-import { ROUTES } from '@/utils/app-shell'
+import { CALCULATOR_ROUTES, ROUTES } from '@/utils/app-shell'
 import NavLink from './NavLink'
 import When from '@/components/When/When'
 import { useAuthContext } from '@/hooks/use-auth'
@@ -34,10 +34,19 @@ export default function MobileMenu() {
         </SheetHeader>
 
         <div className='flex flex-col justify-between h-full'>
-          <div className='space-y-1 '>
-            {ROUTES.map((route) => (
-              <NavLink key={route.path} to={route.path} label={route.label} icon={route.icon} />
-            ))}
+          <div>
+            <div className='space-y-1 '>
+              {ROUTES.map((route) => (
+                <NavLink key={route.path} to={route.path} label={route.label} icon={route.icon} />
+              ))}
+            </div>
+
+            <div className='mt-4'>Calculators</div>
+            <div className='space-y-1'>
+              {CALCULATOR_ROUTES.map((route) => (
+                <NavLink key={route.path} to={route.path} label={route.label} icon={route.icon} />
+              ))}
+            </div>
           </div>
 
           <div className='space-x-2 pb-12'>

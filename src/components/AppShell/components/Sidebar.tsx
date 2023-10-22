@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { LogOutIcon } from 'lucide-react'
 import { cn } from '@/utils/utils'
 import NavLink from './NavLink'
-import { ROUTES } from '@/utils/app-shell'
+import { CALCULATOR_ROUTES, ROUTES } from '@/utils/app-shell'
 import { Button } from '@/components/ui/button'
 import { useAuthContext } from '@/hooks/use-auth'
 import When from '@/components/When/When'
@@ -27,8 +27,15 @@ export function Sidebar({ className, ...restProps }: SidebarProps) {
         <div>
           <h1 className='text-center text-2xl font-bold text-primary'>finuncle</h1>
 
-          <div className='space-y-1  py-2'>
+          <div className='space-y-1 py-2'>
             {ROUTES.map((route) => (
+              <NavLink key={route.path} to={route.path} label={route.label} icon={route.icon} />
+            ))}
+          </div>
+
+          <div className='mt-4'>Calculators</div>
+          <div className='space-y-1 py-2'>
+            {CALCULATOR_ROUTES.map((route) => (
               <NavLink key={route.path} to={route.path} label={route.label} icon={route.icon} />
             ))}
           </div>

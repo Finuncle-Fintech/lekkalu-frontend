@@ -40,7 +40,7 @@ export default function IncomeExpenseTable({
   deleteMutationFn,
 }: Props) {
   const { data, isLoading, refetch } = useQuery(
-    [type === 'INCOME' ? INCOME_STATEMENT.SOURCES : INCOME_STATEMENT.EXPENSES],
+    [type === 'INCOME' ? INCOME_STATEMENT.SOURCES : INCOME_STATEMENT.IS_EXPENSES],
     queryFn,
   )
   const [rowModesModel, setRowModesModel] = useState<GridRowModel>({})

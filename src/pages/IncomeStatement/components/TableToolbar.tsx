@@ -45,7 +45,7 @@ export default function TableToolbar({ type, setRowModesModel, selectedRows }: P
     const id = randomId()
 
     qc.setQueryData<IncomeStatement[]>(
-      [type === 'INCOME' ? INCOME_STATEMENT.SOURCES : INCOME_STATEMENT.EXPENSES],
+      [type === 'INCOME' ? INCOME_STATEMENT.SOURCES : INCOME_STATEMENT.IS_EXPENSES],
       (prev) => {
         if (!prev) {
           return []

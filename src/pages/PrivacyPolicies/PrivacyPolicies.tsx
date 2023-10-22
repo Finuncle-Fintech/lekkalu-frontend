@@ -1,9 +1,6 @@
 import React from 'react'
+import UnderImplementation from '@/components/UnderImplementation/UnderImplementation'
 
 export default function PrivacyPolicies() {
-  return (
-    <div className='flex items-center justify-center h-screen text-muted font-bold'>
-      Privacy and policies page is under implementation
-    </div>
-  )
+  return <UnderImplementation title='Privacy and policies page' />
 }

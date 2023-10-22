@@ -7,8 +7,6 @@ import Page from '@/components/Page/Page'
 import walletAnimation from '@/assets/home/wallet-animation.json'
 import targetAnimation from '@/assets/home/target-animation.json'
 import growthAnimation from '@/assets/home/growth-animation.json'
-import Footer from '@/components/Footer/Footer'
-import UnAuthenticatedHeader from '@/components/UnAuthenticatedHeader/UnAuthenticatedHeader'
 
 const assistanceItems = [
   {
@@ -31,8 +29,6 @@ const assistanceItems = [
 export default function Home() {
   return (
     <div>
-      <UnAuthenticatedHeader />
-
       <div className='mt-16 h-[90vh] flex items-center justify-center flex-col gap-4 text-center'>
         <Lottie animationData={homeAnimation} />
         <div className='text-4xl font-bold'>
@@ -77,8 +73,6 @@ export default function Home() {
           </div>
         </Page>
       </div>
-
-      <Footer />
     </div>
   )
 }

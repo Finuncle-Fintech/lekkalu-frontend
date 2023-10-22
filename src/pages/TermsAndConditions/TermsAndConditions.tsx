@@ -1,9 +1,6 @@
 import React from 'react'
+import UnderImplementation from '@/components/UnderImplementation/UnderImplementation'
 
 export default function TermsAndConditions() {
-  return (
-    <div className='flex items-center justify-center h-screen text-muted font-bold'>
-      Terms and conditions page is under implementation
-    </div>
-  )
+  return <UnderImplementation title='Terms & Conditions page' />
 }

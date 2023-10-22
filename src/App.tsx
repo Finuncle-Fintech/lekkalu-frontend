@@ -3,6 +3,7 @@ import { Routes, Route, Outlet } from 'react-router-dom'
 import { LoaderIcon } from 'lucide-react'
 import { Toaster } from '@/components/ui/toaster'
 import AuthProtection from './components/AuthProtection/AuthProtection'
+import AppShell from './components/AppShell/AppShell'
 
 /** Authenticated Routes */
 const Dashboard = lazy(() => import('@/pages/Dashboard/Dashboard'))
@@ -39,7 +40,9 @@ function App() {
         <Route
           element={
             <AuthProtection>
-              <Outlet />
+              <AppShell>
+                <Outlet />
+              </AppShell>
             </AuthProtection>
           }
         >

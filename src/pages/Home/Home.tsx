@@ -9,6 +9,8 @@ import Page from '@/components/Page/Page'
 import walletAnimation from '@/assets/home/wallet-animation.json'
 import targetAnimation from '@/assets/home/target-animation.json'
 import growthAnimation from '@/assets/home/growth-animation.json'
+import When from '@/components/When/When'
+import { useAuthContext } from '@/hooks/use-auth'
 
 const assistanceItems = [
   {
@@ -29,6 +31,8 @@ const assistanceItems = [
 ]
 
 export default function Home() {
+  const { tokenData } = useAuthContext()
+
   return (
     <div>
       <div className='w-full bg-primary h-16 text-white fixed top-0 left-0 z-50'>
@@ -59,15 +63,24 @@ export default function Home() {
               Products
             </Link>
           </div>
-          <div className='space-x-2'>
-            <Link to='/signin' className={cn(buttonVariants({ variant: 'outline' }), 'bg-transparent')}>
-              Signin
-            </Link>
+          <When
+            truthy={Boolean(tokenData)}
+            fallback={
+              <div className='space-x-2'>
+                <Link to='/signin' className={cn(buttonVariants({ variant: 'outline' }), 'bg-transparent')}>
+                  Signin
+                </Link>
 
-            <Link to='/signup' className={cn(buttonVariants({ variant: 'secondary' }))}>
-              Signup
+                <Link to='/signup' className={cn(buttonVariants({ variant: 'secondary' }))}>
+                  Signup
+                </Link>
+              </div>
+            }
+          >
+            <Link to='/dashboard' className={cn(buttonVariants({ variant: 'secondary' }))}>
+              Dashboard
             </Link>
-          </div>
+          </When>
         </div>
       </div>
 

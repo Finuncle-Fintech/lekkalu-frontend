@@ -1,12 +1,10 @@
 import React, { Suspense, lazy } from 'react'
-import './App.css'
 import { Routes, Route, Outlet } from 'react-router-dom'
 import { LoaderIcon } from 'lucide-react'
 import { Toaster } from '@/components/ui/toaster'
 import AuthProtection from './components/AuthProtection/AuthProtection'
 
 /** Authenticated Routes */
-// @ts-expect-error (no-type-definitions)
 const Dashboard = lazy(() => import('@/pages/Dashboard/Dashboard'))
 const Goals = lazy(() => import('@/pages/Goals/Goals'))
 const IncomeStatement = lazy(() => import('@/pages/IncomeStatement/IncomeStatement'))

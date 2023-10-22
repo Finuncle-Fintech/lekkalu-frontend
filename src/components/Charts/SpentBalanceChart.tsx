@@ -1,32 +1,32 @@
-import 'bootstrap/dist/css/bootstrap.min.css'
-import React from 'react'
-import { ResponsiveContainer, TooltipProps, ComposedChart, Line, Bar, CartesianGrid, XAxis, YAxis, Tooltip, Legend } from 'recharts'
+import React, { useMemo } from 'react'
 import {
-  ValueType,
-  NameType,
-} from 'recharts/types/component/DefaultTooltipContent'
+  ResponsiveContainer,
+  TooltipProps,
+  ComposedChart,
+  Line,
+  Bar,
+  CartesianGrid,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Legend,
+} from 'recharts'
+import { ValueType, NameType } from 'recharts/types/component/DefaultTooltipContent'
+import colors from 'tailwindcss/colors'
+import { useQuery } from '@tanstack/react-query'
+import dayjs from 'dayjs'
 import { useUserPreferences } from '@/hooks/use-user-preferences'
-import Colors from '@/constants/colors'
-import { MonthlyExpense } from '@/types/expense'
+import { EXPENSES } from '@/utils/query-keys'
+import { fetchMonthlyExpenses } from '@/queries/expense'
 
-const CustomTooltip = ({
-  active,
-  payload,
-  label,
-}:TooltipProps<ValueType, NameType>) => {
+const CustomTooltip = ({ active, payload, label }: TooltipProps<ValueType, NameType>) => {
   const { preferences } = useUserPreferences()
   if (active && payload && payload.length) {
     return (
-      <div className='sb-tooltip' style={{ backgroundColor: Colors.white, padding: 10 }}>
-        <p className='sb-tooltip-month'>{`${label}`}</p>
-        <p
-          className='sb-tooltip-spent'
-          style={{ color: Colors.orange }}
-        >{`${payload[0].name} : ${preferences.currencyUnit} ${payload[0].value}`}</p>
-        <p
-          className='sb-tooltip-balance'
-          style={{ color: Colors.blue }}
-        >{`${payload[2].name} : ${preferences.currencyUnit} ${payload[2].value}`}</p>
+      <div className='border bg-white p-1'>
+        <p className='m-1'>{label}</p>
+        <p className='m-1 text-orange-500'>{`${payload[0].name} : ${preferences.currencyUnit} ${payload[0].value}`}</p>
+        <p className='m-1 text-blue-500'>{`${payload[2].name} : ${preferences.currencyUnit} ${payload[2].value}`}</p>
       </div>
     )
   }
@@ -34,57 +34,61 @@ const CustomTooltip = ({
   return null
 }
 
-type Props = {
-  final_monthly_expense : MonthlyExpense[]
-}
+export const SpentBalanceChart = () => {
+  const { data, isLoading } = useQuery([EXPENSES.MONTHLY_EXPENSES], fetchMonthlyExpenses)
 
-export const SpentBalanceChart = ({ final_monthly_expense } : Props) => {
   const { preferences } = useUserPreferences()
 
+  const monthlyData = useMemo(() => {
+    if (!data) {
+      return []
+    }
+
+    return data.map((monthlyExpense) => ({
+      ...monthlyExpense,
+      month: dayjs().month(monthlyExpense.month).format('MMMM'),
+    }))
+  }, [data])
+
+  if (isLoading) {
+    return <div className='w-full animate-pulse bg-gray-300 h-96' />
+  }
+
   return (
-    <div className='section-outer-wrapper col-md-8 mx-auto' style={{ backgroundColor: Colors.graphBG }}>
-      <h3 className='section-title text-white text-center'>Monthly</h3>
-      <div className='section-inner-wrapper'>
-        <ResponsiveContainer width='100%' aspect={2}>
-          <ComposedChart
-            width={500}
-            height={400}
-            data={final_monthly_expense}
-            margin={{
-              top: 20,
-              right: 20,
-              bottom: 25,
-              left: 20,
+    <div className='border p-4 w-full'>
+      <h3 className='text-lg text-center'>Monthly</h3>
+
+      <ResponsiveContainer width='100%' aspect={2}>
+        <ComposedChart
+          data={monthlyData}
+          margin={{
+            top: 20,
+            right: 20,
+            bottom: 25,
+            left: 20,
+          }}
+        >
+          <CartesianGrid strokeDasharray='0 0' vertical={false} />
+          <XAxis dataKey='month' dy={10} />
+          <YAxis
+            tickFormatter={(tick) => {
+              return `${preferences.currencyUnit} ${tick}`
             }}
-          >
-            <CartesianGrid
-              stroke={Colors.cartesianStroke}
-              strokeDasharray='0 0'
-              fill={Colors.graphBG}
-              vertical={false}
-            />
-            <XAxis dataKey='name' dy={10} tick={{ fill: Colors.white }} />
-            <YAxis
-              tickFormatter={(tick) => {
-                return `${preferences.currencyUnit} ${tick}`
-              }}
-              tick={{ fill: Colors.white }}
-            />
-            <Tooltip content={<CustomTooltip />} cursor={{ fill: Colors.white }} />
-            <Legend
-              layout='horizontal'
-              align='center'
-              wrapperStyle={{
-                position: 'relative',
-              }}
-            />
-            <Bar dataKey='Spent' barSize={150} fill={Colors.orange} />
-            <Line type='monotone' dataKey='Spent' stroke={Colors.orange} strokeWidth={2} />
-            <Bar dataKey='Balance' barSize={150} fill={Colors.blue} />
-            <Line type='monotone' dataKey='Balance' stroke={Colors.blue} strokeWidth={2} />
-          </ComposedChart>
-        </ResponsiveContainer>
-      </div>
+          />
+          <Tooltip content={<CustomTooltip />} />
+          <Legend
+            layout='horizontal'
+            align='center'
+            wrapperStyle={{
+              position: 'relative',
+            }}
+          />
+          <Bar dataKey='spent' barSize={150} fill={colors.orange['500']} />
+          <Line type='monotone' dataKey='spent' stroke={colors.orange['500']} strokeWidth={2} />
+          <Bar dataKey='balance' barSize={150} fill={colors.blue['500']} />
+          <Line type='monotone' dataKey='balance' stroke={colors.blue['500']} strokeWidth={2} />
+        </ComposedChart>
+      </ResponsiveContainer>
     </div>
   )
 }

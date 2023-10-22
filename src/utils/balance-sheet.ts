@@ -1,4 +1,10 @@
+import dayjs from 'dayjs'
+import customParseFormat from 'dayjs/plugin/customParseFormat'
 import { InputField } from '@/components/InputFieldsRenderer/InputFieldsRenderer'
+import { PhysicalAsset } from '@/types/balance-sheet'
+import { SERVER_DATE_FORMAT } from './constants'
+
+dayjs.extend(customParseFormat)
 
 export const ASSET_MONTHS = Array.from({ length: 12 }, (_, index) => ({
   id: `${index + 1}`,
@@ -103,3 +109,36 @@ export const LIABILITY_INPUTS: InputField[] = [
     type: 'number',
   },
 ]
+
+function calculateUsefulLife(purchaseDate: dayjs.Dayjs, sellDate: dayjs.Dayjs) {
+  const totalDaysInService = sellDate.diff(purchaseDate, 'day')
+
+  // Approximation: 365.25 days per year to account for leap years
+  const usefulLifeInYears = totalDaysInService / 365.25
+
+  return {
+    years: usefulLifeInYears,
+    days: totalDaysInService,
+  }
+}
+
+export const calculateDeprecationData = (assets: PhysicalAsset[]) => {
+  const depreciationData: Array<{ date: string; value: number }> = []
+
+  for (const asset of assets) {
+    const costOfAsset = parseFloat(asset.purchase_value)
+    const salvageValue = parseFloat(asset.sell_value ?? 0)
+    const purchaseDate = dayjs(asset.purchase_date, SERVER_DATE_FORMAT)
+    const sellDate = dayjs(asset.sell_date, SERVER_DATE_FORMAT)
+    const { years: usefulLifeInYears } = calculateUsefulLife(purchaseDate, sellDate)
+
+    const depreciationExpense = (costOfAsset - salvageValue) / usefulLifeInYears
+
+    depreciationData.push({
+      date: purchaseDate.format(SERVER_DATE_FORMAT),
+      value: depreciationExpense,
+    })
+  }
+
+  return depreciationData
+}

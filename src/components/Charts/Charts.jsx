@@ -8,6 +8,7 @@ import { SpentBalanceChart } from "./SpentBalanceChart";
 import { CumSumChart } from "./CumSumChart";
 import { AssetsLiabilitiesChart } from "./AssetsLiabilitiesChart";
 import AssetsdepreciationChart from "./AssetsDepreciationsChart";
+import Budgets from "../Budgets";
 
 const Test = () => {
   const {
@@ -57,6 +58,7 @@ const Test = () => {
           <AssetsdepreciationChart data={depreciation} />
           <AssetsLiabilitiesChart data={assets} type={"assets"} />
           <AssetsLiabilitiesChart data={liabilities} type={"liabilities"} />
+          <Budgets/>
         </div>
       )}
     </div>

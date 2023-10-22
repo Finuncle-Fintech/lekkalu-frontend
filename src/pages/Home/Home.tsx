@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import Lottie from 'lottie-react'
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight, FacebookIcon, InstagramIcon, LinkedinIcon, TwitterIcon } from 'lucide-react'
 import { Button, buttonVariants } from '@/components/ui/button'
 import { cn } from '@/utils/utils'
 import homeAnimation from '@/assets/home/home-animation.json'
@@ -11,6 +11,7 @@ import targetAnimation from '@/assets/home/target-animation.json'
 import growthAnimation from '@/assets/home/growth-animation.json'
 import When from '@/components/When/When'
 import { useAuthContext } from '@/hooks/use-auth'
+import { Input } from '@/components/ui/input'
 
 const assistanceItems = [
   {
@@ -128,7 +129,63 @@ export default function Home() {
           </div>
         </Page>
       </div>
-      <div className='h-[50vh]' />
+
+      <div className='bg-primary text-white'>
+        <Page className='grid md:grid-cols-3 gap-4 p-4 min-h-max'>
+          <div>
+            <div className='text-xl font-bold mb-4'>About Us</div>
+            <div className='flex flex-col gap-2'>
+              <Link to='#' className='hover:underline'>
+                About Us
+              </Link>
+              <Link to='#' className='hover:underline'>
+                Services
+              </Link>
+              <Link to='#' className='hover:underline'>
+                Pricing
+              </Link>
+            </div>
+          </div>
+          <div>
+            <div className='text-xl font-bold mb-4'>Calculators</div>
+            <div className='flex flex-col gap-2'>
+              <Link to='/sip-calculator' className='hover:underline'>
+                SIP Calculator
+              </Link>
+              <Link to='/cagr-calculator' className='hover:underline'>
+                CAGR Calculator
+              </Link>
+              <Link to='/emi-calculator' className='hover:underline'>
+                EMI Calculator
+              </Link>
+            </div>
+          </div>
+          <div className='space-y-4'>
+            <div className='flex items-center gap-2'>
+              <Button variant='secondary'>
+                <FacebookIcon className='w-4 h-4 text-primary' />
+              </Button>
+              <Button variant='secondary'>
+                <TwitterIcon className='w-4 h-4 text-primary' />
+              </Button>
+              <Button variant='secondary'>
+                <LinkedinIcon className='w-4 h-4 text-primary' />
+              </Button>
+              <Button variant='secondary'>
+                <InstagramIcon className='w-4 h-4 text-primary' />
+              </Button>
+            </div>
+
+            <div className='space-y-2'>
+              <div>Newsletter</div>
+              <Input placeholder='Email' />
+              <Button variant='outline' className='text-primary w-full'>
+                Subscribe
+              </Button>
+            </div>
+          </div>
+        </Page>
+      </div>
     </div>
   )
 }

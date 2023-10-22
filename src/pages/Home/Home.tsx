@@ -86,7 +86,9 @@ export default function Home() {
 
       <div className='mt-16 h-[90vh] flex items-center justify-center flex-col gap-4 text-center'>
         <Lottie animationData={homeAnimation} />
-        <div className='text-4xl font-bold'>Managing investment</div>
+        <div className='text-4xl font-bold'>
+          Managing <span className='bg-primary text-white px-4 rounded-md'>finance</span>
+        </div>
         <div className='text-4xl'>the Smarter Way!</div>
       </div>
 

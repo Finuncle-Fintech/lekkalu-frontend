@@ -18,7 +18,7 @@ export default function Footer() {
             <Link to='#' className='hover:underline'>
               Services
             </Link>
-            <Link to='#' className='hover:underline'>
+            <Link to='/pricing' className='hover:underline'>
               Pricing
             </Link>
             <Link to='/terms-and-conditions' className='hover:underline'>

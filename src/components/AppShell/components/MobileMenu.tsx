@@ -14,6 +14,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import DownloadAllData from '@/components/DownloadAllData/DownloadAllData'
 
 export default function MobileMenu() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
@@ -27,7 +28,7 @@ export default function MobileMenu() {
         </Button>
       </SheetTrigger>
 
-      <SheetContent className='h-full pb-12'>
+      <SheetContent className='h-full '>
         <SheetHeader className='mb-4'>
           <SheetTitle className='text-2xl font-bold text-primary text-center'>finuncle</SheetTitle>
         </SheetHeader>
@@ -39,26 +40,30 @@ export default function MobileMenu() {
             ))}
           </div>
 
-          <When truthy={Boolean(userData)}>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant='outline'>@{userData?.username}</Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <When truthy={Boolean(userData?.email)}>
-                  <DropdownMenuLabel>{userData?.email}</DropdownMenuLabel>
-                </When>
+          <div className='space-x-2 pb-12'>
+            <DownloadAllData />
 
-                <DropdownMenuItem className='cursor-pointer' asChild>
-                  <Link to='/profile'>Profile</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem className='cursor-pointer' onClick={logout}>
-                  <LogOutIcon className='mr-2 h-4 w-4' />
-                  <span>Logout</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </When>
+            <When truthy={Boolean(userData)}>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant='outline'>@{userData?.username}</Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <When truthy={Boolean(userData?.email)}>
+                    <DropdownMenuLabel>{userData?.email}</DropdownMenuLabel>
+                  </When>
+
+                  <DropdownMenuItem className='cursor-pointer' asChild>
+                    <Link to='/profile'>Profile</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className='cursor-pointer' onClick={logout}>
+                    <LogOutIcon className='mr-2 h-4 w-4' />
+                    <span>Logout</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </When>
+          </div>
         </div>
       </SheetContent>
     </Sheet>

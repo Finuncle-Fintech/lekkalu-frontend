@@ -14,8 +14,9 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import DownloadAllData from '@/components/DownloadAllData/DownloadAllData'
 
-interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {}
+type SidebarProps = React.HTMLAttributes<HTMLDivElement>
 
 export function Sidebar({ className, ...restProps }: SidebarProps) {
   const { userData, logout } = useAuthContext()
@@ -33,26 +34,32 @@ export function Sidebar({ className, ...restProps }: SidebarProps) {
           </div>
         </div>
 
-        <When truthy={Boolean(userData)}>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant='outline'>@{userData?.username}</Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <When truthy={Boolean(userData?.email)}>
-                <DropdownMenuLabel>{userData?.email}</DropdownMenuLabel>
-              </When>
+        <div className='space-y-2'>
+          <DownloadAllData className='w-full' />
 
-              <DropdownMenuItem className='cursor-pointer' asChild>
-                <Link to='/profile'>Profile</Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem className='cursor-pointer' onClick={logout}>
-                <LogOutIcon className='mr-2 h-4 w-4' />
-                <span>Logout</span>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </When>
+          <When truthy={Boolean(userData)}>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant='outline' className='w-full'>
+                  @{userData?.username}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <When truthy={Boolean(userData?.email)}>
+                  <DropdownMenuLabel>{userData?.email}</DropdownMenuLabel>
+                </When>
+
+                <DropdownMenuItem className='cursor-pointer' asChild>
+                  <Link to='/profile'>Profile</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem className='cursor-pointer' onClick={logout}>
+                  <LogOutIcon className='mr-2 h-4 w-4' />
+                  <span>Logout</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </When>
+        </div>
       </div>
     </div>
   )

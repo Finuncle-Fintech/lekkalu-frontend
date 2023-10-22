@@ -1,31 +1,32 @@
-import 'bootstrap/dist/css/bootstrap.min.css'
-import React from 'react'
-import { ResponsiveContainer, TooltipProps, ComposedChart, Line, Bar, CartesianGrid, XAxis, YAxis, Tooltip, Legend } from 'recharts'
+import React, { useMemo } from 'react'
 import {
-  ValueType,
-  NameType,
-} from 'recharts/types/component/DefaultTooltipContent'
+  ResponsiveContainer,
+  TooltipProps,
+  ComposedChart,
+  Line,
+  Bar,
+  CartesianGrid,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Legend,
+} from 'recharts'
+import { ValueType, NameType } from 'recharts/types/component/DefaultTooltipContent'
+import { useQuery } from '@tanstack/react-query'
+import dayjs from 'dayjs'
+import colors from 'tailwindcss/colors'
 import { useUserPreferences } from '@/hooks/use-user-preferences'
-import Colors from '@/constants/colors'
-import { MonthlyExpense } from '@/types/expense'
+import { fetchMonthlyExpenses } from '@/queries/expense'
+import { EXPENSES } from '@/utils/query-keys'
 
-// export const handleMouseOver = jest.fn();
-// export const handleSyncMethod = jest.fn();
-
-const CustomTooltip = ({
-  active,
-  payload,
-  label,
-} : TooltipProps<ValueType, NameType>) => {
+const CustomTooltip = ({ active, payload, label }: TooltipProps<ValueType, NameType>) => {
   const { preferences } = useUserPreferences()
 
   if (active && payload && payload.length) {
     return (
-      <div style={{ backgroundColor: Colors.white, padding: 8 }}>
-        <p>{`${label}`}</p>
-        <p
-          style={{ color: Colors.cumSum, margin: 2 }}
-        >{`${payload[0].name} : ${preferences.currencyUnit} ${payload[0].value}`}</p>
+      <div className='border bg-white p-1'>
+        <p className='m-1'>{label}</p>
+        <p className='m-1 text-green-500 '>{`${payload[0].name} : ${preferences.currencyUnit} ${payload[0].value}`}</p>
       </div>
     )
   }
@@ -33,55 +34,59 @@ const CustomTooltip = ({
   return null
 }
 
-type Props = {
-  final_monthly_expense: MonthlyExpense[]
-}
+export const CumSumChart = () => {
+  const { data, isLoading } = useQuery([EXPENSES.MONTHLY_EXPENSES], fetchMonthlyExpenses)
 
-export const CumSumChart = ({ final_monthly_expense } : Props) => {
   const { preferences } = useUserPreferences()
 
+  const cumSumData = useMemo(() => {
+    if (!data) {
+      return []
+    }
+
+    return data.map((monthlyExpense) => ({
+      ...monthlyExpense,
+      month: dayjs().month(monthlyExpense.month).format('MMMM'),
+    }))
+  }, [data])
+
+  if (isLoading) {
+    return <div className='w-full animate-pulse bg-gray-300 h-96' />
+  }
+
   return (
-    <div className='section-outer-wrapper col-md-8 mx-auto' style={{ backgroundColor: Colors.graphBG }}>
-      <h3 className='section-title text-white text-center'>Monthly</h3>
-      <div className='section-inner-wrapper'>
-        <ResponsiveContainer width='100%' aspect={2}>
-          <ComposedChart
-            width={500}
-            height={400}
-            data={final_monthly_expense}
-            margin={{
-              top: 20,
-              right: 20,
-              bottom: 25,
-              left: 20,
+    <div className='border p-4 w-full'>
+      <h3 className='text-lg text-center'>Monthly Cum Sum</h3>
+
+      <ResponsiveContainer width='100%' aspect={2}>
+        <ComposedChart
+          data={cumSumData}
+          margin={{
+            top: 20,
+            right: 20,
+            bottom: 25,
+            left: 25,
+          }}
+        >
+          <CartesianGrid strokeDasharray='0 0' vertical={false} />
+          <XAxis dataKey='month' dy={10} />
+          <YAxis
+            tickFormatter={(tick) => {
+              return `${preferences.currencyUnit} ${tick}`
             }}
-          >
-            <CartesianGrid
-              stroke={Colors.cartesianStroke}
-              strokeDasharray='0 0'
-              fill={Colors.graphBG}
-              vertical={false}
-            />
-            <XAxis dataKey='name' dy={10} tick={{ fill: Colors.white }} />
-            <YAxis
-              tickFormatter={(tick) => {
-                return `${preferences.currencyUnit} ${tick}`
-              }}
-              tick={{ fill: Colors.white }}
-            />
-            <Tooltip content={<CustomTooltip />} cursor={{ fill: Colors.white }} data-testid='tooltip-1' />
-            <Legend
-              layout='horizontal'
-              align='center'
-              wrapperStyle={{
-                position: 'relative',
-              }}
-            />
-            <Bar dataKey='CumSum' barSize={160} fill={Colors.cumSum} />
-            <Line type='monotone' dataKey='CumSum' stroke={Colors.cumSum} strokeWidth={3} />
-          </ComposedChart>
-        </ResponsiveContainer>
-      </div>
+          />
+          <Tooltip content={<CustomTooltip />} />
+          <Legend
+            layout='horizontal'
+            align='center'
+            wrapperStyle={{
+              position: 'relative',
+            }}
+          />
+          <Bar dataKey='cum_sum' barSize={160} fill={colors.green['500']} />
+          <Line type='monotone' dataKey='cum_sum' stroke={colors.green['500']} strokeWidth={3} />
+        </ComposedChart>
+      </ResponsiveContainer>
     </div>
   )
 }

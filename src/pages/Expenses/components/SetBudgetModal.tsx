@@ -1,26 +1,25 @@
 import React, { useState } from 'react'
-import { Dialog, DialogContent, DialogTitle, TextField } from '@mui/material'
-import { DatePicker } from '@mui/x-date-pickers'
-import Swal from 'sweetalert2'
 import dayjs from 'dayjs'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { SetBudgetSchema, setBudgetSchema } from '@/schema/budget'
 import { setBudget } from '@/queries/budget'
 import { SERVER_DATE_FORMAT } from '@/utils/constants'
 import { Button } from '@/components/ui/button'
+import { useToast } from '@/components/ui/use-toast'
+import { Form } from '@/components/ui/form'
+import InputFieldsRenderer from '@/components/InputFieldsRenderer/InputFieldsRenderer'
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { BUDGET_QUERY_KEYS } from '@/utils/query-keys'
+import { BUDGET_MONTH_OPTIONS } from '@/utils/budget'
 
 export default function SetBudgetModal() {
-  const [open, setOpen] = useState(false)
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const { toast } = useToast()
+  const qc = useQueryClient()
 
-  const {
-    handleSubmit,
-    register,
-    setValue,
-    formState: { errors },
-    reset,
-  } = useForm<SetBudgetSchema>({
+  const form = useForm<SetBudgetSchema>({
     resolver: zodResolver(setBudgetSchema),
     defaultValues: {
       month: dayjs().format(SERVER_DATE_FORMAT),
@@ -29,76 +28,52 @@ export default function SetBudgetModal() {
 
   const setBudgetMutation = useMutation(setBudget, {
     onSuccess: () => {
-      reset()
-      setOpen(false)
-
-      Swal.fire({
-        icon: 'success',
-        title: 'Successfully set the budget',
-        timer: 2300,
-        timerProgressBar: true,
-      })
+      qc.invalidateQueries([BUDGET_QUERY_KEYS.BUDGETS])
+      form.reset()
+      setIsDialogOpen(false)
+      toast({ title: 'Successfully set the budget' })
     },
   })
 
   const handleCreateBudget = (values: SetBudgetSchema) => {
-    const dataToSubmit = {
-      ...values,
-      month: dayjs(values.month).format(SERVER_DATE_FORMAT),
-    }
-    setBudgetMutation.mutate(dataToSubmit)
+    setBudgetMutation.mutate({ ...values, month: dayjs().month(Number(values.month)).format(SERVER_DATE_FORMAT) })
   }
 
   return (
-    <>
-      <Button
-        className='flex-grow-1'
+    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+      <DialogTrigger
+        asChild
         onClick={() => {
-          setOpen(true)
+          setIsDialogOpen(true)
         }}
       >
-        Set Budget
-      </Button>
-      <Dialog
-        open={open}
-        onClose={() => {
-          setOpen(false)
-        }}
-      >
-        <DialogTitle>Set Budget</DialogTitle>
-        <DialogContent>
-          <form onSubmit={handleSubmit(handleCreateBudget)} className='p-4'>
-            <TextField
-              className='mb-4'
-              label='Limit'
-              fullWidth
-              {...register('limit')}
-              error={Boolean(errors?.limit?.message)}
-              helperText={errors?.limit?.message}
-              disabled={setBudgetMutation.isLoading}
-            />
-            <DatePicker
-              views={['month']}
-              label='Month'
-              className='w-100 mb-4'
-              defaultValue={dayjs()}
-              {...register('month')}
-              onChange={(date) => {
-                const dayjsDate = date as dayjs.Dayjs
-                if (dayjsDate) {
-                  setValue('month', dayjsDate.format(SERVER_DATE_FORMAT))
-                }
-              }}
-              slotProps={{
-                textField: {
-                  error: Boolean(errors?.month?.message),
-                  helperText: errors?.month?.message,
+        <Button>Set Budget</Button>
+      </DialogTrigger>
+      <DialogContent className='m-4'>
+        <DialogHeader>
+          <DialogTitle>Set Budget</DialogTitle>
+        </DialogHeader>
+
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(handleCreateBudget)} className='space-y-2'>
+            <InputFieldsRenderer
+              control={form.control}
+              inputs={[
+                {
+                  id: 'limit',
+                  label: 'Limit',
+                  type: 'number',
                 },
-              }}
-              disabled={setBudgetMutation.isLoading}
+                {
+                  id: 'month',
+                  label: 'Month',
+                  type: 'select',
+                  options: BUDGET_MONTH_OPTIONS,
+                },
+              ]}
             />
 
-            <div className='d-flex align-items-center gap-2 w-100'>
+            <DialogFooter className='gap-2'>
               <Button type='submit' className='flex-grow' disabled={setBudgetMutation.isLoading}>
                 Set
               </Button>
@@ -106,16 +81,16 @@ export default function SetBudgetModal() {
                 variant='outline'
                 className='flex-grow'
                 onClick={() => {
-                  setOpen(false)
+                  setIsDialogOpen(false)
                 }}
                 disabled={setBudgetMutation.isLoading}
               >
                 Cancel
               </Button>
-            </div>
+            </DialogFooter>
           </form>
-        </DialogContent>
-      </Dialog>
-    </>
+        </Form>
+      </DialogContent>
+    </Dialog>
   )
 }

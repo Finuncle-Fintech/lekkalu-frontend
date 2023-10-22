@@ -1,17 +1,20 @@
 import React, { useState } from 'react'
-import { Edit } from '@mui/icons-material'
-import { Button, Dialog, DialogContent, DialogTitle, IconButton, TextField } from '@mui/material'
-import { DatePicker } from '@mui/x-date-pickers'
 import dayjs from 'dayjs'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { PencilIcon } from 'lucide-react'
 import { Budget } from '@/types/budget'
 import { UpdateBudgetSchema, updateBudgetSchema } from '@/schema/budget'
-import { SERVER_DATE_FORMAT } from '@/utils/constants'
 import { updateBudget } from '@/queries/budget'
 import { BUDGET_QUERY_KEYS } from '@/utils/query-keys'
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { Button } from '@/components/ui/button'
+import { Form } from '@/components/ui/form'
+import InputFieldsRenderer from '@/components/InputFieldsRenderer/InputFieldsRenderer'
+import { BUDGET_MONTH_OPTIONS } from '@/utils/budget'
+import { SERVER_DATE_FORMAT } from '@/utils/constants'
 
 dayjs.extend(customParseFormat)
 
@@ -20,105 +23,84 @@ type Props = {
 }
 
 export default function EditBudgetModal({ budget }: Props) {
-  const [open, setOpen] = useState(false)
-  const queryClient = useQueryClient()
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const qc = useQueryClient()
 
-  const {
-    handleSubmit,
-    register,
-    setValue,
-    formState: { errors },
-    reset,
-  } = useForm<UpdateBudgetSchema>({
+  const form = useForm<UpdateBudgetSchema>({
     resolver: zodResolver(updateBudgetSchema),
     defaultValues: {
-      limit: budget.limit,
-      month: dayjs(budget.month, SERVER_DATE_FORMAT).format(SERVER_DATE_FORMAT),
+      limit: Number(budget.limit),
+      month: dayjs(budget.month, SERVER_DATE_FORMAT).month().toString(),
     },
   })
 
   const updateBudgetMutation = useMutation((dto: UpdateBudgetSchema) => updateBudget(budget.id, dto), {
     onSuccess: () => {
-      queryClient.invalidateQueries([BUDGET_QUERY_KEYS.BUDGETS])
-      reset()
-      setOpen(false)
+      qc.invalidateQueries([BUDGET_QUERY_KEYS.BUDGETS])
+      form.reset()
+      setIsDialogOpen(false)
     },
   })
 
   const handleUpdateBudget = (values: UpdateBudgetSchema) => {
-    const dataToSubmit = {
-      ...values,
-      month: dayjs(values.month).format(SERVER_DATE_FORMAT),
-    }
-    updateBudgetMutation.mutate(dataToSubmit)
+    updateBudgetMutation.mutate({ ...values, month: dayjs().month(Number(values.month)).format(SERVER_DATE_FORMAT) })
   }
 
   return (
-    <>
-      <IconButton
-        aria-label='edit'
+    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+      <DialogTrigger
+        asChild
         onClick={() => {
-          setOpen(true)
+          setIsDialogOpen(true)
         }}
       >
-        <Edit />
-      </IconButton>
-      <Dialog
-        open={open}
-        onClose={() => {
-          setOpen(false)
-        }}
-      >
-        <DialogTitle>Edit Budget</DialogTitle>
-        <DialogContent>
-          <form onSubmit={handleSubmit(handleUpdateBudget)} className='p-4'>
-            <TextField
-              className='mb-4'
-              label='Limit'
-              fullWidth
-              {...register('limit')}
-              error={Boolean(errors?.limit?.message)}
-              helperText={errors?.limit?.message}
-              disabled={updateBudgetMutation.isLoading}
-            />
-            <DatePicker
-              views={['month']}
-              label='Month'
-              className='w-100 mb-4'
-              defaultValue={dayjs(budget.month, SERVER_DATE_FORMAT)}
-              {...register('month')}
-              onChange={(date) => {
-                const dayjsDate = date as dayjs.Dayjs
-                if (dayjsDate) {
-                  setValue('month', dayjsDate.format(SERVER_DATE_FORMAT))
-                }
-              }}
-              slotProps={{
-                textField: {
-                  error: Boolean(errors?.month?.message),
-                  helperText: errors?.month?.message,
+        <Button variant='outline' size='sm'>
+          <PencilIcon className='w-4 h-4' />
+        </Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Update Budget</DialogTitle>
+        </DialogHeader>
+
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(handleUpdateBudget)} className='space-y-2'>
+            <InputFieldsRenderer
+              control={form.control}
+              inputs={[
+                {
+                  id: 'limit',
+                  label: 'Limit',
+                  type: 'number',
                 },
-              }}
-              disabled={updateBudgetMutation.isLoading}
+                {
+                  id: 'month',
+                  label: 'Month',
+                  type: 'select',
+                  options: BUDGET_MONTH_OPTIONS,
+                  value: budget.month,
+                },
+              ]}
             />
 
-            <div className='d-flex align-items-center gap-2 w-100'>
-              <Button type='submit' variant='contained' className='flex-grow' disabled={updateBudgetMutation.isLoading}>
+            <DialogFooter className='gap-2'>
+              <Button type='submit' className='flex-grow' loading={updateBudgetMutation.isLoading}>
                 Update
               </Button>
               <Button
+                variant='outline'
                 className='flex-grow'
                 onClick={() => {
-                  setOpen(false)
+                  setIsDialogOpen(false)
                 }}
-                disabled={updateBudgetMutation.isLoading}
+                loading={updateBudgetMutation.isLoading}
               >
                 Cancel
               </Button>
-            </div>
+            </DialogFooter>
           </form>
-        </DialogContent>
-      </Dialog>
-    </>
+        </Form>
+      </DialogContent>
+    </Dialog>
   )
 }

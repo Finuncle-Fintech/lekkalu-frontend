@@ -1,5 +1,3 @@
-import styles from './styles/FeedbackButton.module.css'
-
 export default function FeedbackButton() {
   const handleClick = () => {
     const popUp = document.querySelector('#popUpSupport')

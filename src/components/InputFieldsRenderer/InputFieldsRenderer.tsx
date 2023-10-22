@@ -14,7 +14,7 @@ type BaseInput = {
   label: string
   className?: string
   style?: React.CSSProperties
-  initialValue?: any
+  value?: any
 }
 
 type NumberInput = BaseInput & {

@@ -62,9 +62,10 @@ export function useAuth() {
   const logout = useCallback(() => {
     deleteCookie(REFRESH_TOKEN_KEY)
     deleteCookie(ACCESS_TOKEN_KEY)
-
     removeTokenData()
-  }, [removeTokenData])
+
+    navigate('/')
+  }, [removeTokenData, navigate])
 
   return {
     isAuthenticationInProgress,

@@ -1,7 +1,7 @@
 import { z } from 'zod'
 
 export const setBudgetSchema = z.object({
-  limit: z.string().min(1, 'Limit is required!'),
+  limit: z.coerce.number().min(1, 'Limit is required!'),
   month: z.string(),
 })
 export type SetBudgetSchema = z.infer<typeof setBudgetSchema>

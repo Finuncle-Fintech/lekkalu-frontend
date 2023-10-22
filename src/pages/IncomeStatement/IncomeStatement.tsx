@@ -20,7 +20,7 @@ import { normalizeNumber } from '@/utils/number'
 
 export default function IncomeStatement() {
   const { data: incomeSources } = useQuery([INCOME_STATEMENT.SOURCES], fetchIncomeSources)
-  const { data: incomeExpenses } = useQuery([INCOME_STATEMENT.EXPENSES], fetchIncomeExpenses)
+  const { data: incomeExpenses } = useQuery([INCOME_STATEMENT.IS_EXPENSES], fetchIncomeExpenses)
 
   const stats = useMemo(() => {
     if (!incomeSources || !incomeExpenses) {

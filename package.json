@@ -1,6 +1,6 @@
 {
   "name": "finuncle-app",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
     "@craco/craco": "^7.1.0",
@@ -131,5 +131,9 @@
   },
   "overrides": {
     "typescript": "^5.1.6"
+  },
+  "engines": {
+    "node": ">18.12.1",
+    "npm": ">9.2.0"
   }
 }

@@ -10,7 +10,7 @@ import { fetchTags } from '@/queries/tag'
 import { useUserPreferences } from '@/hooks/use-user-preferences'
 import { Button } from '@/components/ui/button'
 import DeleteExpense from './DeleteExpense'
-import AddOrEditExpenseDialog from './AddOrEditExpenseDialog'
+import AddOrEditExpenseDialog from './AddOrEditExpenseDialog/AddOrEditExpenseDialog'
 
 type Props = {
   dateRangeEnabled: boolean

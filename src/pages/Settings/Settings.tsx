@@ -1,24 +1,11 @@
-import React, { useMemo } from 'react'
-import { getCountryList } from 'country-data-codes'
-import { uniqBy } from 'lodash'
+import React from 'react'
 import { useUserPreferences } from '@/hooks/use-user-preferences'
 import { Button } from '@/components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import currencyCodes from '@/data/currency-codes.json'
 
 export default function Settings() {
   const { preferences, setPreferences, savePreferences } = useUserPreferences()
-
-  const currencyCodes = useMemo(() => {
-    const countryList = getCountryList()
-    const currencyList = countryList
-      .map((item) => ({
-        name: item.currency.name,
-        symbol: item.currency.symbol as string,
-      }))
-      .filter((item) => Boolean(item.symbol))
-
-    return uniqBy(currencyList, (currency) => currency.symbol)
-  }, [])
 
   const handleValueChange = (symbol: string) => {
     setPreferences((prev) => ({ ...prev, currencyUnit: symbol }))

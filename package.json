@@ -35,7 +35,6 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
     "constate": "^3.3.2",
-    "country-data-codes": "^4.1.9",
     "date-fns": "^2.30.0",
     "dayjs": "^1.11.10",
     "env-cmd": "^10.1.0",

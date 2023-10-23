@@ -4,10 +4,13 @@ import { FacebookIcon, InstagramIcon, LinkedinIcon, TwitterIcon } from 'lucide-r
 import Page from '../Page/Page'
 import { Input } from '../ui/input'
 import { Button } from '../ui/button'
+import FeedbackForm from './Components/FeedbackForm'
 
 export default function Footer() {
   return (
-    <div className='bg-primary text-white'>
+    <div className='bg-primary text-white relative'>
+      <FeedbackForm />
+
       <Page className='grid md:grid-cols-3 gap-4 p-4 min-h-max'>
         <div>
           <div className='text-xl font-bold mb-4'>About Us</div>

@@ -88,17 +88,18 @@ export default function InputFieldsRenderer({ inputs, control }: Props) {
                 onValueChange={(value) => {
                   field.onChange(value[0])
                 }}
+                data-testid={input.id}
               />
             </When>
           </div>
         )
       }
       case 'text': {
-        return <Input type='text' placeholder={input.label} {...field} />
+        return <Input type='text' placeholder={input.label} data-testid={input.id} {...field} />
       }
 
       case 'date': {
-        return <DatePicker placeholder={input.label} {...field} />
+        return <DatePicker placeholder={input.label} data-testid={input.id} {...field} />
       }
 
       // @TODO: Create multi select input
@@ -113,6 +114,7 @@ export default function InputFieldsRenderer({ inputs, control }: Props) {
                 field.onChange(value)
               }
             }}
+            data-testid={input.id}
             {...field}
           >
             <SelectTrigger>
@@ -132,6 +134,7 @@ export default function InputFieldsRenderer({ inputs, control }: Props) {
       case 'select': {
         return (
           <Select
+            data-testid={input.id}
             onValueChange={(value) => {
               if (typeof input.valueFormatter === 'function') {
                 const _value = input.valueFormatter(value)
@@ -158,7 +161,12 @@ export default function InputFieldsRenderer({ inputs, control }: Props) {
 
       case 'radio': {
         return (
-          <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className={input.className}>
+          <RadioGroup
+            onValueChange={field.onChange}
+            defaultValue={field.value}
+            className={input.className}
+            data-testid={input.id}
+          >
             {input.options.map((option) => (
               <FormItem key={option.id} className='flex items-center space-x-3 space-y-0'>
                 <FormControl>

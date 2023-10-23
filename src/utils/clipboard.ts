@@ -7,6 +7,7 @@ export const createUrlString = (params: Record<string, string | number>) => {
 
 export const copyToClipboard = (str: string) => {
   navigator.clipboard.writeText(str).catch((error) => {
+    // eslint-disable-next-line no-console
     console.error('Failed to copy string: ', error)
   })
 }

@@ -69,9 +69,9 @@ export default function Support() {
         <h2 className='gradient-text text-center font-bold tracking-tight text-6xl'>Support</h2>
       </div>
       <p className='max-w-xl text-center font-extrabold text-2xl'>
-        Finuncle gives you the tools to build an <span className='text-primary'>internal knowledge base</span>. It
-        allows your employees to <span className='text-primary'>quickly ask questions</span> and receive answers from
-        colleagues.
+        Finuncle gives you the tools to build an <span className='text-primary'>financial knowledge base</span>. It
+        allows user to <span className='text-primary'>quickly manage finance</span> and manage all the budget with
+        goals.
       </p>
       <div className='grid max-w-6xl grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3'>
         <Card>
@@ -85,7 +85,9 @@ export default function Support() {
               </svg>
             </div>
             <p className='text-center font-extrabold text-xl group-hover/item:text-primary'>Questions / Answers</p>
-            <p className='text-center text-offset text-sm'>FAQMaker is a hybrid between a Wiki and Stack Overflow.</p>
+            <p className='text-center text-offset text-sm'>
+              Finuncle gives all queries and questions related to user experience.
+            </p>
           </CardContent>
         </Card>
         <Card className='group/item flex flex-col items-center gap-4 rounded-md border border-default bg-slate-100 p-6 hover:border-primary'>
@@ -97,8 +99,10 @@ export default function Support() {
               />
             </svg>
           </div>
-          <p className='text-center font-extrabold text-xl group-hover/item:text-primary'>Intuitive editor</p>
-          <p className='text-center text-offset text-sm'>Write detailed answers with its intuitive Markdown editor.</p>
+          <p className='text-center font-extrabold text-xl group-hover/item:text-primary'>User guid</p>
+          <p className='text-center text-offset text-sm'>
+            Follow the steps and guide to getting start with the finuncle.
+          </p>
         </Card>
         <Card className='group/item flex flex-col items-center gap-4 rounded-md border border-default bg-slate-100 p-6 hover:border-primary'>
           <div className='h-16 w-16 rounded-full border-2 border-current p-3 group-hover/item:border-primary group-hover/item:text-primary'>
@@ -109,8 +113,8 @@ export default function Support() {
               />
             </svg>
           </div>
-          <p className='text-center font-extrabold text-xl group-hover/item:text-primary'>Customizable</p>
-          <p className='text-center text-offset text-sm'>Use your brand&apos;s colors to make it your site.</p>
+          <p className='text-center font-extrabold text-xl group-hover/item:text-primary'>Billing / Payments</p>
+          <p className='text-center text-offset text-sm'>Check all the details of the billing and payments.</p>
         </Card>
       </div>
 

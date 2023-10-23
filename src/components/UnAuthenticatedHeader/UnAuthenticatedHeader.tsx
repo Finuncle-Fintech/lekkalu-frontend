@@ -25,7 +25,8 @@ export default function UnAuthenticatedHeader() {
           {CALCULATOR_ROUTES.map((route) => (
             <NavLink key={route.path} to={route.path} label={route.label} />
           ))}
-          <Link to='/pricing'>Pricing</Link>
+          <NavLink to='/pricing' label='Pricing' />
+          <NavLink to='/support' label='Support' />
         </div>
         <When
           truthy={Boolean(tokenData)}

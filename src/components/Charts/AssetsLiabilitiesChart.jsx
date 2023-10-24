@@ -1,119 +1,86 @@
-import Colors from "constants/colors";
-import { useUserPreferences } from "hooks/useUserPreferences";
-import {
-  PieChart,
-  Pie,
-  Cell,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-} from "recharts";
+import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts'
+import Colors from '@/constants/colors'
+import { useUserPreferences } from '@/hooks/use-user-preferences'
 
 export const AssetsLiabilitiesChart = (props) => {
-  let totalValue = props.data.totalVal;
-  let pieData;
-  if (props.type === "assets") {
-    pieData = props.data.finalAssets;
-  } else if (props.type === "liabilities") {
-    pieData = props.data.finalLiabilities;
+  const totalValue = props.data.totalVal
+  let pieData
+  if (props.type === 'assets') {
+    pieData = props.data.finalAssets
+  } else if (props.type === 'liabilities') {
+    pieData = props.data.finalLiabilities
   }
 
-  const RADIAN = Math.PI / 180;
-  const renderCustomizedLabel = ({
-    cx,
-    cy,
-    midAngle,
-    innerRadius,
-    outerRadius,
-    percent,
-    index,
-  }) => {
-    const radius = innerRadius + (outerRadius - innerRadius) * 0.7;
-    const x = cx + radius * Math.cos(-midAngle * RADIAN);
-    const y = cy + radius * Math.sin(-midAngle * RADIAN);
-    if (percent * 100 > 3)
+  const RADIAN = Math.PI / 180
+  const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }) => {
+    const radius = innerRadius + (outerRadius - innerRadius) * 0.7
+    const x = cx + radius * Math.cos(-midAngle * RADIAN)
+    const y = cy + radius * Math.sin(-midAngle * RADIAN)
+    if (percent * 100 > 3) {
       return (
-        <text
-          x={x}
-          y={y}
-          fill="white"
-          textAnchor="middle"
-          dominantBaseline="central"
-        >
+        <text x={x} y={y} fill='white' textAnchor='middle' dominantBaseline='central'>
           {`${(percent * 100).toFixed(1)}%`}
         </text>
-      );
-    return null;
-  };
+      )
+    }
+    return null
+  }
 
   const numDifferentiation = (val) => {
-    if (val >= 10000000) val = (val / 10000000).toFixed(2) + " Cr";
-    else if (val >= 100000) val = (val / 100000).toFixed(2) + " Lac";
-    else if (val >= 1000) val = (val / 1000).toFixed(2) + " K";
-    return val;
-  };
+    if (val >= 10000000) val = (val / 10000000).toFixed(2) + ' Cr'
+    else if (val >= 100000) val = (val / 100000).toFixed(2) + ' Lac'
+    else if (val >= 1000) val = (val / 1000).toFixed(2) + ' K'
+    return val
+  }
 
-  const CustomTooltip = ({ active, payload, percent }) => {
-    const { preferences } = useUserPreferences();
+  const CustomTooltip = ({ active, payload }) => {
+    const { preferences } = useUserPreferences()
 
     if (active) {
       return (
         <div
-          className="custom-tooltip"
+          className='custom-tooltip'
           style={{
-            backgroundColor: "#ffff",
-            padding: "5px",
-            border: "0.5px solid #cccc",
-            borderRadius: 5 + "px",
+            backgroundColor: '#ffff',
+            padding: '5px',
+            border: '0.5px solid #cccc',
+            borderRadius: 5 + 'px',
           }}
         >
           <label>
-            {`${payload[0].name} : ` +
-              ((`${payload[0].value}` * 100) / totalValue).toFixed(2) +
-              "%"}
+            {`${payload[0].name} : ` + ((`${payload[0].value}` * 100) / totalValue).toFixed(2) + '%'}
             <br />
-            {`${preferences.currencyUnit} ${numDifferentiation(
-              payload[0].value
-            )} `}
+            {`${preferences.currencyUnit} ${numDifferentiation(payload[0].value)} `}
           </label>
         </div>
-      );
+      )
     }
 
-    return null;
-  };
+    return null
+  }
 
   return (
     <>
       {pieData && pieData.length !== 0 ? (
-        <ResponsiveContainer width={"100%"} height={350}>
+        <ResponsiveContainer width={'100%'} height={350}>
           <PieChart>
             <defs>
               {pieData.map((entry, index) => (
-                <linearGradient
-                  id={`myGradient${index}`}
-                  key={`myGradient${index}`}
-                >
-                  <stop
-                    offset="0%"
-                    stopColor={Colors.PIE[index % Colors.PIE.length].start}
-                  />
-                  <stop
-                    offset="100%"
-                    stopColor={Colors.PIE[index % Colors.PIE.length].end}
-                  />
+                <linearGradient id={`myGradient${index}`} key={`myGradient${index}`}>
+                  <stop offset='0%' stopColor={Colors.PIE[index % Colors.PIE.length].start} />
+                  <stop offset='100%' stopColor={Colors.PIE[index % Colors.PIE.length].end} />
                 </linearGradient>
               ))}
             </defs>
             <Pie
               data={pieData}
-              color="#000000"
-              dataKey="value"
-              nameKey="name"
-              cx="50%"
-              cy="50%"
+              color='#000000'
+              dataKey='value'
+              nameKey='name'
+              cx='50%'
+              cy='50%'
               outerRadius={120}
-              fill="#8884d8"
+              fill='#8884d8'
               label={renderCustomizedLabel}
               labelLine={false}
             >
@@ -130,21 +97,17 @@ export const AssetsLiabilitiesChart = (props) => {
             </Pie>
             <Tooltip content={<CustomTooltip />} />
             <Legend
-              width={"100%"}
-              layout="horizontal"
-              verticalAlign="bottom"
-              align="center"
+              width={'100%'}
+              layout='horizontal'
+              verticalAlign='bottom'
+              align='center'
               payload={pieData.map((item, index) => {
                 return {
                   id: item.name,
-                  type: "circle",
-                  value:
-                    item.name +
-                    ` : ` +
-                    ((item.value * 100) / totalValue).toFixed(2) +
-                    `%`,
+                  type: 'circle',
+                  value: item.name + ' : ' + ((item.value * 100) / totalValue).toFixed(2) + '%',
                   color: `url(#myGradient${index})`,
-                };
+                }
               })}
             />
           </PieChart>
@@ -153,5 +116,5 @@ export const AssetsLiabilitiesChart = (props) => {
         <h4>No data for {props.type} chart</h4>
       )}
     </>
-  );
-};
+  )
+}

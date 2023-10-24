@@ -1,6 +1,5 @@
 import React, { useCallback } from 'react'
-import * as ExcelJS from 'exceljs'
-import { saveAs } from 'file-saver'
+import * as XLSX from 'xlsx'
 import { useQueries } from '@tanstack/react-query'
 import { DownloadIcon } from 'lucide-react'
 import { BALANCE_SHEET, EXPENSES, GOALS, INCOME_STATEMENT, TAGS } from '@/utils/query-keys'
@@ -54,7 +53,7 @@ const DownloadAllData = (props: Props) => {
   const getTagNames = React.useCallback(
     (tagIds: number[]) => {
       if (!tagsQ.data) {
-        return null
+        return ''
       }
 
       const foundTags = tagsQ.data.filter((tag) => tagIds.includes(tag.id))
@@ -69,58 +68,55 @@ const DownloadAllData = (props: Props) => {
     const totalPhysicalAssets = assetsQ?.data?.reduce((acc, curr) => (acc += parseFloat(curr.market_value)), 0) ?? 0
     const totalLiability = liabilitiesQ?.data?.reduce((acc, curr) => (acc += parseFloat(curr.balance)), 0) ?? 0
 
-    const workbook = new ExcelJS.Workbook()
-    const dailyExpenseListWorksheet = workbook.addWorksheet('Daily Expense')
-    const incomeWorksheet = workbook.addWorksheet('Income')
-    const expenseWorksheet = workbook.addWorksheet('Expense')
-    const assetsWorksheet = workbook.addWorksheet('Asset')
-    const liabilitiesWorksheet = workbook.addWorksheet('Liabilities')
-    const goalsWorksheet = workbook.addWorksheet('Goal')
+    const wb = XLSX.utils.book_new()
+    /** Daily Expense List */
+    const dailyExpenseWorksheet = XLSX.utils.json_to_sheet(
+      expensesQ.data?.map((expense) => ({ ...expense, tags: getTagNames(expense.tags) })) ?? [],
+    )
+    XLSX.utils.book_append_sheet(wb, dailyExpenseWorksheet, 'Daily Expense')
 
-    // Daily Expense List
-    dailyExpenseListWorksheet.addRow(['Tags', 'Amount', 'Date'])
-    expensesQ.data?.forEach((item) => {
-      dailyExpenseListWorksheet.addRow([getTagNames(item.tags), item.amount, item.time])
-    })
+    /** Income Statement */
+    const incomeWorksheet = XLSX.utils.json_to_sheet(incomeSourceQ?.data ?? [])
+    XLSX.utils.sheet_add_aoa(
+      incomeWorksheet,
+      [['Total Income', `${totalIncomeSources.toFixed(2)} ${preferences.currencyUnit}`]],
+      { origin: -1 },
+    )
+    XLSX.utils.book_append_sheet(wb, incomeWorksheet, 'Income')
 
-    // Income Statement
-    incomeWorksheet.addRow(['Income Name', 'Type of Income', 'Amount'])
-    incomeSourceQ?.data?.forEach((item) => {
-      incomeWorksheet.addRow([item.name, item.type, item.amount])
-    })
-    incomeWorksheet.addRow(['Total Income', '', `${totalIncomeSources?.toFixed(2)} ${preferences.currencyUnit}`])
+    /** Expense Statement */
+    const expenseWorksheet = XLSX.utils.json_to_sheet(incomeSourceQ?.data ?? [])
+    XLSX.utils.sheet_add_aoa(
+      expenseWorksheet,
+      [['Total Expense', `${totalIncomeExpenses.toFixed(2)} ${preferences.currencyUnit}`]],
+      { origin: -1 },
+    )
+    XLSX.utils.book_append_sheet(wb, expenseWorksheet, 'Expense')
 
-    // Expense Statement
-    expenseWorksheet.addRow(['Expense Name', 'Type of Expense', 'Amount'])
-    incomeExpenseQ?.data?.forEach((item) => {
-      expenseWorksheet.addRow([item.name, item.type, item.amount])
-    })
-    expenseWorksheet.addRow(['Total Expense', '', `${totalIncomeExpenses?.toFixed(2)} ${preferences.currencyUnit}`])
+    /** Assets */
+    const assetsWorksheet = XLSX.utils.json_to_sheet(assetsQ?.data ?? [])
+    XLSX.utils.sheet_add_aoa(
+      assetsWorksheet,
+      [['Total Value', `${totalPhysicalAssets.toFixed(2)} ${preferences.currencyUnit}`]],
+      { origin: -1 },
+    )
+    XLSX.utils.book_append_sheet(wb, assetsWorksheet, 'Assets')
 
-    // Balance Sheet
-    assetsWorksheet.addRow(['Asset Name', 'Market Value'])
-    assetsQ?.data?.forEach((item) => {
-      assetsWorksheet.addRow([item.name, item.market_value])
-    })
-    assetsWorksheet.addRow(['Total Value', `${totalPhysicalAssets?.toFixed(2)} ${preferences.currencyUnit}`])
+    /** Liabilities */
+    const liabilitiesWorksheet = XLSX.utils.json_to_sheet(liabilitiesQ?.data ?? [])
+    XLSX.utils.sheet_add_aoa(
+      liabilitiesWorksheet,
+      [['Total Liabilities', `${totalLiability.toFixed(2)} ${preferences.currencyUnit}`]],
+      { origin: -1 },
+    )
+    XLSX.utils.book_append_sheet(wb, liabilitiesWorksheet, 'Liabilities')
 
-    liabilitiesWorksheet.addRow(['Liabilities Name', 'Balance'])
-    liabilitiesQ?.data?.forEach((item) => {
-      liabilitiesWorksheet.addRow([item.name, item.balance])
-    })
-    liabilitiesWorksheet.addRow(['Total Liabilities', `${totalLiability?.toFixed(2)} ${preferences.currencyUnit}`])
+    /** Goals */
+    const goalsWorksheet = XLSX.utils.json_to_sheet(goalsQ?.data ?? [])
+    XLSX.utils.book_append_sheet(wb, goalsWorksheet, 'Goals')
 
-    // Goals
-    goalsWorksheet.addRow(['Goal', 'Current Metric', 'Target Metric'])
-    goalsQ?.data?.forEach((item) => {
-      goalsWorksheet.addRow([item.goal, item.current_metric, item.target_metric])
-    })
-
-    // Generate the Excel file as a blob
-    const blob = await workbook.xlsx.writeBuffer()
-
-    // Save the Blob as a file
-    saveAs(new Blob([blob]), 'financial_data.xlsx')
+    /** Saving the file */
+    XLSX.writeFile(wb, 'financial_data.xlsx', { compression: true })
   }, [
     assetsQ?.data,
     expensesQ.data,

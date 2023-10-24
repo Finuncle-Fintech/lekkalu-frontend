@@ -13,6 +13,7 @@ import Password from '@/components/ui/password'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Button } from '@/components/ui/button'
 import { useAuthContext } from '@/hooks/use-auth'
+import Page from '@/components/Page/Page'
 
 export const Signin = () => {
   const { tokenData, loginMutation } = useAuthContext()
@@ -37,107 +38,109 @@ export const Signin = () => {
   }
 
   return (
-    <div className='h-screen bg-primary flex items-center justify-around'>
-      <div className='flex-1 pt-4 hidden md:flex items-center justify-center'>
-        <div className='relative'>
-          <div className='absolute -top-10 -left-10 bg-white rounded-full w-10 h-10' />
-          <p className='text-white text-2xl font-medium text-center'>finuncle</p>
+    <div className='bg-primary'>
+      <Page className='flex items-center justify-around h-screen'>
+        <div className='flex-1 pt-4 hidden md:flex items-center justify-center'>
+          <div className='relative'>
+            <div className='absolute -top-10 -left-10 bg-white rounded-full w-10 h-10' />
+            <p className='text-white text-2xl font-medium text-center'>finuncle</p>
+          </div>
         </div>
-      </div>
 
-      <div className='flex-1 max-w-xl mx-auto'>
-        <div className='bg-white p-4 m-4 rounded-lg'>
-          <h1 className='text-2xl font-bold'>Log in</h1>
-          <p className='text-muted-foreground text-sm mb-4'>Welcome back to finuncle!</p>
+        <div className='flex-1 max-w-xl mx-auto'>
+          <div className='bg-white p-4 m-4 rounded-lg'>
+            <h1 className='text-2xl font-bold'>Log in</h1>
+            <p className='text-muted-foreground text-sm mb-4'>Welcome back to finuncle!</p>
 
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(handleSignin)} className='flex flex-col gap-4'>
-              <FormField
-                disabled={loginMutation.isLoading}
-                control={form.control}
-                name='username'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Username</FormLabel>
-                    <FormControl>
-                      <Input placeholder='Enter your username' {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(handleSignin)} className='flex flex-col gap-4'>
+                <FormField
+                  disabled={loginMutation.isLoading}
+                  control={form.control}
+                  name='username'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Username</FormLabel>
+                      <FormControl>
+                        <Input placeholder='Enter your username' {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-              <FormField
-                disabled={loginMutation.isLoading}
-                control={form.control}
-                name='password'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Password</FormLabel>
-                    <FormControl>
-                      <Password placeholder='Enter your password' {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                <FormField
+                  disabled={loginMutation.isLoading}
+                  control={form.control}
+                  name='password'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Password</FormLabel>
+                      <FormControl>
+                        <Password placeholder='Enter your password' {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-              <FormField
-                disabled={loginMutation.isLoading}
-                control={form.control}
-                name='rememberMe'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <div className='flex items-center space-x-2'>
-                        <Checkbox id='rememberMe' checked={field.value} onCheckedChange={field.onChange} />
-                        <label
-                          htmlFor='rememberMe'
-                          className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
-                        >
-                          Remember Me
-                        </label>
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                <FormField
+                  disabled={loginMutation.isLoading}
+                  control={form.control}
+                  name='rememberMe'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <div className='flex items-center space-x-2'>
+                          <Checkbox id='rememberMe' checked={field.value} onCheckedChange={field.onChange} />
+                          <label
+                            htmlFor='rememberMe'
+                            className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
+                          >
+                            Remember Me
+                          </label>
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-              <Button>Continue</Button>
-            </form>
-          </Form>
+                <Button>Continue</Button>
+              </form>
+            </Form>
 
-          <Link to='/signup' className='block text-sm text-muted-foreground my-2'>
-            Don&apos;t have an account? Sign Up
-          </Link>
+            <Link to='/signup' className='block text-sm text-muted-foreground my-2'>
+              Don&apos;t have an account? Sign Up
+            </Link>
 
-          <When truthy={!isUnderDevelopment}>
-            <div className='space-y-4'>
-              <div className='flex items-center gap-2'>
-                <div className='h-[1px] bg-muted w-full' />
-                <p>OR</p>
-                <div className='h-[1px] bg-muted w-full' />
+            <When truthy={!isUnderDevelopment}>
+              <div className='space-y-4'>
+                <div className='flex items-center gap-2'>
+                  <div className='h-[1px] bg-muted w-full' />
+                  <p>OR</p>
+                  <div className='h-[1px] bg-muted w-full' />
+                </div>
+
+                <Button className='w-full' variant='outline'>
+                  <FacebookIcon className='mr-2 w-4 h-4' />
+                  <span>Continue with Facebook</span>
+                </Button>
+                <Button className='w-full' variant='outline'>
+                  <Google className='mr-2 w-4 h-4' />
+                  <span>Continue with Google</span>
+                </Button>
+
+                {/* @TODO: Update Apple icon */}
+                <Button className='w-full' variant='outline'>
+                  <AppleIcon className='mr-2 w-4 h-4' />
+                  <span>Continue with Apple</span>
+                </Button>
               </div>
-
-              <Button className='w-full' variant='outline'>
-                <FacebookIcon className='mr-2 w-4 h-4' />
-                <span>Continue with Facebook</span>
-              </Button>
-              <Button className='w-full' variant='outline'>
-                <Google className='mr-2 w-4 h-4' />
-                <span>Continue with Google</span>
-              </Button>
-
-              {/* @TODO: Update Apple icon */}
-              <Button className='w-full' variant='outline'>
-                <AppleIcon className='mr-2 w-4 h-4' />
-                <span>Continue with Apple</span>
-              </Button>
-            </div>
-          </When>
+            </When>
+          </div>
         </div>
-      </div>
+      </Page>
     </div>
   )
 }

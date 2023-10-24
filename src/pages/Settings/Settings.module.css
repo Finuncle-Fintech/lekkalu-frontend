@@ -5,6 +5,9 @@
   align-self: flex-start;
   min-height: 80vh;
   padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
 }
 
 .heading {

@@ -1,13 +1,7 @@
 export type IncomeStatement = {
-  id: number | string
+  id: number
   name: string
   type: string
   amount: string
   isNew: boolean
-}
-
-export type CreateIncomeStatementDto = {
-  name: string
-  type: string
-  amount: string
 }

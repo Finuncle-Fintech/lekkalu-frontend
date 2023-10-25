@@ -3,7 +3,6 @@ import { Link, Navigate, useSearchParams } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { AppleIcon, FacebookIcon } from 'lucide-react'
-import { Google } from '@mui/icons-material'
 import { omit } from 'lodash'
 import When from '@/components/When/When'
 import { LoginSchema, loginSchema } from '@/schema/auth'
@@ -127,7 +126,6 @@ export const Signin = () => {
                   <span>Continue with Facebook</span>
                 </Button>
                 <Button className='w-full' variant='outline'>
-                  <Google className='mr-2 w-4 h-4' />
                   <span>Continue with Google</span>
                 </Button>
 

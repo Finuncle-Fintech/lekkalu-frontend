@@ -9,7 +9,6 @@ const Colors = {
 
   PIE: [
     { start: '#34c3ff', end: '#2876bd' },
-
     { start: '#9e54dd', end: '#5c4cbd' },
     { start: '#02aab0', end: '#00cdac' },
     { start: '#eb3349', end: '#f45c43' },

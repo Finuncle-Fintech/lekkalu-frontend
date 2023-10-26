@@ -1,4 +1,5 @@
-import { CreateIncomeStatementDto, IncomeStatement } from '@/types/income-statement'
+import { AddIncomeStatementSchema } from '@/schema/income-statement'
+import { IncomeStatement } from '@/types/income-statement'
 import { apiClient } from '@/utils/client'
 
 export async function fetchIncomeSources() {
@@ -11,12 +12,12 @@ export async function fetchIncomeExpenses() {
   return data
 }
 
-export async function createIncomeSource(dto: CreateIncomeStatementDto) {
+export async function createIncomeSource(dto: AddIncomeStatementSchema) {
   const { data } = await apiClient.post('income_source/', dto)
   return data
 }
 
-export async function updateIncomeSource(id: number, dto: CreateIncomeStatementDto) {
+export async function updateIncomeSource(id: number, dto: Partial<AddIncomeStatementSchema>) {
   const { data } = await apiClient.put(`income_source/${id}`, dto)
   return data
 }
@@ -26,12 +27,12 @@ export async function deleteIncomeSource(id: number) {
   return data
 }
 
-export async function createIncomeExpense(dto: CreateIncomeStatementDto) {
+export async function createIncomeExpense(dto: AddIncomeStatementSchema) {
   const { data } = await apiClient.post('income_expense/', dto)
   return data
 }
 
-export async function updateIncomeExpense(id: number, dto: CreateIncomeStatementDto) {
+export async function updateIncomeExpense(id: number, dto: Partial<AddIncomeStatementSchema>) {
   const { data } = await apiClient.put(`income_expense/${id}`, dto)
   return data
 }

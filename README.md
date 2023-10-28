@@ -3,6 +3,8 @@ Lekkalu-Frontend is REACT based website frontend depict user's finances
 
 To access REST API Documenation, headover to api.fununcle.com/swagger
 
+[Contribution guidelines for this project](CONTRIBUTING.md)
+
 To access the development local URL follow the given command:
 
 ### `npm run start:dev`

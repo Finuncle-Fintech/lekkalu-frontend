@@ -22,7 +22,7 @@ export default function SetBudgetModal() {
   const form = useForm<SetBudgetSchema>({
     resolver: zodResolver(setBudgetSchema),
     defaultValues: {
-      month: dayjs().format(SERVER_DATE_FORMAT),
+      month: dayjs().month().toString(),
     },
   })
 

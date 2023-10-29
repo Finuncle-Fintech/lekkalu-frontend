@@ -24,7 +24,7 @@ type Props = {
 }
 
 type ExcelData = {
-  amount: string
+  amount: number
   tags: string
   date: string
 }
@@ -40,7 +40,7 @@ export default function AddOrEditExpenseDialog({ expense, trigger }: Props) {
   const form = useForm<AddExpenseSchema>({
     resolver: zodResolver(addExpenseSchema),
     defaultValues: {
-      amount: expense?.amount,
+      amount: expense?.amount ? Number(expense.amount) : undefined,
       // @TODO: Add multiple tags
       tags: expense?.tags ? expense.tags[0] : undefined,
       time: expense?.time ? new Date(expense.time) : undefined,
@@ -102,7 +102,7 @@ export default function AddOrEditExpenseDialog({ expense, trigger }: Props) {
     }
 
     /** Handling case of expense creation */
-    const exists = checkIsExpenseExists(expenses ?? [], newExpense)
+    const exists = checkIsExpenseExists(expenses ?? [], { ...newExpense, amount: newExpense.amount.toString() })
     if (exists) {
       toast({ title: 'Expense already exists!', variant: 'destructive' })
       return

@@ -69,7 +69,7 @@ export default function AddOrEditGoal({ trigger, goal }: Props) {
     }
 
     /** Handling the case of updation */
-    if (typeof goal !== 'undefined') {
+    if (isEdit) {
       editGoalMutation.mutate(valuesToSubmit)
       return
     }

@@ -5,7 +5,6 @@ export const addGoalSchema = z.object({
     .string({ required_error: 'Goal is required!' })
     .min(3, 'Please enter at least 3 characters!')
     .max(255, 'Please enter at least 255 characters!'),
-  sub_goal: z.string().optional(),
   target_metric: z.coerce.number({ required_error: 'Target Metric is required!' }),
   current_metric: z.coerce.number({ required_error: 'Current Metric is required!' }),
   reachability_in_months: z.coerce.number({ required_error: 'Reachability in Months is required!' }),

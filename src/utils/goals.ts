@@ -7,11 +7,6 @@ export const GOAL_INPUTS: InputField[] = [
     type: 'text',
   },
   {
-    id: 'sub_goal',
-    label: 'Sub Goal',
-    type: 'text',
-  },
-  {
     id: 'target_metric',
     label: 'Target Metric',
     type: 'number',

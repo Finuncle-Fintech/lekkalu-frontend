@@ -26,4 +26,6 @@ export type AddGoalSchema = Omit<
   finished: string
   plannedFinish: string
   planned_start: string
+  asset?: number
+  liability?: number
 }

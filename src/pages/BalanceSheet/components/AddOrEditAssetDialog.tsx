@@ -41,7 +41,7 @@ export default function AddOrEditAssetDialog({ trigger, asset }: Props) {
       sell_date: asset?.sell_date ? dayjs(asset.sell_date).toDate() : undefined,
       tags: [],
       type: 1,
-      user: userData?.id,
+      user: userData?.id ?? 1,
       init_dep: asset?.depreciation_percent ? Number(asset?.depreciation_percent) : 1,
     },
   })

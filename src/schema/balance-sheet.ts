@@ -13,6 +13,7 @@ export const addPhysicalAssetSchema = z.object({
   tags: z.array(z.string()),
   months: z.coerce.number(),
   years: z.coerce.number(),
+  user: z.number(),
 })
 
 export type AddPhysicalAssetSchema = Omit<z.infer<typeof addPhysicalAssetSchema>, 'purchase_date' | 'sell_date'> & {

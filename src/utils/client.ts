@@ -39,4 +39,19 @@ export const tokenClient = axios.create({
   headers: BASIC_HEADER,
 })
 
+/**
+ * Api client for v1
+ */
+export const v1ApiClient = axios.create({
+  baseURL: process.env.REACT_APP_V1_API_URL,
+  headers: BASIC_HEADER,
+})
+v1ApiClient?.interceptors.request.use((config) => {
+  if (!config.headers.Authorization) {
+    config.headers.Authorization = `Bearer ${getCookie('access')}`
+  }
+
+  return config
+})
+
 export const queryClient = new QueryClient({ defaultOptions: { queries: { refetchOnWindowFocus: false } } })

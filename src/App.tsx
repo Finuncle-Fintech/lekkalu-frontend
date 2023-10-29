@@ -10,6 +10,7 @@ import Footer from './components/Footer/Footer'
 /** Authenticated Routes */
 const Dashboard = lazy(() => import('@/pages/Dashboard/Dashboard'))
 const Goals = lazy(() => import('@/pages/Goals/Goals'))
+const CreateGoal = lazy(() => import('@/pages/CreateGoal/CreateGoal'))
 const IncomeStatement = lazy(() => import('@/pages/IncomeStatement/IncomeStatement'))
 const Expenses = lazy(() => import('@/pages/Expenses/Expenses'))
 const BalanceSheet = lazy(() => import('@/pages/BalanceSheet/BalanceSheet'))
@@ -52,6 +53,7 @@ function App() {
         >
           <Route path='/dashboard' element={<Dashboard />} />
           <Route path='/goals' element={<Goals />} />
+          <Route path='/goals/new' element={<CreateGoal />} />
           <Route path='/income-statement' element={<IncomeStatement />} />
           <Route path='/expenses' element={<Expenses />} />
           <Route path='/balance-sheet' element={<BalanceSheet />} />

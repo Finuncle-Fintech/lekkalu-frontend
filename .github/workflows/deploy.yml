@@ -24,11 +24,11 @@ jobs:
       - name: deployment
         run: |
           touch ./environments/.prod.env
-          echo REACT_APP_BACKEND_URL=https://api.finuncle.com/ > ./environments/.prod.env
-          echo REACT_APP_BACKEND_API=https://api.finuncle.com/api/ > ./environments/.prod.env
-          echo REACT_APP_API_BASE_URL="https://api.finuncle.com/api" > ./environments/.prod.env
-          echo REACT_APP_V1_API_URL="https://api.finuncle.com/api/v1" > ./environments/.prod.env
-          echo REACT_APP_TOKEN_BASE_URL="https://api.finuncle.com/token" > ./environments/.prod.env
-          echo REACT_APP_USER_BASE_URL="https://api.finuncle.com/users/api/users" > ./environments/.prod.env
+          echo REACT_APP_BACKEND_URL=https://api.finuncle.com/ >> ./environments/.prod.env
+          echo REACT_APP_BACKEND_API=https://api.finuncle.com/api/ >> ./environments/.prod.env
+          echo REACT_APP_API_BASE_URL="https://api.finuncle.com/api" >> ./environments/.prod.env
+          echo REACT_APP_V1_API_URL="https://api.finuncle.com/api/v1" >> ./environments/.prod.env
+          echo REACT_APP_TOKEN_BASE_URL="https://api.finuncle.com/token" >> ./environments/.prod.env
+          echo REACT_APP_USER_BASE_URL="https://api.finuncle.com/users/api/users" >> ./environments/.prod.env
           cat ./environments/.prod.env
           npm run build:prod

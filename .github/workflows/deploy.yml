@@ -4,7 +4,7 @@ on:
   push:
     branches: [ master ]
   release:
-    types: [published]
+    types: [ published ]
 
 jobs:
   build:
@@ -34,7 +34,7 @@ jobs:
       - name: Install Dependencies
         run:
           npm install
-      - name: deployment
+      - name: Build app
         run:
           npm run build:prod
       - uses: aws-actions/configure-aws-credentials@v1
@@ -42,4 +42,5 @@ jobs:
             aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
             aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
             aws-region: ap-south-1
-      - run: aws s3 sync ./build s3://finuncle-static-website-react
+      - name: Deploy on s3
+        run: aws s3 sync ./build s3://finuncle-static-website-react

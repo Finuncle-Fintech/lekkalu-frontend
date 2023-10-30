@@ -1,0 +1,46 @@
+name: Deploy
+
+on:
+  # push:
+    # branches: [ master ]
+  release:
+    types: [ published ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+  
+    strategy:
+      matrix:
+        node-version: [18.x]
+          
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Create ENV variables
+        run: |
+          touch ./environments/.prod.env
+          echo REACT_APP_BACKEND_URL=https://api.finuncle.com/ >> ./environments/.prod.env
+          echo REACT_APP_BACKEND_API=https://api.finuncle.com/api/ >> ./environments/.prod.env
+          echo REACT_APP_API_BASE_URL="https://api.finuncle.com/api" >> ./environments/.prod.env
+          echo REACT_APP_V1_API_URL="https://api.finuncle.com/api/v1" >> ./environments/.prod.env
+          echo REACT_APP_TOKEN_BASE_URL="https://api.finuncle.com/token" >> ./environments/.prod.env
+          echo REACT_APP_USER_BASE_URL="https://api.finuncle.com/users/api/users" >> ./environments/.prod.env
+          cat ./environments/.prod.env
+      - name: Install Dependencies
+        run:
+          npm install
+      - name: Build app
+        run:
+          npm run build:prod
+      - uses: aws-actions/configure-aws-credentials@v1
+        with:
+            aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            aws-region: ap-south-1
+      - name: Deploy on s3
+        run: aws s3 sync ./build s3://finuncle-static-website-react

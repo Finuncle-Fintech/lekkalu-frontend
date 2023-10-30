@@ -21,7 +21,7 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
-      - name: deployment
+      - name: Create ENV variables
         run: |
           touch ./environments/.prod.env
           echo REACT_APP_BACKEND_URL=https://api.finuncle.com/ >> ./environments/.prod.env
@@ -31,4 +31,6 @@ jobs:
           echo REACT_APP_TOKEN_BASE_URL="https://api.finuncle.com/token" >> ./environments/.prod.env
           echo REACT_APP_USER_BASE_URL="https://api.finuncle.com/users/api/users" >> ./environments/.prod.env
           cat ./environments/.prod.env
+      - name: deployment
+        run:
           npm run build:prod

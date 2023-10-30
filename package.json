@@ -27,7 +27,7 @@
     "date-fns": "^2.30.0",
     "dayjs": "^1.11.10",
     "env-cmd": "^10.1.0",
-    "jwt-decode": "^3.1.2",
+    "jwt-decode": "^4.0.0",
     "lodash": "^4.17.21",
     "lottie-react": "^2.4.0",
     "lucide-react": "^0.288.0",

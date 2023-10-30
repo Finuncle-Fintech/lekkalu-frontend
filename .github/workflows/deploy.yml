@@ -31,6 +31,9 @@ jobs:
           echo REACT_APP_TOKEN_BASE_URL="https://api.finuncle.com/token" >> ./environments/.prod.env
           echo REACT_APP_USER_BASE_URL="https://api.finuncle.com/users/api/users" >> ./environments/.prod.env
           cat ./environments/.prod.env
+      - name: Install Dependencies
+        run:
+          npm install
       - name: deployment
         run:
           npm run build:prod

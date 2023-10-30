@@ -46,28 +46,26 @@ export function Sidebar({ className, ...restProps }: SidebarProps) {
         <div className='space-y-2'>
           <DownloadAllData className='w-full' />
 
-          <When truthy={Boolean(userData)}>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant='outline' className='w-full'>
-                  @{userData?.username}
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <When truthy={Boolean(userData?.email)}>
-                  <DropdownMenuLabel>{userData?.email}</DropdownMenuLabel>
-                </When>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant='outline' className='w-full'>
+                @{userData?.username}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <When truthy={Boolean(userData?.email)}>
+                <DropdownMenuLabel>{userData?.email}</DropdownMenuLabel>
+              </When>
 
-                <DropdownMenuItem className='cursor-pointer' asChild>
-                  <Link to='/profile'>Profile</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem className='cursor-pointer' onClick={logout}>
-                  <LogOutIcon className='mr-2 h-4 w-4' />
-                  <span>Logout</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </When>
+              <DropdownMenuItem className='cursor-pointer' asChild>
+                <Link to='/profile'>Profile</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem className='cursor-pointer' onClick={logout}>
+                <LogOutIcon className='mr-2 h-4 w-4' />
+                <span>Logout</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     </div>

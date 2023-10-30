@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { PlusCircle } from 'lucide-react'
 import { useQuery } from '@tanstack/react-query'
 import { z } from 'zod'
+import { capitalize } from 'lodash'
 import Page from '@/components/Page/Page'
 import { AddGoalSchema, addGoalSchema } from '@/schema/goals'
 import { useAuthContext } from '@/hooks/use-auth'
@@ -50,6 +51,8 @@ export default function CreateGoal() {
     },
   })
 
+  const formValues = form.watch()
+
   const handleGoalCreate = (values: AddGoalSchema) => {
     console.log(values)
   }
@@ -66,7 +69,8 @@ export default function CreateGoal() {
         <Select
           value={goalType}
           onValueChange={(value) => {
-            form.reset()
+            form.setValue('asset', undefined)
+            form.setValue('liability', undefined)
             setGoalType(value as GoalType)
           }}
         >
@@ -139,6 +143,16 @@ export default function CreateGoal() {
           </When>
 
           <InputFieldsRenderer control={form.control} inputs={GOAL_INPUTS} />
+
+          <When truthy={form.formState.isValid}>
+            <div className='col-span-full'>
+              Your goal is -&gt;{' '}
+              {`${capitalize(formValues.degree)} the ${formValues.observerField?.replace(
+                '_',
+                ' ',
+              )} of your ${capitalize(goalType)} to ${formValues.actualValue} ${formValues.unit}`}
+            </div>
+          </When>
 
           <Button type='submit' className='col-span-full w-max'>
             <PlusCircle className='w-4 h-4 mr-2' />

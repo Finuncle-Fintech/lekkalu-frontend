@@ -10,7 +10,6 @@ import { Goal } from '@/types/goals'
 import { AddGoalSchema, addGoalSchema } from '@/schema/goals'
 import { GOAL_INPUTS } from '@/utils/goals'
 import InputFieldsRenderer from '@/components/InputFieldsRenderer/InputFieldsRenderer'
-import { SERVER_DATE_FORMAT } from '@/utils/constants'
 import { addGoal, editGoal } from '@/queries/goals'
 import { GOALS } from '@/utils/query-keys'
 import { useToast } from '@/components/ui/use-toast'
@@ -35,9 +34,7 @@ export default function AddOrEditGoal({ trigger, goal }: Props) {
       ...goal,
       //  @ts-expect-error
       started: goal?.started ? dayjs(goal.started).toDate() : undefined,
-      //  @ts-expect-error
       finished: goal?.finished ? dayjs(goal.started).toDate() : undefined,
-      //  @ts-expect-error
       planned_start: goal?.planned_start ? dayjs(goal.planned_start).toDate() : undefined,
       planned_finish: goal?.planned_finish ? dayjs(goal?.planned_finish).toDate() : undefined,
       user: userData?.id,
@@ -65,10 +62,10 @@ export default function AddOrEditGoal({ trigger, goal }: Props) {
   const handleAddOrEditGoal = (values: AddGoalSchema) => {
     const valuesToSubmit = {
       ...values,
-      started: dayjs(values.started).format(SERVER_DATE_FORMAT),
-      finished: dayjs(values.started).format(SERVER_DATE_FORMAT),
-      planned_finish: dayjs(values.started).format(SERVER_DATE_FORMAT),
-      planned_start: dayjs(values.started).format(SERVER_DATE_FORMAT),
+      // started: dayjs(values.started).format(SERVER_DATE_FORMAT),
+      // finished: dayjs(values.started).format(SERVER_DATE_FORMAT),
+      // planned_finish: dayjs(values.started).format(SERVER_DATE_FORMAT),
+      // planned_start: dayjs(values.started).format(SERVER_DATE_FORMAT),
     }
 
     /** Handling the case of updation */

@@ -47,3 +47,14 @@ export async function deleteLiability(id: number) {
   const { data } = await v1ApiClient.delete(`loans/${id}`)
   return data
 }
+
+/** Loan Transactions */
+export async function fetchLoanTransactions() {
+  const { data } = await v1ApiClient.get('loan_transactions/')
+  return data
+}
+
+export async function fetchTransactionsForLoan(loanId: number) {
+  const { data } = await v1ApiClient.get(`loan_transactions/?loan=${loanId}`)
+  return data
+}

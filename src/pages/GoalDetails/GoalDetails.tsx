@@ -4,7 +4,7 @@ import Page from '@/components/Page/Page'
 
 export default function GoalDetails() {
   return (
-    <Page>
+    <Page className='space-y-4'>
       <h1 className='text-2xl font-bold mb-8'>Title of the goal</h1>
 
       <div className='grid md:grid-cols-2 gap-4'>

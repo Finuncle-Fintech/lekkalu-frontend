@@ -31,6 +31,7 @@ export const INCOME_STATEMENT = {
 export const BALANCE_SHEET = {
   ASSETS: 'ASSETS',
   LIABILITIES: 'LIABILITIES',
+  LOAN_TRANSACTIONS: 'LOAN_TRANSACTIONS',
 } as const
 
 export const GOALS = {

@@ -7,23 +7,13 @@ export const GOAL_INPUTS: InputField[] = [
     type: 'text',
   },
   {
-    id: 'observerField',
-    label: 'Observer Field',
-    type: 'select',
-    options: [
-      {
-        id: 'interest_rate',
-        label: 'Interest Rate',
-      },
-    ],
-  },
-  {
     id: 'degree',
     label: 'Degree',
     type: 'select',
     options: [
       { id: 'HIGHER', label: 'Higher' },
       { id: 'LOWER', label: 'Lower' },
+      { id: 'EQUAL', label: 'Equal' },
     ],
   },
   {
@@ -43,6 +33,74 @@ export const GOAL_INPUTS: InputField[] = [
     ],
   },
 ]
+
+export const GOAL_CATEGORIES = [
+  {
+    id: 'ASSET_QUALITY',
+    label: 'Asset Quality',
+  },
+  {
+    id: 'LIABILITIES',
+    label: 'Liabilities',
+  },
+  {
+    id: 'BALANCE_SHEET',
+    label: 'Balance Sheet',
+  },
+  {
+    id: 'INCOME_STATEMENT',
+    label: 'Income Statement',
+  },
+] as const
+
+export type GoalCategories = (typeof GOAL_CATEGORIES)[number]['id']
+
+export const CATEGORY_CALCULATION_MAP: Record<GoalCategories, Array<{ id: string; label: string }>> = {
+  ASSET_QUALITY: [
+    {
+      id: 'LENT',
+      label: 'Lent',
+    },
+    {
+      id: 'NPA',
+      label: 'NPA',
+    },
+  ],
+  BALANCE_SHEET: [
+    {
+      id: 'EQUITY',
+      label: 'Equity',
+    },
+    {
+      id: 'NET_CASH',
+      label: 'Net Cash',
+    },
+    {
+      id: 'NET_DEBT',
+      label: 'Net Debt',
+    },
+  ],
+  INCOME_STATEMENT: [
+    {
+      id: 'INVESTMENT',
+      label: 'Investment',
+    },
+    {
+      id: 'ALPHA',
+      label: 'Alpha',
+    },
+    {
+      id: 'CHARITY',
+      label: 'Charity',
+    },
+  ],
+  LIABILITIES: [
+    {
+      id: 'GROSS_DEBT',
+      label: 'Gross Debt',
+    },
+  ],
+}
 
 // * These fields are on hold for now
 // {

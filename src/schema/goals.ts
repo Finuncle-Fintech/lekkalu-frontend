@@ -35,13 +35,11 @@ export const addGoalSchema = z.object({
     .string({ required_error: 'Goal is required!' })
     .min(3, 'Please enter at least 3 characters!')
     .max(255, 'Please enter at least 255 characters!'),
-  observerField: z.string({ required_error: 'Please select the observer field!' }),
   degree: z.string({ required_error: 'Please select the degree!' }),
   actualValue: z.coerce.number({ required_error: 'Please enter the value!' }),
   unit: z.string({ required_error: 'Please select the unit!' }),
   user: z.number(),
+  category: z.string({ required_error: 'Please select the category!' }),
+  calculationField: z.string({ required_error: 'Please select the calculation field!' }),
 })
-export type AddGoalSchema = z.infer<typeof addGoalSchema> & {
-  asset?: number
-  liability?: number
-}
+export type AddGoalSchema = z.infer<typeof addGoalSchema>

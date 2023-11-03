@@ -22,10 +22,7 @@ export default function Goal({ className, style, goalTitle, progressPercentage, 
 
   return (
     <div
-      className={cn(
-        'flex items-center justify-center gap-4 flex-col border-t-4 rounded-lg min-h-[300px] p-4 shadow-md',
-        className,
-      )}
+      className={cn('flex items-center justify-center gap-4 flex-col border-t-4 rounded-lg p-4 shadow-md', className)}
       style={{ ...style, borderColor: color }}
     >
       <RadialBarChart width={circleSize} height={circleSize} innerRadius={50} outerRadius={35} data={data}>

@@ -1,10 +1,10 @@
 on:
   push:
     branches:
-      - "selenium-tests-and-github-ci"  
+      - "master"  
   pull_request:
     branches:
-      - "main" 
+      - "master" 
     paths:
       - ".github/workflows/run_selenium_tests.yaml"
 

@@ -18,7 +18,7 @@ export default function ProgressChart({ className, style, title, value, color, u
 
   return (
     <div
-      className={cn('space-y-4 p-4 rounded-md border flex flex-col items-center justify-center', className)}
+      className={cn('space-y-4 p-4 rounded-lg border flex flex-col items-center justify-center', className)}
       style={style}
     >
       <div className='text-lg font-bold'>{title}</div>

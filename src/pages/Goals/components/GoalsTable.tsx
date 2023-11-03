@@ -1,14 +1,13 @@
 import { useQuery } from '@tanstack/react-query'
 import React, { useState } from 'react'
-import { LoaderIcon, PencilIcon, PlusIcon } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { LoaderIcon, PencilIcon } from 'lucide-react'
 import { GOALS } from '@/utils/query-keys'
 import { fetchGoals } from '@/queries/goals'
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import When from '@/components/When/When'
 import Pagination from '@/components/Pagination/Pagination'
 import AddOrEditGoal from './AddOrEditGoal'
-import { Button, buttonVariants } from '@/components/ui/button'
+import { Button } from '@/components/ui/button'
 import DeleteGoal from './DeleteGoal'
 
 export default function GoalsTable() {
@@ -45,11 +44,6 @@ export default function GoalsTable() {
             {page * 10 + 1} - {page * 10 + 10}
           </div>
         </div>
-
-        <Link to='/goals/new' className={buttonVariants({ variant: 'default' })}>
-          <PlusIcon className='w-4 h-4 mr-2' />
-          <span>Add Goal</span>
-        </Link>
       </div>
       <Table className='border rounded'>
         <TableCaption className='text-center'>A list of all your financial goals</TableCaption>

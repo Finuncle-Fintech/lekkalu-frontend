@@ -15,6 +15,11 @@ jobs:
  
     steps:
     - uses: actions/checkout@v3
+
+    - name: Check out lekkalu test
+      run: |
+        git clone https://github.com/GVR-Secure-Solutions/lekkalu-test-frontend.git
+    
     - name: Set up python
       uses: actions/setup-python@v4
       with:
@@ -26,8 +31,10 @@ jobs:
     - run: npm install
     - run: npm run start:qa &
 
+
     - name: Install dependencies
-      run: pip install -r src/selenium_tests/requirements.txt
+      run: pip install -r selenium_tests/requirements.txt
+      working-directory: lekkalu-test-frontend
        
     - uses: browser-actions/setup-chrome@latest
     - run: chrome --version
@@ -37,4 +44,5 @@ jobs:
       with:
         time: '5s'
      
-    - run: python src/selenium_tests/main.py
+    - run: python selenium_tests/main.py
+      working-directory: lekkalu-test-frontend

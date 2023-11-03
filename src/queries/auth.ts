@@ -37,3 +37,14 @@ export async function fetchUser() {
   const { data } = await userClient.get<User>(`/${decodedToken.user_id}`, { headers })
   return data
 }
+
+export async function notificationUser() {
+  const fetchNotificationMock = () => {
+    return {
+      title: 'This is a example of a notification',
+      description: 'There was a problem with your request.'
+    }
+  }
+
+  return fetchNotificationMock()
+}

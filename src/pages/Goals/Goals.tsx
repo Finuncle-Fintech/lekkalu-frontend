@@ -20,9 +20,9 @@ export default function Goals() {
       </div>
 
       <div className='grid sm:grid-cols-2 md:grid-cols-3 gap-4'>
-        <ProgressChart title='On Track' color={colors.green['500']} value={40} />
-        <ProgressChart title='Off Track' color={colors.red['500']} value={20} />
-        <ProgressChart title='Completed' color={colors.indigo['500']} value={10} />
+        <ProgressChart title='On Track' color={colors.green['500']} value={Math.floor(Math.random() * 100)} />
+        <ProgressChart title='Off Track' color={colors.red['500']} value={Math.floor(Math.random() * 100)} />
+        <ProgressChart title='Completed' color={colors.indigo['500']} value={Math.floor(Math.random() * 100)} />
       </div>
 
       <div className='text-2xl font-bold truncate block py-4'>Your ongoing financial goals</div>

@@ -10,6 +10,7 @@ type Props = {
   className?: string
   style?: React.CSSProperties
   goalTitle: string
+  category: string
   progressPercentage: number
   createdAt: string
   color: string
@@ -17,7 +18,7 @@ type Props = {
 
 const circleSize = 100
 
-export default function Goal({ className, style, goalTitle, progressPercentage, createdAt, color }: Props) {
+export default function Goal({ className, style, goalTitle, category, progressPercentage, createdAt, color }: Props) {
   const data = [{ name: goalTitle, progressPercentage, color }]
 
   return (
@@ -40,10 +41,8 @@ export default function Goal({ className, style, goalTitle, progressPercentage, 
       </RadialBarChart>
 
       <div className='text-xl font-bold'>{goalTitle}</div>
-
-      <div className='flex justify-end w-full'>
-        <div className='text-muted-foreground'>{dayjs(createdAt).fromNow()}</div>
-      </div>
+      <div className='text-sm text-muted-foreground'>{category}</div>
+      <div className='text-muted-foreground text-xs'>{dayjs(createdAt).fromNow()}</div>
     </div>
   )
 }

@@ -4,6 +4,7 @@ import { LoaderIcon } from 'lucide-react'
 import { Toaster } from '@/components/ui/toaster'
 import AuthProtection from './components/AuthProtection/AuthProtection'
 import AppShell from './components/AppShell/AppShell'
+import CookieConsent from './components/AppShell/CookieConsent'
 import UnAuthenticatedHeader from './components/UnAuthenticatedHeader/UnAuthenticatedHeader'
 import Footer from './components/Footer/Footer'
 
@@ -45,6 +46,7 @@ function App() {
           element={
             <AuthProtection>
               <AppShell>
+                <CookieConsent/>
                 <Outlet />
               </AppShell>
             </AuthProtection>
@@ -63,6 +65,7 @@ function App() {
           element={
             <>
               <UnAuthenticatedHeader />
+              <CookieConsent/>
               <div className='min-h-screen mt-16'>
                 <Outlet />
               </div>

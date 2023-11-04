@@ -1,0 +1,36 @@
+/* Styles for the cookie consent banner */
+.cookie-consent {
+    position: fixed;
+    bottom: 12px;
+    left: 12px;
+    /* right: 0; */
+    background: #fff;
+    /* color: #222; */
+    padding: 24px;
+    z-index: 999;
+    border-radius: 0.5rem;
+    border: 1px solid #e5e7eb;
+    max-width: 512px;
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+
+.btn-accept {
+    background: rgb(15, 75, 143);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-size: 14px;
+}
+.btn-decline{
+    color: black;
+    border: none;
+    cursor: pointer;
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-size: 14px;
+    border: 1px solid #e5e7eb;
+    font-weight: 500;
+}

@@ -5,6 +5,7 @@ import { SpentBalanceChart } from '../../components/Charts/SpentBalanceChart'
 import { CumSumChart } from '../../components/Charts/CumSumChart'
 import Page from '@/components/Page/Page'
 import AssetDepreciationChart from '@/components/Charts/AssetDepreciationChart'
+import Budgets from '@/components/Budgets'
 
 const Home = () => {
   return (
@@ -13,6 +14,7 @@ const Home = () => {
       <SpentBalanceChart />
       <CumSumChart />
       <AssetDepreciationChart />
+      <Budgets/>
     </Page>
   )
 }

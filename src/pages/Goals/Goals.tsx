@@ -15,7 +15,7 @@ export default function Goals() {
       <div className='flex justify-end'>
         <Link to='/goals/new' className={buttonVariants({ variant: 'default' })}>
           <PlusIcon className='w-4 h-4 mr-2' />
-          <span>subtract Goal</span>
+          <span>Add Goal</span>
         </Link>
       </div>
 
@@ -31,49 +31,49 @@ export default function Goals() {
         <Goal
           goalTitle='Testing Goal 1'
           category='Assets'
-          progressPercentage={10}
+          progressPercentage={Math.floor(Math.random() * 100)}
           createdAt={dayjs().toISOString()}
           color={colors.violet['500']}
         />
         <Goal
           goalTitle='Testing Goal 1'
           category='Liabilities'
-          progressPercentage={15}
+          progressPercentage={Math.floor(Math.random() * 100)}
           createdAt={dayjs().subtract(1, 'minute').toISOString()}
           color={colors.yellow['500']}
         />
         <Goal
           goalTitle='Testing Goal 1'
           category='Income Statement'
-          progressPercentage={70}
+          progressPercentage={Math.floor(Math.random() * 100)}
           createdAt={dayjs().subtract(10, 'minute').toISOString()}
           color={colors.blue['500']}
         />
         <Goal
           goalTitle='Testing Goal 1'
           category='Balance Sheet'
-          progressPercentage={90}
+          progressPercentage={Math.floor(Math.random() * 100)}
           createdAt={dayjs().subtract(1, 'month').toISOString()}
           color={colors.green['500']}
         />
         <Goal
           goalTitle='Testing Goal 1'
           category='Assets'
-          progressPercentage={30}
+          progressPercentage={Math.floor(Math.random() * 100)}
           createdAt={dayjs().subtract(1, 'year').toISOString()}
           color={colors.indigo['500']}
         />
         <Goal
           goalTitle='Testing Goal 1'
           category='Liabilities'
-          progressPercentage={50}
+          progressPercentage={Math.floor(Math.random() * 100)}
           createdAt={dayjs().subtract(4, 'months').toISOString()}
           color={colors.red['500']}
         />
         <Goal
           goalTitle='Testing Goal 1'
           category='Assets'
-          progressPercentage={40}
+          progressPercentage={Math.floor(Math.random() * 100)}
           createdAt={dayjs().subtract(40, 'minute').toISOString()}
           color={colors.emerald['500']}
         />

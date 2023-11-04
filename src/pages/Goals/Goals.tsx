@@ -15,7 +15,7 @@ export default function Goals() {
       <div className='flex justify-end'>
         <Link to='/goals/new' className={buttonVariants({ variant: 'default' })}>
           <PlusIcon className='w-4 h-4 mr-2' />
-          <span>Add Goal</span>
+          <span>subtract Goal</span>
         </Link>
       </div>
 
@@ -30,44 +30,51 @@ export default function Goals() {
       <div className='grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
         <Goal
           goalTitle='Testing Goal 1'
+          category='Assets'
           progressPercentage={10}
           createdAt={dayjs().toISOString()}
           color={colors.violet['500']}
         />
         <Goal
           goalTitle='Testing Goal 1'
+          category='Liabilities'
           progressPercentage={15}
-          createdAt={dayjs().add(1, 'minute').toISOString()}
+          createdAt={dayjs().subtract(1, 'minute').toISOString()}
           color={colors.yellow['500']}
         />
         <Goal
           goalTitle='Testing Goal 1'
+          category='Income Statement'
           progressPercentage={70}
-          createdAt={dayjs().add(10, 'minute').toISOString()}
+          createdAt={dayjs().subtract(10, 'minute').toISOString()}
           color={colors.blue['500']}
         />
         <Goal
           goalTitle='Testing Goal 1'
+          category='Balance Sheet'
           progressPercentage={90}
-          createdAt={dayjs().add(1, 'month').toISOString()}
+          createdAt={dayjs().subtract(1, 'month').toISOString()}
           color={colors.green['500']}
         />
         <Goal
           goalTitle='Testing Goal 1'
+          category='Assets'
           progressPercentage={30}
-          createdAt={dayjs().add(1, 'year').toISOString()}
+          createdAt={dayjs().subtract(1, 'year').toISOString()}
           color={colors.indigo['500']}
         />
         <Goal
           goalTitle='Testing Goal 1'
+          category='Liabilities'
           progressPercentage={50}
-          createdAt={dayjs().add(4, 'months').toISOString()}
+          createdAt={dayjs().subtract(4, 'months').toISOString()}
           color={colors.red['500']}
         />
         <Goal
           goalTitle='Testing Goal 1'
+          category='Assets'
           progressPercentage={40}
-          createdAt={dayjs().add(40, 'minute').toISOString()}
+          createdAt={dayjs().subtract(40, 'minute').toISOString()}
           color={colors.emerald['500']}
         />
       </div>

@@ -44,9 +44,12 @@ function App() {
         <Route
           element={
             <AuthProtection>
-              <AppShell>
-                <Outlet />
-              </AppShell>
+              <UnAuthenticatedHeader />
+                <div className='min-h-screen mt-16'>
+                  <AppShell>
+                      <Outlet />
+                  </AppShell>
+                </div>
             </AuthProtection>
           }
         >

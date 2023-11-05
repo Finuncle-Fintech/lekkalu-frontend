@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
+import { Menu, X } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import { GiHamburgerMenu } from 'react-icons/gi'
-import { AiOutlineClose } from 'react-icons/ai'
 import When from '../When/When'
 import { useAuthContext } from '@/hooks/use-auth'
 import { cn } from '@/utils/utils'
@@ -148,7 +147,7 @@ export default function UnAuthenticatedHeader() {
          <div className='md:hidden' onClick={handleMobileMenuToggle}>
           <div className='w-6 h-6 cursor-pointer'>
             {
-              isMobileMenuOpen ? <AiOutlineClose size={20}/> : <GiHamburgerMenu size={20}/>
+              isMobileMenuOpen ? <X /> : <Menu />
             }
           </div>
         </div>

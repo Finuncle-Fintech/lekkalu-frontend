@@ -1,5 +1,5 @@
 import { AddLiabilitySchema, AddPhysicalAssetSchema } from '@/schema/balance-sheet'
-import { Liability, PhysicalAsset } from '@/types/balance-sheet'
+import { Liability, LoanTransaction, PhysicalAsset } from '@/types/balance-sheet'
 import { v1ApiClient } from '@/utils/client'
 
 export async function fetchPhysicalAssets() {
@@ -50,11 +50,11 @@ export async function deleteLiability(id: number) {
 
 /** Loan Transactions */
 export async function fetchLoanTransactions() {
-  const { data } = await v1ApiClient.get('loan_transactions/')
+  const { data } = await v1ApiClient.get<LoanTransaction[]>('loan_transactions/')
   return data
 }
 
-export async function fetchTransactionsForLoan(loanId: number) {
-  const { data } = await v1ApiClient.get(`loan_transactions/?loan=${loanId}`)
+export async function fetchTransactionsForLoan(loan_id: number) {
+  const { data } = await v1ApiClient.get<LoanTransaction[]>('loan_transactions', { params: { loan_id } })
   return data
 }

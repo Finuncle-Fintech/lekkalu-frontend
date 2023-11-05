@@ -81,24 +81,46 @@ export default function UnAuthenticatedHeader() {
         </div>
         {
       isMobileMenuOpen &&
-        <div className='flex md:hidden items-center flex-col gap-2 fixed top-16 left-0 right-0 overflow-y-auto bg-primary h-full justify-start p-[5rem] transition-all text-black'>
-          <div className='flex flex-col justify-center items-center bg-white w-72  sm:w-96'>
-          <Accordion type="single" collapsible className="w-full">
-            <AccordionItem className='bg-white' value="item-1">
-              <AccordionTrigger className='justify-center hover:decoration-transparent decoration-transparent border-b-0'>Calculators</AccordionTrigger>
-              {CALCULATOR_ROUTES.map((route) => (
-                  <AccordionContent onClick={handleMobileMenuToggle} key={route.path}>
-                    <NavLink twClass='justify-center' to={route.path} label={route.label} />
-                  </AccordionContent>
-                ))}
-            </AccordionItem>
-          </Accordion>
-          <div onClick={handleMobileMenuToggle} className='border-t w-full p-1'>
-            <NavLink twClass='justify-center' to='/pricing' label='Pricing' />
-          </div>
-          <div onClick={handleMobileMenuToggle} className='border-t w-full p-1'>
-            <NavLink twClass='justify-center' to='/support' label='Support' />
-          </div>
+      <div className='flex md:hidden items-center flex-col gap-2 fixed top-16 left-0 right-0 overflow-y-auto bg-primary h-full justify-start p-[5rem] text-black'>
+          <div>
+            <div className='flex flex-col justify-center items-center bg-white w-72  sm:w-96'>
+              <Accordion type="single" collapsible className="w-full">
+                <AccordionItem className='bg-white' value="item-1">
+                  <AccordionTrigger className='justify-center hover:decoration-transparent decoration-transparent border-b-0'>Calculators</AccordionTrigger>
+                  {CALCULATOR_ROUTES.map((route) => (
+                      <AccordionContent onClick={handleMobileMenuToggle} key={route.path}>
+                        <NavLink twClass='justify-center' to={route.path} label={route.label} />
+                      </AccordionContent>
+                    ))}
+                </AccordionItem>
+              </Accordion>
+              <div onClick={handleMobileMenuToggle} className='border-t w-full p-1'>
+                <NavLink twClass='justify-center' to='/pricing' label='Pricing' />
+              </div>
+              <div onClick={handleMobileMenuToggle} className='border-t w-full p-1'>
+                <NavLink twClass='justify-center' to='/support' label='Support' />
+              </div>
+            </div>
+            <div className='md:hidden mt-2 justify-center items-center flex'>
+              <When
+                truthy={Boolean(tokenData)}
+                fallback={
+                  <div className='space-x-2 flex w-full'>
+                    <Link onClick={handleMobileMenuToggle} to='/signin' className={cn(buttonVariants({ variant: 'outline' }), 'bg-transparent', 'text-white w-full')}>
+                      Signin
+                    </Link>
+
+                    <Link onClick={handleMobileMenuToggle} to='/signup' className={cn(buttonVariants({ variant: 'secondary' }), 'w-full')}>
+                      Signup
+                    </Link>
+                  </div>
+                }
+              >
+                <Link onClick={handleMobileMenuToggle} to='/dashboard' className={cn(buttonVariants({ variant: 'secondary' }))}>
+                  Dashboard
+                </Link>
+              </When>
+            </div>
           </div>
         </div>
         }

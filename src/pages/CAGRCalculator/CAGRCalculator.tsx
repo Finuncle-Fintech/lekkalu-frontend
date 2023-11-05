@@ -39,6 +39,12 @@ const DEFAULT_DATA = {
   durationOfInvestment: 5,
 }
 
+const CAGRHelpTexts: {[key: string]: string} = {
+  initialValue: 'This is the starting value or principal investment amount. It represents the value of your investment or asset at the beginning of the investment period.',
+  finalValue: 'This is the ending value or the current value of your investment after the specified duration. It represents the value of your investment at the end of the investment period.',
+  durationOfInvestment: 'This is the length of time, in years, for which you held the investment. It represents the time period between the initial and final values.'
+}
+
 export default function CAGRCalculator() {
   const { toast } = useToast()
   const [isCopied, setIsCopied] = useState(false)
@@ -63,6 +69,7 @@ export default function CAGRCalculator() {
         max: 100_000_00,
         step: 500,
       },
+      helpText: CAGRHelpTexts.initialValue,
     },
     {
       id: 'finalValue',
@@ -74,6 +81,7 @@ export default function CAGRCalculator() {
         max: 100_000_00,
         step: 500,
       },
+      helpText: CAGRHelpTexts.finalValue,
     },
     {
       id: 'durationOfInvestment',
@@ -85,6 +93,7 @@ export default function CAGRCalculator() {
         max: 40,
         step: 1,
       },
+      helpText: CAGRHelpTexts.durationOfInvestment,
     },
   ]
 
@@ -198,6 +207,22 @@ export default function CAGRCalculator() {
             </div>
           </div>
         </When>
+      </div>
+      <div className='grid gap-4'>
+        <h1 className='text-2md font-bold'>CAGR Formula</h1>
+        <p>The formula to calculate the Compound Annual Growth Rate (CAGR) is as follows:</p>
+        <p><span className='font-bold'> Your Absolute CAGR</span> = (F/I)^(1 / D) - 1</p>
+        <p>Where:</p>
+        <ul className='list-disc pl-8'>
+          <li><span className='font-bold'>F(Final Value):</span> is the ending value or the current value of your investment after the specified duration.</li>
+          <li><span className='font-bold'>I(Initial Value):</span> is the starting value or principal investment amount.</li>
+          <li><span className='font-bold'>D(Duration):</span> is the length of time, in years, for which you held the investment.</li>
+        </ul>
+        <ul className='list-disc pl-8'>
+          <li><span className='font-bold'>Your Absolute CAGR:</span> is the Compound Annual Growth Rate calculated based on the initial value, final value, and costs.</li>
+          <li><span className='font-bold'>Your Absolute CAGR Percentage:</span> represents the annualized growth rate of your investment expressed as a percentage.</li>
+          <li><span className='font-bold'>Your Absolute Returns:</span> is the total return on your investment, accounting for the initial value and final value</li>
+        </ul>
       </div>
     </Page>
   )

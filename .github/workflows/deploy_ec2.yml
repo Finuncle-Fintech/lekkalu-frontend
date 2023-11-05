@@ -1,0 +1,52 @@
+name: Deploy to EC2
+
+on:
+  # push:
+    # branches: [ master ]
+  release:
+    types: [ published ]
+
+jobs:
+  build:
+
+    runs-on: self-hosted
+  
+    strategy:
+      matrix:
+        node-version: [18.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+          
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - name: Create ENV variables
+        run: |
+          touch ./environments/.prod.env
+          echo REACT_APP_BACKEND_URL=https://api.finuncle.com/ >> ./environments/.prod.env
+          echo REACT_APP_BACKEND_API=https://api.finuncle.com/api/ >> ./environments/.prod.env
+          echo REACT_APP_API_BASE_URL="https://api.finuncle.com/api" >> ./environments/.prod.env
+          echo REACT_APP_V1_API_URL="https://api.finuncle.com/api/v1" >> ./environments/.prod.env
+          echo REACT_APP_TOKEN_BASE_URL="https://api.finuncle.com/token" >> ./environments/.prod.env
+          echo REACT_APP_USER_BASE_URL="https://api.finuncle.com/users/api/users" >> ./environments/.prod.env
+          cat ./environments/.prod.env
+          pwd
+          ls
+      - name: Install Dependencies
+        run: npm install
+      - name: Run Tests
+        run: npm test
+      # - name: Build app
+      #   run: npm run build:prod
+      - name: Restart Server
+        run: pm2 restart lekkalu-frontend --update-env
+      # - uses: aws-actions/configure-aws-credentials@v1
+      #   with:
+      #       aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #       aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #       aws-region: ap-south-1
+      # - name: Deploy on s3
+      #   run: aws s3 sync ./build s3://finuncle-static-website-react

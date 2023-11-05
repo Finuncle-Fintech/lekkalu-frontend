@@ -26,3 +26,13 @@ export type Liability = {
   tenure: number
   user: number
 }
+
+export type LoanTransaction = {
+  id: number
+  amount: number
+  loan: number
+  time: string
+  type: number
+  user: number
+  user_remark: string
+}

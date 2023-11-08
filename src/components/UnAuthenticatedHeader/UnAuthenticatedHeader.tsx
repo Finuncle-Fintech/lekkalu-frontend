@@ -1,12 +1,7 @@
-import React, { useState } from 'react'
-import { Menu, X } from 'lucide-react'
+import React from 'react'
 import { Link } from 'react-router-dom'
-import When from '../When/When'
-import { useAuthContext } from '@/hooks/use-auth'
-import { cn } from '@/utils/utils'
-import { buttonVariants } from '../ui/button'
-import { CALCULATOR_ROUTES } from '@/utils/app-shell'
 import NavLink from '../AppShell/components/NavLink'
+import MobileMenu from '../AppShell/components/MobileMenu'
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -15,13 +10,11 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from '@/components/ui/navigation-menu'
-
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from '@/components/ui/accordion'
+import { useAuthContext } from '@/hooks/use-auth'
+import { CALCULATOR_ROUTES } from '@/utils/app-shell'
+import { cn } from '@/utils/utils'
+import When from '../When/When'
+import { buttonVariants } from '../ui/button'
 
 const ListItem = React.forwardRef<
   React.ElementRef<'a'>,
@@ -39,15 +32,10 @@ ListItem.displayName = 'ListItem'
 
 export default function UnAuthenticatedHeader() {
   const { tokenData } = useAuthContext()
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-
-  const handleMobileMenuToggle = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen)
-  }
 
   return (
     <div className='w-full bg-primary h-16 text-white fixed top-0 left-0 z-50'>
-      <div className='max-w-screen-xl mx-auto flex items-center justify-between h-full px-4'>
+      <div className='max-w-screen-xl mx-auto hidden md:flex items-center justify-between h-full px-4'>
         <div>
           <div className='relative'>
             <div className='absolute bg-white w-5 h-5 rounded-full -top-4 -left-4' />
@@ -56,7 +44,7 @@ export default function UnAuthenticatedHeader() {
             </Link>
           </div>
         </div>
-        <div className='hidden md:flex items-center gap-2'>
+        <div className='flex items-center gap-2'>
           <NavigationMenu>
             <NavigationMenuList>
               <NavigationMenuItem>
@@ -78,52 +66,7 @@ export default function UnAuthenticatedHeader() {
           <NavLink to='/pricing' label='Pricing' />
           <NavLink to='/support' label='Support' />
         </div>
-        {
-      isMobileMenuOpen &&
-      <div className='flex md:hidden items-center flex-col gap-2 fixed top-16 left-0 right-0 overflow-y-auto bg-primary h-full justify-start p-[5rem] text-black'>
-          <div>
-            <div className='flex flex-col justify-center items-center bg-white w-72  sm:w-96'>
-              <Accordion type="single" collapsible className="w-full">
-                <AccordionItem className='bg-white' value="item-1">
-                  <AccordionTrigger className='justify-center hover:decoration-transparent decoration-transparent border-b-0'>Calculators</AccordionTrigger>
-                  {CALCULATOR_ROUTES.map((route) => (
-                      <AccordionContent onClick={handleMobileMenuToggle} key={route.path}>
-                        <NavLink twClass='justify-center' to={route.path} label={route.label} />
-                      </AccordionContent>
-                    ))}
-                </AccordionItem>
-              </Accordion>
-              <div onClick={handleMobileMenuToggle} className='border-t w-full p-1'>
-                <NavLink twClass='justify-center' to='/pricing' label='Pricing' />
-              </div>
-              <div onClick={handleMobileMenuToggle} className='border-t w-full p-1'>
-                <NavLink twClass='justify-center' to='/support' label='Support' />
-              </div>
-            </div>
-            <div className='md:hidden mt-2 justify-center items-center flex'>
-              <When
-                truthy={Boolean(tokenData)}
-                fallback={
-                  <div className='space-x-2 flex w-full'>
-                    <Link onClick={handleMobileMenuToggle} to='/signin' className={cn(buttonVariants({ variant: 'outline' }), 'bg-transparent', 'text-white w-full')}>
-                      Signin
-                    </Link>
-
-                    <Link onClick={handleMobileMenuToggle} to='/signup' className={cn(buttonVariants({ variant: 'secondary' }), 'w-full')}>
-                      Signup
-                    </Link>
-                  </div>
-                }
-              >
-                <Link onClick={handleMobileMenuToggle} to='/dashboard' className={cn(buttonVariants({ variant: 'secondary' }))}>
-                  Dashboard
-                </Link>
-              </When>
-            </div>
-          </div>
-        </div>
-        }
-        <div className='hidden md:block'>
+        <div className='block'>
           <When
             truthy={Boolean(tokenData)}
             fallback={
@@ -142,14 +85,19 @@ export default function UnAuthenticatedHeader() {
               Dashboard
             </Link>
           </When>
+        </div>
+      </div>
+      <div className='border-b sticky top-0 left-0 h-16 backdrop-blur-lg w-full z-50 md:hidden flex items-center justify-between px-4'>
+        <div>
+          <div className='relative'>
+            <div className='absolute bg-white w-5 h-5 rounded-full -top-4 -left-4' />
+              <Link to='/' className='text-xl font-bold'>
+                finuncle
+              </Link>
           </div>
-         {/* Hamburger icon for mobile menu */}
-         <div className='md:hidden' onClick={handleMobileMenuToggle}>
-          <div className='w-6 h-6 cursor-pointer'>
-            {
-              isMobileMenuOpen ? <X /> : <Menu />
-            }
-          </div>
+        </div>
+        <div>
+          <MobileMenu isUnAuthenticatedHeader={true} />
         </div>
       </div>
     </div>

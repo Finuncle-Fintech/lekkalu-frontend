@@ -1,0 +1,16 @@
+name: Deploy App
+
+on:
+  workflow_run:
+    workflows: ['Build and Push Image']
+    types:
+      - completed
+
+jobs:
+  build:
+    name: Pull and deploy the Docker Image
+    runs-on: self-hosted
+
+    steps:
+      - name: Pull Docker Image
+        run: docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_TAG }}:latest

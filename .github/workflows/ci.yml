@@ -1,4 +1,4 @@
-name: Deploy to EC2
+name: Build and Push Image
 
 on:
   push:

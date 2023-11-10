@@ -52,28 +52,26 @@ export default function Signup() {
             <Form {...form}>
               <form onSubmit={form.handleSubmit(handleSignup)} className='space-y-4 w-full'>
                 <FormField
-                  disabled={signupMutation.isLoading}
                   control={form.control}
                   name='username'
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Username</FormLabel>
                       <FormControl>
-                        <Input placeholder='Enter your username' {...field} />
+                        <Input disabled={signupMutation.isLoading} placeholder='Enter your username' {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
                 <FormField
-                  disabled={signupMutation.isLoading}
                   control={form.control}
                   name='email'
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Email</FormLabel>
                       <FormControl>
-                        <Input placeholder='Enter your email' {...field} />
+                        <Input disabled={signupMutation.isLoading} placeholder='Enter your email' {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -81,14 +79,13 @@ export default function Signup() {
                 />
 
                 <FormField
-                  disabled={signupMutation.isLoading}
                   control={form.control}
                   name='password'
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Password</FormLabel>
                       <FormControl>
-                        <Password placeholder='Enter your password' {...field} />
+                        <Password disabled={signupMutation.isLoading} placeholder='Enter your password' {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -96,14 +93,18 @@ export default function Signup() {
                 />
 
                 <FormField
-                  disabled={signupMutation.isLoading}
                   control={form.control}
                   name='termsAndConditions'
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
                         <div className='flex items-center space-x-2'>
-                          <Checkbox id='termsAndConditions' checked={field.value} onCheckedChange={field.onChange} />
+                          <Checkbox
+                            disabled={signupMutation.isLoading}
+                            id='termsAndConditions'
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                          />
                           <label
                             htmlFor='termsAndConditions'
                             className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
@@ -128,7 +129,12 @@ export default function Signup() {
                     <FormItem>
                       <FormControl>
                         <div className='flex items-center space-x-2'>
-                          <Checkbox id='privacyPolicy' checked={field.value} onCheckedChange={field.onChange} />
+                          <Checkbox
+                            disabled={signupMutation.isLoading}
+                            id='privacyPolicy'
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                          />
                           <label
                             htmlFor='privacyPolicy'
                             className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'

@@ -1,42 +1,12 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { Sidebar } from './components/Sidebar'
 import MobileMenu from './components/MobileMenu'
-import { useToast } from '../ui/use-toast'
-import { notificationUser } from '@/queries/auth'
 
 type Props = {
   children: React.ReactNode
 }
 
 export default function AppShell({ children }: Props) {
-  // Example notification
-  const { toast } = useToast()
-  const [notificationType, setNotificationType] = useState(false)
-  useEffect(() => {
-    const simulateDatabaseRequest = async () => {
-      const notificationExample = await notificationUser()
-
-      if (notificationExample) {
-        toast({
-          title: notificationExample.title,
-          description: notificationExample.description,
-          variant: notificationType ? 'default' : 'destructive'
-        })
-      }
-    }
-
-    simulateDatabaseRequest()
-
-    const changeNotificatonType = () => {
-      setNotificationType(prev => !prev)
-    }
-    const intervalId = setInterval(changeNotificatonType, 3000)
-
-    return () => {
-      clearInterval(intervalId)
-    }
-  }, [notificationType, toast])
-
   return (
     <div className='h-screen grid grid-cols-12'>
       <Sidebar className='hidden md:block md:col-span-2' />

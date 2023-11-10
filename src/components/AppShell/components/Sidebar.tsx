@@ -15,6 +15,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import DownloadAllData from '@/components/DownloadAllData/DownloadAllData'
+import Head from './HeadSidebar'
 
 type SidebarProps = React.HTMLAttributes<HTMLDivElement>
 
@@ -25,9 +26,8 @@ export function Sidebar({ className, ...restProps }: SidebarProps) {
     <div className={cn('border-r h-full', className)} {...restProps}>
       <div className='space-y-4 py-4 h-full flex flex-col justify-between px-3'>
         <div>
-          <Link className='text-center text-2xl font-bold text-primary block' to='/dashboard'>
-            finuncle
-          </Link>
+
+          <Head />
 
           <div className='space-y-1 py-2'>
             {ROUTES.map((route) => (

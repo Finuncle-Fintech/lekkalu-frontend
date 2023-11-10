@@ -15,7 +15,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import DownloadAllData from '@/components/DownloadAllData/DownloadAllData'
-import Head from './HeadSidebar'
+import HeadSidebar from './HeadSidebar'
 
 type SidebarProps = React.HTMLAttributes<HTMLDivElement>
 
@@ -27,7 +27,7 @@ export function Sidebar({ className, ...restProps }: SidebarProps) {
       <div className='space-y-4 py-4 h-full flex flex-col justify-between px-3'>
         <div>
 
-          <Head />
+          <HeadSidebar />
 
           <div className='space-y-1 py-2'>
             {ROUTES.map((route) => (

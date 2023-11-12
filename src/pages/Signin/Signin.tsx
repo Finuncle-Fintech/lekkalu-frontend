@@ -3,7 +3,6 @@ import { Link, Navigate, useSearchParams } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { AppleIcon, FacebookIcon } from 'lucide-react'
-import { omit } from 'lodash'
 import When from '@/components/When/When'
 import { LoginSchema, loginSchema } from '@/schema/auth'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
@@ -25,11 +24,13 @@ export const Signin = () => {
     resolver: zodResolver(loginSchema),
     defaultValues: {
       username: '',
+      password: '',
+      rememberMe: false,
     },
   })
 
   const handleSignin = (values: LoginSchema) => {
-    loginMutation.mutate(omit(values, 'rememberMe'))
+    loginMutation.mutate(values)
   }
 
   if (tokenData) {
@@ -54,14 +55,13 @@ export const Signin = () => {
             <Form {...form}>
               <form onSubmit={form.handleSubmit(handleSignin)} className='flex flex-col gap-4'>
                 <FormField
-                  disabled={loginMutation.isLoading}
                   control={form.control}
                   name='username'
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Username</FormLabel>
                       <FormControl>
-                        <Input placeholder='Enter your username' {...field} />
+                        <Input disabled={loginMutation.isLoading} placeholder='Enter your username' {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -69,14 +69,13 @@ export const Signin = () => {
                 />
 
                 <FormField
-                  disabled={loginMutation.isLoading}
                   control={form.control}
                   name='password'
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Password</FormLabel>
                       <FormControl>
-                        <Password placeholder='Enter your password' {...field} />
+                        <Password disabled={loginMutation.isLoading} placeholder='Enter your password' {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -84,14 +83,18 @@ export const Signin = () => {
                 />
 
                 <FormField
-                  disabled={loginMutation.isLoading}
                   control={form.control}
                   name='rememberMe'
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
                         <div className='flex items-center space-x-2'>
-                          <Checkbox id='rememberMe' checked={field.value} onCheckedChange={field.onChange} />
+                          <Checkbox
+                            disabled={loginMutation.isLoading}
+                            id='rememberMe'
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                          />
                           <label
                             htmlFor='rememberMe'
                             className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
@@ -105,7 +108,9 @@ export const Signin = () => {
                   )}
                 />
 
-                <Button>Continue</Button>
+                <Button type='submit' loading={loginMutation.isLoading}>
+                  Continue
+                </Button>
               </form>
             </Form>
 

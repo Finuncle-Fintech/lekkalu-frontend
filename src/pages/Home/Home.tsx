@@ -35,6 +35,7 @@ export default function Home() {
           Managing <span className='bg-primary text-white px-4 rounded-md'>finance</span>
         </div>
         <div className='text-4xl'>the Smarter Way!</div>
+        <div>This is updated image</div>
       </div>
 
       <div className='bg-gray-100/80 py-10'>

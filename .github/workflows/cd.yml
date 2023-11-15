@@ -7,7 +7,7 @@ on:
       - completed
 
 jobs:
-  build:
+  deploy:
     name: Pull and deploy the Docker Image
     runs-on: self-hosted
 

@@ -22,4 +22,4 @@ jobs:
         run: docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_TAG }}:latest
 
       - name: Restart docker container with latest image
-        run: docker rm -f ${{ secrets.DOCKERHUB_USERNAME }}-${{ secrets.DOCKERHUB_TAG }} || true &&  docker run --restart unless-stopped -d -p 80:80 --name ${{ secrets.DOCKERHUB_USERNAME }}-${{ secrets.DOCKERHUB_TAG }} ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_TAG }}:latest
+        run: docker rm -f ${{ secrets.DOCKERHUB_USERNAME }}-${{ secrets.DOCKERHUB_TAG }} || true &&  docker run --restart unless-stopped -d -p 3001:80 --name ${{ secrets.DOCKERHUB_USERNAME }}-${{ secrets.DOCKERHUB_TAG }} ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_TAG }}:latest

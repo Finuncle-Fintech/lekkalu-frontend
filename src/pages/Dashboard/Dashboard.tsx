@@ -45,10 +45,10 @@ const Home = () => {
       </div>
 
       <div className='grid grid-cols-5 h-full'>
-        <div className='col-span-5 md:col-span-3 h-full'>
+        <div className='col-span-full md:col-span-3 h-full'>
           <BalanceBarChart />
         </div>
-        <div className='hidden md:block md:col-span-2'>
+        <div className='col-span-full md:col-span-2'>
           <RecentTransactions />
         </div>
       </div>

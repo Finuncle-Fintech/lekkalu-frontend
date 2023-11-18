@@ -17,10 +17,7 @@ export default function StatCard({ className, style, icon, title, color, value, 
   const darkerColor = lighten(0.4, color)
 
   return (
-    <div
-      className={cn('border rounded-2xl space-y-8 p-6', className)}
-      style={{ ...style, backgroundColor: lightenColor, borderColor: color }}
-    >
+    <div className={cn('rounded-2xl space-y-8 p-6', className)} style={{ ...style, backgroundColor: lightenColor }}>
       <div className='flex items-center justify-between'>
         <div className='flex items-center justify-center p-4 rounded-full' style={{ backgroundColor: darkerColor }}>
           {cloneElement(icon, { className: 'w-8 h-8', style: { color } })}

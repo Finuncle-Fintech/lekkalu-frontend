@@ -15,7 +15,7 @@ const Home = () => {
           icon={<Briefcase />}
           title='Total Sales'
           value='$ 43530.00'
-          color={colors.yellow['500']}
+          color={colors.yellow['600']}
           extraValue='+24%'
         />
 
@@ -31,7 +31,7 @@ const Home = () => {
           icon={<Briefcase />}
           title='Total Sales'
           value='$ 43530.00'
-          color={colors.purple['700']}
+          color={colors.purple['800']}
           extraValue='+24 %'
         />
 
@@ -39,7 +39,7 @@ const Home = () => {
           icon={<PieChartIcon />}
           title='Total Expenses'
           value='$ 64530.00'
-          color={colors.orange['600']}
+          color={colors.orange['700']}
           extraValue='-32%'
         />
       </div>

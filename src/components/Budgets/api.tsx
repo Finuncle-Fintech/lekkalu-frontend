@@ -30,7 +30,8 @@ export const FetchBudgetAndExpenses = () => {
               month: budget.month,
               // limit: parseFloat(budget.limit),
               spent: matchingExpense.spent,
-              budget: matchingExpense.budget,
+              // budget: matchingExpense.budget,
+              budget: parseFloat(budget.limit),
               balance: matchingExpense.balance,
             }
           }

@@ -79,13 +79,13 @@ export default function CardWithForm({ data }: ProgressBarType) {
                 margin: 0,
                 color:
                   (data!.spent / data!.budget) * 100 < 80
-                    ? '#5be19f'
+                    ? colors.green['500']
                     : (data!.spent / data!.budget) * 100 < 95
-                    ? '#fdba78'
-                    : '#fd7878',
+                    ? colors.amber['500']
+                    : colors.red['500'],
               }}
             >
-              {`left ${data?.balance}`}
+              {`left ${Number(data?.budget) - Number(data?.spent)}`}
             </h6>
           </div>
           <div>
@@ -109,10 +109,10 @@ export default function CardWithForm({ data }: ProgressBarType) {
                     transform: `translateX(-${100 - (data!.spent / data!.budget) * 100}%)`,
                     backgroundColor:
                       (data!.spent / data!.budget) * 100 < 80
-                        ? '#5be19f'
+                        ? colors.green['500']
                         : (data!.spent / data!.budget) * 100 < 95
-                        ? '#fdba78'
-                        : '#fd7878',
+                        ? colors.amber['500']
+                        : colors.red['500'],
                     width: '100%',
                     height: '100%',
                     transition: 'transform 660ms cubic-bezier(0.65, 0, 0.35, 1)',

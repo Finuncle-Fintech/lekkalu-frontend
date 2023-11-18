@@ -4,10 +4,11 @@ import Page from '@/components/Page/Page'
 import { Briefcase, PieChartIcon, UsersIcon } from 'lucide-react'
 import colors from 'tailwindcss/colors'
 import StatCard from '@/components/StatCard'
+import BalanceBarChart from './components/BalanceBarChart'
 
 const Home = () => {
   return (
-    <Page className='space-y-4'>
+    <Page className='space-y-4 min-h-screen'>
       <div className='grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
         <StatCard
           icon={<Briefcase />}
@@ -40,6 +41,13 @@ const Home = () => {
           color={colors.orange['600']}
           extraValue='-32%'
         />
+      </div>
+
+      <div className='grid grid-cols-5 h-full'>
+        <div className='col-span-5 md:col-span-3 h-full'>
+          <BalanceBarChart />
+        </div>
+        <div className='hidden md:block md:col-span-2'>Right</div>
       </div>
     </Page>
   )

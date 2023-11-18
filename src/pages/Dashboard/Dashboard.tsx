@@ -5,6 +5,7 @@ import { Briefcase, PieChartIcon, UsersIcon } from 'lucide-react'
 import colors from 'tailwindcss/colors'
 import StatCard from '@/components/StatCard'
 import BalanceBarChart from './components/BalanceBarChart'
+import RecentTransactions from './components/RecentTransactionts'
 
 const Home = () => {
   return (
@@ -47,7 +48,9 @@ const Home = () => {
         <div className='col-span-5 md:col-span-3 h-full'>
           <BalanceBarChart />
         </div>
-        <div className='hidden md:block md:col-span-2'>Right</div>
+        <div className='hidden md:block md:col-span-2'>
+          <RecentTransactions />
+        </div>
       </div>
     </Page>
   )

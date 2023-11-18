@@ -1,56 +1,57 @@
 import React from 'react'
 import { Bar, BarChart, Cell, ResponsiveContainer, XAxis, YAxis } from 'recharts'
 import colors from 'tailwindcss/colors'
+import { random } from 'lodash'
 import { useUserPreferences } from '@/hooks/use-user-preferences'
 
 const DUMMY_DATA = [
   {
     name: 'Jan',
-    balance: Math.floor(Math.random() * 1000),
+    balance: random(500, 2000),
   },
   {
     name: 'Feb',
-    balance: Math.floor(Math.random() * 1000),
+    balance: random(500, 2000),
   },
   {
     name: 'Mar',
-    balance: Math.floor(Math.random() * 1000),
+    balance: random(500, 2000),
   },
   {
     name: 'Apr',
-    balance: Math.floor(Math.random() * 1000),
+    balance: random(500, 2000),
   },
   {
     name: 'May',
-    balance: Math.floor(Math.random() * 1000),
+    balance: random(500, 2000),
   },
   {
     name: 'June',
-    balance: Math.floor(Math.random() * 1000),
+    balance: random(500, 2000),
   },
   {
     name: 'July',
-    balance: Math.floor(Math.random() * 1000),
+    balance: random(500, 2000),
   },
   {
     name: 'Aug',
-    balance: Math.floor(Math.random() * 1000),
+    balance: random(500, 2000),
   },
   {
     name: 'Sep',
-    balance: Math.floor(Math.random() * 1000),
+    balance: random(500, 2000),
   },
   {
     name: 'Oct',
-    balance: Math.floor(Math.random() * 1000),
+    balance: random(500, 2000),
   },
   {
     name: 'Nov',
-    balance: Math.floor(Math.random() * 1000),
+    balance: random(500, 2000),
   },
   {
     name: 'Dec',
-    balance: Math.floor(Math.random() * 1000),
+    balance: random(500, 2000),
   },
 ]
 

@@ -2,11 +2,7 @@ import React from 'react'
 
 import { Briefcase, PieChartIcon, UsersIcon } from 'lucide-react'
 import colors from 'tailwindcss/colors'
-import { WeeklyChart } from '../../components/Charts/WeeklyChart'
-import { SpentBalanceChart } from '../../components/Charts/SpentBalanceChart'
-import { CumSumChart } from '../../components/Charts/CumSumChart'
 import Page from '@/components/Page/Page'
-import AssetDepreciationChart from '@/components/Charts/AssetDepreciationChart'
 import StatCard from '@/components/StatCard'
 
 const Home = () => {
@@ -44,13 +40,6 @@ const Home = () => {
           color={colors.orange['600']}
           extraValue='-32%'
         />
-      </div>
-
-      <div className='grid md:grid-cols-2 gap-4'>
-        <WeeklyChart />
-        <SpentBalanceChart />
-        <CumSumChart />
-        <AssetDepreciationChart />
       </div>
     </Page>
   )

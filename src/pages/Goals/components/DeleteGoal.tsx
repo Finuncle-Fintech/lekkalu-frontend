@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { useToast } from '@/components/ui/use-toast'
 import { deleteGoal } from '@/queries/goals'
 import { GOALS } from '@/utils/query-keys'
+import { getErrorMessage } from '@/utils/utils'
 
 type Props = {
   id: number
@@ -20,6 +21,7 @@ export default function DeleteGoal({ id }: Props) {
       qc.invalidateQueries([GOALS.GOALS])
       toast({ title: 'Goal deleted successfully!' })
     },
+    onError: (err: any) => toast(getErrorMessage(err)),
   })
 
   return (

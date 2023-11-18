@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react'
 import { Control, ControllerRenderProps, FieldValues } from 'react-hook-form'
+import { InfoIcon } from 'lucide-react'
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form'
 import { Input } from '../ui/input'
 import { Slider } from '../ui/slider'
@@ -7,6 +8,7 @@ import When from '../When/When'
 import DatePicker from '../DatePicker/DatePicker'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group'
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
 
 // @TODO: Add extraContent prop
 type BaseInput = {
@@ -15,6 +17,7 @@ type BaseInput = {
   className?: string
   style?: React.CSSProperties
   value?: any
+  helpText?: string
 }
 
 type NumberInput = BaseInput & {
@@ -66,19 +69,44 @@ type Props = {
 }
 
 export default function InputFieldsRenderer({ inputs, control }: Props) {
-  const getFieldInput = useCallback((input: InputField, field: ControllerRenderProps<FieldValues, string>) => {
+    const getFieldInput = useCallback((input: InputField, field: ControllerRenderProps<FieldValues, string>) => {
     switch (input.type) {
       case 'number': {
         return (
           <div className='space-y-2'>
-            <Input
-              type='number'
-              placeholder={input.label}
-              {...field}
-              onChange={(e) => {
-                field.onChange(e.target?.valueAsNumber)
-              }}
-            />
+            {
+              (input.helpText && input.helpText !== '') ? <div
+                className={'flex rounded-md items-center gap-2 border px-3 border-input bg-background ring-offset-background focus-visible:ring-2 focus-visible:ring-ring'}
+              >
+                <Input
+                  type='number'
+                  placeholder={input.label}
+                  {...field}
+                  className='!border-none !outline-none p-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0'
+                  onChange={(e) => {
+                    field.onChange(e.target?.valueAsNumber)
+                  }}
+                />
+                <Popover>
+                  <PopoverTrigger>
+                    <div className='cursor-pointer'>
+                      <InfoIcon className='w-4 h-4' />
+                    </div>
+                  </PopoverTrigger>
+                  <PopoverContent>
+                    <div className="Text">
+                      {input.helpText}
+                    </div>
+                  </PopoverContent>
+                </Popover>
+              </div> : <Input
+                type='number'
+                placeholder={input.label}
+                {...field}
+                onChange={(e) => {
+                  field.onChange(e.target?.valueAsNumber)
+                }}
+              />}
             <When truthy={Boolean(input.hasRange)}>
               <Slider
                 defaultValue={[field.value]}
@@ -95,11 +123,29 @@ export default function InputFieldsRenderer({ inputs, control }: Props) {
         )
       }
       case 'text': {
-        return <Input type='text' placeholder={input.label} data-testid={input.id} {...field} />
+        return (<React.Fragment>
+          {(input.helpText && input.helpText !== '') ? <div
+            className={'flex rounded-md items-center gap-2 border px-3 border-input bg-background ring-offset-background focus-visible:ring-2 focus-visible:ring-ring'}
+          >
+            <Input type='text' placeholder={input.label} data-testid={input.id} {...field} />
+            <Popover>
+              <PopoverTrigger>
+                <div className='cursor-pointer'>
+                  <InfoIcon className='w-4 h-4' />
+                </div>
+              </PopoverTrigger>
+              <PopoverContent>
+                <div className="Text">
+                  {input.helpText}
+                </div>
+              </PopoverContent>
+            </Popover>
+          </div> : <Input type='text' placeholder={input.label} data-testid={input.id} {...field} />}
+        </React.Fragment>)
       }
 
       case 'date': {
-        return <DatePicker placeholder={input.label} data-testid={input.id} {...field} />
+        return (<DatePicker placeholder={input.label} data-testid={input.id} {...field} />)
       }
 
       // @TODO: Create multi select input
@@ -192,7 +238,24 @@ export default function InputFieldsRenderer({ inputs, control }: Props) {
       name={input.id}
       render={({ field }) => (
         <FormItem className={input.className} style={input.style}>
-          <FormLabel>{input.label}</FormLabel>
+          <FormLabel className='flex items-center'>
+            {input.label}
+            <span className='pl-2'>
+              {input.helpText && input.helpText !== '' && input.type === 'date' &&
+                <Popover>
+                  <PopoverTrigger>
+                    <div className='cursor-pointer'>
+                      <InfoIcon className='w-4 h-4' />
+                    </div>
+                  </PopoverTrigger>
+                  <PopoverContent>
+                    <div className="Text">
+                      {input.helpText}
+                    </div>
+                  </PopoverContent>
+                </Popover>}
+            </span>
+          </FormLabel>
           <FormControl>{getFieldInput(input, field)}</FormControl>
           <FormMessage />
         </FormItem>

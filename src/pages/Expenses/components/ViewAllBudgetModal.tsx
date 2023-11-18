@@ -10,6 +10,8 @@ import { Button } from '@/components/ui/button'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import When from '@/components/When/When'
+import { getErrorMessage } from '@/utils/utils'
+import { toast } from '@/components/ui/use-toast'
 
 dayjs.extend(customParseFormat)
 
@@ -22,6 +24,7 @@ export default function ViewAllBudgetModal() {
     onSuccess: () => {
       qc.invalidateQueries([BUDGET_QUERY_KEYS.BUDGETS])
     },
+    onError: (err: any) => toast(getErrorMessage(err)),
   })
 
   return (

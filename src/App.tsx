@@ -63,7 +63,7 @@ function App() {
           element={
             <>
               <UnAuthenticatedHeader />
-              <div className='min-h-screen mt-16'>
+              <div className='min-h-screen mt-16 lg:mt-16'>
                 <Outlet />
               </div>
               <Footer />

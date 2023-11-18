@@ -14,7 +14,7 @@ const Home = () => {
         <StatCard
           icon={<Briefcase />}
           title='Total Sales'
-          value={'$ 43530.00'}
+          value='$ 43530.00'
           color={colors.yellow['500']}
           extraValue='+24%'
         />
@@ -22,7 +22,7 @@ const Home = () => {
         <StatCard
           icon={<UsersIcon />}
           title='Total Income'
-          value={'$ 856530.00'}
+          value='$ 856530.00'
           color={colors.emerald['500']}
           extraValue='+24 %'
         />
@@ -30,7 +30,7 @@ const Home = () => {
         <StatCard
           icon={<Briefcase />}
           title='Total Sales'
-          value={'$ 43530.00'}
+          value='$ 43530.00'
           color={colors.purple['700']}
           extraValue='+24 %'
         />
@@ -38,7 +38,7 @@ const Home = () => {
         <StatCard
           icon={<PieChartIcon />}
           title='Total Expenses'
-          value={'$ 64530.00'}
+          value='$ 64530.00'
           color={colors.orange['600']}
           extraValue='-32%'
         />

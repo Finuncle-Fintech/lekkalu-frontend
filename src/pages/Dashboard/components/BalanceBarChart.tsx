@@ -1,5 +1,5 @@
 import React from 'react'
-import { Bar, BarChart, Cell, ResponsiveContainer, XAxis, YAxis } from 'recharts'
+import { Bar, BarChart, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import colors from 'tailwindcss/colors'
 import { random } from 'lodash'
 import { useUserPreferences } from '@/hooks/use-user-preferences'
@@ -82,6 +82,7 @@ export default function BalanceBarChart() {
                 return `${preferences.currencyUnit} ${tick}`
               }}
             />
+            <Tooltip />
           </BarChart>
         </ResponsiveContainer>
       </CardContent>

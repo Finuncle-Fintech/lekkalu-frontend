@@ -15,6 +15,8 @@ import { Form } from '@/components/ui/form'
 import InputFieldsRenderer from '@/components/InputFieldsRenderer/InputFieldsRenderer'
 import { BUDGET_MONTH_OPTIONS } from '@/utils/budget'
 import { SERVER_DATE_FORMAT } from '@/utils/constants'
+import { getErrorMessage } from '@/utils/utils'
+import { toast } from '@/components/ui/use-toast'
 
 dayjs.extend(customParseFormat)
 
@@ -40,6 +42,7 @@ export default function EditBudgetModal({ budget }: Props) {
       form.reset()
       setIsDialogOpen(false)
     },
+    onError: (err: any) => toast(getErrorMessage(err)),
   })
 
   const handleUpdateBudget = (values: UpdateBudgetSchema) => {

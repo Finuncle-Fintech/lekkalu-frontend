@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { deleteExpense } from '@/queries/expense'
 import { EXPENSES } from '@/utils/query-keys'
 import { useToast } from '@/components/ui/use-toast'
+import { getErrorMessage } from '@/utils/utils'
 
 type Props = {
   id: number
@@ -21,6 +22,7 @@ export default function DeleteExpense({ id }: Props) {
 
       toast({ title: 'Expense deleted successfully!' })
     },
+    onError: (err: any) => toast(getErrorMessage(err)),
   })
 
   return (

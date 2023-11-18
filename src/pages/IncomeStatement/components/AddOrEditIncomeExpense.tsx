@@ -11,6 +11,7 @@ import InputFieldsRenderer from '@/components/InputFieldsRenderer/InputFieldsRen
 import { INCOME_STATEMENT } from '@/utils/query-keys'
 import { useToast } from '@/components/ui/use-toast'
 import { Button } from '@/components/ui/button'
+import { getErrorMessage } from '@/utils/utils'
 
 type Props = {
   trigger: React.ReactElement
@@ -48,6 +49,7 @@ export default function AddOrEditIncomeExpense({
       setIsDialogOpen(false)
       toast({ title: `${capitalize(type)} created successfully!` })
     },
+    onError: (err: any) => toast(getErrorMessage(err)),
   })
 
   const updateMutation = useMutation((dto: AddIncomeStatementSchema) => updateMutationFn(incomeStatement?.id!, dto), {
@@ -56,6 +58,7 @@ export default function AddOrEditIncomeExpense({
       setIsDialogOpen(false)
       toast({ title: `${capitalize(type)} updated successfully!` })
     },
+    onError: (err: any) => toast(getErrorMessage(err)),
   })
 
   const handleAddOrEdit = (values: AddIncomeStatementSchema) => {

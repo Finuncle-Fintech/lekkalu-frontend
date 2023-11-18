@@ -35,7 +35,7 @@ export default function AppShell({ children }: Props) {
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant='outline' className='hidden md:block'>
+                <Button className='hidden md:block'>
                   <UserIcon className='w-5 h-5' />
                 </Button>
               </DropdownMenuTrigger>

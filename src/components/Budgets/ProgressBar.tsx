@@ -43,7 +43,7 @@ export default function CardWithForm({ data }: ProgressBarType) {
         <h6
           style={{
             fontSize: 12,
-            fontWeight: '800',
+            fontWeight: '600',
             textTransform: 'capitalize',
             margin: 0,
             width: '60px',

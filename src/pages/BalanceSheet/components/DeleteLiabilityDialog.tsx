@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { deleteLiability } from '@/queries/balance-sheet'
 import { BALANCE_SHEET } from '@/utils/query-keys'
 import { useToast } from '@/components/ui/use-toast'
+import { getErrorMessage } from '@/utils/utils'
 
 type Props = {
   id: number
@@ -20,6 +21,7 @@ export default function DeleteLiabilityDialog({ id }: Props) {
       qc.invalidateQueries([BALANCE_SHEET.LIABILITIES])
       toast({ title: 'Liability deleted successfully!' })
     },
+    onError: (err: any) => toast(getErrorMessage(err)),
   })
 
   return (

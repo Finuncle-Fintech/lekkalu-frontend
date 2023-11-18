@@ -13,6 +13,7 @@ import {
 } from '../ui/dropdown-menu'
 import { Button } from '../ui/button'
 import When from '../When/When'
+import NotificationPopover from '@/components/NotificationPopover'
 
 type Props = {
   children: React.ReactNode
@@ -29,7 +30,9 @@ export default function AppShell({ children }: Props) {
         <div className='md:justify-end border-b sticky top-0 left-0 h-16 bg-white/50 backdrop-blur-lg w-full z-50 flex items-center justify-between px-4'>
           <div className='text-2xl font-bold md:hidden'>finuncle</div>
 
-          <div>
+          <div className='flex items-center gap-2'>
+            <NotificationPopover />
+
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant='outline' className='hidden md:block'>
@@ -50,7 +53,6 @@ export default function AppShell({ children }: Props) {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-
             <MobileMenu />
           </div>
         </div>

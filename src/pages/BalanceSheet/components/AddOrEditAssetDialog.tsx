@@ -18,6 +18,7 @@ import { PhysicalAsset } from '@/types/balance-sheet'
 import { monthsToSeconds, yearsToSeconds } from '@/utils/time'
 import { useAuthContext } from '@/hooks/use-auth'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { getErrorMessage } from '@/utils/utils'
 
 type Props = {
   trigger: React.ReactElement
@@ -52,6 +53,7 @@ export default function AddOrEditAssetDialog({ trigger, asset }: Props) {
       toast({ title: 'Asset created successfully!' })
       setIsDialogOpen(false)
     },
+    onError: (err) => toast(getErrorMessage(err)),
   })
 
   const editPhysicalAssetMutation = useMutation((dto: AddPhysicalAssetSchema) => editPhysicalAsset(asset?.id!, dto), {
@@ -60,6 +62,7 @@ export default function AddOrEditAssetDialog({ trigger, asset }: Props) {
       toast({ title: 'Asset updated successfully!' })
       setIsDialogOpen(false)
     },
+    onError: (err) => toast(getErrorMessage(err)),
   })
 
   const handleAddOrEditPhysicalAsset = (values: AddPhysicalAssetSchema) => {

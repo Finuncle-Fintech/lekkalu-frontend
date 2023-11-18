@@ -17,6 +17,7 @@ import { useToast } from '@/components/ui/use-toast'
 import { Expense } from '@/types/expense'
 import { Input } from '@/components/ui/input'
 import { ALLOWED_EXPENSES_FILE_TYPES, MAX_EXPENSES_ALLOWED } from '@/utils/constants'
+import { getErrorMessage } from '@/utils/utils'
 
 type Props = {
   trigger: React.ReactElement
@@ -53,6 +54,7 @@ export default function AddOrEditExpenseDialog({ expense, trigger }: Props) {
       toast({ title: 'Expense created successfully!' })
       setIsDialogOpen(false)
     },
+    onError: (err: any) => toast(getErrorMessage(err)),
   })
 
   const updateExpenseMutation = useMutation(
@@ -63,6 +65,7 @@ export default function AddOrEditExpenseDialog({ expense, trigger }: Props) {
         toast({ title: 'Expense updated successfully!' })
         setIsDialogOpen(false)
       },
+      onError: (err: any) => toast(getErrorMessage(err)),
     },
   )
 

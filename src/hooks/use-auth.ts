@@ -7,6 +7,7 @@ import { deleteCookie, setCookie } from '@/utils/cookie'
 import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from '@/utils/constants'
 import { AUTH } from '@/utils/query-keys'
 import { useToast } from '@/components/ui/use-toast'
+import { getErrorMessage } from '@/utils/utils'
 
 export function useAuth() {
   const qc = useQueryClient()
@@ -40,13 +41,7 @@ export function useAuth() {
 
       fetchUserData()
     },
-    onError: () => {
-      toast({
-        title: 'Invalid Credentials!',
-        description: 'You have entered the wrong credentials!',
-        variant: 'destructive',
-      })
-    },
+    onError: (err) => toast(getErrorMessage(err)),
   })
 
   const signupMutation = useMutation(signup, {
@@ -57,6 +52,7 @@ export function useAuth() {
       })
       navigate('/signin')
     },
+    onError: (err: any) => toast(getErrorMessage(err)),
   })
 
   const logout = useCallback(() => {

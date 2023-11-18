@@ -15,6 +15,7 @@ import { LIABILITY_INPUTS } from '@/utils/balance-sheet'
 import { Liability } from '@/types/balance-sheet'
 import { BALANCE_SHEET } from '@/utils/query-keys'
 import { SERVER_DATE_FORMAT } from '@/utils/constants'
+import { getErrorMessage } from '@/utils/utils'
 
 type Props = {
   trigger: React.ReactElement
@@ -43,9 +44,7 @@ export default function AddOrEditLiabilityDialog({ trigger, liability }: Props) 
       toast({ title: 'Liability created successfully!' })
       setIsDialogOpen(false)
     },
-    onError: () => {
-      toast({ title: 'Something went wrong!', variant: 'destructive' })
-    },
+    onError: (err: any) => toast(getErrorMessage(err)),
   })
 
   const editLiabilityMutation = useMutation((dto: AddLiabilitySchema) => editLiability(liability?.id!, dto), {
@@ -54,9 +53,7 @@ export default function AddOrEditLiabilityDialog({ trigger, liability }: Props) 
       toast({ title: 'Liability edited successfully!' })
       setIsDialogOpen(false)
     },
-    onError: () => {
-      toast({ title: 'Something went wrong!', variant: 'destructive' })
-    },
+    onError: (err: any) => toast(getErrorMessage(err)),
   })
 
   const handleCreateOrEdit = (values: AddLiabilitySchema) => {

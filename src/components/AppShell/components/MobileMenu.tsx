@@ -24,7 +24,7 @@ export default function MobileMenu({ isUnAuthenticatedHeader }: { isUnAuthentica
   return (
     <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
       <SheetTrigger asChild>
-        <Button variant='ghost'>
+        <Button variant='ghost' className='md:hidden'>
           <MenuIcon className='w-4 h-4' />
         </Button>
       </SheetTrigger>
@@ -55,6 +55,7 @@ export default function MobileMenu({ isUnAuthenticatedHeader }: { isUnAuthentica
               ))}
             </div>
           </div>
+
           <div className='space-x-2 pb-12'>
             {!isUnAuthenticatedHeader && <DownloadAllData />}
 

@@ -1,10 +1,11 @@
 import React from 'react'
 
+import Page from '@/components/Page/Page'
 import { WeeklyChart } from '../../components/Charts/WeeklyChart'
 import { SpentBalanceChart } from '../../components/Charts/SpentBalanceChart'
 import { CumSumChart } from '../../components/Charts/CumSumChart'
-import Page from '@/components/Page/Page'
 import AssetDepreciationChart from '@/components/Charts/AssetDepreciationChart'
+import BudgetChart from '@/components/Charts/BudgetChart'
 
 const Home = () => {
   return (
@@ -13,6 +14,7 @@ const Home = () => {
       <SpentBalanceChart />
       <CumSumChart />
       <AssetDepreciationChart />
+      <BudgetChart />
     </Page>
   )
 }

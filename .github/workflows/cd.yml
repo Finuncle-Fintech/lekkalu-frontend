@@ -1,0 +1,25 @@
+name: Deploy App
+
+on:
+  workflow_run:
+    workflows: ['Build and Push Image']
+    types:
+      - completed
+
+jobs:
+  deploy:
+    name: Pull and deploy the Docker Image
+    runs-on: self-hosted
+
+    steps:
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Pull Docker Image
+        run: docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_TAG }}:latest
+
+      - name: Restart docker container with latest image
+        run: docker rm -f ${{ secrets.DOCKERHUB_USERNAME }}-${{ secrets.DOCKERHUB_TAG }} || true &&  docker run --restart unless-stopped -d -p 3001:80 --name ${{ secrets.DOCKERHUB_USERNAME }}-${{ secrets.DOCKERHUB_TAG }} ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_TAG }}:latest

@@ -55,7 +55,7 @@
     "start:qa": "env-cmd -f ./environments/.qa.env craco start",
     "build:qa": "env-cmd -f ./environments/.qa.env craco build",
     "start:prod": "env-cmd -f ./environments/.prod.env craco start",
-    "build:prod": "env-cmd -f ./environments/.prod.env craco build",
+    "build": "env-cmd -f ./environments/.prod.env craco build",
     "start": "npm run start:prod",
     "format": "prettier --write src/**/*.{js,jsx,ts,tsx,css,md,json,scss} --config ./.prettierrc",
     "lint": "eslint --fix --no-error-on-unmatched-pattern --ignore-path .gitignore --ext ts,tsx,js,jsx ."

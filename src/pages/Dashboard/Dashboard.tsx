@@ -6,6 +6,7 @@ import Page from '@/components/Page/Page'
 import StatCard from '@/components/StatCard'
 import BalanceBarChart from './components/BalanceBarChart'
 import RecentTransactions from './components/RecentTransactionts'
+import BudgetChart from '@/components/Charts/BudgetChart'
 
 const Home = () => {
   return (
@@ -52,6 +53,8 @@ const Home = () => {
           <RecentTransactions />
         </div>
       </div>
+
+      <BudgetChart />
     </Page>
   )
 }

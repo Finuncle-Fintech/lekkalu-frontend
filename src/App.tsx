@@ -6,6 +6,7 @@ import AuthProtection from './components/AuthProtection/AuthProtection'
 import AppShell from './components/AppShell/AppShell'
 import UnAuthenticatedHeader from './components/UnAuthenticatedHeader/UnAuthenticatedHeader'
 import Footer from './components/Footer/Footer'
+import CookieConsent from './components/CookieConsent/CookieConsent'
 
 /** Authenticated Routes */
 const Dashboard = lazy(() => import('@/pages/Dashboard/Dashboard'))
@@ -40,6 +41,7 @@ function App() {
       }
     >
       <Toaster />
+      <CookieConsent />
       <Routes>
         <Route
           element={

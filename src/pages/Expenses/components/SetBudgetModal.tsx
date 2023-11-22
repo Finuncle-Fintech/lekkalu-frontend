@@ -13,6 +13,7 @@ import InputFieldsRenderer from '@/components/InputFieldsRenderer/InputFieldsRen
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { BUDGET_QUERY_KEYS } from '@/utils/query-keys'
 import { BUDGET_MONTH_OPTIONS } from '@/utils/budget'
+import { getErrorMessage } from '@/utils/utils'
 
 export default function SetBudgetModal() {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
@@ -33,6 +34,7 @@ export default function SetBudgetModal() {
       setIsDialogOpen(false)
       toast({ title: 'Successfully set the budget' })
     },
+    onError: (err: any) => toast(getErrorMessage(err)),
   })
 
   const handleCreateBudget = (values: SetBudgetSchema) => {

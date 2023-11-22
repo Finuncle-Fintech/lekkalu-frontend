@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { deletePhysicalAsset } from '@/queries/balance-sheet'
 import { BALANCE_SHEET } from '@/utils/query-keys'
 import { useToast } from '@/components/ui/use-toast'
+import { getErrorMessage } from '@/utils/utils'
 
 type Props = {
   id: number
@@ -20,6 +21,7 @@ export default function DeleteAssetDialog({ id }: Props) {
       qc.invalidateQueries([BALANCE_SHEET.ASSETS])
       toast({ title: 'Asset deleted successfully!' })
     },
+    onError: (err: any) => toast(getErrorMessage(err)),
   })
 
   return (

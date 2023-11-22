@@ -14,6 +14,7 @@ import { addGoal, editGoal } from '@/queries/goals'
 import { GOALS } from '@/utils/query-keys'
 import { useToast } from '@/components/ui/use-toast'
 import { useAuthContext } from '@/hooks/use-auth'
+import { getErrorMessage } from '@/utils/utils'
 
 type Props = {
   trigger: React.ReactElement
@@ -46,6 +47,7 @@ export default function AddOrEditGoal({ trigger, goal }: Props) {
       toast({ title: 'Goal added successfully!' })
       setIsDialogOpen(false)
     },
+    onError: (err: any) => toast(getErrorMessage(err)),
   })
 
   const editGoalMutation = useMutation((dto: AddGoalSchema) => editGoal(goal?.id!, dto), {
@@ -54,6 +56,7 @@ export default function AddOrEditGoal({ trigger, goal }: Props) {
       toast({ title: 'Goal updated successfully!' })
       setIsDialogOpen(false)
     },
+    onError: (err: any) => toast(getErrorMessage(err)),
   })
 
   const handleAddOrEditGoal = (values: AddGoalSchema) => {

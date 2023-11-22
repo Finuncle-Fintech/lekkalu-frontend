@@ -1,5 +1,6 @@
 import React from 'react'
 import {
+  BadgeHelp,
   CalculatorIcon,
   CoinsIcon,
   DollarSignIcon,
@@ -42,6 +43,18 @@ export const ROUTES: Array<Route> = [
     label: 'Settings',
     icon: <Settings2Icon />,
   },
+]
+export const UN_AUTHENTICATED_ROUTES: Array<Route> = [
+  {
+    path: '/pricing',
+    label: 'Pricing',
+    icon: <DollarSignIcon />,
+  },
+  {
+    path: '/support',
+    label: 'Support',
+    icon: <BadgeHelp />,
+  }
 ]
 
 export const CALCULATOR_ROUTES: Array<Route> = [

@@ -8,8 +8,7 @@ import When from '../When/When'
 import DatePicker from '../DatePicker/DatePicker'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group'
-import { HoverCard, HoverCardContent, HoverCardTrigger } from '../ui/hovercard'
-import { cn } from '@/utils/utils'
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
 
 // @TODO: Add extraContent prop
 type BaseInput = {
@@ -70,7 +69,7 @@ type Props = {
 }
 
 export default function InputFieldsRenderer({ inputs, control }: Props) {
-  const getFieldInput = useCallback((input: InputField, field: ControllerRenderProps<FieldValues, string>) => {
+    const getFieldInput = useCallback((input: InputField, field: ControllerRenderProps<FieldValues, string>) => {
     switch (input.type) {
       case 'number': {
         return (
@@ -88,18 +87,18 @@ export default function InputFieldsRenderer({ inputs, control }: Props) {
                     field.onChange(e.target?.valueAsNumber)
                   }}
                 />
-                <HoverCard>
-                  <HoverCardTrigger asChild>
+                <Popover>
+                  <PopoverTrigger>
                     <div className='cursor-pointer'>
                       <InfoIcon className='w-4 h-4' />
                     </div>
-                  </HoverCardTrigger>
-                  <HoverCardContent className={cn('p-2', '')}>
+                  </PopoverTrigger>
+                  <PopoverContent>
                     <div className="Text">
                       {input.helpText}
                     </div>
-                  </HoverCardContent>
-                </HoverCard>
+                  </PopoverContent>
+                </Popover>
               </div> : <Input
                 type='number'
                 placeholder={input.label}
@@ -125,25 +124,23 @@ export default function InputFieldsRenderer({ inputs, control }: Props) {
       }
       case 'text': {
         return (<React.Fragment>
-          {(input.helpText && input.helpText !== '') ? <Input type='text' placeholder={input.label} data-testid={input.id} {...field} />
-            : <div
-              className={'flex rounded-md items-center gap-2 border px-3 border-input bg-background ring-offset-background focus-visible:ring-2 focus-visible:ring-ring'}
-            >
-              <Input type='text' placeholder={input.label} data-testid={input.id} {...field} />
-              <HoverCard>
-                <HoverCardTrigger asChild>
-                  <div className='cursor-pointer'>
-                    <InfoIcon className='w-4 h-4' />
-                  </div>
-                </HoverCardTrigger>
-                <HoverCardContent className={cn('p-2', '')}>
-                  <div className="Text">
-                    {input.helpText}
-                  </div>
-                </HoverCardContent>
-              </HoverCard>
-
-            </div>}
+          {(input.helpText && input.helpText !== '') ? <div
+            className={'flex rounded-md items-center gap-2 border px-3 border-input bg-background ring-offset-background focus-visible:ring-2 focus-visible:ring-ring'}
+          >
+            <Input type='text' placeholder={input.label} data-testid={input.id} {...field} />
+            <Popover>
+              <PopoverTrigger>
+                <div className='cursor-pointer'>
+                  <InfoIcon className='w-4 h-4' />
+                </div>
+              </PopoverTrigger>
+              <PopoverContent>
+                <div className="Text">
+                  {input.helpText}
+                </div>
+              </PopoverContent>
+            </Popover>
+          </div> : <Input type='text' placeholder={input.label} data-testid={input.id} {...field} />}
         </React.Fragment>)
       }
 
@@ -244,18 +241,19 @@ export default function InputFieldsRenderer({ inputs, control }: Props) {
           <FormLabel className='flex items-center'>
             {input.label}
             <span className='pl-2'>
-              {input.helpText && input.helpText !== '' && input.type === 'date' && <HoverCard >
-                <HoverCardTrigger asChild>
-                  <div className='cursor-pointer'>
-                    <InfoIcon className='w-4 h-4' />
-                  </div>
-                </HoverCardTrigger>
-                <HoverCardContent className={cn('p-2', '')}>
-                  <div>
-                    {input.helpText}
-                  </div>
-                </HoverCardContent>
-              </HoverCard>}
+              {input.helpText && input.helpText !== '' && input.type === 'date' &&
+                <Popover>
+                  <PopoverTrigger>
+                    <div className='cursor-pointer'>
+                      <InfoIcon className='w-4 h-4' />
+                    </div>
+                  </PopoverTrigger>
+                  <PopoverContent>
+                    <div className="Text">
+                      {input.helpText}
+                    </div>
+                  </PopoverContent>
+                </Popover>}
             </span>
           </FormLabel>
           <FormControl>{getFieldInput(input, field)}</FormControl>

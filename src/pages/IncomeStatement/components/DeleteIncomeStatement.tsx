@@ -6,6 +6,7 @@ import Alert from '@/components/Alert/Alert'
 import { Button } from '@/components/ui/button'
 import { useToast } from '@/components/ui/use-toast'
 import { INCOME_STATEMENT } from '@/utils/query-keys'
+import { getErrorMessage } from '@/utils/utils'
 
 type Props = {
   id: number
@@ -22,6 +23,7 @@ export default function DeleteIncomeStatement({ id, type, deleteMutationFn }: Pr
       qc.invalidateQueries([type === 'INCOME' ? INCOME_STATEMENT.SOURCES : INCOME_STATEMENT.IS_EXPENSES])
       toast({ title: `${capitalize(type)} deleted successfully!` })
     },
+    onError: (err: any) => toast(getErrorMessage(err)),
   })
 
   return (

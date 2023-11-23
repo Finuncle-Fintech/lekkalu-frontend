@@ -41,7 +41,6 @@ function App() {
       }
     >
       <Toaster />
-      <CookieConsent />
       <Routes>
         <Route
           element={
@@ -64,6 +63,7 @@ function App() {
         <Route
           element={
             <>
+              <CookieConsent />
               <UnAuthenticatedHeader />
               <div className='min-h-screen mt-16 lg:mt-16'>
                 <Outlet />

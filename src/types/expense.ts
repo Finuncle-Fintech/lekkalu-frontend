@@ -18,11 +18,11 @@ export type WeeklyExpense = {
 // }
 
 export type MonthlyExpense = {
-  year: number,
-  month: number,
-  spent: number,
-  budget: number,
-  balance: number,
+  year: number
+  month: number
+  spent: number
+  budget: number
+  balance: number
   cum_sum: number
 }
 

@@ -34,9 +34,6 @@ export default function AddOrEditGoal({ trigger, goal }: Props) {
       ...goal,
       //  @ts-expect-error
       started: goal?.started ? dayjs(goal.started).toDate() : undefined,
-      finished: goal?.finished ? dayjs(goal.started).toDate() : undefined,
-      planned_start: goal?.planned_start ? dayjs(goal.planned_start).toDate() : undefined,
-      planned_finish: goal?.planned_finish ? dayjs(goal?.planned_finish).toDate() : undefined,
       user: userData?.id,
     },
   })

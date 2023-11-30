@@ -29,12 +29,17 @@ const DEFAULT_DATA: EmiValues = {
   disbursementDate: new Date(),
 }
 
-const EmiHelpTexts: {[key: string]: string} = {
-  loanPrincipal: "This is the total amount of money you wish to borrow.It's the initial loan amount you receive. For example, if you want to borrow Rs 50,000 this is your loan principal.",
-  loanInterest: "The loan interest rate is the annual rate at which you are borrowing money. It's expressed as a percentage. For instance, if your loan carries an annual interest rate of 5%, you'd enter 5 as the interest rate.",
-  loanTenure: 'This field represents the total duration, provided in months, over which you will be repaying the loan. For example, if you plan to repay the loan in 3 years, which is 36 months, you would enter 36 months as the loan tenure.',
-  disbursementDate: "This is the date when you receive the loan amount. It's essential for calculating the exact interest applicable for each installment.",
-  emiDay: 'The EMI day is the day of each month on which you want to make your EMI payment. Different lenders may offer various options for selecting the EMI date.'
+const EmiHelpTexts: { [key: string]: string } = {
+  loanPrincipal:
+    "This is the total amount of money you wish to borrow.It's the initial loan amount you receive. For example, if you want to borrow Rs 50,000 this is your loan principal.",
+  loanInterest:
+    "The loan interest rate is the annual rate at which you are borrowing money. It's expressed as a percentage. For instance, if your loan carries an annual interest rate of 5%, you'd enter 5 as the interest rate.",
+  loanTenure:
+    'This field represents the total duration, provided in months, over which you will be repaying the loan. For example, if you plan to repay the loan in 3 years, which is 36 months, you would enter 36 months as the loan tenure.',
+  disbursementDate:
+    "This is the date when you receive the loan amount. It's essential for calculating the exact interest applicable for each installment.",
+  emiDay:
+    'The EMI day is the day of each month on which you want to make your EMI payment. Different lenders may offer various options for selecting the EMI date.',
 }
 
 // @TODO: add unit change options
@@ -217,21 +222,37 @@ const EmiCalculator = () => {
       <div className='grid gap-4'>
         <h1 className='font-bold'>EMI Formula</h1>
         <p>The formula to calculate the Equated Monthly Installment (EMI) is as follows:</p>
-        <pre>
-          EMI = P * (r * (1 + r)^n) / ((1 + r)^n - 1)
-        </pre>
+        <pre>EMI = P * (r * (1 + r)^n) / ((1 + r)^n - 1)</pre>
         <p>Where:</p>
         <ul className='list-disc pl-8'>
-          <li><span className='font-bold'>EMI:</span> Equated Monthly Installment, the fixed amount you need to pay every month.</li>
-          <li><span className='font-bold'>P:</span> Loan Principal, the initial loan amount you receive.</li>
-          <li><span className='font-bold'>r:</span> Monthly interest rate, calculated from the Loan Interest Rate.</li>
-          <li><span className='font-bold'>n:</span> Total number of EMIs you need to pay over the Loan Tenure (in months).</li>
+          <li>
+            <span className='font-bold'>EMI:</span> Equated Monthly Installment, the fixed amount you need to pay every
+            month.
+          </li>
+          <li>
+            <span className='font-bold'>P:</span> Loan Principal, the initial loan amount you receive.
+          </li>
+          <li>
+            <span className='font-bold'>r:</span> Monthly interest rate, calculated from the Loan Interest Rate.
+          </li>
+          <li>
+            <span className='font-bold'>n:</span> Total number of EMIs you need to pay over the Loan Tenure (in months).
+          </li>
         </ul>
         <ul>
-          <li><span className='font-bold'>Total Interest Payable:</span>The total amount you pay in interest over the loan tenure.</li>
-          <li><span className='font-bold'>Total Payment:</span> The total amount you repay, including both the principal and interest.</li>
+          <li>
+            <span className='font-bold'>Total Interest Payable:</span>The total amount you pay in interest over the loan
+            tenure.
+          </li>
+          <li>
+            <span className='font-bold'>Total Payment:</span> The total amount you repay, including both the principal
+            and interest.
+          </li>
         </ul>
-        <p>The EMI formula helps you calculate the monthly repayment amount for a loan based on the principal, interest rate, and loan tenure.</p>
+        <p>
+          The EMI formula helps you calculate the monthly repayment amount for a loan based on the principal, interest
+          rate, and loan tenure.
+        </p>
       </div>
     </div>
   )

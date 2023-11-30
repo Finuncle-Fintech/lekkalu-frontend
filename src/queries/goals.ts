@@ -1,6 +1,6 @@
 import { AddGoalSchema } from '@/schema/goals'
 import { Goal } from '@/types/goals'
-import { v1ApiClient } from '@/utils/client'
+import { v1ApiClient, v2ApiClient } from '@/utils/client'
 
 export async function fetchGoals(params: { page?: number; per_page?: number }) {
   const { data } = await v1ApiClient.get<Goal[]>('financial_goal/', { params })
@@ -8,7 +8,7 @@ export async function fetchGoals(params: { page?: number; per_page?: number }) {
 }
 
 export async function addGoal(dto: AddGoalSchema) {
-  const { data } = await v1ApiClient.post('financial_goal/', dto)
+  const { data } = await v2ApiClient.post('financial_goal/', dto)
   return data
 }
 

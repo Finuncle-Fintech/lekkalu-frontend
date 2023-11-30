@@ -37,7 +37,7 @@ const DownloadAllData = (props: Props) => {
       },
       {
         queryKey: [GOALS.GOALS],
-        queryFn: () => fetchGoals({ page: 1, per_page: 100 }),
+        queryFn: () => fetchGoals(),
       },
       {
         queryKey: [EXPENSES.EXPENSES],

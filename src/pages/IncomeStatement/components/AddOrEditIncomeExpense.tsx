@@ -33,7 +33,11 @@ export default function AddOrEditIncomeExpense({
   const isEdit = Boolean(incomeStatement)
   const qc = useQueryClient()
   const { toast } = useToast()
-  const { data: incomeTypes } = useQuery([INCOME_STATEMENT.INCOME_TYPE], type === 'INCOME' ? fetchIncomeSourceTypes : fetchIncomeExpensesTypes, { enabled: !!isDialogOpen })
+  const { data: incomeTypes } = useQuery(
+    [INCOME_STATEMENT.INCOME_TYPE],
+    type === 'INCOME' ? fetchIncomeSourceTypes : fetchIncomeExpensesTypes,
+    { enabled: !!isDialogOpen },
+  )
 
   const form = useForm<AddIncomeStatementSchema>({
     resolver: zodResolver(addIncomeStatementSchema),
@@ -103,7 +107,8 @@ export default function AddOrEditIncomeExpense({
                   id: 'type',
                   label: 'Type',
                   type: 'select',
-                  options: incomeTypes?.map((type: any) => ({ id: type.value, label: type.label, value: type.value })) ?? [],
+                  options:
+                    incomeTypes?.map((type: any) => ({ id: type.value, label: type.label, value: type.value })) ?? [],
                 },
                 {
                   id: 'amount',

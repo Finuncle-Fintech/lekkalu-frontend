@@ -39,7 +39,12 @@ export default function AppShell({ children }: Props) {
         <div className='md:justify-end border-b sticky top-0 left-0 h-16 bg-white/50 backdrop-blur-lg w-full z-50 flex items-center justify-between px-4'>
           <div className='text-2xl font-bold md:hidden'>finuncle</div>
           <div className='capitalize text-[1] mr-auto max-md:hidden'>
-            <span>{greeting()} <span className='font-bold text-primary'>{userData && (userData.first_name ? userData.first_name : userData.username)}</span></span>
+            <span>
+              {greeting()}{' '}
+              <span className='font-bold text-primary'>
+                {userData && (userData.first_name ? userData.first_name : userData.username)}
+              </span>
+            </span>
           </div>
           <div className='flex items-center gap-2'>
             <NotificationPopover />

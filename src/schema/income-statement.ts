@@ -12,6 +12,6 @@ export const addIncomeStatementSchema = z.object({
     .min(2, 'Please enter at least 4 characters!')
     .max(100, 'Please enter at most 100 characters!'),
   type: z.string({ required_error: 'Type is required!' }),
-    amount: z.coerce.number({ required_error: 'Amount is required!' }),
+  amount: z.coerce.number({ required_error: 'Amount is required!' }),
 })
 export type AddIncomeStatementSchema = z.infer<typeof addIncomeStatementSchema>

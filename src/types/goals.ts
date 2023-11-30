@@ -1,15 +1,12 @@
 export type Goal = {
   id: number
-  goal: string
-  current_metric: number
-  target_metric: string
-  balance: number
-  reachability_in_months: string
-  reachability_in_years: string
-  prefered_value_of_balance: string
-  started: string
-  finished: string
-  planned_start: string
-  planned_finish: string
-  sub_goal: string
+  name: string
+  target_value: number
+  current_value: number
+  reachable_by_days: number
+  goal_proportionality: string
+  track_kpi: 'LiabilityPercent'
+  created_at: string
+  updated_at: string
+  target_contribution_source: number
 }

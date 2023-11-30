@@ -64,4 +64,19 @@ v1ApiClient?.interceptors.request.use((config) => {
   return config
 })
 
+/**
+ * Api client for v2
+ */
+export const v2ApiClient = axios.create({
+  baseURL: process.env.REACT_APP_V2_API_URL,
+  headers: BASIC_HEADER,
+})
+v2ApiClient?.interceptors.request.use((config) => {
+  if (!config.headers.Authorization) {
+    config.headers.Authorization = `Bearer ${getCookie('access')}`
+  }
+
+  return config
+})
+
 export const queryClient = new QueryClient({ defaultOptions: { queries: { refetchOnWindowFocus: false } } })

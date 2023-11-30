@@ -2,35 +2,20 @@ import { InputField } from '@/components/InputFieldsRenderer/InputFieldsRenderer
 
 export const GOAL_INPUTS: InputField[] = [
   {
-    id: 'goal',
-    label: 'Goal',
+    id: 'name',
+    label: 'Name',
     type: 'text',
   },
   {
-    id: 'degree',
-    label: 'Degree',
-    type: 'select',
-    options: [
-      { id: 'HIGHER', label: 'Higher' },
-      { id: 'LOWER', label: 'Lower' },
-      { id: 'EQUAL', label: 'Equal' },
-    ],
-  },
-  {
-    id: 'actualValue',
-    label: 'Actual Value',
+    id: 'target_value',
+    label: 'Target Value',
     type: 'number',
   },
   {
-    id: 'unit',
-    label: 'Unit',
+    id: 'track_kpi',
+    label: 'Track KPI',
     type: 'select',
-    options: [
-      {
-        id: 'percent',
-        label: 'Percentage (%)',
-      },
-    ],
+    options: [{ id: 'LiabilityPercent', label: 'Liability Percent' }],
   },
 ]
 

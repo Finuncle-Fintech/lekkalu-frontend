@@ -17,11 +17,7 @@ import {
 import DownloadAllData from '@/components/DownloadAllData/DownloadAllData'
 import { cn } from '@/utils/utils'
 
-export default function MobileMenu({
-  isUnAuthenticatedHeader
-}:{
-  isUnAuthenticatedHeader?:boolean
-}) {
+export default function MobileMenu({ isUnAuthenticatedHeader }: { isUnAuthenticatedHeader?: boolean }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const { userData, logout, tokenData } = useAuthContext()
 
@@ -54,16 +50,16 @@ export default function MobileMenu({
             </div>
           </div>
 
-          <div className="space-x-2 pb-12">
+          <div className='space-x-2 pb-12'>
             {!isUnAuthenticatedHeader && <DownloadAllData />}
 
             {isUnAuthenticatedHeader ? (
               <When
                 truthy={Boolean(tokenData)}
                 fallback={
-                  <div className="space-x-2 flex w-full">
+                  <div className='space-x-2 flex w-full'>
                     <Link
-                      to="/signin"
+                      to='/signin'
                       className={cn(
                         buttonVariants({ variant: 'outline' }),
                         'border-1 border border-black/50',
@@ -74,21 +70,15 @@ export default function MobileMenu({
                     </Link>
 
                     <Link
-                      to="/signup"
-                      className={cn(
-                        buttonVariants({ variant: 'secondary' }),
-                        'w-full border-1 border border-black/50',
-                      )}
+                      to='/signup'
+                      className={cn(buttonVariants({ variant: 'secondary' }), 'w-full border-1 border border-black/50')}
                     >
                       Signup
                     </Link>
                   </div>
                 }
               >
-                <Link
-                  to="/dashboard"
-                  className={cn(buttonVariants({ variant: 'secondary' }), 'w-full')}
-                >
+                <Link to='/dashboard' className={cn(buttonVariants({ variant: 'secondary' }), 'w-full')}>
                   Dashboard
                 </Link>
               </When>
@@ -96,18 +86,18 @@ export default function MobileMenu({
               <When truthy={Boolean(userData)}>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="outline">@{userData?.username}</Button>
+                    <Button variant='outline'>@{userData?.username}</Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent>
                     <When truthy={Boolean(userData?.email)}>
                       <DropdownMenuLabel>{userData?.email}</DropdownMenuLabel>
                     </When>
 
-                    <DropdownMenuItem className="cursor-pointer" asChild>
-                      <Link to="/profile">Profile</Link>
+                    <DropdownMenuItem className='cursor-pointer' asChild>
+                      <Link to='/profile'>Profile</Link>
                     </DropdownMenuItem>
-                    <DropdownMenuItem className="cursor-pointer" onClick={logout}>
-                      <LogOutIcon className="mr-2 h-4 w-4" />
+                    <DropdownMenuItem className='cursor-pointer' onClick={logout}>
+                      <LogOutIcon className='mr-2 h-4 w-4' />
                       <span>Logout</span>
                     </DropdownMenuItem>
                   </DropdownMenuContent>

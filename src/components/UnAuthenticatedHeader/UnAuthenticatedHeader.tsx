@@ -16,10 +16,7 @@ import { cn } from '@/utils/utils'
 import When from '../When/When'
 import { buttonVariants } from '../ui/button'
 
-const ListItem = React.forwardRef<
-  React.ElementRef<'a'>,
-  React.ComponentPropsWithoutRef<'a'>
->(({ title, href }) => {
+const ListItem = React.forwardRef<React.ElementRef<'a'>, React.ComponentPropsWithoutRef<'a'>>(({ title, href }) => {
   return (
     <li>
       <NavigationMenuLink asChild>
@@ -52,11 +49,7 @@ export default function UnAuthenticatedHeader() {
                 <NavigationMenuContent>
                   <ul className='grid w-[200px] gap-3 p-4 md:w-[250px] md:grid-cols-1'>
                     {CALCULATOR_ROUTES.map((route) => (
-                      <ListItem
-                        key={route.path}
-                        title={route.label}
-                        href={route.path}
-                      />
+                      <ListItem key={route.path} title={route.label} href={route.path} />
                     ))}
                   </ul>
                 </NavigationMenuContent>
@@ -91,9 +84,9 @@ export default function UnAuthenticatedHeader() {
         <div>
           <div className='relative'>
             <div className='absolute bg-white w-5 h-5 rounded-full -top-4 -left-4' />
-              <Link to='/' className='text-xl font-bold'>
-                finuncle
-              </Link>
+            <Link to='/' className='text-xl font-bold'>
+              finuncle
+            </Link>
           </div>
         </div>
         <div>

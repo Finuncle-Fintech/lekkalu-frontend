@@ -24,10 +24,10 @@ const DEFAULT_DATA = {
   rateReturn: 1,
 }
 
-const SIPHelpTexts: {[key: string]: string} = {
+const SIPHelpTexts: { [key: string]: string } = {
   monthlyAmount: 'This is the amount you plan to invest each month.',
   durationInvestment: 'Specify how long you intend to continue your SIP investments.',
-  rateReturn: 'Estimate the average annual return you expect from your investments.'
+  rateReturn: 'Estimate the average annual return you expect from your investments.',
 }
 
 type SipValues = z.infer<typeof sipCalculatorSchema>
@@ -173,22 +173,50 @@ export default function SIPCalculator() {
         </div>
         <div className='grid gap-3'>
           <h1 className='text-2md font-bold'>About SIP Calculator</h1>
-          <p>To estimate your potential returns with a Systematic Investment Plan (SIP), you need to provide three key pieces of information:</p>
+          <p>
+            To estimate your potential returns with a Systematic Investment Plan (SIP), you need to provide three key
+            pieces of information:
+          </p>
           <ul className='list-disc pl-8'>
-            <li><span className='font-bold'>Monthly Investment Amount:</span> This is the amount you plan to invest each month.</li>
-            <li><span className='font-bold'>Duration of the Investment:</span> Specify how long you intend to continue your SIP investments.</li>
-            <li><span className='font-bold'>Expected Annual Return (%):</span> Estimate the average annual return you expect from your investments.</li>
+            <li>
+              <span className='font-bold'>Monthly Investment Amount:</span> This is the amount you plan to invest each
+              month.
+            </li>
+            <li>
+              <span className='font-bold'>Duration of the Investment:</span> Specify how long you intend to continue
+              your SIP investments.
+            </li>
+            <li>
+              <span className='font-bold'>Expected Annual Return (%):</span> Estimate the average annual return you
+              expect from your investments.
+            </li>
           </ul>
-          <p>After entering these details, the SIP Calculator will provide you with an estimate of your potential wealth creation and returns.</p>
+          <p>
+            After entering these details, the SIP Calculator will provide you with an estimate of your potential wealth
+            creation and returns.
+          </p>
           <h1 className='font-bold'>SIP Calculator Formula</h1>
           <p>The formula to calculate the future value of your SIP investment is:</p>
-          <p><strong>Future Value of SIP Investment (FV) = P * ([(1 + r)^n - 1]/r)(1 + r)</strong></p>
+          <p>
+            <strong>Future Value of SIP Investment (FV) = P * ([(1 + r)^n - 1]/r)(1 + r)</strong>
+          </p>
           <p>Where:</p>
           <ul className='list-disc pl-8'>
-            <li><span className='font-bold'>FV</span> is the Future Value of your investment at the end of the SIP duration.</li>
-            <li><span className='font-bold'>P</span> is the Monthly Investment Amount you contribute.</li>
-            <li><span className='font-bold'>r</span> is the monthly interest rate, calculated from the Expected Annual Return. The formula for monthly interest rate is: <strong>r = [(Annual rate/100)/12]</strong></li>
-            <li><span className='font-bold'>n</span> is the total number of contributions, calculated as the product of the Duration of Investment (in years) and 12 (for monthly contributions).</li>
+            <li>
+              <span className='font-bold'>FV</span> is the Future Value of your investment at the end of the SIP
+              duration.
+            </li>
+            <li>
+              <span className='font-bold'>P</span> is the Monthly Investment Amount you contribute.
+            </li>
+            <li>
+              <span className='font-bold'>r</span> is the monthly interest rate, calculated from the Expected Annual
+              Return. The formula for monthly interest rate is: <strong>r = [(Annual rate/100)/12]</strong>
+            </li>
+            <li>
+              <span className='font-bold'>n</span> is the total number of contributions, calculated as the product of
+              the Duration of Investment (in years) and 12 (for monthly contributions).
+            </li>
           </ul>
         </div>
       </div>

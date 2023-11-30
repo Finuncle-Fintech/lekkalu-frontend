@@ -54,7 +54,7 @@ export const UN_AUTHENTICATED_ROUTES: Array<Route> = [
     path: '/support',
     label: 'Support',
     icon: <BadgeHelp />,
-  }
+  },
 ]
 
 export const CALCULATOR_ROUTES: Array<Route> = [

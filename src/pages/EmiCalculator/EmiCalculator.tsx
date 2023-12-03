@@ -1,4 +1,6 @@
 import React, { useMemo, useState } from 'react'
+import * as XLSX from 'xlsx'
+import { saveAs } from 'file-saver'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -121,6 +123,22 @@ const EmiCalculator = () => {
     setTimeout(() => setIsCopied(false), 3000)
   }
 
+  const csvData = useMemo(() => {
+    const data = {
+      loanEmi: result?.summary?.loan_emi,
+      totalInterestPayable: result?.summary?.total_interest_payable,
+      totalPayment: result?.summary?.total_payment
+    }
+    return [{ ...values, ...data }]
+  }, [values, result])
+
+  const handleExportToCSV = () => {
+    const sipCalculationWorksheet = XLSX.utils.json_to_sheet(csvData) ?? []
+    const csv = XLSX.utils.sheet_to_csv(sipCalculationWorksheet)
+    const CSV_EXTENSION = '.csv'
+    saveAs(new Blob([csv]), `${'EMI_calculation'}_export_${new Date().getTime()}${CSV_EXTENSION}`)
+  }
+
   return (
     <div className='max-w-screen-xl mx-auto p-4 space-y-4'>
       <div className='flex items-center justify-between'>
@@ -160,6 +178,9 @@ const EmiCalculator = () => {
             <div>
               <div>Total Payment</div>
               <div className='text-2xl font-medium'>{result?.summary?.total_payment}</div>
+            </div>
+            <div>
+              <Button onClick={handleExportToCSV}>Export to CSV</Button>
             </div>
           </div>
 

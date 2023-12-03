@@ -1,4 +1,6 @@
 import React, { useMemo, useState } from 'react'
+import * as XLSX from 'xlsx'
+import { saveAs } from 'file-saver'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -123,6 +125,22 @@ export default function CAGRCalculator() {
     return { summary, pieChartData, barChartData: summary.barChartData }
   }, [values.durationOfInvestment, values.finalValue, values.initialValue])
 
+  const csvData = useMemo(() => {
+    const data = {
+      absoluteCAGR: result?.summary.absoluteCAGR,
+      absoluteReturns: result?.summary.absoluteReturns,
+      percentageCAGR: result?.summary.percentageCAGR,
+    }
+    return [{ ...values, ...data }]
+  }, [values, result])
+
+  const handleExportToCSV = () => {
+    const sipCalculationWorksheet = XLSX.utils.json_to_sheet(csvData) ?? []
+    const csv = XLSX.utils.sheet_to_csv(sipCalculationWorksheet)
+    const CSV_EXTENSION = '.csv'
+    saveAs(new Blob([csv]), `${'CAGR_calculation'}_export_${new Date().getTime()}${CSV_EXTENSION}`)
+  }
+
   return (
     <Page className='space-y-4'>
       <div className='flex items-center justify-between'>
@@ -204,6 +222,9 @@ export default function CAGRCalculator() {
             <div className='flex gap-2 border-b'>
               <div>You CAGR percentage: </div>
               <div className='font-medium'>{result?.summary?.percentageCAGR} %</div>
+            </div>
+            <div>
+              <Button onClick={handleExportToCSV}>Export to CSV</Button>
             </div>
           </div>
         </When>

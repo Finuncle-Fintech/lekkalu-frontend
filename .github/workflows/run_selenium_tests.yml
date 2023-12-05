@@ -1,10 +1,10 @@
 on:
   push:
     branches:
-      - "selenium-tests-and-github-ci"  
+      - "master"  
   pull_request:
     branches:
-      - "main" 
+      - "master" 
     paths:
       - ".github/workflows/run_selenium_tests.yaml"
 
@@ -18,7 +18,7 @@ jobs:
 
     - name: Check out lekkalu test
       run: |
-        git clone https://github.com/GVR-Secure-Solutions/lekkalu-test-frontend.git
+        git clone https://github.com/SzatmariA/lekkalu-test-frontend.git
     
     - name: Set up python
       uses: actions/setup-python@v4

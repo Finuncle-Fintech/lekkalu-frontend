@@ -1,7 +1,6 @@
 import React, { useMemo, useState } from 'react'
 import { useLocation } from 'react-router'
 import * as XLSX from 'xlsx'
-import { saveAs } from 'file-saver'
 import { isEmpty } from 'lodash'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -107,10 +106,10 @@ export default function SIPCalculator() {
   }
 
   const handleExportToCSV = () => {
+    const wb = XLSX.utils.book_new()
     const sipCalculationWorksheet = XLSX.utils.json_to_sheet([{ ...values, ...result?.summary }]) ?? []
-    const csv = XLSX.utils.sheet_to_csv(sipCalculationWorksheet)
-    const CSV_EXTENSION = '.csv'
-    saveAs(new Blob([csv]), `${'SIP_calculation'}_export_${new Date().getTime()}${CSV_EXTENSION}`)
+    XLSX.utils.book_append_sheet(wb, sipCalculationWorksheet, 'SIP Calculation')
+    XLSX.writeFile(wb, 'sip_calculation.xlsx', { compression: true })
   }
 
   return (

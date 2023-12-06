@@ -1,6 +1,5 @@
 import React, { useMemo, useState } from 'react'
 import * as XLSX from 'xlsx'
-import { saveAs } from 'file-saver'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -133,10 +132,15 @@ const EmiCalculator = () => {
   }, [values, result])
 
   const handleExportToCSV = () => {
-    const sipCalculationWorksheet = XLSX.utils.json_to_sheet(csvData) ?? []
-    const csv = XLSX.utils.sheet_to_csv(sipCalculationWorksheet)
-    const CSV_EXTENSION = '.csv'
-    saveAs(new Blob([csv]), `${'EMI_calculation'}_export_${new Date().getTime()}${CSV_EXTENSION}`)
+    const wb = XLSX.utils.book_new()
+    const emiCalculationWorksheet = XLSX.utils.json_to_sheet(csvData) ?? []
+    const emiMonthlyCalculationWorksheet = XLSX.utils.json_to_sheet(result?.summary?.repayment_table ?? []) ?? []
+    const emiCalculationJson = XLSX.utils.sheet_to_json(emiCalculationWorksheet, { header: 1 })
+    const emiMonthlyCalculationJson = XLSX.utils.sheet_to_json(emiMonthlyCalculationWorksheet, { header: 1 })
+    const mergedWorksheet = emiCalculationJson.concat([[''], [''], ['']]).concat(emiMonthlyCalculationJson)
+    const finalWorksheet = XLSX.utils.json_to_sheet(mergedWorksheet, { skipHeader: true })
+    XLSX.utils.book_append_sheet(wb, finalWorksheet, 'EMI Calculation')
+    XLSX.writeFile(wb, 'emi_calculation.xlsx', { compression: true })
   }
 
   return (

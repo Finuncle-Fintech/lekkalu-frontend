@@ -1,6 +1,5 @@
 import React, { useMemo, useState } from 'react'
 import * as XLSX from 'xlsx'
-import { saveAs } from 'file-saver'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -135,10 +134,10 @@ export default function CAGRCalculator() {
   }, [values, result])
 
   const handleExportToCSV = () => {
-    const sipCalculationWorksheet = XLSX.utils.json_to_sheet(csvData) ?? []
-    const csv = XLSX.utils.sheet_to_csv(sipCalculationWorksheet)
-    const CSV_EXTENSION = '.csv'
-    saveAs(new Blob([csv]), `${'CAGR_calculation'}_export_${new Date().getTime()}${CSV_EXTENSION}`)
+    const wb = XLSX.utils.book_new()
+    const cagrCalculationWorksheet = XLSX.utils.json_to_sheet(csvData) ?? []
+    XLSX.utils.book_append_sheet(wb, cagrCalculationWorksheet, 'CAGR Calculation')
+    XLSX.writeFile(wb, 'cagr_calculation.xlsx', { compression: true })
   }
 
   return (

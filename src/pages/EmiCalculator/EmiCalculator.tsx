@@ -122,7 +122,7 @@ const EmiCalculator = () => {
     setTimeout(() => setIsCopied(false), 3000)
   }
 
-  const csvData = useMemo(() => {
+  const excelData = useMemo(() => {
     const data = {
       loanEmi: result?.summary?.loan_emi,
       totalInterestPayable: result?.summary?.total_interest_payable,
@@ -131,9 +131,9 @@ const EmiCalculator = () => {
     return [{ ...values, ...data }]
   }, [values, result])
 
-  const handleExportToCSV = () => {
+  const handleExportToExcel = () => {
     const wb = XLSX.utils.book_new()
-    const emiCalculationWorksheet = XLSX.utils.json_to_sheet(csvData) ?? []
+    const emiCalculationWorksheet = XLSX.utils.json_to_sheet(excelData) ?? []
     const emiMonthlyCalculationWorksheet = XLSX.utils.json_to_sheet(result?.summary?.repayment_table ?? []) ?? []
     const emiCalculationJson = XLSX.utils.sheet_to_json(emiCalculationWorksheet, { header: 1 })
     const emiMonthlyCalculationJson = XLSX.utils.sheet_to_json(emiMonthlyCalculationWorksheet, { header: 1 })
@@ -184,7 +184,7 @@ const EmiCalculator = () => {
               <div className='text-2xl font-medium'>{result?.summary?.total_payment}</div>
             </div>
             <div>
-              <Button onClick={handleExportToCSV}>Export to CSV</Button>
+              <Button onClick={handleExportToExcel}>Export to Excel</Button>
             </div>
           </div>
 

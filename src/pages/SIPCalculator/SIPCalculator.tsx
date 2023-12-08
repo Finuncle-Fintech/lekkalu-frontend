@@ -105,7 +105,7 @@ export default function SIPCalculator() {
     setTimeout(() => setIsCopied(false), 3000)
   }
 
-  const handleExportToCSV = () => {
+  const handleExportToExcel = () => {
     const wb = XLSX.utils.book_new()
     const sipCalculationWorksheet = XLSX.utils.json_to_sheet([{ ...values, ...result?.summary }]) ?? []
     XLSX.utils.book_append_sheet(wb, sipCalculationWorksheet, 'SIP Calculation')
@@ -176,7 +176,7 @@ export default function SIPCalculator() {
                   <Tooltip content={<CustomLabelPie />} />
                 </PieChart>
                 <div>
-                  <Button onClick={handleExportToCSV}>Export to CSV</Button>
+                  <Button onClick={handleExportToExcel}>Export to Excel</Button>
                 </div>
               </div>
             </div>

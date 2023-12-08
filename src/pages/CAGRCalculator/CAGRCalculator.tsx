@@ -124,7 +124,7 @@ export default function CAGRCalculator() {
     return { summary, pieChartData, barChartData: summary.barChartData }
   }, [values.durationOfInvestment, values.finalValue, values.initialValue])
 
-  const csvData = useMemo(() => {
+  const excelData = useMemo(() => {
     const data = {
       absoluteCAGR: result?.summary.absoluteCAGR,
       absoluteReturns: result?.summary.absoluteReturns,
@@ -133,9 +133,9 @@ export default function CAGRCalculator() {
     return [{ ...values, ...data }]
   }, [values, result])
 
-  const handleExportToCSV = () => {
+  const handleExportToExcel = () => {
     const wb = XLSX.utils.book_new()
-    const cagrCalculationWorksheet = XLSX.utils.json_to_sheet(csvData) ?? []
+    const cagrCalculationWorksheet = XLSX.utils.json_to_sheet(excelData) ?? []
     XLSX.utils.book_append_sheet(wb, cagrCalculationWorksheet, 'CAGR Calculation')
     XLSX.writeFile(wb, 'cagr_calculation.xlsx', { compression: true })
   }
@@ -223,7 +223,7 @@ export default function CAGRCalculator() {
               <div className='font-medium'>{result?.summary?.percentageCAGR} %</div>
             </div>
             <div>
-              <Button onClick={handleExportToCSV}>Export to CSV</Button>
+              <Button onClick={handleExportToExcel}>Export to Excel</Button>
             </div>
           </div>
         </When>

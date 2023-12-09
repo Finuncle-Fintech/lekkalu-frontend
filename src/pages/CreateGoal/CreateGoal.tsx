@@ -1,9 +1,10 @@
 import React from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { PlusCircle } from 'lucide-react'
+import { ArrowLeftIcon, PlusCircle } from 'lucide-react'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useNavigate } from 'react-router'
+import { Link } from 'react-router-dom'
 import Page from '@/components/Page/Page'
 import { AddGoalSchema, addGoalSchema } from '@/schema/goals'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
@@ -42,6 +43,11 @@ export default function CreateGoal() {
         <div className='w-full h-[1px] bg-gray-200 my-2' />
       </div>
 
+      <Link className='flex items-center gap-2 text-muted-foreground' to='/goals'>
+        <ArrowLeftIcon className='w-4 h-4' />
+        Back to Goals
+      </Link>
+
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleGoalCreate)} className='grid md:grid-cols-2 gap-4 items-center'>
           <InputFieldsRenderer control={form.control} inputs={GOAL_INPUTS} />
@@ -51,11 +57,11 @@ export default function CreateGoal() {
             name='target_contribution_source'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Target Contribution Source</FormLabel>
+                <FormLabel>Source</FormLabel>
                 <FormControl>
                   <Select value={field.value?.toString()} onValueChange={field.onChange}>
                     <SelectTrigger>
-                      <SelectValue placeholder='Target Contribution Source' />
+                      <SelectValue placeholder='Source' />
                     </SelectTrigger>
                     <SelectContent>
                       {incomeExpensesQuery?.data?.map((item) => (

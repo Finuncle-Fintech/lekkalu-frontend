@@ -14,10 +14,6 @@
 
 # subdirectories.
 
-/src/ @mohitkhatri06
+/src/ @mohitkhatri06 @rockingrohit9639
 package.json @mohitkhatri06
 package-lock.json @mohitkhatri06
-
-/src/pages/Signin
-/src/pages/Signin
-/src/Router.jsx

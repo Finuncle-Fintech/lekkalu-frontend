@@ -61,6 +61,7 @@ export default function Goals() {
         {goalsQuery.data?.map((goal) => (
           <Goal
             key={goal.id}
+            id={goal.id}
             goalTitle={goal.name}
             category={goal.track_kpi}
             progressPercentage={Math.floor(Math.random() * 100)}

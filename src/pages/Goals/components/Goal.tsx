@@ -2,13 +2,17 @@ import React from 'react'
 import { PolarAngleAxis, RadialBar, RadialBarChart } from 'recharts'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
+import { useQuery } from '@tanstack/react-query'
 import { cn } from '@/utils/utils'
+import { GOALS } from '@/utils/query-keys'
+import { getGoalProgress } from '@/queries/goals'
 
 dayjs.extend(relativeTime)
 
 type Props = {
   className?: string
   style?: React.CSSProperties
+  id: number
   goalTitle: string
   category: string
   progressPercentage: number
@@ -18,8 +22,21 @@ type Props = {
 
 const circleSize = 100
 
-export default function Goal({ className, style, goalTitle, category, progressPercentage, createdAt, color }: Props) {
+export default function Goal({
+  className,
+  style,
+  id,
+  goalTitle,
+  category,
+  progressPercentage,
+  createdAt,
+  color,
+}: Props) {
   const data = [{ name: goalTitle, progressPercentage, color }]
+
+  const progressQuery = useQuery([GOALS.PROGRESS], () => getGoalProgress(id))
+
+  console.log(progressQuery.data)
 
   return (
     <div

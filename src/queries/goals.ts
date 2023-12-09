@@ -21,3 +21,8 @@ export async function deleteGoal(id: number) {
   const { data } = await v1ApiClient.delete(`financial_goal/${id}`)
   return data
 }
+
+export async function getGoalProgress(id: number) {
+  const { data } = await v2ApiClient.get(`financial_goal/progress/${id}`)
+  return data
+}

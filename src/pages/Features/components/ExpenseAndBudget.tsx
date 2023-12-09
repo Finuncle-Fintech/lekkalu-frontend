@@ -1,13 +1,15 @@
 import React from 'react'
 
 // ** Constants **
+import Lottie from 'lottie-react'
 import { EXPENSE_BUDGET_FEATURES } from '@/utils/details-page-data'
+import { cn } from '@/utils/utils'
 
 const ExpenseAndBudget = () => {
   return (
     <>
       {/* Hero Section  */}
-      <div className='flex max-w-xl flex-col items-center pb-0 pt-8 text-center mx-5 sm:mx-auto sm:pb-16 lg:pb-20 lg:pt-20'>
+      <div className='flex max-w-5xl flex-col items-center pb-0 pt-8 text-center mx-5 sm:mx-auto sm:pb-16 lg:pb-20 sm:pt-14 md:pt-20'>
         <h1 className='mb-8 text-3xl font-bold text-black sm:text-4xl md:mb-12 md:text-5xl'>
           Expense and Budget Management
         </h1>
@@ -44,7 +46,7 @@ const ExpenseAndBudget = () => {
             </p>
           </div>
           <div className='grid gap-7 sm:grid-cols-2 lg:grid-cols-3 xl:gap-10'>
-            {EXPENSE_BUDGET_FEATURES.map(({ title, description, icon }) => {
+            {EXPENSE_BUDGET_FEATURES.map(({ title, icon }) => {
               return (
                 <div
                   key={title}
@@ -57,7 +59,7 @@ const ExpenseAndBudget = () => {
                     <h2 className='mb-2 text-base sm:text-lg font-semibold max-sm:text-center text-gray-800'>
                       {title}
                     </h2>
-                    <p className='text-gray-500 text-sm sm:text-base'>{description}</p>
+                    {/* <p className='text-gray-500 text-sm sm:text-base'>{description}</p> */}
                   </div>
                 </div>
               )
@@ -68,26 +70,27 @@ const ExpenseAndBudget = () => {
       {/* How it Works */}
       <div className='bg-white py-6 sm:py-8 lg:py-12'>
         <div className='mx-auto max-w-screen-xl px-4 md:px-8'>
-          <div className='grid gap-8 md:grid-cols-2 lg:gap-12 '>
-            <div className='h-64 overflow-hidden rounded-lg  md:h-auto'>
-              <img
-                src='https://webmobilefirst-screencasts.s3.eu-west-3.amazonaws.com/OTG0BT9iIX.gif'
-                loading='lazy'
-                alt='Photo by Martin Sanchez'
-                className='h-full w-full object-contain object-center'
-              />
-            </div>
-            <div className='md:pt-8'>
-              <p className='text-center font-bold text-indigo-500 md:text-left'>Add Expense</p>
-              <h1 className='mb-4 text-center text-2xl font-bold text-gray-800 sm:text-3xl md:mb-6 md:text-left'>
-                Our competitive advantage
-              </h1>
-              <p className='mb-6 text-gray-500 sm:text-lg md:mb-8'>
-                Navigate to the Add Expense section and input the amount, tags, date, and attach any relevant images.
-                This feature ensures accurate and transparent expense tracking.
-              </p>
-            </div>
+          <div className='mb-8 sm:mb-16'>
+            <h2 className='mb-4 text-center text-2xl font-bold text-gray-800 md:mb-6 lg:text-3xl'>Usage of Features</h2>
+            <p className='mx-auto max-w-screen-lg text-center text-gray-500 md:text-lg'>
+              Explore our feature-rich platform to streamline your workflow. From intuitive expense tracking to seamless
+              collaboration, our tools are designed to enhance productivity and provide you with a smooth user
+              experience.
+            </p>
           </div>
+          {EXPENSE_BUDGET_FEATURES.map((ele, index) => (
+            <div key={ele.title} className='grid gap-8 md:grid-cols-2 lg:gap-12 items-center my-10'>
+              <Lottie
+                animationData={ele.animation}
+                className={cn('max-w-sm mx-auto', index % 2 === 0 ? 'md:order-first' : 'md:order-last')}
+              />
+              <div className={cn('md:pt-8', index % 2 === 0 ? 'md:text-start' : 'md:text-end')}>
+                <p className='font-bold text-indigo-500'>{ele.title}</p>
+                <h1 className='mb-4 text-2xl font-bold text-gray-800 sm:text-3xl md:mb-4'>{ele?.subTitle}</h1>
+                <p className='mb-6 text-gray-500 sm:text-lg md:mb-8'>{ele.description}</p>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </>

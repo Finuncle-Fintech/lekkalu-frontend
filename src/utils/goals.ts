@@ -8,12 +8,12 @@ export const GOAL_INPUTS: InputField[] = [
   },
   {
     id: 'target_value',
-    label: 'Target Value',
+    label: 'Target',
     type: 'number',
   },
   {
     id: 'track_kpi',
-    label: 'Track KPI',
+    label: 'KPI',
     type: 'select',
     options: [{ id: 'LiabilityPercent', label: 'Liability Percent' }],
   },

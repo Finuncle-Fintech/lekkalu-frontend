@@ -37,6 +37,7 @@ export const BALANCE_SHEET = {
 
 export const GOALS = {
   GOALS: 'GOALS',
+  PROGRESS: 'PROGRESS',
 } as const
 
 export const NOTIFICATION = {

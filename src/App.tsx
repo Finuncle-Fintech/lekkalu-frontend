@@ -29,6 +29,7 @@ const PrivacyPolicies = lazy(() => import('@/pages/PrivacyPolicies/PrivacyPolici
 const Pricing = lazy(() => import('@/pages/Pricing/Pricing'))
 const NotFound = lazy(() => import('@/pages/NotFound/NotFound'))
 const Support = lazy(() => import('./pages/Support/Support'))
+const FeaturesDetails = lazy(() => import('./pages/Features/FeaturesDetails'))
 
 function App() {
   return (
@@ -82,6 +83,7 @@ function App() {
           <Route path='/privacy-policies' element={<PrivacyPolicies />} />
           <Route path='/pricing' element={<Pricing />} />
           <Route path='/support' element={<Support />} />
+          <Route path='/feature/:toolName' element={<FeaturesDetails />} />
         </Route>
         <Route path='*' element={<NotFound />} />
       </Routes>

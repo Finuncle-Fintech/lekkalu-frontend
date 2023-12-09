@@ -11,15 +11,43 @@ import {
   NavigationMenuTrigger,
 } from '@/components/ui/navigation-menu'
 import { useAuthContext } from '@/hooks/use-auth'
-import { CALCULATOR_ROUTES } from '@/utils/app-shell'
+import { CALCULATOR_ROUTES, FEATURES_ROUTES } from '@/utils/app-shell'
 import { cn } from '@/utils/utils'
 import When from '../When/When'
 import { buttonVariants } from '../ui/button'
 
-const ListItem = React.forwardRef<
+const ListItemFeatures = React.forwardRef<
   React.ElementRef<'a'>,
-  React.ComponentPropsWithoutRef<'a'>
->(({ title, href }) => {
+  { title: string; href: string; children: React.ReactNode; icon: React.ReactNode }
+>(({ title, href, children, icon, ...props }, ref) => {
+  return (
+    <li>
+      <NavigationMenuLink asChild>
+        <Link
+          to={href as string}
+          ref={ref}
+          className={cn(
+            'group block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-all hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground',
+          )}
+          {...props}
+        >
+          <div className='flex items-center gap-5'>
+            <div>{icon}</div>
+            <div>
+              <div className='text-sm font-medium leading-none'>{title}</div>
+              <div className='hidden group-hover:block'>
+                <p className='line-clamp-2 text-sm leading-snug text-muted-foreground'>{children}</p>
+              </div>
+            </div>
+          </div>
+        </Link>
+      </NavigationMenuLink>
+    </li>
+  )
+})
+ListItemFeatures.displayName = 'ListItemFeatures'
+
+const ListItem = React.forwardRef<React.ElementRef<'a'>, React.ComponentPropsWithoutRef<'a'>>(({ title, href }) => {
   return (
     <li>
       <NavigationMenuLink asChild>
@@ -29,7 +57,6 @@ const ListItem = React.forwardRef<
   )
 })
 ListItem.displayName = 'ListItem'
-
 export default function UnAuthenticatedHeader() {
   const { tokenData } = useAuthContext()
 
@@ -48,15 +75,23 @@ export default function UnAuthenticatedHeader() {
           <NavigationMenu>
             <NavigationMenuList>
               <NavigationMenuItem>
+                <NavigationMenuTrigger className='bg-transparent'>Features</NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <ul className='grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]'>
+                    {FEATURES_ROUTES.map((route) => (
+                      <ListItemFeatures key={route.title} icon={route.icon} title={route.title} href={route.href}>
+                        {route.description}
+                      </ListItemFeatures>
+                    ))}
+                  </ul>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
                 <NavigationMenuTrigger className='bg-transparent'>Calculators</NavigationMenuTrigger>
                 <NavigationMenuContent>
                   <ul className='grid w-[200px] gap-3 p-4 md:w-[250px] md:grid-cols-1'>
                     {CALCULATOR_ROUTES.map((route) => (
-                      <ListItem
-                        key={route.path}
-                        title={route.label}
-                        href={route.path}
-                      />
+                      <ListItem key={route.path} title={route.label} href={route.path} />
                     ))}
                   </ul>
                 </NavigationMenuContent>
@@ -91,9 +126,9 @@ export default function UnAuthenticatedHeader() {
         <div>
           <div className='relative'>
             <div className='absolute bg-white w-5 h-5 rounded-full -top-4 -left-4' />
-              <Link to='/' className='text-xl font-bold'>
-                finuncle
-              </Link>
+            <Link to='/' className='text-xl font-bold'>
+              finuncle
+            </Link>
           </div>
         </div>
         <div>

@@ -23,6 +23,6 @@ export async function deleteGoal(id: number) {
 }
 
 export async function getGoalProgress(id: number) {
-  const { data } = await v2ApiClient.get(`financial_goal/progress/${id}`)
+  const { data } = await v2ApiClient.get<{ name: string; progress_percent: number }>(`financial_goal/progress/${id}`)
   return data
 }

@@ -3,6 +3,7 @@ import { PolarAngleAxis, RadialBar, RadialBarChart } from 'recharts'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { useQuery } from '@tanstack/react-query'
+import { Link } from 'react-router-dom'
 import { cn } from '@/utils/utils'
 import { GOALS } from '@/utils/query-keys'
 import { getGoalProgress } from '@/queries/goals'
@@ -27,7 +28,8 @@ export default function Goal({ className, style, id, goalTitle, category, create
   const data = [{ name: goalTitle, progressPercentage: progressQuery.data?.progress_percent, color }]
 
   return (
-    <div
+    <Link
+      to={`/goals/${id}`}
       className={cn('flex items-center justify-center gap-4 flex-col border-t-4 rounded-lg p-4 shadow-md', className)}
       style={{ ...style, borderColor: color }}
     >
@@ -48,6 +50,6 @@ export default function Goal({ className, style, id, goalTitle, category, create
       <div className='text-xl font-bold'>{goalTitle}</div>
       <div className='text-sm text-muted-foreground'>{category}</div>
       <div className='text-muted-foreground text-xs'>{dayjs(createdAt).fromNow()}</div>
-    </div>
+    </Link>
   )
 }

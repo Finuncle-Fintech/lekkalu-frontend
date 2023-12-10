@@ -26,3 +26,8 @@ export async function getGoalProgress(id: number) {
   const { data } = await v2ApiClient.get<{ name: string; progress_percent: number }>(`financial_goal/progress/${id}`)
   return data
 }
+
+export async function fetchGoalDetails(id: number) {
+  const { data } = await v2ApiClient.get<Goal>(`financial_goal/${id}`)
+  return data
+}

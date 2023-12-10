@@ -64,7 +64,6 @@ export default function Goals() {
             id={goal.id}
             goalTitle={goal.name}
             category={goal.track_kpi}
-            progressPercentage={Math.floor(Math.random() * 100)}
             createdAt={dayjs(goal.created_at).toISOString()}
             color={colors.violet['500']}
           />

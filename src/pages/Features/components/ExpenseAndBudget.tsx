@@ -9,7 +9,10 @@ const ExpenseAndBudget = () => {
   return (
     <>
       {/* Hero Section  */}
-      <div className='flex max-w-5xl flex-col items-center pb-0 pt-8 text-center mx-5 sm:mx-auto sm:pb-16 lg:pb-20 sm:pt-14 md:pt-20'>
+      <div
+        data-aos='fade-up'
+        className='flex max-w-5xl flex-col items-center pb-0 pt-8 text-center mx-5 sm:mx-auto sm:pb-16 lg:pb-20 sm:pt-14 md:pt-20'
+      >
         <h1 className='mb-8 text-3xl font-bold text-black sm:text-4xl md:mb-12 md:text-5xl'>
           Expense and Budget Management
         </h1>
@@ -20,7 +23,7 @@ const ExpenseAndBudget = () => {
         </p>
         <div className='flex w-full flex-col gap-2.5 sm:flex-row sm:justify-center'>
           <a
-            href='#'
+            href='/expenses'
             className='inline-block rounded-lg bg-primary px-8 py-3 text-center text-sm font-semibold text-white outline-none ring-indigo-300 transition duration-100 hover:bg-indigo-600 focus-visible:ring active:bg-indigo-700 md:text-base'
           >
             Start now
@@ -36,8 +39,7 @@ const ExpenseAndBudget = () => {
       {/* Features Section */}
       <div className='bg-white py-6 max-sm:mt-20 sm:py-8 lg:py-12' id='overview'>
         <div className='mx-auto max-w-screen-xl px-4 md:px-8'>
-          {/* text - start */}
-          <div className='mb-10 md:mb-16'>
+          <div data-aos='fade-up' className='mb-10 md:mb-16'>
             <h2 className='mb-4 text-center text-2xl font-bold text-gray-800 md:mb-6 lg:text-3xl'>
               Overview of Features
             </h2>
@@ -49,6 +51,7 @@ const ExpenseAndBudget = () => {
             {EXPENSE_BUDGET_FEATURES.map(({ title, icon }) => {
               return (
                 <div
+                  data-aos='zoom-in'
                   key={title}
                   className='flex flex-col items-center overflow-hidden rounded-lg border shadow-lg bg-white'
                 >
@@ -70,7 +73,7 @@ const ExpenseAndBudget = () => {
       {/* How it Works */}
       <div className='bg-white py-6 sm:py-8 lg:py-12'>
         <div className='mx-auto max-w-screen-xl px-4 md:px-8'>
-          <div className='mb-8 sm:mb-16'>
+          <div data-aos='fade-up' className='mb-8 sm:mb-16'>
             <h2 className='mb-4 text-center text-2xl font-bold text-gray-800 md:mb-6 lg:text-3xl'>Usage of Features</h2>
             <p className='mx-auto max-w-screen-lg text-center text-gray-500 md:text-lg'>
               Explore our feature-rich platform to streamline your workflow. From intuitive expense tracking to seamless
@@ -79,7 +82,7 @@ const ExpenseAndBudget = () => {
             </p>
           </div>
           {EXPENSE_BUDGET_FEATURES.map((ele, index) => (
-            <div key={ele.title} className='grid gap-8 md:grid-cols-2 lg:gap-12 items-center my-10'>
+            <div data-aos='zoom-in' key={ele.title} className='grid gap-8 md:grid-cols-2 lg:gap-12 items-center my-10'>
               <Lottie
                 animationData={ele.animation}
                 className={cn('max-w-sm mx-auto', index % 2 === 0 ? 'md:order-first' : 'md:order-last')}

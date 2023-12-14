@@ -70,9 +70,7 @@ export default function PrivacyPolicies() {
       <div className='space-y-4'>
         <h1 className='text-2xl font-bold'>Third-Party Disclosure</h1>
         <p className='text-muted-foreground'>
-          We do not sell, trade, or otherwise transfer your personal information to third parties. This does not include
-          trusted third parties who assist us in operating our website, conducting our business, or servicing you, as
-          long as those parties agree to keep this information confidential.
+          We do not sell, trade, or otherwise transfer your personal information to third parties.
         </p>
       </div>
 

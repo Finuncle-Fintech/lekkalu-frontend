@@ -1,8 +1,11 @@
 name: Build and Push Image
 
 on:
-  push:
-    branches: ['master']
+  # push:
+  # branches: [ master ]
+
+  release:
+    types: [published]
 
 jobs:
   build:

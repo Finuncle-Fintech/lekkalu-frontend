@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from 'react'
 import { useLocation } from 'react-router'
+import * as XLSX from 'xlsx'
 import { isEmpty } from 'lodash'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -104,6 +105,13 @@ export default function SIPCalculator() {
     setTimeout(() => setIsCopied(false), 3000)
   }
 
+  const handleExportToExcel = () => {
+    const wb = XLSX.utils.book_new()
+    const sipCalculationWorksheet = XLSX.utils.json_to_sheet([{ ...values, ...result?.summary }]) ?? []
+    XLSX.utils.book_append_sheet(wb, sipCalculationWorksheet, 'SIP Calculation')
+    XLSX.writeFile(wb, 'sip_calculation.xlsx', { compression: true })
+  }
+
   return (
     <Page className='space-y-4'>
       <div className='flex items-center justify-between'>
@@ -167,6 +175,9 @@ export default function SIPCalculator() {
                   <Legend />
                   <Tooltip content={<CustomLabelPie />} />
                 </PieChart>
+                <div>
+                  <Button onClick={handleExportToExcel}>Export to Excel</Button>
+                </div>
               </div>
             </div>
           </When>

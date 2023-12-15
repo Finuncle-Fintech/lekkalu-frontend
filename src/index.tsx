@@ -6,7 +6,7 @@ import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClient } from '@/utils/client'
 import App from './App'
 import { AuthProvider } from '@/hooks/use-auth'
-
+import 'aos/dist/aos.css'
 import './styles/globals.css'
 
 ReactGA.initialize(`${process.env.REACT_APP_GA_TRACKING_CODE}`)

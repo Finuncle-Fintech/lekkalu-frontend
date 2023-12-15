@@ -16,16 +16,23 @@ import { cn } from '@/utils/utils'
 import When from '../When/When'
 import { buttonVariants } from '../ui/button'
 
-const ListItemFeatures = React.forwardRef<
-  React.ElementRef<'a'>,
-  { title: string; href: string; children: React.ReactNode; icon: React.ReactNode }
->(({ title, href, children, icon, ...props }, ref) => {
+const ListItemFeatures = ({
+  title,
+  href,
+  children,
+  icon,
+  ...props
+}: {
+  title: string
+  href: string
+  children: React.ReactNode
+  icon: React.ReactNode
+}) => {
   return (
     <li>
       <NavigationMenuLink asChild>
         <Link
           to={href as string}
-          ref={ref}
           className={cn(
             'group block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-all hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground',
           )}
@@ -44,19 +51,22 @@ const ListItemFeatures = React.forwardRef<
       </NavigationMenuLink>
     </li>
   )
-})
+}
+
 ListItemFeatures.displayName = 'ListItemFeatures'
 
-const ListItem = React.forwardRef<React.ElementRef<'a'>, React.ComponentPropsWithoutRef<'a'>>(({ title, href }) => {
+const ListItem = ({ title, href, ...restProps }: { title: string; href: string }) => {
   return (
     <li>
       <NavigationMenuLink asChild>
-        <NavLink to={href as string} label={title as string} />
+        <NavLink to={href as string} label={title as string} {...restProps} />
       </NavigationMenuLink>
     </li>
   )
-})
+}
+
 ListItem.displayName = 'ListItem'
+
 export default function UnAuthenticatedHeader() {
   const { tokenData } = useAuthContext()
 

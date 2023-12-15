@@ -1,4 +1,5 @@
-import React, { Suspense, lazy } from 'react'
+import React, { Suspense, lazy, useEffect } from 'react'
+import AOS from 'aos'
 import { Routes, Route, Outlet } from 'react-router-dom'
 import { LoaderIcon } from 'lucide-react'
 import { Toaster } from '@/components/ui/toaster'
@@ -32,6 +33,9 @@ const Support = lazy(() => import('./pages/Support/Support'))
 const FeaturesDetails = lazy(() => import('./pages/Features/FeaturesDetails'))
 
 function App() {
+  useEffect(() => {
+    AOS.init()
+  }, [])
   return (
     <Suspense
       fallback={

@@ -1,39 +1,55 @@
-import React, { useEffect } from 'react'
+import React, { useMemo, Suspense, lazy, useEffect } from 'react'
+import { LoaderIcon } from 'lucide-react'
 import { useParams } from 'react-router-dom'
-import AOS from 'aos'
-import 'aos/dist/aos.css'
-import ExpenseAndBudget from './components/ExpenseAndBudget'
 import NotFound from '../NotFound/NotFound'
-import FinancialGoal from './components/FinancialGoal'
-import IncomeAndExpense from './components/IncomeAndExpense'
-import BalanceSheetDetails from './components/BalanceSheetDetails'
-import Calculators from './components/Calculators'
-export default function FeaturesDetails() {
-  const { toolName } = useParams()
 
-  let toolDetailComponent
+const ExpenseAndBudget = lazy(() => import('./components/ExpenseAndBudget'))
+const FinancialGoal = lazy(() => import('./components/FinancialGoal'))
+const IncomeAndExpense = lazy(() => import('./components/IncomeAndExpense'))
+const BalanceSheetDetails = lazy(() => import('./components/BalanceSheetDetails'))
+const Calculators = lazy(() => import('./components/Calculators'))
+
+const FeaturesDetails = () => {
+  const { toolName } = useParams()
+  let ToolDetailComponent: any
+
   switch (toolName) {
     case 'expense-budget':
-      toolDetailComponent = <ExpenseAndBudget />
+      ToolDetailComponent = ExpenseAndBudget
       break
     case 'financial-goal':
-      toolDetailComponent = <FinancialGoal />
+      ToolDetailComponent = FinancialGoal
       break
     case 'income-expense':
-      toolDetailComponent = <IncomeAndExpense />
+      ToolDetailComponent = IncomeAndExpense
       break
     case 'balance-sheet':
-      toolDetailComponent = <BalanceSheetDetails />
+      ToolDetailComponent = BalanceSheetDetails
       break
     case 'calculators':
-      toolDetailComponent = <Calculators />
+      ToolDetailComponent = Calculators
       break
     default:
-      toolDetailComponent = <NotFound />
+      ToolDetailComponent = NotFound
       break
   }
+
+  const memoizedComponent = useMemo(() => <ToolDetailComponent />, [ToolDetailComponent])
   useEffect(() => {
-    AOS.init()
-  }, [])
-  return toolDetailComponent
+    window.scrollTo(0, 0)
+  }, [toolName])
+  return (
+    <Suspense
+      fallback={
+        <div className='flex h-screen w-full items-center justify-center gap-2'>
+          <LoaderIcon className='w-4 h-4 animate-spin' />
+          <div>Loading please wait...</div>
+        </div>
+      }
+    >
+      {memoizedComponent}
+    </Suspense>
+  )
 }
+
+export default FeaturesDetails

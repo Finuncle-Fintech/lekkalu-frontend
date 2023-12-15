@@ -4,12 +4,15 @@ import { useParams } from 'react-router'
 import { useQuery } from '@tanstack/react-query'
 import Page from '@/components/Page/Page'
 import { GOALS } from '@/utils/query-keys'
-import { fetchGoalDetails } from '@/queries/goals'
+import { fetchGoalDetails, fetchGoalTimeline } from '@/queries/goals'
 
 export default function GoalDetails() {
   const { id } = useParams() as { id: string }
 
   const { isLoading, data } = useQuery([GOALS.DETAILS, Number(id)], () => fetchGoalDetails(Number(id)))
+  const timelineQuery = useQuery([GOALS.TIMELINE, Number(id)], () => fetchGoalTimeline(Number(id)))
+
+  console.log(timelineQuery.data)
 
   if (isLoading) {
     return <div>Loading goal details...</div>

@@ -34,4 +34,5 @@ export const GOALS = {
   GOALS: 'GOALS',
   PROGRESS: 'PROGRESS',
   DETAILS: 'DETAILS',
+  TIMELINE: 'TIMELINE',
 } as const

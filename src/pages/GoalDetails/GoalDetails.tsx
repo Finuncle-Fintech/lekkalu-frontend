@@ -4,15 +4,13 @@ import { useParams } from 'react-router'
 import { useQuery } from '@tanstack/react-query'
 import Page from '@/components/Page/Page'
 import { GOALS } from '@/utils/query-keys'
-import { fetchGoalDetails, fetchGoalTimeline } from '@/queries/goals'
+import { fetchGoalDetails } from '@/queries/goals'
+import GoalTimeline from './components/GoalTimeline'
 
 export default function GoalDetails() {
   const { id } = useParams() as { id: string }
 
   const { isLoading, data } = useQuery([GOALS.DETAILS, Number(id)], () => fetchGoalDetails(Number(id)))
-  const timelineQuery = useQuery([GOALS.TIMELINE, Number(id)], () => fetchGoalTimeline(Number(id)))
-
-  console.log(timelineQuery.data)
 
   if (isLoading) {
     return <div>Loading goal details...</div>
@@ -59,6 +57,8 @@ export default function GoalDetails() {
           <div className='flex-1 font-medium'>{data.reachable_by_days} days</div>
         </div>
       </div>
+
+      <GoalTimeline goalId={Number(id)} />
     </Page>
   )
 }

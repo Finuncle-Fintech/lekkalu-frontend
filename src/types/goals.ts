@@ -10,3 +10,8 @@ export type Goal = {
   updated_at: string
   target_contribution_source: number
 }
+
+export type Timeline = {
+  kpi_value: number
+  time: string
+}

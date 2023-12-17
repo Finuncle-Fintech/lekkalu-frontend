@@ -13,8 +13,6 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogT
 import { Button } from '@/components/ui/button'
 import { Form } from '@/components/ui/form'
 import InputFieldsRenderer from '@/components/InputFieldsRenderer/InputFieldsRenderer'
-import { BUDGET_MONTH_OPTIONS } from '@/utils/budget'
-import { SERVER_DATE_FORMAT } from '@/utils/constants'
 import { getErrorMessage } from '@/utils/utils'
 import { toast } from '@/components/ui/use-toast'
 
@@ -32,7 +30,6 @@ export default function EditBudgetModal({ budget }: Props) {
     resolver: zodResolver(updateBudgetSchema),
     defaultValues: {
       limit: Number(budget.limit),
-      month: dayjs(budget.month, SERVER_DATE_FORMAT).month().toString(),
     },
   })
 
@@ -46,7 +43,7 @@ export default function EditBudgetModal({ budget }: Props) {
   })
 
   const handleUpdateBudget = (values: UpdateBudgetSchema) => {
-    updateBudgetMutation.mutate({ ...values, month: dayjs().month(Number(values.month)).format(SERVER_DATE_FORMAT) })
+    updateBudgetMutation.mutate({ ...values })
   }
 
   return (
@@ -63,7 +60,7 @@ export default function EditBudgetModal({ budget }: Props) {
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Update Budget</DialogTitle>
+          <DialogTitle>Update Budget ({dayjs(budget.month).format('MMMM YYYY')})</DialogTitle>
         </DialogHeader>
 
         <Form {...form}>
@@ -75,14 +72,7 @@ export default function EditBudgetModal({ budget }: Props) {
                   id: 'limit',
                   label: 'Limit',
                   type: 'number',
-                },
-                {
-                  id: 'month',
-                  label: 'Month',
-                  type: 'select',
-                  options: BUDGET_MONTH_OPTIONS,
-                  value: budget.month,
-                },
+                }
               ]}
             />
 

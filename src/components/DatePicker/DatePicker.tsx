@@ -28,7 +28,7 @@ export default function DatePicker({ className, style, onChange, placeholder, va
           {date ? dayjs(date).format('MMM DD, YYYY') : <span>{placeholder ?? 'Pick a date'}</span>}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className={cn('w-auto p-0', className)} style={style}>
+      <PopoverContent className={cn('w-auto p-0', className)} style={style} side={'top'}>
         <Calendar
           {...props}
           mode='single'

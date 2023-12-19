@@ -4,6 +4,7 @@ import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { useQuery } from '@tanstack/react-query'
 import { Link } from 'react-router-dom'
+import { round } from 'lodash'
 import { cn } from '@/utils/utils'
 import { GOALS } from '@/utils/query-keys'
 import { getGoalProgress } from '@/queries/goals'
@@ -20,12 +21,12 @@ type Props = {
   color: string
 }
 
-const circleSize = 100
+const circleSize = 150
 
 export default function Goal({ className, style, id, goalTitle, category, createdAt, color }: Props) {
   const progressQuery = useQuery([GOALS.PROGRESS], () => getGoalProgress(id))
 
-  const data = [{ name: goalTitle, progressPercentage: progressQuery.data?.progress_percent, color }]
+  const data = [{ name: goalTitle, progressPercentage: round(progressQuery.data?.progress_percent ?? 0, 2), color }]
 
   return (
     <Link
@@ -33,7 +34,7 @@ export default function Goal({ className, style, id, goalTitle, category, create
       className={cn('flex items-center justify-center gap-4 flex-col border-t-4 rounded-lg p-4 shadow-md', className)}
       style={{ ...style, borderColor: color }}
     >
-      <RadialBarChart width={circleSize} height={circleSize} innerRadius={50} outerRadius={35} data={data}>
+      <RadialBarChart width={circleSize} height={circleSize} innerRadius={40} outerRadius={50} data={data}>
         <PolarAngleAxis type='number' domain={[0, 100]} angleAxisId={0} tick={false} />
         <RadialBar background dataKey='progressPercentage' cornerRadius={circleSize / 2} fill={color} />
         <text
@@ -43,7 +44,7 @@ export default function Goal({ className, style, id, goalTitle, category, create
           dominantBaseline='middle'
           className='text-lg font-bold'
         >
-          {`${progressQuery.data?.progress_percent} %`}
+          {`${round(progressQuery.data?.progress_percent ?? 0, 2)} %`}
         </text>
       </RadialBarChart>
 

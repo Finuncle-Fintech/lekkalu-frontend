@@ -43,7 +43,7 @@ export default function EditBudgetModal({ budget }: Props) {
   })
 
   const handleUpdateBudget = (values: UpdateBudgetSchema) => {
-    updateBudgetMutation.mutate({ ...values })
+    updateBudgetMutation.mutate({ ...values, limit: Number(values?.limit?.toFixed(2)) })
   }
 
   return (
@@ -72,7 +72,7 @@ export default function EditBudgetModal({ budget }: Props) {
                   id: 'limit',
                   label: 'Limit',
                   type: 'number',
-                }
+                },
               ]}
             />
 

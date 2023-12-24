@@ -42,13 +42,18 @@ export default function SetBudgetModal() {
   const handleCreateBudget = (values: SetBudgetSchemaDTO) => {
     let monthAlreadyPresent = false
     const currentSelectedDate = dayjs(values.month).format('MMM YYYY')
-    data?.forEach(budget => {
+    data?.forEach((budget) => {
       if (currentSelectedDate === dayjs(budget.month).format('MMM YYYY')) {
         form.setError('month', { message: 'Budget already alloted for this month' })
         monthAlreadyPresent = true
       }
     })
-    !monthAlreadyPresent && setBudgetMutation.mutate({ ...values, month: dayjs(values.month).format(SERVER_DATE_FORMAT) })
+    !monthAlreadyPresent &&
+      setBudgetMutation.mutate({
+        ...values,
+        month: dayjs(values.month).format(SERVER_DATE_FORMAT),
+        limit: Number(values.limit.toFixed(2)),
+      })
   }
 
   return (

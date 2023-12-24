@@ -62,6 +62,7 @@ export default function AddOrEditIncomeExpense({
   })
 
   const handleAddOrEdit = (values: AddIncomeStatementSchema) => {
+    values.amount = Number(values.amount.toFixed(2))
     if (isEdit) {
       updateMutation.mutate(values)
       return

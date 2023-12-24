@@ -8,6 +8,7 @@ import { useLocation } from 'react-router'
 import dayjs from 'dayjs'
 import { Button } from '@/components/ui/button'
 import { useToast } from '@/components/ui/use-toast'
+import { useUserPreferences } from '@/hooks/use-user-preferences'
 import { emiCalculatorSchema } from '@/schema/calculators'
 import { parseQueryString } from '@/utils/query-string'
 import { Form } from '@/components/ui/form'
@@ -18,6 +19,7 @@ import When from '@/components/When/When'
 // @ts-expect-error
 import { AssetsLiabilitiesChart } from '../../components/Charts/AssetsLiabilitiesChart'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { formatIndianMoneyNotation } from '@/utils/format-money'
 
 type EmiValues = z.infer<typeof emiCalculatorSchema>
 
@@ -44,15 +46,22 @@ const EmiCalculator = () => {
   const [isCopied, setIsCopied] = useState(false)
 
   const { toast } = useToast()
+  const { preferences } = useUserPreferences()
 
   const form = useForm<EmiValues>({
     resolver: zodResolver(emiCalculatorSchema),
     defaultValues: !isEmpty(parsedObject) ? parsedObject : DEFAULT_DATA,
+    mode: 'all',
   })
   const values = form.watch()
 
   const result = useMemo(() => {
-    if (!values.loanPrincipal || !values.loanInterest || !values.loanTenure) {
+    if (
+      !values.loanPrincipal ||
+      !values.loanInterest ||
+      !values.loanTenure ||
+      Object.keys(form.formState.errors).length !== 0
+    ) {
       return undefined
     }
 
@@ -61,7 +70,7 @@ const EmiCalculator = () => {
     const tenure = calculateTenureByUnit('Months', values.loanTenure)
 
     return { summary, assets, tenure }
-  }, [values.loanInterest, values.loanPrincipal, values.loanTenure])
+  }, [values.loanInterest, values.loanPrincipal, values.loanTenure, form.formState.errors])
 
   const inputs: Array<InputField> = [
     {
@@ -118,7 +127,7 @@ const EmiCalculator = () => {
 
   const handleCopy = () => {
     setIsCopied(true)
-    handleShare({ ...values, disbursementDate: dayjs(values.disbursementDate).unix() })
+    handleShare({ ...values, disbursementDate: dayjs(values.disbursementDate).unix() * 1000 })
     setTimeout(() => setIsCopied(false), 3000)
   }
 
@@ -173,15 +182,23 @@ const EmiCalculator = () => {
           <div className='flex items-center justify-center flex-col gap-4 text-center'>
             <div>
               <div>Loan EMI</div>
-              <div className='text-2xl font-medium'>{result?.summary?.loan_emi}</div>
+              <div className='text-2xl font-medium'>
+                {formatIndianMoneyNotation(parseFloat(result?.summary?.loan_emi as string))} {preferences.currencyUnit}
+              </div>
             </div>
             <div>
               <div>Total Interest Payable</div>
-              <div className='text-2xl font-medium'>{result?.summary?.total_interest_payable}</div>
+              <div className='text-2xl font-medium'>
+                {formatIndianMoneyNotation(parseFloat(result?.summary?.total_interest_payable as string))}{' '}
+                {preferences.currencyUnit}
+              </div>
             </div>
             <div>
               <div>Total Payment</div>
-              <div className='text-2xl font-medium'>{result?.summary?.total_payment}</div>
+              <div className='text-2xl font-medium'>
+                {formatIndianMoneyNotation(parseFloat(result?.summary?.total_payment as string))}{' '}
+                {preferences.currencyUnit}
+              </div>
             </div>
             <div>
               <Button onClick={handleExportToExcel}>Export to Excel</Button>

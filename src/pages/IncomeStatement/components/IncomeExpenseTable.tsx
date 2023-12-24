@@ -45,7 +45,7 @@ export default function IncomeExpenseTable({
         />
       </div>
       <Table className='border rounded'>
-        <TableCaption className='text-center'>A list of physical assets</TableCaption>
+        <TableCaption className='text-center'>A list of Income/Expenses</TableCaption>
         <TableHeader className='bg-gray-100/50'>
           <TableRow>
             <TableHead>Name</TableHead>

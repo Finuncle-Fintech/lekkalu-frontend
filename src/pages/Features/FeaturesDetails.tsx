@@ -11,33 +11,37 @@ const Calculators = lazy(() => import('./components/Calculators'))
 
 const FeaturesDetails = () => {
   const { toolName } = useParams()
-  let ToolDetailComponent: any
 
-  switch (toolName) {
-    case 'expense-budget':
-      ToolDetailComponent = ExpenseAndBudget
-      break
-    case 'financial-goal':
-      ToolDetailComponent = FinancialGoal
-      break
-    case 'income-expense':
-      ToolDetailComponent = IncomeAndExpense
-      break
-    case 'balance-sheet':
-      ToolDetailComponent = BalanceSheetDetails
-      break
-    case 'calculators':
-      ToolDetailComponent = Calculators
-      break
-    default:
-      ToolDetailComponent = NotFound
-      break
-  }
+  const memoizedComponent = useMemo(() => {
+    let ToolDetailComponent: any
 
-  const memoizedComponent = useMemo(() => <ToolDetailComponent />, [ToolDetailComponent])
+    switch (toolName) {
+      case 'expense-budget':
+        ToolDetailComponent = ExpenseAndBudget
+        break
+      case 'financial-goal':
+        ToolDetailComponent = FinancialGoal
+        break
+      case 'income-expense':
+        ToolDetailComponent = IncomeAndExpense
+        break
+      case 'balance-sheet':
+        ToolDetailComponent = BalanceSheetDetails
+        break
+      case 'calculators':
+        ToolDetailComponent = Calculators
+        break
+      default:
+        ToolDetailComponent = NotFound
+        break
+    }
+    return <ToolDetailComponent />
+  }, [toolName])
+
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [toolName])
+
   return (
     <Suspense
       fallback={

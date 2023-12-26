@@ -51,6 +51,7 @@ export default function AddOrEditExpenseDialog({ expense, trigger }: Props) {
   const addExpenseMutation = useMutation(addExpense, {
     onSuccess: () => {
       queryClient.invalidateQueries([EXPENSES.EXPENSES])
+      form.reset()
       toast({ title: 'Expense created successfully!' })
       setIsDialogOpen(false)
     },
@@ -94,7 +95,7 @@ export default function AddOrEditExpenseDialog({ expense, trigger }: Props) {
 
   const handleAddOrEditExpense = (values: AddExpenseSchema) => {
     const newExpense = {
-      amount: values.amount,
+      amount: parseFloat(values.amount.toFixed(2)),
       tags: [values.tags],
       time: values.time,
     }

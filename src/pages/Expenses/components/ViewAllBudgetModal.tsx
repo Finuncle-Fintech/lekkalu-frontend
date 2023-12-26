@@ -60,7 +60,7 @@ export default function ViewAllBudgetModal() {
 
             {data?.map((budget) => (
               <TableRow key={budget.id}>
-                <TableCell>{dayjs(budget.month, 'YYYY-MM-DD').format('MMMM')}</TableCell>
+                <TableCell>{dayjs(budget.month, 'YYYY-MM-DD').format('MMMM YYYY')}</TableCell>
                 <TableCell>{budget.limit}</TableCell>
                 <TableCell className='flex items-center gap-2'>
                   <Button loading={deleteBudgetMutation.isLoading} variant='ghost' size='sm'>

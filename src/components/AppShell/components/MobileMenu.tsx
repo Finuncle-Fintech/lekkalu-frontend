@@ -3,7 +3,7 @@ import { LogOutIcon, MenuIcon } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { Button, buttonVariants } from '@/components/ui/button'
-import { CALCULATOR_ROUTES, ROUTES, UN_AUTHENTICATED_ROUTES } from '@/utils/app-shell'
+import { CALCULATOR_ROUTES, FEATURES_ROUTES, ROUTES, UN_AUTHENTICATED_ROUTES } from '@/utils/app-shell'
 import NavLink from './NavLink'
 import When from '@/components/When/When'
 import { useAuthContext } from '@/hooks/use-auth'
@@ -17,11 +17,7 @@ import {
 import DownloadAllData from '@/components/DownloadAllData/DownloadAllData'
 import { cn } from '@/utils/utils'
 
-export default function MobileMenu({
-  isUnAuthenticatedHeader
-}:{
-  isUnAuthenticatedHeader?:boolean
-}) {
+export default function MobileMenu({ isUnAuthenticatedHeader }: { isUnAuthenticatedHeader?: boolean }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const { userData, logout, tokenData } = useAuthContext()
 
@@ -52,18 +48,23 @@ export default function MobileMenu({
                 <NavLink key={route.path} to={route.path} label={route.label} icon={route.icon} />
               ))}
             </div>
+            <div className='mt-4'>Features</div>
+            <div className='space-y-1'>
+              {FEATURES_ROUTES.map((route) => (
+                <NavLink key={route.href} to={route.href} label={route.title} icon={route.icon as any} />
+              ))}
+            </div>
           </div>
-
-          <div className="space-x-2 pb-12">
+          <div className='space-x-2 pb-12'>
             {!isUnAuthenticatedHeader && <DownloadAllData />}
 
             {isUnAuthenticatedHeader ? (
               <When
                 truthy={Boolean(tokenData)}
                 fallback={
-                  <div className="space-x-2 flex w-full">
+                  <div className='space-x-2 flex w-full'>
                     <Link
-                      to="/signin"
+                      to='/signin'
                       className={cn(
                         buttonVariants({ variant: 'outline' }),
                         'border-1 border border-black/50',
@@ -74,21 +75,15 @@ export default function MobileMenu({
                     </Link>
 
                     <Link
-                      to="/signup"
-                      className={cn(
-                        buttonVariants({ variant: 'secondary' }),
-                        'w-full border-1 border border-black/50',
-                      )}
+                      to='/signup'
+                      className={cn(buttonVariants({ variant: 'secondary' }), 'w-full border-1 border border-black/50')}
                     >
                       Signup
                     </Link>
                   </div>
                 }
               >
-                <Link
-                  to="/dashboard"
-                  className={cn(buttonVariants({ variant: 'secondary' }), 'w-full')}
-                >
+                <Link to='/dashboard' className={cn(buttonVariants({ variant: 'secondary' }), 'w-full')}>
                   Dashboard
                 </Link>
               </When>
@@ -96,18 +91,18 @@ export default function MobileMenu({
               <When truthy={Boolean(userData)}>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="outline">@{userData?.username}</Button>
+                    <Button variant='outline'>@{userData?.username}</Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent>
                     <When truthy={Boolean(userData?.email)}>
                       <DropdownMenuLabel>{userData?.email}</DropdownMenuLabel>
                     </When>
 
-                    <DropdownMenuItem className="cursor-pointer" asChild>
-                      <Link to="/profile">Profile</Link>
+                    <DropdownMenuItem className='cursor-pointer' asChild>
+                      <Link to='/profile'>Profile</Link>
                     </DropdownMenuItem>
-                    <DropdownMenuItem className="cursor-pointer" onClick={logout}>
-                      <LogOutIcon className="mr-2 h-4 w-4" />
+                    <DropdownMenuItem className='cursor-pointer' onClick={logout}>
+                      <LogOutIcon className='mr-2 h-4 w-4' />
                       <span>Logout</span>
                     </DropdownMenuItem>
                   </DropdownMenuContent>

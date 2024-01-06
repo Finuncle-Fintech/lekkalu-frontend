@@ -71,7 +71,7 @@ const DownloadAllData = (props: Props) => {
     const wb = XLSX.utils.book_new()
     /** Daily Expense List */
     const dailyExpenseWorksheet = XLSX.utils.json_to_sheet(
-      expensesQ.data?.map((expense) => ({ ...expense, tags: getTagNames(expense.tags) })) ?? [],
+      expensesQ.data?.records?.map((expense) => ({ ...expense, tags: getTagNames(expense.tags) })) ?? [],
     )
     XLSX.utils.book_append_sheet(wb, dailyExpenseWorksheet, 'Daily Expense')
 

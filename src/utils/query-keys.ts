@@ -17,6 +17,10 @@ export const EXPENSES = {
   DATE_RANGE: 'DATE_RANGE',
 } as const
 
+export const EXPENSES_SEARCH = {
+  EXPENSES_SEARCH: 'EXPENSES_SEARCH',
+} as const
+
 export const INCOME_STATEMENT = {
   INCOME_STATEMENT: 'INCOME_STATEMENT',
   SOURCES: 'SOURCES',

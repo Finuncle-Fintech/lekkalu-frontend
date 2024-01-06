@@ -19,11 +19,25 @@ import SetBudgetModal from './components/SetBudgetModal'
 import Pagination from '@/components/Pagination/Pagination'
 
 dayjs.extend(customParseFormat)
-
+export type totalExpensesMetadataType =
+  | {
+      page: number
+      per_page: number
+      page_count: number
+      total_count: number
+      Links: {
+        self?: string
+        first?: string
+        previous?: string
+        next?: string
+      }[]
+    }
+  | undefined
 export default function Expenses() {
   const { preferences } = useUserPreferences()
   const [searchParams, setSearchParams] = useSearchParams()
   const [dateRangeEnabled, setDateRangeEnabled] = useState(false)
+  const [totalExpensesMetadata, setTotalExpensesMetadata] = useState<totalExpensesMetadataType>()
 
   const page = searchParams.get('page') ? Number(searchParams.get('page')) : 0
 
@@ -46,6 +60,7 @@ export default function Expenses() {
     filtersForm.reset()
     setDateRangeEnabled(false)
   }
+  const maxPage = Math.ceil((totalExpensesMetadata?.total_count || 0) / 10) - 1
 
   return (
     <div className='max-w-screen-xl mx-auto align-self-start min-h-[80vh] p-4 space-y-4'>
@@ -75,7 +90,7 @@ export default function Expenses() {
           <Pagination
             showSkipButtons
             disablePrevious={page === 0}
-            disableNext={page === 6}
+            disableNext={page * 10 + 10 >= (totalExpensesMetadata?.total_count ?? 0)}
             onSkipPrevious={() => {
               setSearchParams((prev) => {
                 prev.set('page', Math.max(page - 3, 0).toString())
@@ -96,14 +111,15 @@ export default function Expenses() {
             }}
             onSkipNext={() => {
               setSearchParams((prev) => {
-                prev.set('page', Math.min(page + 3, 6).toString())
+                prev.set('page', Math.min(page + 3, maxPage).toString())
                 return prev
               })
             }}
           />
 
           <div>
-            {page * 10 + 1} - {page * 10 + 10} of 70
+            {page * 10 + 1} - {Math.min((page + 1) * 10, totalExpensesMetadata?.total_count ?? 0)} of{' '}
+            {totalExpensesMetadata?.total_count}
           </div>
         </div>
 
@@ -148,6 +164,7 @@ export default function Expenses() {
       </div>
 
       <ExpensesTable
+        setTotalExpensesMetadata={setTotalExpensesMetadata}
         dateRangeEnabled={dateRangeEnabled}
         filters={{
           from: dayjs(filters.from).format('YYYY-MM-DD'),

@@ -106,7 +106,10 @@ export default function AddOrEditExpenseDialog({ expense, trigger }: Props) {
     }
 
     /** Handling case of expense creation */
-    const exists = checkIsExpenseExists(expenses ?? [], { ...newExpense, amount: newExpense.amount.toString() })
+    const exists = checkIsExpenseExists(expenses?.records ?? [], {
+      ...newExpense,
+      amount: newExpense.amount.toString(),
+    })
     if (exists) {
       toast({ title: 'Expense already exists!', variant: 'destructive' })
       return

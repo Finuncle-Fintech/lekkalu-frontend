@@ -9,24 +9,26 @@ import { fetchMonthlyExpenses } from '@/queries/expense'
 import { BUDGET_QUERY_KEYS, EXPENSES } from '@/utils/query-keys'
 import { fetchBudgets } from '@/queries/budget'
 import { cn } from '@/utils/utils'
+import { useUserPreferences } from '@/hooks/use-user-preferences'
 
 const dropdownOptions = [
   {
     name: 'Last 3 Months',
-    value: 'month-3',
+    value: '3',
   },
   {
     name: 'Last 6 Months',
-    value: 'month-6',
+    value: '6',
   },
   {
     name: 'Last Year',
-    value: 'year',
+    value: '12',
   },
 ]
 
 function MonthlyProgressBar({ data }: any) {
   const { budget, month, spent, year } = data
+  const { preferences } = useUserPreferences()
   const present = (spent / budget) * 100
 
   return (
@@ -40,13 +42,17 @@ function MonthlyProgressBar({ data }: any) {
         </h6>
         <div className='flex-1'>
           <div className='flex justify-between items-center'>
-            <h6 className='text-xs font-medium uppercase text-gray-700'>spent {spent}</h6>
+            <h6 className='text-xs font-medium uppercase text-gray-700'>
+              spent {`${spent} ${preferences.currencyUnit}`}
+            </h6>
             <h6
               className={`text-xs font-medium uppercase ${
                 present < 80 ? 'text-green-500' : present < 95 ? 'text-amber-500' : 'text-red-500'
               }`}
             >
-              {`left ${Number(budget) - Number(spent)}`}
+              {budget
+                ? `left ${(Number(budget) - Number(spent)).toFixed(2)} ${preferences.currencyUnit}`
+                : 'Budget not set'}
             </h6>
           </div>
           <div>
@@ -79,7 +85,7 @@ export default function BudgetChart() {
     },
   })
   const { data, isLoading } = useQuery([EXPENSES.MONTHLY_EXPENSES], fetchMonthlyExpenses)
-  const [timeRange, setTimeRange] = useState('month-3')
+  const [timeRange, setTimeRange] = useState('3')
   const monthlyData = useMemo(() => {
     if (!data || !budgetData) {
       return []
@@ -87,8 +93,15 @@ export default function BudgetChart() {
 
     return data
       ?.map((ele) => ({ ...ele, budget: budgetData?.find((item: any) => item.month === ele.month)?.limit }))
-      .sort((a, b) => b.month - a.month)
-  }, [data, budgetData])
+      .sort((a, b) => {
+        if (a.year !== b.year) {
+          return b.year - a.year
+        } else {
+          return b.month - a.month
+        }
+      })
+      .slice(0, parseInt(timeRange))
+  }, [data, budgetData, timeRange])
 
   if (isLoading) {
     return <div className='w-full animate-pulse bg-gray-300 h-96' />

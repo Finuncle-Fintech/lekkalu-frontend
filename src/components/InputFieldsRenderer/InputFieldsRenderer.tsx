@@ -9,6 +9,7 @@ import DatePicker from '../DatePicker/DatePicker'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group'
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
+import MultipleSelector, { Option } from '../Expenses/MultipleSelector'
 
 // @TODO: Add extraContent prop
 type BaseInput = {
@@ -35,7 +36,7 @@ type DateInput = BaseInput & {
   defaultDate?: Date
 }
 
-type Option = {
+type Options = {
   id: string
   label: string | number
 }
@@ -43,12 +44,11 @@ type Option = {
 type MultiSelectInput = BaseInput & {
   type: 'multi-select'
   options: Option[]
-  valueFormatter?: (value: string | number) => string | number
 }
 
 type SelectInput = BaseInput & {
   type: 'select'
-  options: Option[]
+  options: Options[]
   valueFormatter?: (value: string | number) => string | number
 }
 
@@ -58,7 +58,7 @@ type TextInput = BaseInput & {
 
 type RadioInput = BaseInput & {
   type: 'radio'
-  options: Option[]
+  options: Options[]
 }
 
 export type InputField = NumberInput | DateInput | MultiSelectInput | TextInput | SelectInput | RadioInput
@@ -69,14 +69,16 @@ type Props = {
 }
 
 export default function InputFieldsRenderer({ inputs, control }: Props) {
-    const getFieldInput = useCallback((input: InputField, field: ControllerRenderProps<FieldValues, string>) => {
+  const getFieldInput = useCallback((input: InputField, field: ControllerRenderProps<FieldValues, string>) => {
     switch (input.type) {
       case 'number': {
         return (
           <div className='space-y-2'>
-            {
-              (input.helpText && input.helpText !== '') ? <div
-                className={'flex rounded-md items-center gap-2 border px-3 border-input bg-background ring-offset-background focus-visible:ring-2 focus-visible:ring-ring'}
+            {input.helpText && input.helpText !== '' ? (
+              <div
+                className={
+                  'flex rounded-md items-center gap-2 border px-3 border-input bg-background ring-offset-background focus-visible:ring-2 focus-visible:ring-ring'
+                }
               >
                 <Input
                   type='number'
@@ -94,19 +96,20 @@ export default function InputFieldsRenderer({ inputs, control }: Props) {
                     </div>
                   </PopoverTrigger>
                   <PopoverContent>
-                    <div className="Text">
-                      {input.helpText}
-                    </div>
+                    <div className='Text'>{input.helpText}</div>
                   </PopoverContent>
                 </Popover>
-              </div> : <Input
+              </div>
+            ) : (
+              <Input
                 type='number'
                 placeholder={input.label}
                 {...field}
                 onChange={(e) => {
                   field.onChange(e.target?.valueAsNumber)
                 }}
-              />}
+              />
+            )}
             <When truthy={Boolean(input.hasRange)}>
               <Slider
                 defaultValue={[field.value]}
@@ -123,57 +126,47 @@ export default function InputFieldsRenderer({ inputs, control }: Props) {
         )
       }
       case 'text': {
-        return (<React.Fragment>
-          {(input.helpText && input.helpText !== '') ? <div
-            className={'flex rounded-md items-center gap-2 border px-3 border-input bg-background ring-offset-background focus-visible:ring-2 focus-visible:ring-ring'}
-          >
-            <Input type='text' placeholder={input.label} data-testid={input.id} {...field} />
-            <Popover>
-              <PopoverTrigger>
-                <div className='cursor-pointer'>
-                  <InfoIcon className='w-4 h-4' />
-                </div>
-              </PopoverTrigger>
-              <PopoverContent>
-                <div className="Text">
-                  {input.helpText}
-                </div>
-              </PopoverContent>
-            </Popover>
-          </div> : <Input type='text' placeholder={input.label} data-testid={input.id} {...field} />}
-        </React.Fragment>)
+        return (
+          <React.Fragment>
+            {input.helpText && input.helpText !== '' ? (
+              <div
+                className={
+                  'flex rounded-md items-center gap-2 border px-3 border-input bg-background ring-offset-background focus-visible:ring-2 focus-visible:ring-ring'
+                }
+              >
+                <Input type='text' placeholder={input.label} data-testid={input.id} {...field} />
+                <Popover>
+                  <PopoverTrigger>
+                    <div className='cursor-pointer'>
+                      <InfoIcon className='w-4 h-4' />
+                    </div>
+                  </PopoverTrigger>
+                  <PopoverContent>
+                    <div className='Text'>{input.helpText}</div>
+                  </PopoverContent>
+                </Popover>
+              </div>
+            ) : (
+              <Input type='text' placeholder={input.label} data-testid={input.id} {...field} />
+            )}
+          </React.Fragment>
+        )
       }
 
       case 'date': {
-        return (<DatePicker placeholder={input.label} data-testid={input.id} {...field} />)
+        return <DatePicker placeholder={input.label} data-testid={input.id} {...field} />
       }
 
-      // @TODO: Create multi select input
       case 'multi-select': {
         return (
-          <Select
-            onValueChange={(value) => {
-              if (typeof input.valueFormatter === 'function') {
-                const _value = input.valueFormatter(value)
-                field.onChange(_value)
-              } else {
-                field.onChange(value)
-              }
-            }}
-            data-testid={input.id}
+          <MultipleSelector
+            options={input.options}
+            placeholder={input.label}
+            creatable
+            hidePlaceholderWhenSelected
             {...field}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder={input.label} />
-            </SelectTrigger>
-            <SelectContent className='max-h-72'>
-              {input.options.map(({ id, label }) => (
-                <SelectItem value={id} key={id}>
-                  {label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+            data-testid={input.id}
+          />
         )
       }
 
@@ -241,7 +234,7 @@ export default function InputFieldsRenderer({ inputs, control }: Props) {
           <FormLabel className='flex items-center'>
             {input.label}
             <span className='pl-2'>
-              {input.helpText && input.helpText !== '' && input.type === 'date' &&
+              {input.helpText && input.helpText !== '' && input.type === 'date' && (
                 <Popover>
                   <PopoverTrigger>
                     <div className='cursor-pointer'>
@@ -249,11 +242,10 @@ export default function InputFieldsRenderer({ inputs, control }: Props) {
                     </div>
                   </PopoverTrigger>
                   <PopoverContent>
-                    <div className="Text">
-                      {input.helpText}
-                    </div>
+                    <div className='Text'>{input.helpText}</div>
                   </PopoverContent>
-                </Popover>}
+                </Popover>
+              )}
             </span>
           </FormLabel>
           <FormControl>{getFieldInput(input, field)}</FormControl>

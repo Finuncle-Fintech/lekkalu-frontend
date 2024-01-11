@@ -3,7 +3,7 @@ import { LogOutIcon, MenuIcon } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { Button, buttonVariants } from '@/components/ui/button'
-import { CALCULATOR_ROUTES, ROUTES, UN_AUTHENTICATED_ROUTES } from '@/utils/app-shell'
+import { CALCULATOR_ROUTES, FEATURES_ROUTES, ROUTES, UN_AUTHENTICATED_ROUTES } from '@/utils/app-shell'
 import NavLink from './NavLink'
 import When from '@/components/When/When'
 import { useAuthContext } from '@/hooks/use-auth'
@@ -48,8 +48,13 @@ export default function MobileMenu({ isUnAuthenticatedHeader }: { isUnAuthentica
                 <NavLink key={route.path} to={route.path} label={route.label} icon={route.icon} />
               ))}
             </div>
+            <div className='mt-4'>Features</div>
+            <div className='space-y-1'>
+              {FEATURES_ROUTES.map((route) => (
+                <NavLink key={route.href} to={route.href} label={route.title} icon={route.icon as any} />
+              ))}
+            </div>
           </div>
-
           <div className='space-x-2 pb-12'>
             {!isUnAuthenticatedHeader && <DownloadAllData />}
 

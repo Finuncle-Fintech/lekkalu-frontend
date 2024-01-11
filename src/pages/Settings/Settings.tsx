@@ -18,7 +18,7 @@ export default function Settings() {
 
       <div className='grid md:grid-cols-2 gap-4 mb-2'>
         <div className='space-y-2'>
-          <div>First name</div>
+          <div>Currency</div>
           <Select onValueChange={handleValueChange} value={preferences.currencyUnit}>
             <SelectTrigger>
               <SelectValue placeholder='Currency Unit' />

@@ -5,7 +5,7 @@ import { getCookie } from '@/utils/cookie'
 import { User } from '@/types/user'
 
 export async function signup(dto: Omit<SignupSchema, 'termsAndConditions' | 'privacyPolicy'>) {
-  const { data } = await userClient.post<{ email: string; username: string }>('/users', dto)
+  const { data } = await userClient.post<{ email: string; username: string }>('/users_1', dto)
   return data
 }
 

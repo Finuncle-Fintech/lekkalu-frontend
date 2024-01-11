@@ -1,9 +1,14 @@
 import React from 'react'
 import {
   BadgeHelp,
+  Calculator,
   CalculatorIcon,
+  CandlestickChart,
+  CircleDollarSign,
   CoinsIcon,
   DollarSignIcon,
+  FileSpreadsheet,
+  Goal,
   LayoutDashboardIcon,
   Settings2Icon,
   SheetIcon,
@@ -54,7 +59,7 @@ export const UN_AUTHENTICATED_ROUTES: Array<Route> = [
     path: '/support',
     label: 'Support',
     icon: <BadgeHelp />,
-  }
+  },
 ]
 
 export const CALCULATOR_ROUTES: Array<Route> = [
@@ -72,5 +77,37 @@ export const CALCULATOR_ROUTES: Array<Route> = [
     path: '/emi-calculator',
     label: 'EMI Calculator',
     icon: <CalculatorIcon />,
+  },
+]
+export const FEATURES_ROUTES: { title: string; href: string; description: string; icon: React.ReactNode }[] = [
+  {
+    title: 'Expense & Budget',
+    href: '/feature/expense-budget',
+    description: 'Effortlessly manage expenses and budget, track spending, and achieve financial stability.',
+    icon: <CircleDollarSign size={30} />,
+  },
+  {
+    title: 'Financial Goal',
+    href: '/feature/financial-goal',
+    description: 'Set and track financial goals with precision for a successful financial journey.',
+    icon: <Goal size={30} />,
+  },
+  {
+    title: 'Income & Expense',
+    href: '/feature/income-expense',
+    description: 'Gain insights into income and expenses for informed financial decision-making.',
+    icon: <CandlestickChart size={30} />,
+  },
+  {
+    title: 'Balance Sheet',
+    href: '/feature/balance-sheet',
+    description: 'Access a clear balance sheet to understand and improve your financial position.',
+    icon: <FileSpreadsheet size={30} />,
+  },
+  {
+    title: 'Calculators',
+    href: '/feature/calculators',
+    description: 'Empower yourself with financial calculators for smart planning and decision-making.',
+    icon: <Calculator size={30} />,
   },
 ]

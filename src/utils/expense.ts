@@ -1,5 +1,5 @@
 import dayjs from 'dayjs'
-import { Expense } from '@/types/expense'
+import { Expense, InputValueArray, OutputValueArray } from '@/types/expense'
 import { Tag } from '@/types/tag'
 import { createTag } from '@/queries/tag'
 
@@ -54,4 +54,22 @@ export async function getOrCreateTag(newTags: string[], existingTags: Tag[]) {
   }
 
   return existingOrCreatedTagIds
+}
+
+export const getIdAndUniqueIdArray = (input: InputValueArray[]): OutputValueArray => {
+  const idArr: number[] = []
+  const newIdArr: string[] = []
+
+  input.forEach((item) => {
+    if (item.id !== undefined) {
+      idArr.push(item.id)
+    } else {
+      newIdArr.push(item.value)
+    }
+  })
+
+  return {
+    idArr,
+    newIdArr,
+  }
 }

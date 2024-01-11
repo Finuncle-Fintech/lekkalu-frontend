@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from 'react'
+import * as XLSX from 'xlsx'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -126,6 +127,27 @@ const EmiCalculator = () => {
     setTimeout(() => setIsCopied(false), 3000)
   }
 
+  const excelData = useMemo(() => {
+    const data = {
+      loanEmi: result?.summary?.loan_emi,
+      totalInterestPayable: result?.summary?.total_interest_payable,
+      totalPayment: result?.summary?.total_payment
+    }
+    return [{ ...values, ...data }]
+  }, [values, result])
+
+  const handleExportToExcel = () => {
+    const wb = XLSX.utils.book_new()
+    const emiCalculationWorksheet = XLSX.utils.json_to_sheet(excelData) ?? []
+    const emiMonthlyCalculationWorksheet = XLSX.utils.json_to_sheet(result?.summary?.repayment_table ?? []) ?? []
+    const emiCalculationJson = XLSX.utils.sheet_to_json(emiCalculationWorksheet, { header: 1 })
+    const emiMonthlyCalculationJson = XLSX.utils.sheet_to_json(emiMonthlyCalculationWorksheet, { header: 1 })
+    const mergedWorksheet = emiCalculationJson.concat([[''], [''], ['']]).concat(emiMonthlyCalculationJson)
+    const finalWorksheet = XLSX.utils.json_to_sheet(mergedWorksheet, { skipHeader: true })
+    XLSX.utils.book_append_sheet(wb, finalWorksheet, 'EMI Calculation')
+    XLSX.writeFile(wb, 'emi_calculation.xlsx', { compression: true })
+  }
+
   return (
     <div className='max-w-screen-xl mx-auto p-4 space-y-4'>
       <div className='flex items-center justify-between'>
@@ -165,6 +187,9 @@ const EmiCalculator = () => {
             <div>
               <div>Total Payment</div>
               <div className='text-2xl font-medium'>{result?.summary?.total_payment}</div>
+            </div>
+            <div>
+              <Button onClick={handleExportToExcel}>Export to Excel</Button>
             </div>
           </div>
 

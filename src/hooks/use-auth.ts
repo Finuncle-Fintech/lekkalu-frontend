@@ -4,7 +4,7 @@ import constate from 'constate'
 import { useNavigate } from 'react-router'
 import { fetchUser, login, refreshToken, signup } from '@/queries/auth'
 import { deleteCookie, setCookie } from '@/utils/cookie'
-import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from '@/utils/constants'
+import { ACCESS_TOKEN_KEY, COOKIE_CONSENT, REFRESH_TOKEN_KEY } from '@/utils/constants'
 import { AUTH } from '@/utils/query-keys'
 import { useToast } from '@/components/ui/use-toast'
 import { getErrorMessage } from '@/utils/utils'
@@ -35,7 +35,7 @@ export function useAuth() {
       /** Saving the tokens in cookies */
       setCookie(REFRESH_TOKEN_KEY, data.refresh, 30)
       setCookie(ACCESS_TOKEN_KEY, data.access, 30)
-
+      setCookie(COOKIE_CONSENT, 'accept', 30)
       /** updating the data in queryClient */
       qc.setQueryData([AUTH.LOGGED_IN], data)
 

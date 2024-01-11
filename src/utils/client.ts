@@ -40,8 +40,18 @@ export const tokenClient = axios.create({
 })
 
 /**
- * Api client for v1
+ * Api client for v1 where NO token is required
  */
+
+export const v1ApiClientWithoutToken = axios.create({
+  baseURL: process.env.REACT_APP_V1_API_URL,
+  headers: BASIC_HEADER,
+})
+
+/**
+ * Api client for v1 where token is required (below end point have interceptor with token)
+ */
+
 export const v1ApiClient = axios.create({
   baseURL: process.env.REACT_APP_V1_API_URL,
   headers: BASIC_HEADER,

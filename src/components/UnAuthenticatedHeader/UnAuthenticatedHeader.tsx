@@ -11,20 +11,60 @@ import {
   NavigationMenuTrigger,
 } from '@/components/ui/navigation-menu'
 import { useAuthContext } from '@/hooks/use-auth'
-import { CALCULATOR_ROUTES } from '@/utils/app-shell'
+import { CALCULATOR_ROUTES, FEATURES_ROUTES } from '@/utils/app-shell'
 import { cn } from '@/utils/utils'
 import When from '../When/When'
 import { buttonVariants } from '../ui/button'
 
-const ListItem = React.forwardRef<React.ElementRef<'a'>, React.ComponentPropsWithoutRef<'a'>>(({ title, href }) => {
+const ListItemFeatures = ({
+  title,
+  href,
+  children,
+  icon,
+  ...props
+}: {
+  title: string
+  href: string
+  children: React.ReactNode
+  icon: React.ReactNode
+}) => {
   return (
     <li>
       <NavigationMenuLink asChild>
-        <NavLink to={href as string} label={title as string} />
+        <Link
+          to={href as string}
+          className={cn(
+            'group block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-all hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground',
+          )}
+          {...props}
+        >
+          <div className='flex items-center gap-5'>
+            <div>{icon}</div>
+            <div>
+              <div className='text-sm font-medium leading-none'>{title}</div>
+              <div className='hidden group-hover:block'>
+                <p className='line-clamp-2 text-sm leading-snug text-muted-foreground'>{children}</p>
+              </div>
+            </div>
+          </div>
+        </Link>
       </NavigationMenuLink>
     </li>
   )
-})
+}
+
+ListItemFeatures.displayName = 'ListItemFeatures'
+
+const ListItem = ({ title, href, ...restProps }: { title: string; href: string }) => {
+  return (
+    <li>
+      <NavigationMenuLink asChild>
+        <NavLink to={href as string} label={title as string} {...restProps} />
+      </NavigationMenuLink>
+    </li>
+  )
+}
+
 ListItem.displayName = 'ListItem'
 
 export default function UnAuthenticatedHeader() {
@@ -44,6 +84,18 @@ export default function UnAuthenticatedHeader() {
         <div className='flex items-center gap-2'>
           <NavigationMenu>
             <NavigationMenuList>
+              <NavigationMenuItem>
+                <NavigationMenuTrigger className='bg-transparent'>Features</NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <ul className='grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]'>
+                    {FEATURES_ROUTES.map((route) => (
+                      <ListItemFeatures key={route.title} icon={route.icon} title={route.title} href={route.href}>
+                        {route.description}
+                      </ListItemFeatures>
+                    ))}
+                  </ul>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
               <NavigationMenuItem>
                 <NavigationMenuTrigger className='bg-transparent'>Calculators</NavigationMenuTrigger>
                 <NavigationMenuContent>

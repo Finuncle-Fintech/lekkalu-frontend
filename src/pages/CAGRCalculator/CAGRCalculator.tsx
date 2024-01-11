@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from 'react'
+import * as XLSX from 'xlsx'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -126,6 +127,22 @@ export default function CAGRCalculator() {
     return { summary, pieChartData, barChartData: summary.barChartData }
   }, [values.durationOfInvestment, values.finalValue, values.initialValue])
 
+  const excelData = useMemo(() => {
+    const data = {
+      absoluteCAGR: result?.summary.absoluteCAGR,
+      absoluteReturns: result?.summary.absoluteReturns,
+      percentageCAGR: result?.summary.percentageCAGR,
+    }
+    return [{ ...values, ...data }]
+  }, [values, result])
+
+  const handleExportToExcel = () => {
+    const wb = XLSX.utils.book_new()
+    const cagrCalculationWorksheet = XLSX.utils.json_to_sheet(excelData) ?? []
+    XLSX.utils.book_append_sheet(wb, cagrCalculationWorksheet, 'CAGR Calculation')
+    XLSX.writeFile(wb, 'cagr_calculation.xlsx', { compression: true })
+  }
+
   return (
     <Page className='space-y-4'>
       <div className='flex items-center justify-between'>
@@ -207,6 +224,9 @@ export default function CAGRCalculator() {
             <div className='flex gap-2 border-b'>
               <div>You CAGR percentage: </div>
               <div className='font-medium'>{result?.summary?.percentageCAGR} %</div>
+            </div>
+            <div>
+              <Button onClick={handleExportToExcel}>Export to Excel</Button>
             </div>
           </div>
         </When>

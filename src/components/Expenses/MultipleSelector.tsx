@@ -174,6 +174,7 @@ const MultipleSelector = React.forwardRef<MultipleSelectorRef, MultipleSelectorP
           }
         }
       },
+      // eslint-disable-next-line
       [selected],
     )
 

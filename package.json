@@ -27,7 +27,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
     "constate": "^3.3.2",
-    "date-fns": "^2.30.0",
+    "date-fns": "^3.2.0",
     "dayjs": "^1.11.10",
     "env-cmd": "^10.1.0",
     "jwt-decode": "^4.0.0",

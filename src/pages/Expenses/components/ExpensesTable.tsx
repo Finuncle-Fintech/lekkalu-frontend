@@ -3,10 +3,10 @@ import { useQueries } from '@tanstack/react-query'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import dayjs from 'dayjs'
-import { EditIcon, LoaderIcon } from 'lucide-react'
+import { EditIcon, LoaderIcon, Search } from 'lucide-react'
 import { useSearchParams } from 'react-router-dom'
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { Form, FormField } from '@/components/ui/form'
+import { Form, FormDescription, FormField, FormItem } from '@/components/ui/form'
 import { EXPENSES, EXPENSES_SEARCH, TAGS } from '@/utils/query-keys'
 import { fetchExpenseByDate, fetchExpenseBySearch, fetchExpenses } from '@/queries/expense'
 import { fetchTags } from '@/queries/tag'
@@ -57,7 +57,7 @@ export default function ExpensesTable({ dateRangeEnabled, filters, setTotalExpen
       {
         queryKey: [EXPENSES_SEARCH.EXPENSES_SEARCH, search],
         queryFn: () => fetchExpenseBySearch({ search }),
-        enabled: search.length > 3,
+        enabled: search.length > 2,
       },
     ],
   })
@@ -66,8 +66,8 @@ export default function ExpensesTable({ dateRangeEnabled, filters, setTotalExpen
     if (dateRangeEnabled) {
       return expensesByDateQuery.data ?? []
     }
-    setTotalExpensesMetadata(expenseQuery.data?._metadata)
-    return search.length > 3 ? searchQuery?.data?.records ?? [] : expenseQuery.data?.records ?? []
+    setTotalExpensesMetadata(search.length > 2 ? searchQuery.data?._metadata : expenseQuery.data?._metadata)
+    return search.length > 2 ? searchQuery?.data?.records ?? [] : expenseQuery.data?.records ?? []
   }, [
     dateRangeEnabled,
     expenseQuery.data,
@@ -103,7 +103,19 @@ export default function ExpensesTable({ dateRangeEnabled, filters, setTotalExpen
           <FormField
             control={searchExpenseForm.control}
             name='search'
-            render={({ field }) => <Input type='text' placeholder='Search...' {...field} />}
+            render={({ field }) => (
+              <FormItem>
+                <div className='flex items-center relative'>
+                  <Search className='absolute left-3' size={20} color='#64748b' />
+                  <Input className='max-w-sm pl-10' type='text' placeholder='Search...' {...field} />
+                </div>
+                {search.length !== 0 && search.length <= 2 && (
+                  <FormDescription className='text-xs text-muted-foreground'>
+                    Serch term should be at least 2 characters long
+                  </FormDescription>
+                )}
+              </FormItem>
+            )}
           />
         </form>
       </Form>

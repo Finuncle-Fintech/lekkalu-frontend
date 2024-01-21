@@ -73,4 +73,9 @@ export const CALCULATOR_ROUTES: Array<Route> = [
     label: 'EMI Calculator',
     icon: <CalculatorIcon />,
   },
+  {
+    path: '/xirr-calculator',
+    label: 'XIRR Calculator',
+    icon: <CalculatorIcon />,
+  }
 ]

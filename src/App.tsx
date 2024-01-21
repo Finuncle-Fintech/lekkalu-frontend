@@ -7,6 +7,7 @@ import AppShell from './components/AppShell/AppShell'
 import UnAuthenticatedHeader from './components/UnAuthenticatedHeader/UnAuthenticatedHeader'
 import Footer from './components/Footer/Footer'
 import CookieConsent from './components/CookieConsent/CookieConsent'
+import XIRRCalculator from './pages/XIRRCalculator/XIRRCalculator'
 
 /** Authenticated Routes */
 const Dashboard = lazy(() => import('@/pages/Dashboard/Dashboard'))
@@ -82,6 +83,7 @@ function App() {
           <Route path='/privacy-policies' element={<PrivacyPolicies />} />
           <Route path='/pricing' element={<Pricing />} />
           <Route path='/support' element={<Support />} />
+          <Route path='/xirr-calculator' element={<XIRRCalculator/>} />
         </Route>
         <Route path='*' element={<NotFound />} />
       </Routes>

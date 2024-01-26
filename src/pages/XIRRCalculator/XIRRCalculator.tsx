@@ -3,6 +3,7 @@ import { useLocation } from 'react-router'
 import dayjs from 'dayjs'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
+import { Trash2Icon } from 'lucide-react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { isEmpty } from 'lodash'
 import { Button } from '@/components/ui/button'
@@ -78,7 +79,7 @@ const XIRRCalculator = () => {
       for (let i = 1; i < 5; i++) {
         tempCashFlows.push({
           key: 'Period' + i,
-          value: 200,
+          value: (200 * i),
           type: 'number',
           label: 'Period ' + i,
           transactionDate: new Date(new Date().setFullYear(new Date().getFullYear() + i))
@@ -168,25 +169,35 @@ const XIRRCalculator = () => {
         <Form {...form}>
           <div className='grid md:grid-cols-2 gap-4'>
             <InputFieldsRenderer control={form.control} inputs={inputs.filter(input => { return input.id !== 'guess' })} />
-            {cashFlows.map(input => {
-              return (<FormItem key={input.key}>
-                <FormLabel className='flex items-center justify-between'>
-                  {input.label}
-                  <Button size="sm" variant="outline" id={input.key} onClick={handlePeriodRemoveButton}>Remove</Button>
-                </FormLabel>
-                <FormControl >
-                  <DatePicker value={input.transactionDate} id={input.key} onChange={handleDateFieldChange(input.key)} placeholder={input.label} data-testid={input.key} />
-                </FormControl>
-                <FormControl><Input
-                  key={input.key}
-                  id={input.key}
-                  type='number'
-                  placeholder={input.label}
-                  value={input.value.toString()}
-                  onChange={handleTextFieldChange}
-                /></FormControl>
-                <FormMessage />
-              </FormItem>)
+            {cashFlows.map((input, index) => {
+              return (
+                <React.Fragment key={input.key}>
+                  <div className='flex'>
+                    <FormLabel className='flex items-center mr-2'>{index + 1}.</FormLabel>
+                    <FormItem key={input.key} className='w-full'>
+                      <FormControl>
+                        <DatePicker value={input.transactionDate} id={input.key + ':date'} onChange={handleDateFieldChange(input.key)} placeholder={input.label} data-testid={input.key} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  </div>
+                  <div className='flex'>
+                    <FormItem className='w-full'>
+                      <FormControl><Input
+                        key={input.key + ':value'}
+                        id={input.key + ':value'}
+                        type='number'
+                        placeholder={input.label}
+                        value={input.value.toString()}
+                        onChange={handleTextFieldChange}
+                      /></FormControl>
+                      <FormMessage />
+                    </FormItem>
+                    <Button className='ml-2' size='sm' variant='ghost' id={input.key} onClick={handlePeriodRemoveButton}>
+                      <Trash2Icon className='pointer-events-none' />
+                    </Button>
+                  </div>
+                </React.Fragment>)
             })}
           </div>
           <div className='grid md:grid-cols-2 gap-4 pt-4'>

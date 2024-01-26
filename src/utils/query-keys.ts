@@ -49,3 +49,8 @@ export const GOALS = {
 export const NOTIFICATION = {
   NOTIFICATION: 'NOTIFICATION',
 } as const
+
+export const LENDING = {
+  TRANSACTIONS: 'LENDING_TRANSACTIONS',
+  ACCOUNTS: 'LENDING_ACCOUNTS',
+} as const

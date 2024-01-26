@@ -13,6 +13,7 @@ import {
   Settings2Icon,
   SheetIcon,
   TargetIcon,
+  Wallet,
 } from 'lucide-react'
 
 type Route = { path: string; label: string; icon: React.ReactElement<{ className?: string }> }
@@ -37,6 +38,11 @@ export const ROUTES: Array<Route> = [
     path: '/expenses',
     label: 'Expenses',
     icon: <CoinsIcon />,
+  },
+  {
+    path: '/lending',
+    label: 'Lending',
+    icon: <Wallet />,
   },
   {
     path: '/balance-sheet',

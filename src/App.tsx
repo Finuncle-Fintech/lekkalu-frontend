@@ -17,6 +17,7 @@ const EditGoal = lazy(() => import('@/pages/Goals/AddEditGoalPages/EditGoal'))
 const GoalDetails = lazy(() => import('@/pages/GoalDetails/GoalDetails'))
 const IncomeStatement = lazy(() => import('@/pages/IncomeStatement/IncomeStatement'))
 const Expenses = lazy(() => import('@/pages/Expenses/Expenses'))
+const Lending = lazy(() => import('@/pages/Lending/Lending'))
 const BalanceSheet = lazy(() => import('@/pages/BalanceSheet/BalanceSheet'))
 const Settings = lazy(() => import('@/pages/Settings/Settings'))
 const Profile = lazy(() => import('@/pages/Profile/Profile'))
@@ -66,6 +67,7 @@ function App() {
           <Route path='/goals/:id' element={<GoalDetails />} />
           <Route path='/income-statement' element={<IncomeStatement />} />
           <Route path='/expenses' element={<Expenses />} />
+          <Route path='/lending' element={<Lending />} />
           <Route path='/balance-sheet' element={<BalanceSheet />} />
           <Route path='/settings' element={<Settings />} />
           <Route path='/profile' element={<Profile />} />

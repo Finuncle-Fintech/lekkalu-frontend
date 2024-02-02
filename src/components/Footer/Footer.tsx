@@ -6,8 +6,6 @@ import { Input } from '../ui/input'
 import { Button } from '../ui/button'
 import FeedbackForm from './Components/FeedbackForm'
 import SocialIcon from './Components/SocialIcons'
-import IosIcon from '@/assets/icons/iosIcon'
-import AndroidIcon from '@/assets/icons/androidIcon'
 
 const TwitterIcon = icons.Twitter
 const LinkedInIcon = icons.Linkedin
@@ -59,13 +57,20 @@ export default function Footer() {
               Icon={<YoutubeIcon size={18} />}
               link='https://www.youtube.com/channel/UC3FN66Kic3nEdp5nfOe3T6A'
             />
-            <SocialIcon Icon={<IosIcon size={18} />} link='https://apps.apple.com/in/app/finuncle/id6475839395' />
-            <SocialIcon
-              Icon={<AndroidIcon size={18} />}
-              link='https://play.google.com/store/apps/details?id=com.lekkalu.finuncle&pcampaignid=web_share'
-            />
             <SocialIcon Icon={<TwitterIcon size={18} />} link='https://twitter.com/FinuncleX' />
             <SocialIcon Icon={<LinkedInIcon size={18} />} link='https://linkedin.com/company/finuncle' />
+          </div>
+          <div className='flex gap-2 pt-2'>
+            <Link
+              to='https://play.google.com/store/apps/details?id=com.lekkalu.finuncle&pcampaignid=web_share'
+              target='_blank'
+              className='block'
+            >
+              <img src={'playstore.png'} loading='lazy' alt='Get Finuncle on playstore' width={135} height={130} />
+            </Link>
+            <Link to='https://apps.apple.com/in/app/finuncle/id6475839395' target='_blank' className='block'>
+              <img src='appstore.png' loading='lazy' alt='Get Finuncle on appstore' width={150} height={170} />
+            </Link>
           </div>
 
           <div className='space-y-2'>

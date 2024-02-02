@@ -5,7 +5,7 @@ import Page from '../Page/Page'
 import { Input } from '../ui/input'
 import { Button } from '../ui/button'
 import FeedbackForm from './Components/FeedbackForm'
-import SocialIcon from './Components/SocialIcons'
+import SocialIcon from './Components/SocialIcon'
 
 const TwitterIcon = icons.Twitter
 const LinkedInIcon = icons.Linkedin
@@ -53,12 +53,9 @@ export default function Footer() {
         </div>
         <div className='space-y-4'>
           <div className='flex items-center gap-2'>
-            <SocialIcon
-              Icon={<YoutubeIcon size={18} />}
-              link='https://www.youtube.com/channel/UC3FN66Kic3nEdp5nfOe3T6A'
-            />
-            <SocialIcon Icon={<TwitterIcon size={18} />} link='https://twitter.com/FinuncleX' />
-            <SocialIcon Icon={<LinkedInIcon size={18} />} link='https://linkedin.com/company/finuncle' />
+            <SocialIcon Icon={YoutubeIcon} link='https://www.youtube.com/channel/UC3FN66Kic3nEdp5nfOe3T6A' />
+            <SocialIcon Icon={TwitterIcon} link='https://twitter.com/FinuncleX' />
+            <SocialIcon Icon={LinkedInIcon} link='https://linkedin.com/company/finuncle' />
           </div>
           <div className='flex gap-2 pt-2'>
             <Link

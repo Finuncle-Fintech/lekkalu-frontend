@@ -6,7 +6,7 @@ const SocialIcon = ({ Icon, link }: SocialIconType) => {
   return (
     <Link to={link} target='_blank'>
       <span className='block bg-white h-10 px-4 py-3 rounded text-primary hover:bg-gray-300 hover:transition'>
-        {Icon}
+        {<Icon size={18} />}
       </span>
     </Link>
   )

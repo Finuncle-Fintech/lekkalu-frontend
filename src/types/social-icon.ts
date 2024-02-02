@@ -1,7 +1,3 @@
-import { ReactElement } from 'react'
+import { LucideIcon } from 'lucide-react'
 
-export type Icon = {
-  size: number
-}
-
-export type SocialIconType = { Icon: ReactElement; link: string }
+export type SocialIconType = { Icon: LucideIcon; link: string }

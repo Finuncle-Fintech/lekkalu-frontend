@@ -1,44 +1,13 @@
 import React, { cloneElement } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import { AlertCircleIcon, BellIcon, CheckCircleIcon, InfoIcon, XOctagonIcon } from 'lucide-react'
 import dayjs from 'dayjs'
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
 import { Button } from '../ui/button'
+import { fetchNotifications } from '@/queries/notification'
+import { NOTIFICATION } from '@/utils/query-keys'
 
-type Notification = {
-  id: string
-  title: string
-  type: 'WARNING' | 'SUCCESS' | 'ERROR' | 'INFO'
-  date: string
-}
-
-const DUMMY_NOTIFICATIONS: Notification[] = [
-  {
-    id: 'asfasdf',
-    title: 'You car EMI is incoming in 2 days.',
-    type: 'WARNING',
-    date: '2023/10/20',
-  },
-  {
-    id: 'hsdfgsdf',
-    title: 'You have received your income.',
-    type: 'SUCCESS',
-    date: '2023/10/10',
-  },
-  {
-    id: 'werascv',
-    title: 'You have made an expense of 4000rs.',
-    type: 'ERROR',
-    date: '2023/02/11',
-  },
-  {
-    id: 'faseradfadf',
-    title: 'You are about to reach your first goal.',
-    type: 'INFO',
-    date: '2023/11/25',
-  },
-]
-
-const TYPE_ICON_MAP: Record<Notification['type'], React.ReactElement> = {
+const TYPE_ICON_MAP: Record<string, React.ReactElement> = {
   ERROR: <XOctagonIcon className='text-red-500 w-6 h-6' />,
   INFO: <InfoIcon className='text-blue-500 w-6 h-6' />,
   SUCCESS: <CheckCircleIcon className='text-emerald-500 w-6 h-6' />,
@@ -46,6 +15,7 @@ const TYPE_ICON_MAP: Record<Notification['type'], React.ReactElement> = {
 }
 
 export default function NotificationsPopover() {
+  const { data, isLoading } = useQuery([NOTIFICATION.NOTIFICATION], fetchNotifications)
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -54,18 +24,18 @@ export default function NotificationsPopover() {
         </Button>
       </PopoverTrigger>
 
-      <PopoverContent className='w-full' asChild>
+      <PopoverContent className='max-w-full' asChild>
         <div className='divide-y'>
-          {DUMMY_NOTIFICATIONS.map((notification) => {
-            const icon = TYPE_ICON_MAP[notification.type]
+          {!isLoading && data && data.map((notification) => {
+            const icon = TYPE_ICON_MAP.INFO
 
             return (
               <div key={notification.id} className='rounded-md flex items-center gap-4 py-4'>
                 <div className='flex items-center justify-center p-2 rounded-xl'>{cloneElement(icon)}</div>
 
                 <div className='space-y-1'>
-                  <p className='font-medium'>{notification.title}</p>
-                  <p className='text-xs text-muted-foreground'>{dayjs(notification.date).format('DD/MM/YYYY')}</p>
+                  <p className='font-medium'>{notification.message}</p>
+                  <p className='text-xs text-muted-foreground'>{dayjs(notification.created_at).format('DD/MM/YYYY')}</p>
                 </div>
               </div>
             )

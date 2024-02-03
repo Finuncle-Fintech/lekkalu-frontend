@@ -25,3 +25,14 @@ export type MonthlyExpense = {
   balance: number,
   cum_sum: number
 }
+
+export type InputValueArray = {
+  id?: number
+  label: string
+  value: string
+}
+
+export type OutputValueArray = {
+  idArr: number[]
+  newIdArr: string[]
+}

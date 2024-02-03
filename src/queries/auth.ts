@@ -35,3 +35,18 @@ export async function fetchUser() {
   const { data } = await userClient.get<User>('/detail', { headers })
   return data
 }
+
+export async function deleteUserAccount() {
+  const token = getCookie(ACCESS_TOKEN_KEY)
+  if (!token) {
+    return
+  }
+
+  const headers = {
+    Authorization: `Bearer ${token}`,
+    'Content-Type': 'application/json',
+  }
+
+  const { data } = await userClient.delete<{ message: string }>('/delete_user_account', { headers })
+  return data
+}

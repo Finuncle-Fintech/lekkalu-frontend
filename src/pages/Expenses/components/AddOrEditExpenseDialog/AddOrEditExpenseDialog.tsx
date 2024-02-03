@@ -12,7 +12,13 @@ import { Form } from '@/components/ui/form'
 import { EXPENSES, TAGS } from '@/utils/query-keys'
 import { fetchTags } from '@/queries/tag'
 import { addExpense, fetchExpenses, updateExpense } from '@/queries/expense'
-import { EXPENSE_FILE_VALID_COLUMNS, checkIsExpenseExists, getOrCreateTag, validateFileColumns } from '@/utils/expense'
+import {
+  EXPENSE_FILE_VALID_COLUMNS,
+  getOrCreateTag,
+  validateFileColumns,
+  getIdAndUniqueIdArray,
+  checkIsExpenseExists,
+} from '@/utils/expense'
 import { useToast } from '@/components/ui/use-toast'
 import { Expense } from '@/types/expense'
 import { Input } from '@/components/ui/input'
@@ -37,13 +43,18 @@ export default function AddOrEditExpenseDialog({ expense, trigger }: Props) {
 
   const { data: tags, refetch: refetchTags } = useQuery([TAGS.TAGS], fetchTags, { enabled: !!isDialogOpen })
   const { data: expenses } = useQuery([EXPENSES.EXPENSES], () => fetchExpenses(), { enabled: !!isDialogOpen })
-
   const form = useForm<AddExpenseSchema>({
     resolver: zodResolver(addExpenseSchema),
     defaultValues: {
       amount: expense?.amount ? Number(expense.amount) : undefined,
       // @TODO: Add multiple tags
-      tags: expense?.tags ? expense.tags[0] : undefined,
+      tags: expense?.tags
+        ? expense.tags.map((tagId) => ({
+            id: tagId,
+            label: tags?.find((e) => e.id === tagId)?.name,
+            value: tags?.find((e) => e.id === tagId)?.name,
+          }))
+        : undefined,
       time: expense?.time ? new Date(expense.time) : undefined,
     },
   })
@@ -51,6 +62,7 @@ export default function AddOrEditExpenseDialog({ expense, trigger }: Props) {
   const addExpenseMutation = useMutation(addExpense, {
     onSuccess: () => {
       queryClient.invalidateQueries([EXPENSES.EXPENSES])
+      refetchTags()
       form.reset()
       toast({ title: 'Expense created successfully!' })
       setIsDialogOpen(false)
@@ -63,6 +75,7 @@ export default function AddOrEditExpenseDialog({ expense, trigger }: Props) {
     {
       onSuccess: () => {
         queryClient.invalidateQueries([EXPENSES.EXPENSES])
+        refetchTags()
         toast({ title: 'Expense updated successfully!' })
         setIsDialogOpen(false)
       },
@@ -81,8 +94,7 @@ export default function AddOrEditExpenseDialog({ expense, trigger }: Props) {
         id: 'tags',
         label: 'Select tags',
         type: 'multi-select',
-        options: tags?.map((tag) => ({ id: tag.id, label: tag.name })) ?? [],
-        valueFormatter: (value) => Number(value),
+        options: tags?.map((tag) => ({ id: tag.id, label: tag.name, value: tag.name })) ?? [],
       },
       {
         id: 'time',
@@ -92,11 +104,12 @@ export default function AddOrEditExpenseDialog({ expense, trigger }: Props) {
       },
     ] as InputField[]
   }, [tags, expense?.time])
-
-  const handleAddOrEditExpense = (values: AddExpenseSchema) => {
+  const handleAddOrEditExpense = async (values: AddExpenseSchema) => {
+    const newTagsArray = getIdAndUniqueIdArray(values.tags)
+    const tagIds = await getOrCreateTag(newTagsArray.newIdArr, tags ?? [])
     const newExpense = {
       amount: parseFloat(values.amount.toFixed(2)),
-      tags: [values.tags],
+      tags: [...newTagsArray.idArr, ...tagIds],
       time: values.time,
     }
     /** Handling case of expense updation */
@@ -106,7 +119,10 @@ export default function AddOrEditExpenseDialog({ expense, trigger }: Props) {
     }
 
     /** Handling case of expense creation */
-    const exists = checkIsExpenseExists(expenses ?? [], { ...newExpense, amount: newExpense.amount.toString() })
+    const exists = checkIsExpenseExists(expenses?.records ?? [], {
+      ...newExpense,
+      amount: newExpense.amount.toString(),
+    })
     if (exists) {
       toast({ title: 'Expense already exists!', variant: 'destructive' })
       return

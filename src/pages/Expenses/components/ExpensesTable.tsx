@@ -1,16 +1,23 @@
 import React, { useCallback, useMemo } from 'react'
 import { useQueries } from '@tanstack/react-query'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
 import dayjs from 'dayjs'
-import { EditIcon, LoaderIcon } from 'lucide-react'
+import { EditIcon, LoaderIcon, Search } from 'lucide-react'
 import { useSearchParams } from 'react-router-dom'
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { EXPENSES, TAGS } from '@/utils/query-keys'
-import { fetchExpenseByDate, fetchExpenses } from '@/queries/expense'
+import { Form, FormDescription, FormField, FormItem } from '@/components/ui/form'
+import { EXPENSES, EXPENSES_SEARCH, TAGS } from '@/utils/query-keys'
+import { fetchExpenseByDate, fetchExpenseBySearch, fetchExpenses } from '@/queries/expense'
 import { fetchTags } from '@/queries/tag'
 import { useUserPreferences } from '@/hooks/use-user-preferences'
 import { Button } from '@/components/ui/button'
 import DeleteExpense from './DeleteExpense'
 import AddOrEditExpenseDialog from './AddOrEditExpenseDialog/AddOrEditExpenseDialog'
+import { expenseFiltersSchema } from '@/schema/expense'
+import { Input } from '@/components/ui/input'
+import { Expense } from '@/types/expense'
+import { totalExpensesMetadataType } from '../Expenses'
 
 type Props = {
   dateRangeEnabled: boolean
@@ -18,14 +25,21 @@ type Props = {
     from: string
     to: string
   }
+  setTotalExpensesMetadata: (data: totalExpensesMetadataType) => void
 }
 
-export default function ExpensesTable({ dateRangeEnabled, filters }: Props) {
+export default function ExpensesTable({ dateRangeEnabled, filters, setTotalExpensesMetadata }: Props) {
   const [searchParams] = useSearchParams()
   const page = searchParams.get('page') ? Number(searchParams.get('page')) : 0
 
   const { preferences } = useUserPreferences()
-  const [expenseQuery, expensesByDateQuery, tagsQuery] = useQueries({
+  const searchExpenseForm = useForm({
+    defaultValues: { search: '' },
+    resolver: zodResolver(expenseFiltersSchema),
+  })
+  const { search } = searchExpenseForm.watch()
+
+  const [expenseQuery, expensesByDateQuery, tagsQuery, searchQuery] = useQueries({
     queries: [
       {
         queryKey: [EXPENSES.EXPENSES, page, dateRangeEnabled],
@@ -40,6 +54,11 @@ export default function ExpensesTable({ dateRangeEnabled, filters }: Props) {
         queryKey: [TAGS.TAGS],
         queryFn: fetchTags,
       },
+      {
+        queryKey: [EXPENSES_SEARCH.EXPENSES_SEARCH, search],
+        queryFn: () => fetchExpenseBySearch({ search }),
+        enabled: search.length > 2,
+      },
     ],
   })
 
@@ -47,10 +66,16 @@ export default function ExpensesTable({ dateRangeEnabled, filters }: Props) {
     if (dateRangeEnabled) {
       return expensesByDateQuery.data ?? []
     }
-
-    return expenseQuery.data ?? []
-  }, [dateRangeEnabled, expenseQuery.data, expensesByDateQuery.data])
-
+    setTotalExpensesMetadata(search.length > 2 ? searchQuery.data?._metadata : expenseQuery.data?._metadata)
+    return search.length > 2 ? searchQuery?.data?.records ?? [] : expenseQuery.data?.records ?? []
+  }, [
+    dateRangeEnabled,
+    expenseQuery.data,
+    searchQuery.data,
+    expensesByDateQuery.data,
+    search.length,
+    setTotalExpensesMetadata,
+  ])
   const getTagNames = useCallback(
     (tagIds: number[]) => {
       if (!tagsQuery.data) {
@@ -71,40 +96,69 @@ export default function ExpensesTable({ dateRangeEnabled, filters }: Props) {
       </div>
     )
   }
-
   return (
-    <Table className='border rounded'>
-      <TableCaption className='text-center'>A list of all your expenses</TableCaption>
-      <TableHeader className='bg-gray-100/50'>
-        <TableRow>
-          <TableHead>Amount</TableHead>
-          <TableHead>Tags</TableHead>
-          <TableHead>Time</TableHead>
-          <TableHead>Actions</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {expenses.map((expense) => (
-          <TableRow key={expense.id}>
-            <TableCell>
-              {expense.amount} {preferences.currencyUnit}
-            </TableCell>
-            <TableCell>{getTagNames(expense.tags)}</TableCell>
-            <TableCell>{dayjs(expense.time).format('ddd MMM DD, YYYY')}</TableCell>
-            <TableCell className='flex'>
-              <AddOrEditExpenseDialog
-                expense={expense}
-                trigger={
-                  <Button size='sm' variant='ghost'>
-                    <EditIcon className='w-4 h-4' />
-                  </Button>
-                }
-              />
-              <DeleteExpense id={expense.id} />
-            </TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+    <React.Fragment>
+      <Form {...searchExpenseForm}>
+        <form className='space-y-2'>
+          <FormField
+            control={searchExpenseForm.control}
+            name='search'
+            render={({ field }) => (
+              <FormItem>
+                <div className='flex items-center relative'>
+                  <Search className='absolute left-3' size={20} color='#64748b' />
+                  <Input className='max-w-sm pl-10' type='text' placeholder='Search...' {...field} />
+                </div>
+                {search.length !== 0 && search.length <= 2 && (
+                  <FormDescription className='text-xs text-muted-foreground'>
+                    Serch term should be at least 2 characters long
+                  </FormDescription>
+                )}
+              </FormItem>
+            )}
+          />
+        </form>
+      </Form>
+      {searchQuery.isFetching ? (
+        <div className='w-full flex items-center justify-center gap-2 h-96'>
+          <LoaderIcon className='w-5 h-5 animate-spin' />
+          <div>Searching Expenses...</div>
+        </div>
+      ) : (
+        <Table className='border rounded'>
+          <TableCaption className='text-center'>A list of all your expenses</TableCaption>
+          <TableHeader className='bg-gray-100/50'>
+            <TableRow>
+              <TableHead>Amount</TableHead>
+              <TableHead>Tags</TableHead>
+              <TableHead>Time</TableHead>
+              <TableHead>Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {expenses.map((expense: Expense) => (
+              <TableRow key={expense.id}>
+                <TableCell>
+                  {expense.amount} {preferences.currencyUnit}
+                </TableCell>
+                <TableCell>{getTagNames(expense.tags)}</TableCell>
+                <TableCell>{dayjs(expense.time).format('ddd MMM DD, YYYY')}</TableCell>
+                <TableCell className='flex'>
+                  <AddOrEditExpenseDialog
+                    expense={expense}
+                    trigger={
+                      <Button size='sm' variant='ghost'>
+                        <EditIcon className='w-4 h-4' />
+                      </Button>
+                    }
+                  />
+                  <DeleteExpense id={expense.id} />
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      )}
+    </React.Fragment>
   )
 }

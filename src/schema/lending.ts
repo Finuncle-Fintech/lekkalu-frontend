@@ -6,3 +6,8 @@ export const addAccountSchema = z.object({
   principal: z.number(),
   started: z.date(),
 })
+export const addTransactionSchema = z.object({
+  lending_account: z.string(),
+  amount: z.number(),
+  time: z.date(),
+})

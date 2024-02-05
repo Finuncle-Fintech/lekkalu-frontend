@@ -81,7 +81,7 @@ export default function AddOrEditLending({ accounts, trigger }: Props) {
         defaultDate: accounts?.started ? new Date(accounts.started) : undefined,
       },
     ] as InputField[]
-  }, [])
+  }, [accounts?.started])
 
   const handleAddOrEditLendingAccount = () => {
     const values = form.getValues()

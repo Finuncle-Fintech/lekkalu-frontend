@@ -57,6 +57,7 @@ export default function Expenses() {
   }
 
   const handleClearFilters = () => {
+    filtersForm.clearErrors()
     filtersForm.reset()
     setDateRangeEnabled(false)
   }

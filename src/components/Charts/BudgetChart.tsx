@@ -13,18 +13,17 @@ import { cn } from '@/utils/utils'
 const dropdownOptions = [
   {
     name: 'Last 3 Months',
-    value: 'month-3',
+    value: '3',
   },
   {
     name: 'Last 6 Months',
-    value: 'month-6',
+    value: '6',
   },
   {
     name: 'Last Year',
-    value: 'year',
+    value: '12',
   },
 ]
-
 function MonthlyProgressBar({ data }: any) {
   const { budget, month, spent, year } = data
   const present = (spent / budget) * 100
@@ -42,11 +41,11 @@ function MonthlyProgressBar({ data }: any) {
           <div className='flex justify-between items-center'>
             <h6 className='text-xs font-medium uppercase text-gray-700'>spent {spent}</h6>
             <h6
-              className={`text-xs font-medium uppercase ${
-                present < 80 ? 'text-green-500' : present < 95 ? 'text-amber-500' : 'text-red-500'
-              }`}
+              className={`text-xs font-medium uppercase ${present < 80 ? 'text-green-500' : present < 95 ? 'text-amber-500' : 'text-red-500'
+                }`}
             >
-              {`left ${Number(budget) - Number(spent)}`}
+              {`left ${((Number(budget) || 0) - (Number(spent) || 0)).toFixed(2)
+                }`}
             </h6>
           </div>
           <div>
@@ -70,8 +69,8 @@ function MonthlyProgressBar({ data }: any) {
 
 export default function BudgetChart() {
   const { data: budgetData } = useQuery([BUDGET_QUERY_KEYS.BUDGETS], fetchBudgets, {
-    select: (budgets: any) => {
-      return budgets?.map((budget: any) => ({
+    select: (budgets) => {
+      return budgets?.map((budget) => ({
         ...budget,
         month: parseInt(dayjs(budget.month, 'YYYY-MM-DD').format('MM')),
         limit: parseInt(budget.limit),
@@ -79,16 +78,28 @@ export default function BudgetChart() {
     },
   })
   const { data, isLoading } = useQuery([EXPENSES.MONTHLY_EXPENSES], fetchMonthlyExpenses)
-  const [timeRange, setTimeRange] = useState('month-3')
+  const [timeRange, setTimeRange] = useState('3')
+  const currentDate = dayjs()
+  const currentMonthYear = currentDate.format('MM')
   const monthlyData = useMemo(() => {
     if (!data || !budgetData) {
       return []
     }
-
     return data
-      ?.map((ele) => ({ ...ele, budget: budgetData?.find((item: any) => item.month === ele.month)?.limit }))
-      .sort((a, b) => b.month - a.month)
-  }, [data, budgetData])
+      ?.map((ele) => ({
+        ...ele,
+        budget: budgetData?.find((item) => item.month === ele.month)?.limit,
+      }))
+  }, [data, budgetData, currentMonthYear])
+
+  const currentDate1: Date = new Date(currentDate.format('YYYY-MM-DD'))
+
+  const filteredData = monthlyData.filter((entry) => {
+    const monthsDifference: number =
+      (currentDate1.getMonth() - entry.month + (currentDate1.getFullYear() - entry.year) * 12 + 12) % 12
+    const timeRangeNumber = parseInt(timeRange, 12)
+    return monthsDifference < timeRangeNumber
+  })
 
   if (isLoading) {
     return <div className='w-full animate-pulse bg-gray-300 h-96' />
@@ -118,8 +129,8 @@ export default function BudgetChart() {
           </div>
         </div>
         <CardContent className='pb-0 px-3'>
-          {monthlyData && monthlyData.length > 0 ? (
-            monthlyData?.map((ele, key) => <MonthlyProgressBar data={ele} key={key} />)
+          {filteredData && filteredData.length > 0 ? (
+            filteredData?.map((ele, key) => <MonthlyProgressBar data={ele} key={key} />)
           ) : (
             <h3 className='text-xs text-center my-3'>No Expenses</h3>
           )}

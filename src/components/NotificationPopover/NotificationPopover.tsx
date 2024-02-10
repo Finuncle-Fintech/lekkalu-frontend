@@ -26,6 +26,7 @@ export default function NotificationsPopover() {
 
       <PopoverContent className='max-w-full' asChild>
         <div className='divide-y'>
+          {!isLoading && data && data.length === 0 && <div className='text-center'>No Latest Notifications</div>}
           {!isLoading && data && data.map((notification) => {
             const icon = TYPE_ICON_MAP.INFO
 

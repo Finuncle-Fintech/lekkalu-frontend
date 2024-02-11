@@ -11,9 +11,9 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import InputFieldsRenderer from '@/components/InputFieldsRenderer/InputFieldsRenderer'
 import { Button } from '@/components/ui/button'
 import { GOAL_INPUTS } from '@/utils/goals'
-import { BALANCE_SHEET } from '@/utils/query-keys'
+import { BALANCE_SHEET, GOALS } from '@/utils/query-keys'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { addGoal } from '@/queries/goals'
+import { addGoal, fetchGoalProportionalityTypes, fetchKPITypes } from '@/queries/goals'
 import { fetchIncomeExpenses } from '@/queries/income-statement'
 import { useToast } from '@/components/ui/use-toast'
 
@@ -25,6 +25,9 @@ export default function CreateGoal() {
   })
 
   const incomeExpensesQuery = useQuery([BALANCE_SHEET.LIABILITIES], fetchIncomeExpenses)
+  const goalPropotionalityType = useQuery([GOALS.GOAL_PROPORATIONALITY_TYPES], fetchGoalProportionalityTypes)
+  const getTargetKpi = useQuery([GOALS.KPI_TYPES], fetchKPITypes)
+
   const createGoalMutation = useMutation(addGoal, {
     onSuccess: () => {
       toast({ title: 'Goal created successfully!' })
@@ -67,6 +70,56 @@ export default function CreateGoal() {
                       {incomeExpensesQuery?.data?.map((item) => (
                         <SelectItem key={item.id} value={item.id.toString()}>
                           {item.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name='goal_proportionality'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Goal Proportionality Type</FormLabel>
+                <FormControl>
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <SelectTrigger>
+                      <SelectValue placeholder='Goal Propotionality Type' />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {goalPropotionalityType?.data?.map((item) => (
+                        <SelectItem key={item.id} value={item.value}>
+                          {item.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name='track_kpi'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>KPI</FormLabel>
+                <FormControl>
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <SelectTrigger>
+                      <SelectValue placeholder='KPI' />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {getTargetKpi?.data?.map((item) => (
+                        <SelectItem key={item.id} value={item.value}>
+                          {item.label}
                         </SelectItem>
                       ))}
                     </SelectContent>

@@ -5,13 +5,26 @@ export type Goal = {
   current_value: number
   reachable_by_days: number
   goal_proportionality: string
-  track_kpi: 'LiabilityPercent'
+  track_kpi: string
   created_at: string
   updated_at: string
   target_contribution_source: number
+  target_date: string
 }
 
 export type Timeline = {
   kpi_value: number
   time: string
+}
+
+export type GoalProportionalityType = {
+  id: number
+  label: string
+  value: string
+}
+
+export type KpiType = {
+  id: number
+  label: string
+  value: string
 }

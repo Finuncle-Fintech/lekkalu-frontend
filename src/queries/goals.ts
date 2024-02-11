@@ -1,5 +1,5 @@
 import { AddGoalSchema } from '@/schema/goals'
-import { Goal, Timeline } from '@/types/goals'
+import { Goal, GoalProportionalityType, KpiType, Timeline } from '@/types/goals'
 import { v1ApiClient, v2ApiClient } from '@/utils/client'
 
 export async function fetchGoals() {
@@ -34,5 +34,15 @@ export async function fetchGoalDetails(id: number) {
 
 export async function fetchGoalTimeline(id: number) {
   const { data } = await v2ApiClient.get<Timeline[]>(`financial_goal/timeline/${id}`)
+  return data
+}
+
+export async function fetchGoalProportionalityTypes() {
+  const { data } = await v2ApiClient.get<GoalProportionalityType[]>('financial_goal/goal_proportionality_type')
+  return data
+}
+
+export async function fetchKPITypes() {
+  const { data } = await v2ApiClient.get<KpiType[]>('financial_goal/kpis_type')
   return data
 }

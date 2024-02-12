@@ -10,6 +10,7 @@ export type Goal = {
   updated_at: string
   target_contribution_source: number
   target_date: string
+  met: boolean
 }
 
 export type Timeline = {
@@ -27,4 +28,11 @@ export type KpiType = {
   id: number
   label: string
   value: string
+}
+
+export type GoalStatus = {
+  total: number
+  onTrack: number
+  offTrack: number
+  completed: number
 }

@@ -83,7 +83,7 @@ export default function Goals() {
       <div className='grid sm:grid-cols-2 md:grid-cols-3 gap-4'>
         <ProgressChart
           title='On Track'
-          color={colors.green['500']}
+          color={colors.indigo['500']}
           value={getPercentage(goalStatus?.onTrack, goalStatus?.total)}
           unit='%'
         />
@@ -95,7 +95,7 @@ export default function Goals() {
         />
         <ProgressChart
           title='Completed'
-          color={colors.indigo['500']}
+          color={colors.green['500']}
           value={getPercentage(goalStatus?.completed, goalStatus?.total)}
           unit='%'
         />
@@ -103,7 +103,7 @@ export default function Goals() {
 
       <div className='text-2xl font-bold truncate block py-4'>Your ongoing financial goals</div>
 
-      <div className='grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
+      <div className='grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 gap-y-10'>
         {data?.map((goal) => (
           <Goal
             key={goal.id}

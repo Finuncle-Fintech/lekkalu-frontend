@@ -90,14 +90,14 @@ export default function GoalTimeline({ className, style, goalId }: GoalTimelineP
           />
 
           <Select onValueChange={(value: ChartView) => setViewAs(value)} value={viewAs}>
-            <SelectTrigger className='text-xs focus:ring-transparent w-[100px]' placeholder='View as'>
+            <SelectTrigger className='text-sm focus:ring-transparent w-[100px]' placeholder='View as'>
               <span className='flex items-center'>
                 <SelectValue placeholder='Select' />
               </span>
             </SelectTrigger>
             <SelectContent className='max-h-60'>
               {dropdownOptions.map(({ name, value }) => (
-                <SelectItem value={value} key={`${name}_${value}`} className='text-xs'>
+                <SelectItem value={value} key={`${name}_${value}`} className='text-sm'>
                   {name}
                 </SelectItem>
               ))}

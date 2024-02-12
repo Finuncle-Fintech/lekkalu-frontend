@@ -1,5 +1,5 @@
 import React from 'react'
-import { TrashIcon } from 'lucide-react'
+// import { TrashIcon } from 'lucide-react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import Alert from '@/components/Alert/Alert'
 import { Button } from '@/components/ui/button'
@@ -27,8 +27,8 @@ export default function DeleteGoal({ id }: Props) {
   return (
     <Alert
       trigger={
-        <Button size='sm' variant='ghost'>
-          <TrashIcon className='w-4 h-4 text-red-500' />
+        <Button size='sm' variant='ghost' className='w-full text-red-500 hover:text-white hover:bg-red-500'>
+          Delete
         </Button>
       }
       title='Delete Goal'

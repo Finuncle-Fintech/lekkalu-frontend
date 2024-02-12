@@ -24,9 +24,9 @@ type Props = {
 const circleSize = 150
 
 export default function Goal({ className, style, id, goalTitle, category, createdAt, color }: Props) {
-  const progressQuery = useQuery([GOALS.PROGRESS], () => getGoalProgress(id))
+  const { data: progressQuery } = useQuery([`${GOALS.PROGRESS}_${id}`], () => getGoalProgress(id))
 
-  const data = [{ name: goalTitle, progressPercentage: round(progressQuery.data?.progress_percent ?? 0, 2), color }]
+  const data = [{ name: goalTitle, progressPercentage: round(progressQuery?.progress_percent ?? 0, 2), color }]
 
   return (
     <Link
@@ -44,7 +44,7 @@ export default function Goal({ className, style, id, goalTitle, category, create
           dominantBaseline='middle'
           className='text-lg font-bold'
         >
-          {`${round(progressQuery.data?.progress_percent ?? 0, 2)} %`}
+          {`${round(progressQuery?.progress_percent ?? 0, 2)} %`}
         </text>
       </RadialBarChart>
 

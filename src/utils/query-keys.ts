@@ -37,6 +37,7 @@ export const BALANCE_SHEET = {
 
 export const GOALS = {
   GOALS: 'GOALS',
+  GOAL: 'GOAL',
   PROGRESS: 'PROGRESS',
   DETAILS: 'DETAILS',
   TIMELINE: 'TIMELINE',

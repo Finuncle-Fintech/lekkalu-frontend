@@ -13,6 +13,7 @@ import CookieConsent from './components/CookieConsent/CookieConsent'
 const Dashboard = lazy(() => import('@/pages/Dashboard/Dashboard'))
 const Goals = lazy(() => import('@/pages/Goals/Goals'))
 const CreateGoal = lazy(() => import('@/pages/CreateGoal/CreateGoal'))
+const EditGoal = lazy(() => import('@/pages/EditGoal'))
 const GoalDetails = lazy(() => import('@/pages/GoalDetails/GoalDetails'))
 const IncomeStatement = lazy(() => import('@/pages/IncomeStatement/IncomeStatement'))
 const Expenses = lazy(() => import('@/pages/Expenses/Expenses'))
@@ -61,6 +62,7 @@ function App() {
           <Route path='/dashboard' element={<Dashboard />} />
           <Route path='/goals' element={<Goals />} />
           <Route path='/goals/new' element={<CreateGoal />} />
+          <Route path='/goals/edit/:id' element={<EditGoal />} />
           <Route path='/goals/:id' element={<GoalDetails />} />
           <Route path='/income-statement' element={<IncomeStatement />} />
           <Route path='/expenses' element={<Expenses />} />

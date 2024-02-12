@@ -1,6 +1,6 @@
 import { CalendarIcon } from 'lucide-react'
 import dayjs from 'dayjs'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button } from '../ui/button'
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
 import { cn } from '@/utils/utils'
@@ -16,6 +16,11 @@ export type DatePickerProps = Omit<CalendarProps, 'onSelect'> & {
 
 export default function DatePicker({ className, style, onChange, placeholder, value, ...props }: DatePickerProps) {
   const [date, setDate] = React.useState<Date | undefined>(value)
+
+  useEffect(() => {
+    setDate(value)
+  }, [value])
+
   const [isCalendarOpen, setIsCalendarOpen] = useState(false)
   return (
     <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>

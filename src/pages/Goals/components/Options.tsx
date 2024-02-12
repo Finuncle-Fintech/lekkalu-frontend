@@ -1,7 +1,7 @@
 import React from 'react'
 import { MoreVertical } from 'lucide-react'
+import { Link } from 'react-router-dom'
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover'
-import { Button } from '@/components/ui/button'
 import DeleteGoal from './DeleteGoal'
 
 type GoalOptionsType = {
@@ -19,9 +19,12 @@ const GoalOptions = ({ id }: GoalOptionsType) => {
         </PopoverTrigger>
         <PopoverContent className='w-[200px]'>
           <div className='flex flex-col'>
-            <Button variant={'ghost'} size={'sm'}>
+            <Link
+              to={`/goals/edit/${id}`}
+              className='w-full hover:bg-accent flex justify-center p-2 rounded-lg text-sm font-medium'
+            >
               Edit
-            </Button>
+            </Link>
             <DeleteGoal id={id} />
           </div>
         </PopoverContent>

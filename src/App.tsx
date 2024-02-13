@@ -12,8 +12,8 @@ import CookieConsent from './components/CookieConsent/CookieConsent'
 /** Authenticated Routes */
 const Dashboard = lazy(() => import('@/pages/Dashboard/Dashboard'))
 const Goals = lazy(() => import('@/pages/Goals/Goals'))
-const CreateGoal = lazy(() => import('@/pages/CreateGoal/CreateGoal'))
-const EditGoal = lazy(() => import('@/pages/EditGoal'))
+const CreateGoal = lazy(() => import('@/pages/Goals/AddEditGoalPages/CreateGoal/CreateGoal'))
+const EditGoal = lazy(() => import('@/pages/Goals/AddEditGoalPages/EditGoal'))
 const GoalDetails = lazy(() => import('@/pages/GoalDetails/GoalDetails'))
 const IncomeStatement = lazy(() => import('@/pages/IncomeStatement/IncomeStatement'))
 const Expenses = lazy(() => import('@/pages/Expenses/Expenses'))

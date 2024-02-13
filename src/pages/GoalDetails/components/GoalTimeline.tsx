@@ -78,10 +78,10 @@ export default function GoalTimeline({ className, style, goalId }: GoalTimelineP
   }
 
   return (
-    <Card className={cn('h-96 shadow-sm', className)} style={style}>
-      <CardHeader className='flex flex-start flex-row'>
+    <Card className={cn('h-[600px] sm:h-96 pb-20 sm:pb-0 shadow-sm', className)} style={style}>
+      <CardHeader className='flex flex-start flex-col sm:flex-row'>
         <CardTitle>Timeline</CardTitle>
-        <div className='flex ml-auto gap-5'>
+        <div className='flex flex-col sm:flex-row sm:ml-auto gap-5 pt-5 sm:pt-0'>
           <DatePickerWithRange
             dateRange={dateRange}
             onChange={(range) => {
@@ -90,7 +90,7 @@ export default function GoalTimeline({ className, style, goalId }: GoalTimelineP
           />
 
           <Select onValueChange={(value: ChartView) => setViewAs(value)} value={viewAs}>
-            <SelectTrigger className='text-sm focus:ring-transparent w-[100px]' placeholder='View as'>
+            <SelectTrigger className='text-sm focus:ring-transparent w-full md:w-[100px]' placeholder='View as'>
               <span className='flex items-center'>
                 <SelectValue placeholder='Select' />
               </span>
@@ -108,9 +108,9 @@ export default function GoalTimeline({ className, style, goalId }: GoalTimelineP
 
       <CardContent className='w-full h-full'>
         <ResponsiveContainer width='100%' height='75%'>
-          <LineChart data={dataToRender} width={730} height={250} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+          <LineChart data={dataToRender} width={730} height={250} margin={{ top: 5, right: 0, left: 10, bottom: 5 }}>
             <CartesianGrid strokeDasharray='3 1' />
-            <XAxis dataKey='time' tickFormatter={(date) => dayjs(date).format('DD MMM YYYY')} />
+            <XAxis dataKey='time' tickFormatter={(date) => dayjs(date).format('MMM YYYY')} />
             <YAxis dataKey={'kpi_value'} />
             <Tooltip labelFormatter={(date) => dayjs(date).format('DD MMM YYYY')} />
             <Line dataKey={'kpi_value'} name='Kpi Value' />

@@ -8,7 +8,7 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 
 export type CalendarProps = React.ComponentProps<typeof DayPicker>
 
-function Calendar({ className, classNames, showOutsideDays = true, mode, ...props }: CalendarProps) {
+function Calendar({ className, classNames, showOutsideDays = true, ...props }: CalendarProps) {
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
@@ -17,7 +17,7 @@ function Calendar({ className, classNames, showOutsideDays = true, mode, ...prop
         months: 'flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0',
         month: 'space-y-4',
         caption: 'flex justify-center pt-1 relative items-center',
-        caption_label: mode === 'range' ? 'block' : 'hidden',
+        caption_label: props.mode === 'range' ? 'block' : 'hidden',
         caption_dropdowns: 'flex justify-center gap-1',
         nav: 'space-x-1 flex items-center',
         nav_button: cn(

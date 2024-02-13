@@ -7,7 +7,7 @@ import { toast } from '@/components/ui/use-toast'
 
 const useGetSelectOptionsForGoal = () => {
   const navigate = useNavigate()
-  const { data: incomeExpenses } = useQuery([BALANCE_SHEET.LIABILITIES], fetchIncomeExpenses, {
+  const { data: incomeExpenses } = useQuery([BALANCE_SHEET.INCOME_EXPENSES], fetchIncomeExpenses, {
     onSuccess: (data) => {
       if (!data.length) {
         toast({ title: 'Please add income expense before adding goals.' })

@@ -59,7 +59,7 @@ export default function GoalForm({ form, onSubmit, isLoading, isEdit = false }: 
                 <FormLabel>Target</FormLabel>
                 <FormControl>
                   <DatePicker
-                    onChange={(value) => field.onChange(value?.toISOString().substring(0, 10))}
+                    onChange={(value) => field.onChange(value?.toString())}
                     value={dayjs(field.value).toDate()}
                   />
                 </FormControl>

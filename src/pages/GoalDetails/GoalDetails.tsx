@@ -1,5 +1,6 @@
 import React from 'react'
-import { BadgeCheckIcon, GaugeIcon, SplitIcon, TargetIcon } from 'lucide-react'
+import { BadgeCheckIcon, GaugeIcon, SplitIcon, TargetIcon, ArrowLeft } from 'lucide-react'
+import { Link } from 'react-router-dom'
 import { useParams } from 'react-router'
 import { useQuery } from '@tanstack/react-query'
 import Page from '@/components/Page/Page'
@@ -23,7 +24,12 @@ export default function GoalDetails() {
   return (
     <Page className='space-y-4'>
       <h1 className='text-2xl font-bold mb-8'>{data.name}</h1>
-
+      <div>
+        <Link to='/goals' className='flex items-center gap-2 mb-10 text-muted-foreground'>
+          {' '}
+          <ArrowLeft className='w-4 h-4' /> Back to goals
+        </Link>
+      </div>
       <div className='grid md:grid-cols-2 gap-4'>
         <div className='flex'>
           <div className='flex gap-2 flex-1 items-center'>

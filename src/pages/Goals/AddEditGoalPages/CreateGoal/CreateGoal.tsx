@@ -5,6 +5,7 @@ import { ArrowLeftIcon } from 'lucide-react'
 import { useMutation } from '@tanstack/react-query'
 import { useNavigate } from 'react-router'
 import { Link } from 'react-router-dom'
+import dayjs from 'dayjs'
 import Page from '@/components/Page/Page'
 import { AddGoalSchema, addGoalSchema } from '@/schema/goals'
 import { addGoal } from '@/queries/goals'
@@ -16,6 +17,9 @@ export default function CreateGoal() {
   const navigate = useNavigate()
   const form = useForm<AddGoalSchema>({
     resolver: zodResolver(addGoalSchema),
+    defaultValues: {
+      target_date: dayjs().format('YYYY-MM-DD'),
+    },
   })
 
   const createGoalMutation = useMutation(addGoal, {

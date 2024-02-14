@@ -25,7 +25,7 @@ export default function GoalDetails() {
     <Page className='space-y-4'>
       <h1 className='text-2xl font-bold mb-8'>{data.name}</h1>
       <div>
-        <Link to='/goals' className='flex items-center gap-2 mb-10 text-muted-foreground'>
+        <Link to='/goals' className='flex items-center gap-2 mb-10 text-muted-foreground w-40'>
           {' '}
           <ArrowLeft className='w-4 h-4' /> Back to goals
         </Link>

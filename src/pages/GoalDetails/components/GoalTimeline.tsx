@@ -41,7 +41,7 @@ type ChartView = 'day' | 'week' | 'month' | 'year'
 
 export default function GoalTimeline({ className, style, goalId }: GoalTimelineProps) {
   const [dateRange, setDateRange] = useState<DateRange | undefined>({
-    from: new Date(),
+    from: dayjs().toDate(),
     to: dayjs().add(1, 'month').toDate(),
   })
 
@@ -54,9 +54,21 @@ export default function GoalTimeline({ className, style, goalId }: GoalTimelineP
       return []
     }
 
-    const validDates = timelineQuery.data.filter(
-      (item) => dayjs(item.time).isAfter(dateRange?.from) && dayjs(item.time).isBefore(dateRange?.to),
-    )
+    const _fromDate = dayjs(dateRange?.from)
+
+    const _toDate = dayjs(dateRange?.to)
+
+    const validDates = timelineQuery.data.filter((item) => {
+      const _currentDate = dayjs(item.time)
+
+      if (_fromDate.isSame(_currentDate, 'day') || _toDate.isSame(_currentDate, 'day')) {
+        return true
+      } else if (dayjs(item.time).isAfter(dateRange?.from) && dayjs(item.time).isBefore(dateRange?.to)) {
+        return true
+      } else {
+        return false
+      }
+    })
 
     return aggregatedDates(validDates)
     // eslint-disable-next-line react-hooks/exhaustive-deps

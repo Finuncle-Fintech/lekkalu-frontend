@@ -48,7 +48,7 @@ export const getDataByWeek = (arr: Array<Timeline>) => {
     if (index + 1 === arr.length) {
       result.push({
         time: item.time,
-        kpi_value: (current.aggValue + item.kpi_value) / (current.totalDays + 1),
+        kpi_value: +((current.aggValue + item.kpi_value) / (current.totalDays + 1)).toFixed(2),
       })
       return
     }
@@ -57,7 +57,7 @@ export const getDataByWeek = (arr: Array<Timeline>) => {
      * for the date which is the end of the week.
      */
     if (isEndOfWeek(item.time)) {
-      result.push({ time: current.date, kpi_value: current.aggValue / current.totalDays })
+      result.push({ time: current.date, kpi_value: +(current.aggValue / current.totalDays).toFixed(2) })
       current.totalDays = 0
       current.aggValue = 0
     } else {
@@ -92,13 +92,13 @@ export const getDataByMonth = (arr: Array<Timeline>) => {
     if (index + 1 === arr.length) {
       result.push({
         time: item.time,
-        kpi_value: (current.aggValue + item.kpi_value) / (current.totalDays + 1),
+        kpi_value: +((current.aggValue + item.kpi_value) / (current.totalDays + 1)).toFixed(2),
       })
       return
     }
 
     if (isStartOfMonth(item.time)) {
-      result.push({ time: current.date, kpi_value: current.aggValue / current.totalDays })
+      result.push({ time: current.date, kpi_value: +(current.aggValue / current.totalDays).toFixed(2) })
       current.totalDays = 0
       current.aggValue = 0
     } else {
@@ -132,13 +132,13 @@ export const getDataByYear = (arr: Array<Timeline>) => {
     if (index + 1 === arr.length) {
       result.push({
         time: item.time,
-        kpi_value: (current.aggValue + item.kpi_value) / (current.totalDays + 1),
+        kpi_value: +((current.aggValue + item.kpi_value) / (current.totalDays + 1)).toFixed(2),
       })
       return
     }
 
     if (isStartOfYear(item.time)) {
-      result.push({ time: current.date, kpi_value: current.aggValue / current.totalDays })
+      result.push({ time: current.date, kpi_value: +(current.aggValue / current.totalDays).toFixed(2) })
       current.totalDays = 0
       current.aggValue = 0
     } else {

@@ -27,8 +27,6 @@ export default function Goals() {
   const { data, isLoading, isFetching } = useQuery([GOALS.GOALS], fetchGoals)
   const [goalStatus, setGoalStatus] = useState<GoalStatus>(INITIAL_GOAL_STATUS)
 
-  console.log(isFetching)
-
   useEffect(() => {
     if (!isLoading) {
       const goalStatus = { ...INITIAL_GOAL_STATUS, total: data?.length || 0 }

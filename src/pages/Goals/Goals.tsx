@@ -24,8 +24,10 @@ const INITIAL_GOAL_STATUS: GoalStatus = {
 }
 
 export default function Goals() {
-  const { data, isLoading } = useQuery([GOALS.GOALS], fetchGoals)
+  const { data, isLoading, isFetching } = useQuery([GOALS.GOALS], fetchGoals)
   const [goalStatus, setGoalStatus] = useState<GoalStatus>(INITIAL_GOAL_STATUS)
+
+  console.log(isFetching)
 
   useEffect(() => {
     if (!isLoading) {
@@ -61,12 +63,6 @@ export default function Goals() {
         </div>
 
         <Skeleton className='h-10 w-1/2' />
-
-        <div className='grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full'>
-          {range(8).map((i) => (
-            <Skeleton key={i} className='h-64 w-full' />
-          ))}
-        </div>
       </Page>
     )
   }
@@ -103,27 +99,35 @@ export default function Goals() {
 
       <div className='text-2xl font-bold truncate block py-4'>Your ongoing financial goals</div>
 
-      <div className='grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 gap-y-10'>
-        {data?.length ? (
-          data?.map((goal) => (
-            <Goal
-              key={goal.id}
-              id={goal.id}
-              goalTitle={goal.name}
-              category={goal.track_kpi}
-              createdAt={dayjs(goal.created_at).toISOString()}
-              color={colors.violet['500']}
-            />
-          ))
-        ) : (
-          <div>
-            <p>You Have no financial goals.</p>
-            <Link to='/goals/new' className='block underline mt-2'>
-              Click here to add.
-            </Link>{' '}
-          </div>
-        )}
-      </div>
+      {isFetching ? (
+        <div className='grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full'>
+          {range(8).map((i) => (
+            <Skeleton key={i} className='h-64 w-full' />
+          ))}
+        </div>
+      ) : (
+        <div className='grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 gap-y-10'>
+          {data?.length ? (
+            data?.map((goal) => (
+              <Goal
+                key={goal.id}
+                id={goal.id}
+                goalTitle={goal.name}
+                category={goal.track_kpi}
+                createdAt={dayjs(goal.created_at).toISOString()}
+                color={colors.violet['500']}
+              />
+            ))
+          ) : (
+            <div>
+              <p>You Have no financial goals.</p>
+              <Link to='/goals/new' className='block underline mt-2'>
+                Click here to add.
+              </Link>{' '}
+            </div>
+          )}
+        </div>
+      )}
     </Page>
   )
 }

@@ -4,14 +4,24 @@ import { Link } from 'react-router-dom'
 import { useParams } from 'react-router'
 import { useQuery } from '@tanstack/react-query'
 import Page from '@/components/Page/Page'
-import { GOALS } from '@/utils/query-keys'
+import { BALANCE_SHEET, GOALS } from '@/utils/query-keys'
 import { fetchGoalDetails } from '@/queries/goals'
 import GoalTimeline from './components/GoalTimeline'
+import { fetchIncomeExpenses } from '@/queries/income-statement'
 
 export default function GoalDetails() {
   const { id } = useParams() as { id: string }
 
-  const { isLoading, data } = useQuery([GOALS.DETAILS, Number(id)], () => fetchGoalDetails(Number(id)))
+  const { data: incomeExpenses } = useQuery([BALANCE_SHEET.INCOME_EXPENSES], fetchIncomeExpenses)
+
+  const { isLoading, data } = useQuery([GOALS.DETAILS, Number(id)], () => fetchGoalDetails(Number(id)), {
+    select: (data) => {
+      return {
+        ...data,
+        target_contribution_source: incomeExpenses?.find((each) => each?.id === data?.target_contribution_source)?.name,
+      }
+    },
+  })
 
   if (isLoading) {
     return <div>Loading goal details...</div>

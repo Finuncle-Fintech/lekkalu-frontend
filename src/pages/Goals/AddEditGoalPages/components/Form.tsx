@@ -99,11 +99,11 @@ export default function GoalForm({ form, onSubmit, isLoading, isEdit = false }: 
           name='goal_proportionality'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Goal Proportionality Type</FormLabel>
+              <FormLabel>Goal Proportionality</FormLabel>
               <FormControl>
                 <Select value={field.value} onValueChange={field.onChange}>
                   <SelectTrigger>
-                    <SelectValue placeholder='Goal Propotionality Type' />
+                    <SelectValue placeholder='Goal Propotionality' />
                   </SelectTrigger>
                   <SelectContent>
                     {goalPropotionality?.map((item) => (

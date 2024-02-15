@@ -12,7 +12,7 @@ const customErrorMap: z.ZodErrorMap = (issue, ctx) => {
 
 export const addGoalSchema = z.object({
   name: z.string(),
-  target_value: z.number().min(1).max(100),
+  target_value: z.number(),
   target_contribution_source: z.coerce.number({ errorMap: customErrorMap }),
   track_kpi: z.string(),
   target_date: z.string().transform((value) => dayjs(value).format('YYYY-MM-DD')),

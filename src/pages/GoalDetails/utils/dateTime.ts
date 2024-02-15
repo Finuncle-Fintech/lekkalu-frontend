@@ -1,5 +1,7 @@
 import { Timeline } from '@/types/goals'
 
+type GoalTimelineWithTarget = Timeline & { target: number }
+
 function isEndOfWeek(isoDate: string): boolean {
   const date = new Date(isoDate)
   return date.getDay() === 0
@@ -24,8 +26,8 @@ function getNextISODate(currentISODate: string): string {
   return nextISODate
 }
 
-export const getDataByWeek = (arr: Array<Timeline>) => {
-  const result: Array<Timeline> = []
+export const getDataByWeek = (arr: Array<Timeline>, target: number) => {
+  const result: Array<GoalTimelineWithTarget> = []
   const current = {
     totalDays: 0,
     aggValue: 0,
@@ -38,7 +40,7 @@ export const getDataByWeek = (arr: Array<Timeline>) => {
     */
     if (index === 0 && !isEndOfWeek(item.time)) {
       current.date = item.time
-      result.push({ time: item.time, kpi_value: item.kpi_value })
+      result.push({ time: item.time, kpi_value: item.kpi_value, target })
     } else {
       current.aggValue += item.kpi_value
       current.totalDays += 1
@@ -49,6 +51,7 @@ export const getDataByWeek = (arr: Array<Timeline>) => {
       result.push({
         time: item.time,
         kpi_value: +((current.aggValue + item.kpi_value) / (current.totalDays + 1)).toFixed(2),
+        target,
       })
       return
     }
@@ -57,7 +60,7 @@ export const getDataByWeek = (arr: Array<Timeline>) => {
      * for the date which is the end of the week.
      */
     if (isEndOfWeek(item.time)) {
-      result.push({ time: current.date, kpi_value: +(current.aggValue / current.totalDays).toFixed(2) })
+      result.push({ time: current.date, kpi_value: +(current.aggValue / current.totalDays).toFixed(2), target })
       current.totalDays = 0
       current.aggValue = 0
     } else {
@@ -70,8 +73,8 @@ export const getDataByWeek = (arr: Array<Timeline>) => {
   return result
 }
 
-export const getDataByMonth = (arr: Array<Timeline>) => {
-  const result: Array<Timeline> = []
+export const getDataByMonth = (arr: Array<Timeline>, target: number) => {
+  const result: Array<GoalTimelineWithTarget> = []
   const current = {
     totalDays: 0,
     aggValue: 0,
@@ -82,7 +85,7 @@ export const getDataByMonth = (arr: Array<Timeline>) => {
     // for the first item of the array which is not the start of the month
     if (index === 0 && !isStartOfMonth(item.time)) {
       current.date = item.time
-      result.push({ time: item.time, kpi_value: item.kpi_value })
+      result.push({ time: item.time, kpi_value: item.kpi_value, target })
     } else {
       current.aggValue += item.kpi_value
       current.totalDays += 1
@@ -93,12 +96,13 @@ export const getDataByMonth = (arr: Array<Timeline>) => {
       result.push({
         time: item.time,
         kpi_value: +((current.aggValue + item.kpi_value) / (current.totalDays + 1)).toFixed(2),
+        target,
       })
       return
     }
 
     if (isStartOfMonth(item.time)) {
-      result.push({ time: current.date, kpi_value: +(current.aggValue / current.totalDays).toFixed(2) })
+      result.push({ time: current.date, kpi_value: +(current.aggValue / current.totalDays).toFixed(2), target })
       current.totalDays = 0
       current.aggValue = 0
     } else {
@@ -110,8 +114,8 @@ export const getDataByMonth = (arr: Array<Timeline>) => {
   return result
 }
 
-export const getDataByYear = (arr: Array<Timeline>) => {
-  const result: Array<Timeline> = []
+export const getDataByYear = (arr: Array<Timeline>, target: number) => {
+  const result: Array<GoalTimelineWithTarget> = []
   const current = {
     totalDays: 0,
     aggValue: 0,
@@ -122,7 +126,7 @@ export const getDataByYear = (arr: Array<Timeline>) => {
     // for the first item of the array which is not the start of the month
     if (index === 0 && !isStartOfYear(item.time)) {
       current.date = item.time
-      result.push({ time: item.time, kpi_value: item.kpi_value })
+      result.push({ time: item.time, kpi_value: item.kpi_value, target })
     } else {
       current.aggValue += item.kpi_value
       current.totalDays += 1
@@ -133,12 +137,13 @@ export const getDataByYear = (arr: Array<Timeline>) => {
       result.push({
         time: item.time,
         kpi_value: +((current.aggValue + item.kpi_value) / (current.totalDays + 1)).toFixed(2),
+        target,
       })
       return
     }
 
     if (isStartOfYear(item.time)) {
-      result.push({ time: current.date, kpi_value: +(current.aggValue / current.totalDays).toFixed(2) })
+      result.push({ time: current.date, kpi_value: +(current.aggValue / current.totalDays).toFixed(2), target })
       current.totalDays = 0
       current.aggValue = 0
     } else {

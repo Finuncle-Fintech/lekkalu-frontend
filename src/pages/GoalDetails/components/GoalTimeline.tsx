@@ -1,24 +1,23 @@
-import React, { useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import dayjs from 'dayjs'
-import { DateRange } from 'react-day-picker'
 import { GOALS } from '@/utils/query-keys'
 import { fetchGoalTimeline } from '@/queries/goals'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { cn } from '@/utils/utils'
-import DatePickerWithRange from '@/components/DatePickerWithRange'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { getDataByMonth, getDataByWeek, getDataByYear } from '../utils/dateTime'
 import { Timeline } from '@/types/goals'
+import { Button } from '@/components/ui/button'
 
 type GoalTimelineProps = {
   className?: string
   style?: React.CSSProperties
   goalId: number
+  target: number
 }
 
-const dropdownOptions = [
+const ViewAsOptions = [
   {
     name: 'Day',
     value: 'day',
@@ -39,82 +38,69 @@ const dropdownOptions = [
 
 type ChartView = 'day' | 'week' | 'month' | 'year'
 
-export default function GoalTimeline({ className, style, goalId }: GoalTimelineProps) {
-  const [dateRange, setDateRange] = useState<DateRange | undefined>({
-    from: dayjs().toDate(),
-    to: dayjs().add(1, 'month').toDate(),
+const roundBorder = (index: number) => {
+  if (index === 0) {
+    return 'rounded-l-lg border-l'
+  } else if (index === 3) {
+    return 'rounded-r-lg border-r'
+  } else {
+    return ''
+  }
+}
+
+export default function GoalTimeline({ className, style, goalId, target }: GoalTimelineProps) {
+  const [viewAs, setViewAs] = useState<ChartView>('day')
+  const timelineQuery = useQuery([GOALS.TIMELINE, goalId], () => fetchGoalTimeline(goalId), {
+    select: (data) => {
+      return data.map((each) => ({ ...each, kpi_value: Number(each.kpi_value.toFixed(2)), target }))
+    },
   })
 
-  const [viewAs, setViewAs] = useState<ChartView>('day')
-
-  const timelineQuery = useQuery([GOALS.TIMELINE, goalId], () => fetchGoalTimeline(goalId))
+  const aggregatedDates = useCallback(
+    (dates: Timeline[]) => {
+      switch (viewAs) {
+        case 'day':
+          return dates
+        case 'month':
+          return getDataByMonth(dates, target)
+        case 'week':
+          return getDataByWeek(dates, target)
+        case 'year':
+          return getDataByYear(dates, target)
+        default:
+          return dates
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [viewAs],
+  )
 
   const dataToRender = useMemo(() => {
     if (!timelineQuery.data) {
       return []
     }
-
-    const _fromDate = dayjs(dateRange?.from)
-
-    const _toDate = dayjs(dateRange?.to)
-
-    const validDates = timelineQuery.data.filter((item) => {
-      const _currentDate = dayjs(item.time)
-
-      if (_fromDate.isSame(_currentDate, 'day') || _toDate.isSame(_currentDate, 'day')) {
-        return true
-      } else if (dayjs(item.time).isAfter(dateRange?.from) && dayjs(item.time).isBefore(dateRange?.to)) {
-        return true
-      } else {
-        return false
-      }
-    })
+    const validDates = timelineQuery.data
 
     return aggregatedDates(validDates)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dateRange?.from, dateRange?.to, timelineQuery.data, viewAs])
-
-  function aggregatedDates(dates: Timeline[]) {
-    switch (viewAs) {
-      case 'day':
-        return dates
-      case 'month':
-        return getDataByMonth(dates)
-      case 'week':
-        return getDataByWeek(dates)
-      case 'year':
-        return getDataByYear(dates)
-      default:
-        return dates
-    }
-  }
+  }, [timelineQuery.data, viewAs])
 
   return (
     <Card className={cn('h-[600px] sm:h-96 pb-20 sm:pb-0 shadow-sm', className)} style={style}>
       <CardHeader className='flex flex-start flex-col sm:flex-row'>
         <CardTitle>Timeline</CardTitle>
-        <div className='flex flex-col sm:flex-row sm:ml-auto gap-5 pt-5 sm:pt-0'>
-          <DatePickerWithRange
-            dateRange={dateRange}
-            onChange={(range) => {
-              setDateRange(range)
-            }}
-          />
-
-          <Select onValueChange={(value: ChartView) => setViewAs(value)} value={viewAs}>
-            <SelectTrigger className='text-sm focus:ring-transparent w-full md:w-[100px]' placeholder='View as'>
-              <span className='flex items-center'>
-                <SelectValue placeholder='Select' />
-              </span>
-            </SelectTrigger>
-            <SelectContent className='max-h-60'>
-              {dropdownOptions.map(({ name, value }) => (
-                <SelectItem value={value} key={`${name}_${value}`} className='text-sm'>
-                  {name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+        <div className='flex flex-col sm:flex-row sm:ml-auto gap-5x pt-5 sm:pt-0'>
+          {ViewAsOptions.map((each, index) => (
+            <div key={each?.value}>
+              <Button
+                className={`m-0 border-y rounded-none ${roundBorder(index)}`}
+                variant={each?.value === viewAs ? 'default' : 'ghost'}
+                onClick={() => setViewAs(each?.value as ChartView)}
+              >
+                {each?.name}
+              </Button>
+            </div>
+          ))}
         </div>
       </CardHeader>
 
@@ -125,7 +111,8 @@ export default function GoalTimeline({ className, style, goalId }: GoalTimelineP
             <XAxis dataKey='time' tickFormatter={(date) => dayjs(date).format('MMM YYYY')} />
             <YAxis dataKey={'kpi_value'} />
             <Tooltip labelFormatter={(date) => dayjs(date).format('DD MMM YYYY')} />
-            <Line dataKey={'kpi_value'} name='Kpi Value' />
+            <Line type='monotone' dataKey={'kpi_value'} name='Kpi Value' strokeWidth={1} dot={false} />
+            <Line type='monotone' dataKey={'target'} name='Target' stroke='red' strokeWidth={1} dot={false} />
           </LineChart>
         </ResponsiveContainer>
       </CardContent>

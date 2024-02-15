@@ -74,7 +74,7 @@ export default function GoalDetails() {
         </div>
       </div>
 
-      <GoalTimeline goalId={Number(id)} />
+      <GoalTimeline goalId={Number(id)} target={data.target_value} />
     </Page>
   )
 }

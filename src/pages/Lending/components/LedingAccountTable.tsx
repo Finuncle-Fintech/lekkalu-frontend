@@ -1,25 +1,70 @@
-import React, { useCallback } from 'react'
-import { useQuery } from '@tanstack/react-query'
+import React, { useCallback, useState } from 'react'
 import dayjs from 'dayjs'
-import { ChevronDown, ChevronUp, LoaderIcon, PencilIcon } from 'lucide-react'
+import { ChevronDown, ChevronUp, EditIcon, LoaderIcon } from 'lucide-react'
+import { useQuery } from '@tanstack/react-query'
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Accounts } from '@/types/lending'
-import { LENDING } from '@/utils/query-keys'
 import { Button } from '@/components/ui/button'
 import TransactionListTable from './TransactionListTable'
 import AddOrEditLending from './AddOrEditLending'
 import DeleteLendingAccount from './DeleteLendingAccount'
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
 import When from '@/components/When/When'
+import { LENDING } from '@/utils/query-keys'
+import { fetchLendingAccounts } from '@/queries/lending'
 
-type Props = {
-  queryFn: () => Promise<Accounts[]>
+const ClickableTableRow = ({
+  account,
+  handleSetActiveTab,
+  activeTab,
+}: {
+  account: Accounts
+  handleSetActiveTab: (deps: number) => void
+  activeTab: number[]
+}) => {
+  const [isOpen, setIsOpen] = useState(false)
+
+  const toggleCollapsible = () => {
+    setIsOpen(!isOpen)
+  }
+  return (
+    <>
+      <TableRow
+        onClick={() => {
+          handleSetActiveTab(account.id)
+          toggleCollapsible()
+        }}
+        className='cursor-pointer'
+      >
+        <TableCell>
+          <div className='flex items-center gap-2'>
+            {activeTab.includes(account.id) ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+            {account.name}
+          </div>
+        </TableCell>
+        <TableCell>
+          <div className='flex items-center gap-2 cursor-pointer'>{account.balance || 'N/A'}</div>
+        </TableCell>
+        <TableCell>{account.user_remark || 'N/A'}</TableCell>
+        <TableCell className='min-w-[150px]'>{dayjs(account.started).format('ddd MMM DD, YYYY')}</TableCell>
+        <TableCell className='space-x-2 min-w-[120px]'>
+          <AddOrEditLending
+            accounts={account as any}
+            trigger={
+              <Button size='sm' variant='ghost'>
+                <EditIcon className='w-4 h-4' />
+              </Button>
+            }
+          />
+          <DeleteLendingAccount id={account.id} />
+        </TableCell>
+      </TableRow>
+      <TransactionListTable isOpen={isOpen} acc={{ name: account.name, id: account.id }} />
+    </>
+  )
 }
-
-export default function LedingAccountTable({ queryFn }: Props) {
+export default function LedingAccountTable() {
   const [activeTab, setActiveTab] = React.useState<number[]>([])
-
-  const { data, isFetching } = useQuery([LENDING.ACCOUNTS], queryFn)
+  const { data, isFetching } = useQuery([LENDING.ACCOUNTS], fetchLendingAccounts)
 
   const handleSetActiveTab = useCallback((deps: number) => {
     setActiveTab((prevActiveTab) => {
@@ -40,10 +85,9 @@ export default function LedingAccountTable({ queryFn }: Props) {
         <TableHeader className='bg-gray-100/50'>
           <TableRow>
             <TableHead className='font-medium'>Name</TableHead>
-            <TableHead className='font-medium'>Email</TableHead>
             <TableHead className='font-medium'>Balance</TableHead>
             <TableHead className='font-medium'>Remarks</TableHead>
-            <TableHead className='font-medium'>Started</TableHead>
+            <TableHead className='font-medium'>Transaction Date</TableHead>
             <TableHead className='font-medium'>Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -54,40 +98,13 @@ export default function LedingAccountTable({ queryFn }: Props) {
             </div>
           </When>
           {data
-            ? data.map((account) => (
-                <Collapsible key={account.id} asChild>
-                  <>
-                    <TableRow>
-                      <TableCell className='cursor-pointer'>{account.name}</TableCell>
-                      <TableCell className='cursor-pointer'>{account.partner_email}</TableCell>
-                      <TableCell className='cursor-pointer'>
-                        <div className='flex items-center gap-2 cursor-pointer'>
-                          {account.balance || 'N/A'}
-
-                          <CollapsibleTrigger onClick={() => handleSetActiveTab(account.id)} asChild>
-                            {activeTab.includes(account.id) ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
-                          </CollapsibleTrigger>
-                        </div>
-                      </TableCell>
-                      <TableCell className='cursor-pointer'>{account.user_remark || 'N/A'}</TableCell>
-                      <TableCell>{dayjs(account.started).format('ddd MMM DD, YYYY')}</TableCell>
-                      <TableCell className='space-x-2 cursor-pointer'>
-                        <AddOrEditLending
-                          accounts={account as any}
-                          trigger={
-                            <Button variant='outline' size='sm'>
-                              <PencilIcon className='w-4 h-4' />
-                            </Button>
-                          }
-                        />
-                        <DeleteLendingAccount id={account.id} />
-                      </TableCell>
-                    </TableRow>
-                    <CollapsibleContent asChild>
-                      <TransactionListTable acc={{ name: account.name, id: account.id }} />
-                    </CollapsibleContent>
-                  </>
-                </Collapsible>
+            ? data.map((account: Accounts) => (
+                <ClickableTableRow
+                  key={account.id}
+                  handleSetActiveTab={handleSetActiveTab}
+                  activeTab={activeTab}
+                  account={account}
+                />
               ))
             : null}
         </TableBody>

@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group'
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
 import MultipleSelector, { Option } from '../Expenses/MultipleSelector'
+import { toast } from '../ui/use-toast'
 
 // @TODO: Add extraContent prop
 type BaseInput = {
@@ -44,6 +45,7 @@ type Options = {
 type MultiSelectInput = BaseInput & {
   type: 'multi-select'
   options: Option[]
+  maxSelection?: number
 }
 
 type SelectInput = BaseInput & {
@@ -160,11 +162,14 @@ export default function InputFieldsRenderer({ inputs, control }: Props) {
       case 'multi-select': {
         return (
           <MultipleSelector
+            maxSelected={input.maxSelection}
             options={input.options}
             placeholder={input.label}
             creatable
             hidePlaceholderWhenSelected
+            onMaxSelected={() => toast({ title: 'You can only select ' + input.maxSelection + ' account!' })}
             {...field}
+            onChange={field.onChange}
             data-testid={input.id}
           />
         )

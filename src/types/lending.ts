@@ -32,7 +32,15 @@ export type AddAccountSchema = {
 }
 export type AddTransactionSchema = {
   id?: number
-  lending_account: string | number
+  lending_account:
+    | string
+    | {
+        id?: string
+        name: string
+        value: string
+      }[]
+
+  partner_email?: string
   time: Date
   amount: number | string | null
   note?: string

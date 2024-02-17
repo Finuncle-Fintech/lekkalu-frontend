@@ -1,5 +1,6 @@
 import React, { cloneElement, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { ChevronDown } from 'lucide-react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
@@ -11,8 +12,14 @@ import { AddTransactionSchema } from '@/types/lending'
 import { useToast } from '@/components/ui/use-toast'
 import { getErrorMessage } from '@/utils/utils'
 import { addTransactionSchema } from '@/schema/lending'
-import { addLendingTransaction, fetchLendingAccounts, updateLendingTransaction } from '@/queries/lending'
+import {
+  addLendingAccount,
+  addLendingTransaction,
+  fetchLendingAccounts,
+  updateLendingTransaction,
+} from '@/queries/lending'
 import { calculateTransactionAmount } from '@/utils/lending'
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
 
 type Props = {
   trigger: React.ReactElement
@@ -24,10 +31,11 @@ export default function AddOrEditTransaction({ type, transaction, trigger }: Pro
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const { toast } = useToast()
   const queryClient = useQueryClient()
+  const { data: lendingAccounts } = useQuery([LENDING.ACCOUNTS], fetchLendingAccounts)
   const form = useForm<AddTransactionSchema>({
     resolver: zodResolver(addTransactionSchema),
     defaultValues: {
-      lending_account: transaction?.lending_account?.toString(),
+      lending_account: transaction?.lending_account?.toString() || undefined,
       amount: Number(transaction?.amount),
       time: transaction?.time ? new Date(transaction.time) : undefined,
       payment_method: transaction?.payment_method,
@@ -35,7 +43,22 @@ export default function AddOrEditTransaction({ type, transaction, trigger }: Pro
       note: transaction?.note,
     },
   })
-  const { data: lendingAccounts } = useQuery([LENDING.ACCOUNTS], fetchLendingAccounts)
+
+  const lendingAccount = form.watch('lending_account')
+
+  const isNewAccount = useMemo(
+    () => Array.isArray(lendingAccount) && lendingAccount.length > 0 && lendingAccount[0]?.id === undefined,
+    [lendingAccount],
+  )
+  const addAccountMutation = useMutation(addLendingAccount, {
+    onSuccess: () => {
+      queryClient.invalidateQueries([LENDING.ACCOUNTS])
+      form.reset()
+      setIsDialogOpen(false)
+      toast({ title: 'Account created successfully!' })
+    },
+    onError: (err: any) => toast(getErrorMessage(err)),
+  })
 
   const addTransactionMutation = useMutation(addLendingTransaction, {
     onSuccess: () => {
@@ -60,13 +83,25 @@ export default function AddOrEditTransaction({ type, transaction, trigger }: Pro
       onError: (err: any) => toast(getErrorMessage(err)),
     },
   )
+
+  const lendingAccountOptions = useMemo(() => {
+    return (
+      lendingAccounts?.map((acc) => ({
+        id: acc.id?.toString(),
+        label: acc.name,
+        ...(transaction ? {} : { value: acc.name }), // Only include 'value' if there is no transaction
+      })) ?? []
+    )
+  }, [lendingAccounts, transaction])
+
   const inputs = useMemo(() => {
     return [
       {
         id: 'lending_account',
         label: 'Select Lending Account',
-        type: 'select',
-        options: lendingAccounts?.map((acc) => ({ id: acc.id?.toString(), label: acc.name })) ?? [],
+        type: transaction ? 'select' : 'multi-select',
+        options: lendingAccountOptions,
+        maxSelection: 1,
       },
       {
         id: 'payment_method',
@@ -95,24 +130,62 @@ export default function AddOrEditTransaction({ type, transaction, trigger }: Pro
         defaultDate: transaction?.time ? new Date(transaction.time) : undefined,
       },
     ] as InputField[]
-  }, [lendingAccounts, transaction?.time])
+  }, [lendingAccountOptions, transaction])
 
+  const inputsForAccount = useMemo(() => {
+    return [
+      {
+        id: 'partner_email',
+        label: 'Enter Email',
+        type: 'text',
+      },
+      {
+        id: 'user_remark',
+        label: 'Remarks',
+        type: 'text',
+      },
+    ] as InputField[]
+  }, [])
   const handleAddOrEditLendingTransaction = () => {
     const values = form.getValues()
+    const lending_account = values.lending_account
+
+    // ** Checking if there is an account
+    if (!lending_account || lending_account?.length === 0) {
+      form.setError('lending_account', {
+        message: 'Please select an account',
+      })
+      return
+    }
     const newTransaction = {
       ...values,
       id: transaction?.id,
     }
+
     /** Handling case of transaction updation */
     if (transaction) {
       updateTransactionMutation.mutate(newTransaction)
       return
     }
-    /** Handling case of transaction creation */
-    addTransactionMutation.mutate({
-      ...values,
-      amount: type ? calculateTransactionAmount(type, values.amount as number) : values.amount,
-    })
+    if (Array.isArray(lending_account)) {
+      /** Handling case of transaction creation */
+      if (lending_account?.some((ele) => ele.id)) {
+        // there is already an account, so add transaction
+        addTransactionMutation.mutate({
+          ...values,
+          lending_account: lending_account[0].id as string,
+          amount: type ? calculateTransactionAmount(type, values.amount as number) : values.amount,
+        })
+      } else {
+        // there is no account, so add account as first transaction
+        addAccountMutation.mutate({
+          started: values.time,
+          partner_email: values.partner_email as string,
+          name: lending_account[0].value?.charAt(0)?.toUpperCase() + lending_account[0].value?.slice(1),
+          principal: type ? calculateTransactionAmount(type, values.amount as number) : values.amount,
+        })
+      }
+    }
   }
 
   return (
@@ -134,6 +207,17 @@ export default function AddOrEditTransaction({ type, transaction, trigger }: Pro
           <form onSubmit={form.handleSubmit(handleAddOrEditLendingTransaction)} className='space-y-4'>
             <InputFieldsRenderer control={form.control} inputs={inputs} />
 
+            {isNewAccount && !transaction && (
+              <Collapsible>
+                <CollapsibleTrigger className='flex hover:underline justify-between items-center w-full mb-5 text-sm font-medium'>
+                  Advance Options
+                  <ChevronDown size={20} />
+                </CollapsibleTrigger>
+                <CollapsibleContent className='flex flex-col gap-3'>
+                  <InputFieldsRenderer control={form.control} inputs={inputsForAccount} />
+                </CollapsibleContent>
+              </Collapsible>
+            )}
             <DialogFooter className='gap-2'>
               <Button
                 type='button'

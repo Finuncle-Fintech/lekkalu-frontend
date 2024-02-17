@@ -61,7 +61,7 @@ export default function AddOrEditLending({ accounts, trigger }: Props) {
       },
       {
         id: 'partner_email',
-        label: 'Enter Email of Partner',
+        label: 'Enter Email',
         type: 'text',
       },
       {

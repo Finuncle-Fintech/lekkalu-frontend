@@ -1,5 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
+import { TooltipProvider } from '@radix-ui/react-tooltip'
 import { BrowserRouter } from 'react-router-dom'
 import ReactGA from 'react-ga4'
 import { QueryClientProvider } from '@tanstack/react-query'
@@ -15,7 +16,9 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <BrowserRouter>
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <App />
+        <TooltipProvider>
+          <App />
+        </TooltipProvider>
       </AuthProvider>
     </QueryClientProvider>
   </BrowserRouter>,

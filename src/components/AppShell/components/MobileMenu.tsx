@@ -14,7 +14,6 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import DownloadAllData from '@/components/DownloadAllData/DownloadAllData'
 import { cn } from '@/utils/utils'
 
 export default function MobileMenu({ isUnAuthenticatedHeader }: { isUnAuthenticatedHeader?: boolean }) {
@@ -57,7 +56,7 @@ export default function MobileMenu({ isUnAuthenticatedHeader }: { isUnAuthentica
           </div>
 
           <div className='space-x-2 pb-12'>
-            {!isUnAuthenticatedHeader && <DownloadAllData />}
+            {/* {!isUnAuthenticatedHeader && <DownloadAllData />} */}
 
             {isUnAuthenticatedHeader ? (
               <When

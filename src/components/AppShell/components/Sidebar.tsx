@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom'
 import { cn } from '@/utils/utils'
 import NavLink from './NavLink'
 import { CALCULATOR_ROUTES, ROUTES } from '@/utils/app-shell'
-import DownloadAllData from '@/components/DownloadAllData/DownloadAllData'
 
 type SidebarProps = React.HTMLAttributes<HTMLDivElement>
 
@@ -30,7 +29,7 @@ export function Sidebar({ className, ...restProps }: SidebarProps) {
           </div>
         </div>
 
-        <DownloadAllData className='w-full' />
+        {/* <DownloadAllData className='w-full' /> */}
       </div>
     </div>
   )

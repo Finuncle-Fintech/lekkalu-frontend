@@ -115,8 +115,7 @@ function MonthlyProgressBar({
       <div className='text-xs font-semibold w-16 text-right'>
         {dayjs()
           .month(month - 1)
-          .format('MMMM')}
-        <br />
+          .format('MMM')}{' '}
         {year}
       </div>
 
@@ -128,11 +127,15 @@ function MonthlyProgressBar({
                 <h6 className='text-xs font-medium uppercase text-gray-700'>spent {spent}</h6>
                 <h6
                   className={cn(
-                    'text-xs font-medium uppercase',
+                    'text-xs font-medium uppercase pb-1',
                     percentage < 80 ? 'text-green-500' : percentage < 95 ? 'text-amber-500' : 'text-red-500',
                   )}
                 >
-                  {`left ${leftAmount}`}
+                  {budget
+                    ? leftAmount < 0
+                      ? `Exceeded ${Math.abs(leftAmount)}`
+                      : `left ${leftAmount}`
+                    : 'budget not set'}
                 </h6>
               </div>
 
@@ -143,21 +146,26 @@ function MonthlyProgressBar({
               />
             </div>
           </TooltipTrigger>
-          <TooltipContent className='text-left'>
-            <div>
-              Budget - {currency}
-              {budget}
-            </div>
-            <div>
-              Spent - {currency}
-              {spent}
-            </div>
-            <div>
-              Left - {currency}
-              {leftAmount}
-            </div>
-            <div>Spent Percentage - {percentage}%</div>
-          </TooltipContent>
+          {budget ? (
+            <TooltipContent className='text-left'>
+              <div>
+                Budget : {currency}
+                {budget}
+              </div>
+              <div>
+                Spent : {currency}
+                {spent}
+              </div>
+              <div>
+                {leftAmount < 0
+                  ? `Exceeded : ${currency}
+                ${Math.abs(leftAmount)}`
+                  : `Left : ${currency}
+                ${leftAmount}`}
+              </div>
+              <div>Spent % over Budget : {percentage}%</div>
+            </TooltipContent>
+          ) : null}
         </Tooltip>
       </TooltipProvider>
     </div>

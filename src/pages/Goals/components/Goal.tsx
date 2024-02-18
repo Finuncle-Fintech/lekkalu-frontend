@@ -90,8 +90,19 @@ export default function Goal({
       style={{ ...style, borderColor: color }}
     >
       <GoalOptions id={id} handleAllowRename={handleAllowRename} />
-      <Link to={!allowRename ? `/goals/${id}` : ''} className='flex items-center justify-center gap-4 flex-col h-full'>
-        <RadialBarChart width={circleSize} height={circleSize} innerRadius={40} outerRadius={50} data={data}>
+      <Link
+        title='Click to view detail'
+        to={!allowRename ? `/goals/${id}` : ''}
+        className='flex items-center justify-center gap-4 flex-col h-full'
+      >
+        <RadialBarChart
+          width={circleSize}
+          height={circleSize}
+          innerRadius={40}
+          outerRadius={50}
+          data={data}
+          style={{ cursor: 'pointer' }}
+        >
           <PolarAngleAxis type='number' domain={[0, 100]} angleAxisId={0} tick={false} />
           <RadialBar
             background

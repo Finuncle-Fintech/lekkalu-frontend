@@ -2,6 +2,7 @@ import React from 'react'
 import dayjs from 'dayjs'
 import { PlusCircle } from 'lucide-react'
 import { UseFormReturn } from 'react-hook-form'
+import { Link } from 'react-router-dom'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -18,10 +19,14 @@ type GoalFormType = {
 }
 
 export default function GoalForm({ form, onSubmit, isLoading, isEdit = false }: GoalFormType) {
-  const { incomeExpenses, goalPropotionality, getTargetKpi } = useGetSelectOptionsForGoal()
+  const { incomeExpenses, goalProportionality, getTargetKpi, isFetchingOptions } = useGetSelectOptionsForGoal()
+
+  if (isFetchingOptions) {
+    return <></>
+  }
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className='grid md:grid-cols-2 gap-4 items-center'>
+      <form onSubmit={form.handleSubmit(onSubmit)} className='grid md:grid-cols-2 gap-4'>
         <FormField
           control={form.control}
           name='name'
@@ -76,7 +81,11 @@ export default function GoalForm({ form, onSubmit, isLoading, isEdit = false }: 
             <FormItem>
               <FormLabel>Source* (Required)</FormLabel>
               <FormControl>
-                <Select value={field.value?.toString()} onValueChange={field.onChange}>
+                <Select
+                  value={field.value?.toString()}
+                  onValueChange={field.onChange}
+                  disabled={Boolean(!incomeExpenses?.length)}
+                >
                   <SelectTrigger>
                     <SelectValue placeholder='Source' />
                   </SelectTrigger>
@@ -89,6 +98,15 @@ export default function GoalForm({ form, onSubmit, isLoading, isEdit = false }: 
                   </SelectContent>
                 </Select>
               </FormControl>
+              <div>
+                {!incomeExpenses?.length ? (
+                  <Link to='/income-statement' className='text-gray-500 text-xs hover:underline'>
+                    No Income Expense found. Click here to add.
+                  </Link>
+                ) : (
+                  <></>
+                )}
+              </div>
               <FormMessage />
             </FormItem>
           )}
@@ -101,12 +119,16 @@ export default function GoalForm({ form, onSubmit, isLoading, isEdit = false }: 
             <FormItem>
               <FormLabel>Goal Proportionality* (Required)</FormLabel>
               <FormControl>
-                <Select value={field.value} onValueChange={field.onChange}>
+                <Select
+                  value={field.value}
+                  onValueChange={field.onChange}
+                  disabled={Boolean(!goalProportionality?.length)}
+                >
                   <SelectTrigger>
                     <SelectValue placeholder='Goal Propotionality' />
                   </SelectTrigger>
                   <SelectContent>
-                    {goalPropotionality?.map((item) => (
+                    {goalProportionality?.map((item) => (
                       <SelectItem key={item.id} value={item.value}>
                         {item.label}
                       </SelectItem>
@@ -114,6 +136,13 @@ export default function GoalForm({ form, onSubmit, isLoading, isEdit = false }: 
                   </SelectContent>
                 </Select>
               </FormControl>
+              <div>
+                {!goalProportionality?.length ? (
+                  <p className='text-red-500 text-xs'>No goal propotionality found.</p>
+                ) : (
+                  <></>
+                )}
+              </div>
               <FormMessage />
             </FormItem>
           )}
@@ -126,7 +155,7 @@ export default function GoalForm({ form, onSubmit, isLoading, isEdit = false }: 
             <FormItem>
               <FormLabel>KPI* (Required)</FormLabel>
               <FormControl>
-                <Select value={field.value} onValueChange={field.onChange}>
+                <Select value={field.value} onValueChange={field.onChange} disabled={Boolean(!getTargetKpi?.length)}>
                   <SelectTrigger>
                     <SelectValue placeholder='KPI' />
                   </SelectTrigger>
@@ -139,6 +168,7 @@ export default function GoalForm({ form, onSubmit, isLoading, isEdit = false }: 
                   </SelectContent>
                 </Select>
               </FormControl>
+              <div>{!getTargetKpi?.length ? <p className='text-red-500 text-xs'>No Target KPI found.</p> : <></>}</div>
               <FormMessage />
             </FormItem>
           )}

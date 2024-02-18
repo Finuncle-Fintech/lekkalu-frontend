@@ -1,26 +1,34 @@
+import { useEffect, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { useNavigate } from 'react-router'
 import { fetchGoalProportionalityTypes, fetchKPITypes } from '@/queries/goals'
 import { fetchIncomeExpenses } from '@/queries/income-statement'
 import { BALANCE_SHEET, GOALS } from '@/utils/query-keys'
-import { toast } from '@/components/ui/use-toast'
 
 const useGetSelectOptionsForGoal = () => {
-  const navigate = useNavigate()
-  const { data: incomeExpenses } = useQuery([BALANCE_SHEET.INCOME_EXPENSES], fetchIncomeExpenses, {
-    onSuccess: (data) => {
-      if (!data.length) {
-        toast({ title: 'Please add income expense before adding goals.' })
-        navigate('/income-statement')
-      }
-    },
-  })
-  const { data: goalPropotionality } = useQuery([GOALS.GOAL_PROPORATIONALITY_TYPES], fetchGoalProportionalityTypes)
-  const { data: getTargetKpi } = useQuery([GOALS.KPI_TYPES], fetchKPITypes)
+  const [isFetchingOptions, setIsFetchingOptions] = useState(true)
+  const { data: incomeExpenses, isFetched: hasFetchedIncomeExpenses } = useQuery(
+    [BALANCE_SHEET.INCOME_EXPENSES],
+    fetchIncomeExpenses,
+  )
+  const { data: goalProportionality, isFetched: hasFetchedGoalProportionality } = useQuery(
+    [GOALS.GOAL_PROPORTIONALITY_TYPES],
+    fetchGoalProportionalityTypes,
+  )
+  const { data: getTargetKpi, isFetched: hasFetchedTargetKpi } = useQuery([GOALS.KPI_TYPES], fetchKPITypes)
+
+  useEffect(() => {
+    if (hasFetchedIncomeExpenses && hasFetchedGoalProportionality && hasFetchedTargetKpi) {
+      setIsFetchingOptions(false)
+    } else {
+      setIsFetchingOptions(true)
+    }
+  }, [hasFetchedGoalProportionality, hasFetchedIncomeExpenses, hasFetchedTargetKpi])
+
   return {
     incomeExpenses,
-    goalPropotionality,
+    goalProportionality,
     getTargetKpi,
+    isFetchingOptions,
   }
 }
 

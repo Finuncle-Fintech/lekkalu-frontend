@@ -19,6 +19,34 @@ function isStartOfYear(isoDate: string) {
   return date.getMonth() === 0 && date.getDate() === 1
 }
 
+export function convertDays(days: number) {
+  const _days = Math.abs(days)
+  const weeks = Math.floor(_days / 7)
+  const remainingDaysInWeek = _days % 7
+
+  const months = Math.floor(_days / 30)
+  const remainingDaysInMonth = _days % 30
+
+  const years = Math.floor(_days / 365)
+  const remainingMonthsInYear = Math.floor((_days % 365) / 30)
+
+  if (years) {
+    return days < 0
+      ? `This goal expired ${years} years ${remainingMonthsInYear} months ago.`
+      : `This goal will expire after ${years} years ${remainingMonthsInYear} months.`
+  } else if (months) {
+    return days < 0
+      ? `This goal expired ${months} month ${remainingDaysInMonth} days ago.`
+      : `This goal will expire after ${months} months ${remainingDaysInMonth} days.`
+  } else if (weeks) {
+    return days < 0
+      ? `This goal expired ${weeks} weeks ${remainingDaysInWeek} days ago.`
+      : `This goal will expire after ${weeks} weeks ${remainingDaysInWeek} days.`
+  } else {
+    return days < 0 ? `This goal expired ${days} days ago` : `This goal will expire after ${days} days.`
+  }
+}
+
 function getNextISODate(currentISODate: string): string {
   const date = new Date(currentISODate)
   date.setDate(date.getDate() + 1)

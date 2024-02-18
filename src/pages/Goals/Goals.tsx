@@ -113,7 +113,8 @@ export default function Goals() {
                 goalTitle={goal.name}
                 category={goal.track_kpi}
                 createdAt={dayjs(goal.created_at).toISOString()}
-                color={colors.violet['500']}
+                color={goal?.reachable_by_days > 0 ? colors.violet['500'] : colors.red['500']}
+                reachable_by_days={goal?.reachable_by_days}
               />
             ))
           ) : (

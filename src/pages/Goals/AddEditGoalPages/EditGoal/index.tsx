@@ -39,7 +39,6 @@ export default function EditGoal() {
 
   const form = useForm<AddGoalSchema>({
     resolver: zodResolver(addGoalSchema),
-    reValidateMode: 'onChange',
   })
 
   useEffect(() => {

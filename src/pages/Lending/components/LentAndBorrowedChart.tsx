@@ -83,7 +83,8 @@ export default function LentAndBorrowedChart({ className, style }: Props) {
         // Assert the type to include the 'percentage' property
         return item as typeof item & { percentage: string }
       })
-
+      .slice()
+      .sort((a, b) => b.value - a.value)
     const borrowedData = accounts.data
       .filter((account) => parseFloat(String(account?.balance)) < 0)
       .map((ele) => {
@@ -94,6 +95,8 @@ export default function LentAndBorrowedChart({ className, style }: Props) {
         // Assert the type to include the 'percentage' property
         return item as typeof item & { percentage: string }
       })
+      .slice()
+      .sort((a, b) => b.value - a.value)
 
     // Calculate total lent and borrowed amounts
     const totalLent = lentData.reduce((acc, curr) => acc + curr.value, 0) || 0
@@ -129,7 +132,7 @@ export default function LentAndBorrowedChart({ className, style }: Props) {
   return (
     <div className={cn('flex items-center justify-center flex-col md:flex-row gap-4 w-full', className)} style={style}>
       <div className='w-full flex items-center justify-center flex-col'>
-        <div className='text-center'>Lent</div>
+        {lentData?.length > 0 && <div className='text-center'>Lent</div>}
         {lentData?.length > 0 ? (
           <ResponsiveContainer width='100%' height={350}>
             <PieChart>
@@ -157,23 +160,51 @@ export default function LentAndBorrowedChart({ className, style }: Props) {
               <Legend
                 layout='horizontal'
                 verticalAlign='bottom'
-                payload={lentData?.map((item, index) => {
-                  return {
-                    id: item.name,
-                    type: 'circle',
-                    value: `${item.name} ${item.percentage} %`,
-                    color: `url(#myGradient${index})`,
+                payload={(() => {
+                  if (lentData.length > 3) {
+                    // Sort lentData by value in descending order
+                    const sortedData = lentData.slice().sort((a, b) => b.value - a.value)
+
+                    const topThree = sortedData.slice(0, 3)
+                    const sortedColors = PIE_CHART_COLORS.slice(0, 3)
+
+                    // Construct legend payload
+                    const payload: any[] = topThree.map((item, index) => ({
+                      value: `${item.name} ${item.percentage}%`,
+                      type: 'circle',
+                      id: item.name,
+                      color: sortedColors[index % sortedColors.length].start,
+                    }))
+
+                    // Add "Others" entry to legend payload
+                    payload.push({
+                      value: `Others ${(
+                        100 - topThree.reduce((acc, curr) => acc + parseFloat(curr.percentage), 0)
+                      ).toFixed(2)}%`,
+                      type: 'circle',
+                      id: 'Others',
+                      color: 'gray',
+                    })
+
+                    return payload
+                  } else {
+                    return lentData.map((item, index) => ({
+                      value: `${item.name} ${item.percentage}%`,
+                      type: 'circle',
+                      id: item.name,
+                      color: `url(#myGradient${index})`,
+                    }))
                   }
-                })}
+                })()}
               />
             </PieChart>
           </ResponsiveContainer>
         ) : (
-          <div className='min-h-[100px]'>No Data Available</div>
+          <div>No Lent Data Available</div>
         )}
       </div>
       <div className='w-full flex items-center justify-center flex-col'>
-        <div className='text-center'>Borrowed</div>
+        {borrowedData?.length > 0 && <div className='text-center'>Borrowed</div>}
         {borrowedData?.length > 0 ? (
           <ResponsiveContainer width='100%' height={350}>
             <PieChart>
@@ -201,19 +232,48 @@ export default function LentAndBorrowedChart({ className, style }: Props) {
               <Legend
                 layout='horizontal'
                 verticalAlign='bottom'
-                payload={borrowedData?.map((item, index) => {
-                  return {
-                    id: item.name,
-                    type: 'circle',
-                    value: `${item.name} ${item.percentage} %`,
-                    color: `url(#myGradient${index})`,
+                payload={(() => {
+                  if (borrowedData.length > 3) {
+                    // Sort lentData by value in descending order
+                    const sortedData = borrowedData.slice().sort((a, b) => b.value - a.value)
+
+                    // Extract top 3 accounts and calculate sum of the rest
+                    const topThree = sortedData.slice(0, 3)
+                    const sortedColors = PIE_CHART_COLORS.slice(0, 3)
+
+                    // Construct legend payload
+                    const payload: any[] = topThree.map((item, index) => ({
+                      value: `${item.name} ${item.percentage}%`,
+                      type: 'circle',
+                      id: item.name,
+                      color: sortedColors[index % sortedColors.length].start,
+                    }))
+
+                    // Added "Others" entry to legend payload
+                    payload.push({
+                      value: `Others ${(
+                        100 - topThree.reduce((acc, curr) => acc + parseFloat(curr.percentage), 0)
+                      ).toFixed(2)}%`,
+                      type: 'circle',
+                      id: 'Others',
+                      color: 'gray',
+                    })
+
+                    return payload
+                  } else {
+                    return borrowedData.map((item, index) => ({
+                      value: `${item.name} ${item.percentage}%`,
+                      type: 'circle',
+                      id: item.name,
+                      color: `url(#myGradient${index})`,
+                    }))
                   }
-                })}
+                })()}
               />
             </PieChart>
           </ResponsiveContainer>
         ) : (
-          <div className='min-h-[100px]'>No Data Available</div>
+          <div>No Borrowed Data Available</div>
         )}
       </div>
     </div>

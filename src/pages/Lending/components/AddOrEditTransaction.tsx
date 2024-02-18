@@ -24,10 +24,9 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 type Props = {
   trigger: React.ReactElement
   transaction?: AddTransactionSchema
-  type?: 'borrow' | 'lend'
 }
 
-export default function AddOrEditTransaction({ type, transaction, trigger }: Props) {
+export default function AddOrEditTransaction({ transaction, trigger }: Props) {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const { toast } = useToast()
   const queryClient = useQueryClient()
@@ -41,6 +40,7 @@ export default function AddOrEditTransaction({ type, transaction, trigger }: Pro
       payment_method: transaction?.payment_method,
       reference_no: transaction?.reference_no,
       note: transaction?.note,
+      type: (transaction?.amount as number) < 0 ? 'borrow' : 'lend',
     },
   })
 
@@ -97,26 +97,21 @@ export default function AddOrEditTransaction({ type, transaction, trigger }: Pro
   const inputs = useMemo(() => {
     return [
       {
+        id: 'type',
+        label: 'Select Type',
+        type: 'select',
+        options: [
+          { id: 'lend', value: 'Lend', label: 'Lend' },
+          { id: 'borrow', value: 'Borrow', label: 'Borrow' },
+        ],
+      },
+      {
         id: 'lending_account',
         label: 'Select Lending Account',
         type: transaction ? 'select' : 'multi-select',
         options: lendingAccountOptions,
         maxSelection: 1,
-      },
-      {
-        id: 'payment_method',
-        label: 'Enter Payment Method',
-        type: 'text',
-      },
-      {
-        id: 'reference_no',
-        label: 'Enter Reference No',
-        type: 'text',
-      },
-      {
-        id: 'note',
-        label: 'Enter Note',
-        type: 'text',
+        helpText: 'A lending account is where your transactions will be recorded.',
       },
       {
         id: 'amount',
@@ -133,21 +128,50 @@ export default function AddOrEditTransaction({ type, transaction, trigger }: Pro
   }, [lendingAccountOptions, transaction])
 
   const inputsForAccount = useMemo(() => {
-    return [
+    const inputs = [
       {
-        id: 'partner_email',
-        label: 'Enter Email',
+        id: 'payment_method',
+        label: 'Enter Payment Method',
         type: 'text',
+        helpText: 'Enter the payment method used for this transaction.',
       },
       {
-        id: 'user_remark',
-        label: 'Remarks',
+        id: 'reference_no',
+        label: 'Enter Reference No',
         type: 'text',
+        helpText: 'Enter a reference number for this transaction if available.',
+      },
+      {
+        id: 'note',
+        label: 'Enter Note',
+        type: 'text',
+        helpText: 'Add any additional notes or details for this transaction.',
       },
     ] as InputField[]
-  }, [])
+
+    if (isNewAccount && !transaction) {
+      inputs.unshift(
+        {
+          id: 'partner_email',
+          label: 'Enter Email',
+          type: 'text',
+          helpText: 'Enter the email of the partner who owns this account.',
+        },
+        {
+          id: 'user_remark',
+          label: 'Remarks',
+          type: 'text',
+          helpText: 'Enter any additional remarks for this account.',
+        },
+      )
+    }
+
+    return inputs
+  }, [isNewAccount, transaction])
+
   const handleAddOrEditLendingTransaction = () => {
     const values = form.getValues()
+    const type = values.type
     const lending_account = values.lending_account
 
     // ** Checking if there is an account
@@ -160,6 +184,7 @@ export default function AddOrEditTransaction({ type, transaction, trigger }: Pro
     const newTransaction = {
       ...values,
       id: transaction?.id,
+      amount: type ? calculateTransactionAmount(type, values.amount as number) : values.amount,
     }
 
     /** Handling case of transaction updation */
@@ -207,17 +232,15 @@ export default function AddOrEditTransaction({ type, transaction, trigger }: Pro
           <form onSubmit={form.handleSubmit(handleAddOrEditLendingTransaction)} className='space-y-4'>
             <InputFieldsRenderer control={form.control} inputs={inputs} />
 
-            {isNewAccount && !transaction && (
-              <Collapsible>
-                <CollapsibleTrigger className='flex hover:underline justify-between items-center w-full mb-5 text-sm font-medium'>
-                  Advance Options
-                  <ChevronDown size={20} />
-                </CollapsibleTrigger>
-                <CollapsibleContent className='flex flex-col gap-3'>
-                  <InputFieldsRenderer control={form.control} inputs={inputsForAccount} />
-                </CollapsibleContent>
-              </Collapsible>
-            )}
+            <Collapsible>
+              <CollapsibleTrigger className='flex hover:underline justify-between items-center w-full mb-5 text-sm font-medium'>
+                Advance Options
+                <ChevronDown size={20} />
+              </CollapsibleTrigger>
+              <CollapsibleContent className='flex flex-col gap-3'>
+                <InputFieldsRenderer control={form.control} inputs={inputsForAccount} />
+              </CollapsibleContent>
+            </Collapsible>
             <DialogFooter className='gap-2'>
               <Button
                 type='button'

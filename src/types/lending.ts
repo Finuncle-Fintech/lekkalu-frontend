@@ -46,4 +46,5 @@ export type AddTransactionSchema = {
   note?: string
   payment_method?: string
   reference_no?: string
+  type: 'lend' | 'borrow'
 }

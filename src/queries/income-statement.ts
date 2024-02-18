@@ -1,5 +1,5 @@
 import { AddIncomeStatementSchema } from '@/schema/income-statement'
-import { IncomeStatement } from '@/types/income-statement'
+import { IncomeStatement, IncomeTypes } from '@/types/income-statement'
 import { v1ApiClient } from '@/utils/client'
 
 export async function fetchIncomeSources() {
@@ -39,5 +39,15 @@ export async function updateIncomeExpense(id: number, dto: Partial<AddIncomeStat
 
 export async function deleteIncomeExpense(id: number) {
   const { data } = await v1ApiClient.delete(`income_expense/${id}`)
+  return data
+}
+
+export async function fetchIncomeExpensesTypes() {
+  const { data } = await v1ApiClient.get<Array<IncomeTypes>>('/income_expense_type')
+  return data
+}
+
+export async function fetchIncomeSourceTypes() {
+  const { data } = await v1ApiClient.get<Array<IncomeTypes>>('/income_source_type')
   return data
 }

@@ -1,7 +1,7 @@
 import React, { cloneElement, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { capitalize } from 'lodash'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { IncomeStatement } from '@/types/income-statement'
@@ -12,6 +12,7 @@ import { INCOME_STATEMENT } from '@/utils/query-keys'
 import { useToast } from '@/components/ui/use-toast'
 import { Button } from '@/components/ui/button'
 import { getErrorMessage } from '@/utils/utils'
+import { fetchIncomeExpensesTypes, fetchIncomeSourceTypes } from '@/queries/income-statement'
 
 type Props = {
   trigger: React.ReactElement
@@ -32,12 +33,12 @@ export default function AddOrEditIncomeExpense({
   const isEdit = Boolean(incomeStatement)
   const qc = useQueryClient()
   const { toast } = useToast()
+  const { data: incomeTypes } = useQuery([INCOME_STATEMENT.INCOME_TYPE], type === 'INCOME' ? fetchIncomeSourceTypes : fetchIncomeExpensesTypes, { enabled: !!isDialogOpen })
 
   const form = useForm<AddIncomeStatementSchema>({
     resolver: zodResolver(addIncomeStatementSchema),
     defaultValues: {
       name: incomeStatement?.name,
-      type: incomeStatement?.type ? incomeStatement.type : type === 'INCOME' ? 'Salary' : 'Personal',
       amount: incomeStatement?.amount ? Number(incomeStatement.amount) : undefined,
     },
   })
@@ -101,7 +102,8 @@ export default function AddOrEditIncomeExpense({
                 {
                   id: 'type',
                   label: 'Type',
-                  type: 'text',
+                  type: 'select',
+                  options: incomeTypes?.map((type: any) => ({ id: type.value, label: type.label, value: type.value })) ?? [],
                 },
                 {
                   id: 'amount',

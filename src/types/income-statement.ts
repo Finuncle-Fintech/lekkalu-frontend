@@ -5,3 +5,9 @@ export type IncomeStatement = {
   amount: string
   isNew: boolean
 }
+
+export type IncomeTypes = {
+  id: number
+  label: string
+  value: string
+}

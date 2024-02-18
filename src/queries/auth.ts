@@ -32,7 +32,7 @@ export async function fetchUser() {
     'Content-Type': 'application/json',
   }
 
-  const { data } = await userClient.get<User>('/user_profile', { headers })
+  const { data } = await userClient.get<User>('/detail', { headers })
   return data
 }
 

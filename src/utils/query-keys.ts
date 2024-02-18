@@ -25,6 +25,7 @@ export const INCOME_STATEMENT = {
   INCOME_STATEMENT: 'INCOME_STATEMENT',
   SOURCES: 'SOURCES',
   IS_EXPENSES: 'IS_EXPENSES',
+  INCOME_TYPE: 'INCOME_TYPE'
 } as const
 
 export const BALANCE_SHEET = {
@@ -34,4 +35,8 @@ export const BALANCE_SHEET = {
 
 export const GOALS = {
   GOALS: 'GOALS',
+} as const
+
+export const NOTIFICATION = {
+  NOTIFICATION: 'NOTIFICATION'
 } as const

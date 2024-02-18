@@ -1,12 +1,12 @@
 import React from 'react'
-import { BadgeCheckIcon, GaugeIcon, SplitIcon, TargetIcon, ArrowLeft } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { BadgeCheckIcon, GaugeIcon, SplitIcon, TargetIcon } from 'lucide-react'
 import { useParams } from 'react-router'
 import { useQuery } from '@tanstack/react-query'
 import Page from '@/components/Page/Page'
 import { BALANCE_SHEET, GOALS } from '@/utils/query-keys'
 import { fetchGoalDetails } from '@/queries/goals'
 import GoalTimeline from './components/GoalTimeline'
+import BackButton from './components/BackButton'
 import { fetchIncomeExpenses } from '@/queries/income-statement'
 
 export default function GoalDetails() {
@@ -24,22 +24,29 @@ export default function GoalDetails() {
   })
 
   if (isLoading) {
-    return <div>Loading goal details...</div>
+    return (
+      <Page>
+        <BackButton />
+        <div>
+          <p>Loading goal details...</p>
+        </div>
+      </Page>
+    )
   }
 
   if (!data) {
-    return null
+    return (
+      <Page>
+        <BackButton />
+        <p>{`No goal found with id ${id}`}</p>
+      </Page>
+    )
   }
 
   return (
     <Page className='space-y-4'>
       <h1 className='text-2xl font-bold mb-8'>{data.name}</h1>
-      <div>
-        <Link to='/goals' className='flex items-center gap-2 mb-10 text-muted-foreground w-40'>
-          {' '}
-          <ArrowLeft className='w-4 h-4' /> Back to goals
-        </Link>
-      </div>
+      <BackButton />
       <div className='grid md:grid-cols-2 gap-4'>
         <div className='flex'>
           <div className='flex gap-2 flex-1 items-center'>

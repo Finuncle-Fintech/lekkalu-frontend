@@ -48,7 +48,7 @@ export default function ExpensesTable({ dateRangeEnabled, filters, setTotalExpen
       {
         queryKey: [EXPENSES.DATE_RANGE, page],
         queryFn: () => fetchExpenseByDate({ from: filters.from, to: filters.to, page }),
-        enabled: !!dateRangeEnabled,
+        enabled: dateRangeEnabled,
       },
       {
         queryKey: [TAGS.TAGS],

@@ -8,11 +8,9 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu'
 import { Button } from '../ui/button'
-import When from '../When/When'
 import NotificationPopover from '@/components/NotificationPopover'
 
 type Props = {
@@ -50,12 +48,9 @@ export default function AppShell({ children }: Props) {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                <When truthy={Boolean(userData?.email)}>
-                  <DropdownMenuLabel>{userData?.email}</DropdownMenuLabel>
-                </When>
 
                 <DropdownMenuItem className='cursor-pointer' asChild>
-                  <Link to='/profile'>Profile</Link>
+                  <Link to='/profile' className=' font-[600]'>{userData?.username}</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem className='cursor-pointer' onClick={logout}>
                   <LogOutIcon className='mr-2 h-4 w-4' />

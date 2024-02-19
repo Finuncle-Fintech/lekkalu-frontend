@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { BadgeCheckIcon, GaugeIcon, SplitIcon, TargetIcon } from 'lucide-react'
 import { useParams } from 'react-router'
 import { useQuery } from '@tanstack/react-query'
@@ -8,6 +8,7 @@ import { fetchGoalDetails } from '@/queries/goals'
 import GoalTimeline from './components/GoalTimeline'
 import BackButton from './components/BackButton'
 import { fetchIncomeExpenses } from '@/queries/income-statement'
+import { convertDays, goalReachedString } from './utils/dateTime'
 
 export default function GoalDetails() {
   const { id } = useParams() as { id: string }
@@ -22,6 +23,11 @@ export default function GoalDetails() {
       }
     },
   })
+
+  const reachableDays = useMemo(
+    () => goalReachedString(convertDays(data?.reachable_by_days || 0)),
+    [data?.reachable_by_days],
+  )
 
   if (isLoading) {
     return (
@@ -75,9 +81,11 @@ export default function GoalDetails() {
         <div className='flex'>
           <div className='flex gap-2 flex-1 items-center'>
             <BadgeCheckIcon className='w-4 h-4' />
-            <div>Reachable by</div>
+            <div>{data?.reachable_by_days < 0 ? 'Reached' : 'Reachable'}</div>
           </div>
-          <div className='flex-1 font-medium'>{data.reachable_by_days} days</div>
+          <div className='flex-1 font-medium'>
+            <p>{reachableDays}</p>
+          </div>
         </div>
       </div>
 

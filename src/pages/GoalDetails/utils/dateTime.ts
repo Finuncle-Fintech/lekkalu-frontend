@@ -2,6 +2,16 @@ import { Timeline } from '@/types/goals'
 
 type GoalTimelineWithTarget = Timeline & { target: number }
 
+type dayUnit = 'day' | 'month' | 'week' | 'year'
+
+type GoalReachedStringType = {
+  hasReached: boolean
+  unit: number
+  unitName: dayUnit
+  subUnit?: number
+  subUnitName?: dayUnit
+}
+
 function isEndOfWeek(isoDate: string): boolean {
   const date = new Date(isoDate)
   return date.getDay() === 0
@@ -19,6 +29,21 @@ function isStartOfYear(isoDate: string) {
   return date.getMonth() === 0 && date.getDate() === 1
 }
 
+export function getplural(number: number, unit: string) {
+  return number > 1 ? `${unit}s` : unit
+}
+
+export function goalReachedString({ hasReached, subUnit, subUnitName, unit, unitName }: GoalReachedStringType) {
+  if (hasReached) {
+    return `${unit} ${getplural(unit, unitName)}${
+      subUnit && subUnitName ? ` and ${subUnit} ${getplural(subUnit, subUnitName)} ago.` : ' ago.'
+    }`
+  }
+  return `${unit} ${getplural(unit, unitName)} ${
+    subUnit && subUnitName ? `and ${subUnit} ${getplural(subUnit, subUnitName)}.` : '.'
+  }`
+}
+
 export function convertDays(days: number) {
   const _days = Math.abs(days)
   const weeks = Math.floor(_days / 7)
@@ -31,19 +56,35 @@ export function convertDays(days: number) {
   const remainingMonthsInYear = Math.floor((_days % 365) / 30)
 
   if (years) {
-    return days < 0
-      ? `This goal expired ${years} years ${remainingMonthsInYear} months ago.`
-      : `This goal will expire after ${years} years ${remainingMonthsInYear} months.`
+    return {
+      hasReached: days < 0,
+      unit: years,
+      unitName: 'year' as dayUnit,
+      subUnit: remainingMonthsInYear,
+      subUnitName: 'month' as dayUnit,
+    }
   } else if (months) {
-    return days < 0
-      ? `This goal expired ${months} month ${remainingDaysInMonth} days ago.`
-      : `This goal will expire after ${months} months ${remainingDaysInMonth} days.`
+    return {
+      hasReached: days < 0,
+      unit: months,
+      unitName: 'month' as dayUnit,
+      subUnit: remainingDaysInMonth,
+      subUnitName: 'day' as dayUnit,
+    }
   } else if (weeks) {
-    return days < 0
-      ? `This goal expired ${weeks} weeks ${remainingDaysInWeek} days ago.`
-      : `This goal will expire after ${weeks} weeks ${remainingDaysInWeek} days.`
+    return {
+      hasReached: days < 0,
+      unit: weeks,
+      unitName: 'week' as dayUnit,
+      subUnit: remainingDaysInWeek,
+      subUnitName: 'day' as dayUnit,
+    }
   } else {
-    return days < 0 ? `This goal expired ${days} days ago` : `This goal will expire after ${days} days.`
+    return {
+      hasReached: days < 0,
+      unit: days,
+      unitName: 'day' as dayUnit,
+    }
   }
 }
 

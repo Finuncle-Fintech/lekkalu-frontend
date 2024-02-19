@@ -11,6 +11,7 @@ export type UpdateBudgetSchema = z.infer<typeof updateBudgetSchema>
 
 export const setBudgetSchemaDTO = z.object({
   limit: z.coerce.number().min(1, 'Limit is required!'),
-  month: z.date(),
+  month: z.string(),
+  year: z.string(),
 })
 export type SetBudgetSchemaDTO = z.infer<typeof setBudgetSchemaDTO>

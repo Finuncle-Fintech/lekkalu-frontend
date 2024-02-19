@@ -23,7 +23,7 @@ export default function SetBudgetModal() {
   const form = useForm<SetBudgetSchemaDTO>({
     resolver: zodResolver(setBudgetSchemaDTO),
     defaultValues: {
-      month: new Date(),
+      month: dayjs().format('MM'),
     },
   })
 
@@ -49,12 +49,43 @@ export default function SetBudgetModal() {
       }
     })
     !monthAlreadyPresent &&
-      setBudgetMutation.mutate({
-        ...values,
-        month: dayjs(values.month).format(SERVER_DATE_FORMAT),
-        limit: Number(values.limit.toFixed(2)),
-      })
+    setBudgetMutation.mutate({
+      ...values,
+      month: dayjs(`${values.year}-${values.month}-01`).format(SERVER_DATE_FORMAT),
+      limit: Number(values.limit.toFixed(2)),
+    })
   }
+
+  interface YearOption {
+    id: string;
+    label: string;
+  }
+
+  const currentYear = new Date().getFullYear()
+  const years: YearOption[] = Array.from({ length: 10 }, (v, i) => ({
+    id: `${currentYear - i}`,
+    label: `${currentYear - i}`,
+  }))
+
+  interface MonthOption {
+    id: string;
+    label: string;
+  }
+
+  const monthOptions: MonthOption[] = [
+    { id: '01', label: 'January' },
+    { id: '02', label: 'February' },
+    { id: '03', label: 'March' },
+    { id: '04', label: 'April' },
+    { id: '05', label: 'May' },
+    { id: '06', label: 'June' },
+    { id: '07', label: 'July' },
+    { id: '08', label: 'August' },
+    { id: '09', label: 'September' },
+    { id: '10', label: 'October' },
+    { id: '11', label: 'November' },
+    { id: '12', label: 'December' },
+  ]
 
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -66,14 +97,14 @@ export default function SetBudgetModal() {
       >
         <Button>Set Budget</Button>
       </DialogTrigger>
-      <DialogContent className='m-4'>
+      <DialogContent className="m-4">
         <DialogHeader>
           <DialogTitle>Set Budget</DialogTitle>
         </DialogHeader>
 
         <When truthy={!isFetching}>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(handleCreateBudget)} className='space-y-2'>
+            <form onSubmit={form.handleSubmit(handleCreateBudget)} className="space-y-2">
               <InputFieldsRenderer
                 control={form.control}
                 inputs={[
@@ -85,18 +116,25 @@ export default function SetBudgetModal() {
                   {
                     id: 'month',
                     label: 'Month',
-                    type: 'date',
+                    type: 'select',
+                    options: monthOptions,
+                  },
+                  {
+                    id: 'year',
+                    label: 'Year',
+                    type: 'select',
+                    options: years,
                   },
                 ]}
               />
 
-              <DialogFooter className='gap-2'>
-                <Button type='submit' className='flex-grow' disabled={setBudgetMutation.isLoading}>
+              <DialogFooter className="gap-2">
+                <Button type="submit" className="flex-grow" disabled={setBudgetMutation.isLoading}>
                   Set
                 </Button>
                 <Button
-                  variant='outline'
-                  className='flex-grow'
+                  variant="outline"
+                  className="flex-grow"
                   onClick={() => {
                     setIsDialogOpen(false)
                   }}

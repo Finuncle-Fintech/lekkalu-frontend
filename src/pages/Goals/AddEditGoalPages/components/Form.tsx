@@ -32,7 +32,7 @@ export default function GoalForm({ form, onSubmit, isLoading, isEdit = false }: 
           name='name'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Name* (Required)</FormLabel>
+              <FormLabel>Name*</FormLabel>
               <FormControl>
                 <Input value={field.value} onChange={field.onChange} />
               </FormControl>
@@ -46,7 +46,7 @@ export default function GoalForm({ form, onSubmit, isLoading, isEdit = false }: 
           name='target_value'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Target* (Required)</FormLabel>
+              <FormLabel>Target*</FormLabel>
               <FormControl>
                 <Input type='number' value={field.value} onChange={(e) => field.onChange(e.target.valueAsNumber)} />
               </FormControl>
@@ -61,7 +61,7 @@ export default function GoalForm({ form, onSubmit, isLoading, isEdit = false }: 
           render={({ field }) => {
             return (
               <FormItem>
-                <FormLabel>Target Date* (Required)</FormLabel>
+                <FormLabel>Target Date*</FormLabel>
                 <FormControl>
                   <DatePicker
                     onChange={(value) => field.onChange(value?.toString())}
@@ -79,7 +79,7 @@ export default function GoalForm({ form, onSubmit, isLoading, isEdit = false }: 
           name='target_contribution_source'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Source* (Required)</FormLabel>
+              <FormLabel>Source*</FormLabel>
               <FormControl>
                 <Select
                   value={field.value?.toString()}
@@ -117,7 +117,7 @@ export default function GoalForm({ form, onSubmit, isLoading, isEdit = false }: 
           name='goal_proportionality'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Goal Proportionality* (Required)</FormLabel>
+              <FormLabel>Goal Proportionality*</FormLabel>
               <FormControl>
                 <Select
                   value={field.value}
@@ -153,7 +153,7 @@ export default function GoalForm({ form, onSubmit, isLoading, isEdit = false }: 
           name='track_kpi'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>KPI* (Required)</FormLabel>
+              <FormLabel>KPI*</FormLabel>
               <FormControl>
                 <Select value={field.value} onValueChange={field.onChange} disabled={Boolean(!getTargetKpi?.length)}>
                   <SelectTrigger>

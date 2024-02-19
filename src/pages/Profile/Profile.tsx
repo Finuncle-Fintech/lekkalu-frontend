@@ -1,6 +1,7 @@
 import React from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
+import { useMutation } from '@tanstack/react-query'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { changePasswordSchema, userProfileSchema } from '../../schema/user'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
@@ -8,26 +9,49 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import Password from '@/components/ui/password'
 import { useToast } from '@/components/ui/use-toast'
+import { useAuthContext } from '@/hooks/use-auth'
+import { updateUserDetails } from '@/queries/user'
+import { getErrorMessage } from '@/utils/utils'
 
 type UserProfileSchema = z.infer<typeof userProfileSchema>
 type ChangePasswordSchema = z.infer<typeof changePasswordSchema>
 
+/**
+ * @todo Remove the check once password functionality is implemented
+ */
+const HIDE_PASSWORD_RESET_FUNCTIONALITY = true
+
 export default function Profile() {
   const { toast } = useToast()
+  const { userData, fetchUserData } = useAuthContext()
   // @TODO: Add user details initially
   const userProfileForm = useForm<UserProfileSchema>({
     resolver: zodResolver(userProfileSchema),
+    defaultValues: userData && userData
   })
 
   const passwordForm = useForm<ChangePasswordSchema>({
     resolver: zodResolver(changePasswordSchema),
   })
 
-  const handleUserProfileUpdate = () => {
-    toast({
-      title: 'Feature under development!',
-      description: 'This feature is still under development and will be available soon!',
-    })
+  React.useEffect(() => {
+    if (userData) {
+      userProfileForm.reset(userData)
+    }
+  }, [userData, userProfileForm])
+
+  const updateUserDetailMutation = useMutation(updateUserDetails, {
+    onSuccess: () => {
+      fetchUserData()
+      toast({
+        title: 'Details Updated Successfully!',
+        description: '',
+      })
+    },
+    onError: (err: any) => toast(getErrorMessage(err)),
+  })
+  const handleUserProfileUpdate = (values: UserProfileSchema) => {
+    updateUserDetailMutation.mutate(values)
   }
 
   const handlePasswordChange = () => {
@@ -48,6 +72,7 @@ export default function Profile() {
             <FormField
               control={userProfileForm.control}
               name='first_name'
+              defaultValue=''
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>First name</FormLabel>
@@ -62,6 +87,7 @@ export default function Profile() {
             <FormField
               control={userProfileForm.control}
               name='last_name'
+              defaultValue=''
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Last name</FormLabel>
@@ -76,11 +102,26 @@ export default function Profile() {
             <FormField
               control={userProfileForm.control}
               name='email'
+              defaultValue=''
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input placeholder='Enter your first name' {...field} />
+                    <Input placeholder='Enter your email' {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={userProfileForm.control}
+              name='username'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Username</FormLabel>
+                  <FormControl>
+                    <Input placeholder='Enter your Username' {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -92,58 +133,60 @@ export default function Profile() {
         </form>
       </Form>
 
-      <div className='text-lg font-bold'>Update your password</div>
-      <div className='w-full h-[1px] bg-gray-500/20 my-4' />
+      {!HIDE_PASSWORD_RESET_FUNCTIONALITY && <>
+        <div className='text-lg font-bold'>Update your password</div>
+        <div className='w-full h-[1px] bg-gray-500/20 my-4' />
 
-      <Form {...passwordForm}>
-        <form onSubmit={passwordForm.handleSubmit(handlePasswordChange)} className='space-y-4 mb-4'>
-          <div className='grid md:grid-cols-2 gap-4'>
-            <FormField
-              control={passwordForm.control}
-              name='current_password'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Current Password</FormLabel>
-                  <FormControl>
-                    <Password placeholder='Enter your current password' {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+        <Form {...passwordForm}>
+          <form onSubmit={passwordForm.handleSubmit(handlePasswordChange)} className='space-y-4 mb-4'>
+            <div className='grid md:grid-cols-2 gap-4'>
+              <FormField
+                control={passwordForm.control}
+                name='current_password'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Current Password</FormLabel>
+                    <FormControl>
+                      <Password placeholder='Enter your current password' {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            <FormField
-              control={passwordForm.control}
-              name='new_password'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>New Password</FormLabel>
-                  <FormControl>
-                    <Password placeholder='Enter your new password' {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+              <FormField
+                control={passwordForm.control}
+                name='new_password'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>New Password</FormLabel>
+                    <FormControl>
+                      <Password placeholder='Enter your new password' {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            <FormField
-              control={passwordForm.control}
-              name='confirm_password'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Confirm Password</FormLabel>
-                  <FormControl>
-                    <Password placeholder='Confirm password' {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
+              <FormField
+                control={passwordForm.control}
+                name='confirm_password'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Confirm Password</FormLabel>
+                    <FormControl>
+                      <Password placeholder='Confirm password' {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
 
-          <Button type='submit'>Change Password</Button>
-        </form>
-      </Form>
+            <Button type='submit'>Change Password</Button>
+          </form>
+        </Form>
+      </>}
     </div>
   )
 }

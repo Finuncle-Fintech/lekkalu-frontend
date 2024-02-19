@@ -12,8 +12,8 @@ type Props = {
 export default function PercentageCard({ className, style, value, title }: Props) {
   return (
     <div className={cn('flex items-center gap-4 border rounded p-4', className)} style={style}>
-      <div className='rounded-full p-3 bg-blue-500/10'>
-        <PercentIcon className='w-6 h-6 text-blue-500' />
+      <div className='rounded-full p-3 bg-indigo-500/10'>
+        <PercentIcon className='w-6 h-6 text-indigo-500' />
       </div>
       <div>
         <div className='text-xl font-medium'>{value} %</div>

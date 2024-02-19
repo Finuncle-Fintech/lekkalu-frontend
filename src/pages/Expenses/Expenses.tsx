@@ -17,6 +17,9 @@ import ExpensesTable from './components/ExpensesTable'
 import ViewAllBudgetModal from './components/ViewAllBudgetModal'
 import SetBudgetModal from './components/SetBudgetModal'
 import Pagination from '@/components/Pagination/Pagination'
+import { WeeklyChart } from '@/components/Charts/WeeklyChart'
+import { SpentBalanceChart } from '@/components/Charts/SpentBalanceChart'
+import { CumSumChart } from '@/components/Charts/CumSumChart'
 
 dayjs.extend(customParseFormat)
 export type totalExpensesMetadataType =
@@ -65,6 +68,12 @@ export default function Expenses() {
 
   return (
     <div className='max-w-screen-xl mx-auto align-self-start min-h-[80vh] p-4 space-y-4'>
+      <div className='grid md:grid-cols-2 gap-4'>
+        <WeeklyChart />
+        <SpentBalanceChart />
+        <CumSumChart />
+      </div>
+
       <div className='border rounded-2 shadow-sm w-100 p-4 flex flex-col gap-2 max-w-md'>
         <div className='text-2xl font-bold'>Budget</div>
         <div className='flex items-center gap-2'>

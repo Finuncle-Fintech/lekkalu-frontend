@@ -70,6 +70,7 @@ export function useAuth() {
     logout,
     signupMutation,
     userData,
+    fetchUserData
   }
 }
 

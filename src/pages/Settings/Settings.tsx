@@ -10,6 +10,7 @@ import { getErrorMessage } from '@/utils/utils'
 import { queryClient } from '@/utils/client'
 import { deleteUserAccount } from '@/queries/auth'
 import { useAuthContext } from '@/hooks/use-auth'
+import DownloadAllData from '@/components/DownloadAllData/DownloadAllData'
 
 export default function Settings() {
   const { toast } = useToast()
@@ -60,6 +61,10 @@ export default function Settings() {
       >
         Update
       </Button>
+
+      <div className='text-lg font-bold mt-4'>Download all financial data</div>
+      <div className='w-full h-[1px] bg-gray-500/20 my-4' />
+      <DownloadAllData />
 
       <div className='text-lg font-bold mt-4'>Account</div>
       <div className='w-full h-[1px] bg-gray-500/20 my-4' />

@@ -13,7 +13,7 @@ import GoalOptions from './Options'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Goal as GoalType } from '@/types/goals'
-import { convertDays } from '@/pages/GoalDetails/utils/dateTime'
+import { convertDays, goalReachedString } from '@/pages/GoalDetails/utils/dateTime'
 
 dayjs.extend(relativeTime)
 
@@ -82,7 +82,7 @@ export default function Goal({
     }
   }
 
-  const remainingDays = useMemo(() => convertDays(reachable_by_days), [reachable_by_days])
+  const remainingDays = useMemo(() => goalReachedString(convertDays(reachable_by_days)), [reachable_by_days])
 
   return (
     <div
@@ -147,7 +147,11 @@ export default function Goal({
           <p>{dayjs(createdAt).fromNow()}</p>
         </div>
         <div className='mt-auto'>
-          <p className='text-xs text-center text-muted-foreground'>{remainingDays}</p>
+          <p className='text-xs text-center text-muted-foreground'>
+            {reachable_by_days > 0
+              ? `This goal will be reached in ${remainingDays}`
+              : `This goal was reached ${remainingDays}`}
+          </p>
         </div>
       </Link>
     </div>

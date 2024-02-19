@@ -81,7 +81,9 @@ export default function GoalDetails() {
         <div className='flex'>
           <div className='flex gap-2 flex-1 items-center'>
             <BadgeCheckIcon className='w-4 h-4' />
-            <div>{data?.reachable_by_days < 0 ? 'Reached' : 'Reachable'}</div>
+            <div>
+              <p>{data?.reachable_by_days < 0 ? 'Reached' : 'Reachable by'}</p>
+            </div>
           </div>
           <div className='flex-1 font-medium'>
             <p>{reachableDays}</p>

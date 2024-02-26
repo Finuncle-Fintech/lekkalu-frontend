@@ -46,6 +46,7 @@ type MultiSelectInput = BaseInput & {
   type: 'multi-select'
   options: Option[]
   maxSelection?: number
+  closeOnSelect?: boolean
 }
 
 type SelectInput = BaseInput & {
@@ -149,6 +150,7 @@ export default function InputFieldsRenderer({ inputs, control }: Props) {
             {...field}
             onChange={field.onChange}
             data-testid={input.id}
+            closeOnSelect={input.closeOnSelect}
           />
         )
       }

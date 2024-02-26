@@ -18,7 +18,7 @@ import {
   fetchLendingAccounts,
   updateLendingTransaction,
 } from '@/queries/lending'
-import { calculateTransactionAmount } from '@/utils/lending'
+import { PAYMENT_METHODS, TRANNACTION_TYPES, calculateTransactionAmount } from '@/utils/lending'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
 
 type Props = {
@@ -36,7 +36,7 @@ export default function AddOrEditTransaction({ transaction, trigger }: Props) {
     defaultValues: {
       lending_account: transaction?.lending_account?.toString() || undefined,
       amount: Number(transaction?.amount),
-      time: transaction?.time ? new Date(transaction.time) : undefined,
+      time: transaction?.time ? new Date(transaction.time) : new Date(),
       payment_method: transaction?.payment_method,
       reference_no: transaction?.reference_no,
       note: transaction?.note,
@@ -100,10 +100,7 @@ export default function AddOrEditTransaction({ transaction, trigger }: Props) {
         id: 'type',
         label: 'Select Type',
         type: 'select',
-        options: [
-          { id: 'lend', value: 'Lend', label: 'Lend' },
-          { id: 'borrow', value: 'Borrow', label: 'Borrow' },
-        ],
+        options: TRANNACTION_TYPES,
       },
       {
         id: 'lending_account',
@@ -112,27 +109,29 @@ export default function AddOrEditTransaction({ transaction, trigger }: Props) {
         options: lendingAccountOptions,
         maxSelection: 1,
         helpText: 'A lending account is where your transactions will be recorded.',
+        closeOnSelect: true,
       },
       {
         id: 'amount',
-        label: 'Principal Amount',
+        label: isNewAccount ? 'Principal Amount' : 'Amount',
         type: 'number',
       },
       {
         id: 'time',
-        label: 'Choose the Date',
+        label: 'Date',
         type: 'date',
-        defaultDate: transaction?.time ? new Date(transaction.time) : undefined,
+        defaultDate: transaction?.time ? new Date(transaction.time) : new Date(),
       },
     ] as InputField[]
-  }, [lendingAccountOptions, transaction])
+  }, [lendingAccountOptions, transaction, isNewAccount])
 
   const inputsForAccount = useMemo(() => {
     const inputs = [
       {
         id: 'payment_method',
         label: 'Enter Payment Method',
-        type: 'text',
+        type: 'select',
+        options: PAYMENT_METHODS,
         helpText: 'Enter the payment method used for this transaction.',
       },
       {

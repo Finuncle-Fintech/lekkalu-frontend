@@ -78,7 +78,7 @@ export default function LentAndBorrowedChart({ className, style }: Props) {
       .map((ele) => {
         const item = {
           ...ele,
-          value: parseFloat(String(ele?.balance)),
+          value: Math.abs(parseFloat(String(ele?.balance))),
         }
         // Assert the type to include the 'percentage' property
         return item as typeof item & { percentage: string }
@@ -105,17 +105,47 @@ export default function LentAndBorrowedChart({ className, style }: Props) {
     // Calculate percentages for lent and borrowed data
     if (totalLent > 0) {
       lentData.forEach((item) => {
-        item.percentage = ((item.value / totalLent) * 100).toFixed(2)
+        item.percentage = ((item.value / totalLent) * 100).toFixed(1)
       })
     }
 
     if (totalBorrowed > 0) {
       borrowedData.forEach((item) => {
-        item.percentage = ((item.value / totalBorrowed) * 100).toFixed(2)
+        item.percentage = ((item.value / totalBorrowed) * 100).toFixed(1)
       })
     }
 
-    return { lentData, borrowedData }
+    const lentTopThree = lentData.slice(0, 3)
+    const borrowTopThree = borrowedData.slice(0, 3)
+
+    const lentOthers = lentData.slice(3)
+    const borrowedOthers = borrowedData.slice(3)
+    // Calculate total lent and borrowed amounts
+    const lentOthersSum = lentOthers.reduce((acc, curr) => acc + curr.value, 0)
+    const borrowedOthersSum = borrowedOthers.reduce((acc, curr) => acc + curr.value, 0)
+
+    // Add an "Others" item with percentage
+    const lentDataProcessed = [
+      ...lentTopThree,
+      {
+        name: 'Others',
+        value: lentOthersSum,
+        percentage: ((lentOthersSum / totalLent) * 100).toFixed(1),
+      },
+    ]
+    const borrowedDataProcessed = [
+      ...borrowTopThree,
+      {
+        name: 'Others',
+        value: borrowedOthersSum,
+        percentage: ((borrowedOthersSum / totalBorrowed) * 100).toFixed(1),
+      },
+    ]
+
+    return {
+      lentData: lentData.length > 3 ? lentDataProcessed : lentData,
+      borrowedData: borrowedData.length > 3 ? borrowedDataProcessed : borrowedData,
+    }
   }, [accounts.data])
 
   const { lentData, borrowedData } = chartData
@@ -160,42 +190,14 @@ export default function LentAndBorrowedChart({ className, style }: Props) {
               <Legend
                 layout='horizontal'
                 verticalAlign='bottom'
-                payload={(() => {
-                  if (lentData.length > 3) {
-                    // Sort lentData by value in descending order
-                    const sortedData = lentData.slice().sort((a, b) => b.value - a.value)
-
-                    const topThree = sortedData.slice(0, 3)
-                    const sortedColors = PIE_CHART_COLORS.slice(0, 3)
-
-                    // Construct legend payload
-                    const payload: any[] = topThree.map((item, index) => ({
-                      value: `${item.name} ${item.percentage}%`,
-                      type: 'circle',
-                      id: item.name,
-                      color: sortedColors[index % sortedColors.length].start,
-                    }))
-
-                    // Add "Others" entry to legend payload
-                    payload.push({
-                      value: `Others ${(
-                        100 - topThree.reduce((acc, curr) => acc + parseFloat(curr.percentage), 0)
-                      ).toFixed(2)}%`,
-                      type: 'circle',
-                      id: 'Others',
-                      color: 'gray',
-                    })
-
-                    return payload
-                  } else {
-                    return lentData.map((item, index) => ({
-                      value: `${item.name} ${item.percentage}%`,
-                      type: 'circle',
-                      id: item.name,
-                      color: `url(#myGradient${index})`,
-                    }))
+                payload={lentData?.map((item, index) => {
+                  return {
+                    id: item.name,
+                    type: 'circle',
+                    value: `${item.name} ${item.percentage} %`,
+                    color: `url(#myGradient${index})`,
                   }
-                })()}
+                })}
               />
             </PieChart>
           </ResponsiveContainer>
@@ -232,43 +234,14 @@ export default function LentAndBorrowedChart({ className, style }: Props) {
               <Legend
                 layout='horizontal'
                 verticalAlign='bottom'
-                payload={(() => {
-                  if (borrowedData.length > 3) {
-                    // Sort lentData by value in descending order
-                    const sortedData = borrowedData.slice().sort((a, b) => b.value - a.value)
-
-                    // Extract top 3 accounts and calculate sum of the rest
-                    const topThree = sortedData.slice(0, 3)
-                    const sortedColors = PIE_CHART_COLORS.slice(0, 3)
-
-                    // Construct legend payload
-                    const payload: any[] = topThree.map((item, index) => ({
-                      value: `${item.name} ${item.percentage}%`,
-                      type: 'circle',
-                      id: item.name,
-                      color: sortedColors[index % sortedColors.length].start,
-                    }))
-
-                    // Added "Others" entry to legend payload
-                    payload.push({
-                      value: `Others ${(
-                        100 - topThree.reduce((acc, curr) => acc + parseFloat(curr.percentage), 0)
-                      ).toFixed(2)}%`,
-                      type: 'circle',
-                      id: 'Others',
-                      color: 'gray',
-                    })
-
-                    return payload
-                  } else {
-                    return borrowedData.map((item, index) => ({
-                      value: `${item.name} ${item.percentage}%`,
-                      type: 'circle',
-                      id: item.name,
-                      color: `url(#myGradient${index})`,
-                    }))
+                payload={borrowedData?.map((item, index) => {
+                  return {
+                    id: item.name,
+                    type: 'circle',
+                    value: `${item.name} ${item.percentage} %`,
+                    color: `url(#myGradient${index})`,
                   }
-                })()}
+                })}
               />
             </PieChart>
           </ResponsiveContainer>

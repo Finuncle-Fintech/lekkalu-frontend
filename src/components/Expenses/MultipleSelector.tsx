@@ -55,6 +55,7 @@ interface MultipleSelectorProps {
   creatable?: boolean
   /** Limit the input text length. */
   maxTextLength?: number
+  closeOnSelect?: boolean
 }
 
 export interface MultipleSelectorRef {
@@ -127,6 +128,7 @@ const MultipleSelector = React.forwardRef<MultipleSelectorRef, MultipleSelectorP
       selectFirstItem = true,
       creatable = false,
       maxTextLength = Number.MAX_SAFE_INTEGER,
+      closeOnSelect,
     }: MultipleSelectorProps,
     ref: React.Ref<MultipleSelectorRef>,
   ) => {
@@ -209,6 +211,11 @@ const MultipleSelector = React.forwardRef<MultipleSelectorRef, MultipleSelectorP
             e.stopPropagation()
           }}
           onSelect={(value: string) => {
+            if (closeOnSelect) {
+              setOpen(false)
+              inputRef.current?.blur()
+              setInputValue('')
+            }
             if (selected.length >= maxSelected) {
               onMaxSelected?.(selected.length)
               return
@@ -314,7 +321,15 @@ const MultipleSelector = React.forwardRef<MultipleSelectorRef, MultipleSelectorP
         </div>
         <div className='relative mt-2'>
           {open && (
-            <CommandList className='absolute top-0 z-10 w-full rounded-md border bg-popover text-popover-foreground shadow-md outline-none animate-in'>
+            <CommandList
+              onClick={() => {
+                if (closeOnSelect) {
+                  setOpen(false)
+                  inputRef.current?.blur()
+                }
+              }}
+              className='absolute top-0 z-10 w-full rounded-md border bg-popover text-popover-foreground shadow-md outline-none animate-in'
+            >
               {isLoading ? (
                 <>{loadingIndicator}</>
               ) : (
@@ -336,6 +351,10 @@ const MultipleSelector = React.forwardRef<MultipleSelectorRef, MultipleSelectorP
                                 e.stopPropagation()
                               }}
                               onSelect={() => {
+                                if (closeOnSelect) {
+                                  setOpen(false)
+                                  inputRef.current?.blur()
+                                }
                                 if (selected.length >= maxSelected) {
                                   onMaxSelected?.(selected.length)
                                   return

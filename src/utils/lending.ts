@@ -7,3 +7,14 @@ export function calculateTransactionAmount(type: 'lend' | 'borrow', amount: numb
     throw new Error('Invalid transaction type. Use "lend" or "borrow".')
   }
 }
+
+export const TRANNACTION_TYPES = [
+  { id: 'lend', value: 'Lend', label: 'Lend' },
+  { id: 'borrow', value: 'Borrow', label: 'Borrow' },
+]
+export const PAYMENT_METHODS = [
+  { id: 'upi', value: 'UPI', label: 'UPI' },
+  { id: 'card', value: 'CARD', label: 'Card' },
+  { id: 'cash', value: 'CASH', label: 'Cash' },
+  { id: 'other', value: 'OTHER', label: 'Other' },
+]

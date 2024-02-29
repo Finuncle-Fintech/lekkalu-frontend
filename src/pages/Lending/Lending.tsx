@@ -2,7 +2,7 @@ import React from 'react'
 import { PlusIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import LedingAccountTable from './components/LedingAccountTable'
-import AddOrEditTransaction from './components/AddOrEditTransaction'
+import AddOrEditTransaction from './components/AddOrEditTransaction/AddOrEditTransaction'
 import LentAndBorrowedChart from './components/LentAndBorrowedChart'
 
 export default function Lending() {

@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import dayjs from 'dayjs'
 import { ChevronDown, ChevronUp, EditIcon, LoaderIcon } from 'lucide-react'
 import { useQuery } from '@tanstack/react-query'
@@ -6,11 +6,12 @@ import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, Tabl
 import { Accounts } from '@/types/lending'
 import { Button } from '@/components/ui/button'
 import TransactionListTable from './TransactionListTable'
-import AddOrEditLending from './AddOrEditLending'
+import AddOrEditLending from './AddOrEditLending/AddOrEditLending'
 import DeleteLendingAccount from './DeleteLendingAccount'
 import When from '@/components/When/When'
 import { LENDING } from '@/utils/query-keys'
 import { fetchLendingAccounts } from '@/queries/lending'
+import { formatIndianMoneyNotation } from '@/utils/format-money'
 
 const ClickableTableRow = ({
   account,
@@ -42,7 +43,9 @@ const ClickableTableRow = ({
           </div>
         </TableCell>
         <TableCell>
-          <div className='flex items-center gap-2 cursor-pointer'>{account.balance || 'N/A'}</div>
+          <div className='flex items-center gap-2 cursor-pointer'>
+            {formatIndianMoneyNotation(account.balance) || 'N/A'}
+          </div>
         </TableCell>
         <TableCell>{account.user_remark || 'N/A'}</TableCell>
         <TableCell className='min-w-[150px]'>{dayjs(account.started).format('ddd MMM DD, YYYY')}</TableCell>
@@ -75,12 +78,15 @@ export default function LedingAccountTable() {
       }
     })
   }, [])
+  const sortedAccounts = useMemo(() => {
+    return data?.sort((a, b) => a.balance - b.balance).reverse() || []
+  }, [data])
 
   return (
     <div className='space-y-4'>
       <Table>
         <TableCaption className='text-center'>
-          {data?.length === 0 ? 'No Lending Accounts Found' : 'A list of Lending Accounts'}
+          {sortedAccounts?.length === 0 ? 'No Lending Accounts Found' : 'A list of Lending Accounts'}
         </TableCaption>
         <TableHeader className='bg-gray-100/50'>
           <TableRow>
@@ -97,8 +103,8 @@ export default function LedingAccountTable() {
               <LoaderIcon className='animate-spin w-4 h-4' />
             </div>
           </When>
-          {data
-            ? data.map((account: Accounts) => (
+          {sortedAccounts
+            ? sortedAccounts.map((account: Accounts) => (
                 <ClickableTableRow
                   key={account.id}
                   handleSetActiveTab={handleSetActiveTab}

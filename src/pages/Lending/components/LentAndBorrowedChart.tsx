@@ -6,6 +6,7 @@ import { LENDING } from '@/utils/query-keys'
 import { fetchLendingAccounts, fetchLendingTransaction } from '@/queries/lending'
 import { PIE_CHART_COLORS, RADIAN } from '@/utils/constants'
 import { useUserPreferences } from '@/hooks/use-user-preferences'
+import { formatIndianMoneyNotation } from '@/utils/format-money'
 
 type Props = {
   className?: string
@@ -25,6 +26,7 @@ export default function LentAndBorrowedChart({ className, style }: Props) {
       },
     ],
   })
+  const { preferences } = useUserPreferences()
 
   const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }: PieLabelRenderProps) => {
     const radius = (Number(innerRadius) ?? 0) + (Number(outerRadius ?? 0) - Number(innerRadius ?? 0)) * 0.7
@@ -204,6 +206,10 @@ export default function LentAndBorrowedChart({ className, style }: Props) {
         ) : (
           <div>No Lent Data Available</div>
         )}
+        <div>
+          Total Lent: {formatIndianMoneyNotation(lentData?.reduce((acc, curr) => acc + curr.value, 0) || 0)}{' '}
+          {preferences.currencyUnit}
+        </div>
       </div>
       <div className='w-full flex items-center justify-center flex-col'>
         {borrowedData?.length > 0 && <div className='text-center'>Borrowed</div>}
@@ -248,6 +254,10 @@ export default function LentAndBorrowedChart({ className, style }: Props) {
         ) : (
           <div>No Borrowed Data Available</div>
         )}
+        <div>
+          Total Borrowed: {formatIndianMoneyNotation(borrowedData?.reduce((acc, curr) => acc + curr.value, 0) || 0)}{' '}
+          {preferences.currencyUnit}
+        </div>
       </div>
     </div>
   )

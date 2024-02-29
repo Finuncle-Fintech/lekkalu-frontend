@@ -3,13 +3,14 @@ import { LoaderIcon, EditIcon } from 'lucide-react'
 import dayjs from 'dayjs'
 import { useQuery } from '@tanstack/react-query'
 import { TableCell, TableRow } from '@/components/ui/table'
-import AddOrEditTransaction from './AddOrEditTransaction'
+import AddOrEditTransaction from './AddOrEditTransaction/AddOrEditTransaction'
 import { Button } from '@/components/ui/button'
 import DeleteLendingTransaction from './DeleteLendingTransaction'
 import { LENDING } from '@/utils/query-keys'
 import { fetchLendingTransaction } from '@/queries/lending'
 import When from '@/components/When/When'
 import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible'
+import { formatIndianMoneyNotation } from '@/utils/format-money'
 
 export default function TransactionListTable({ acc, isOpen }: { acc: { name: string; id: number }; isOpen: boolean }) {
   const { data: transactions, isLoading } = useQuery([LENDING.TRANSACTIONS], fetchLendingTransaction)
@@ -36,7 +37,7 @@ export default function TransactionListTable({ acc, isOpen }: { acc: { name: str
                   key={trans.id}
                 >
                   <TableCell>{trans.payment_method || 'No Method'}</TableCell>
-                  <TableCell>{Math.abs(trans.amount as number) || 'N/A'}</TableCell>
+                  <TableCell>{formatIndianMoneyNotation(Math.abs(trans.amount as number)) || 'N/A'}</TableCell>
                   <TableCell>{trans.reference_no || 'No Ref.no'}</TableCell>
                   <TableCell>{dayjs(trans.time).format('ddd MMM DD, YYYY')}</TableCell>
                   <TableCell className='space-x-2 cursor-pointer min-w-[120px]'>

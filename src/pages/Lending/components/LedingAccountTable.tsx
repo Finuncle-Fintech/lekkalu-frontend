@@ -12,6 +12,7 @@ import When from '@/components/When/When'
 import { LENDING } from '@/utils/query-keys'
 import { fetchLendingAccounts } from '@/queries/lending'
 import { formatIndianMoneyNotation } from '@/utils/format-money'
+import { Badge } from '@/components/ui/badge'
 
 const ClickableTableRow = ({
   account,
@@ -44,6 +45,7 @@ const ClickableTableRow = ({
         </TableCell>
         <TableCell>
           <div className='flex items-center gap-2 cursor-pointer'>
+            <Badge className={`${account.balance < 0 ? 'bg-red-500' : 'bg-green-500'} h-3 w-3 p-0`} />
             {formatIndianMoneyNotation(account.balance) || 'N/A'}
           </div>
         </TableCell>

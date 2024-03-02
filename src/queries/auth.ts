@@ -1,11 +1,18 @@
 import { LoginSchema, SignupSchema } from '@/schema/auth'
-import { tokenClient, userClient } from '@/utils/client'
+import { googleClient, tokenClient, userClient } from '@/utils/client'
 import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from '@/utils/constants'
 import { getCookie } from '@/utils/cookie'
 import { User } from '@/types/user'
 
 export async function signup(dto: Omit<SignupSchema, 'termsAndConditions' | 'privacyPolicy'>) {
   const { data } = await userClient.post<{ email: string; username: string }>('/users_1', dto)
+  return data
+}
+export async function googleSignup(dto: { code: string }) {
+  const { data } = await googleClient.post<{ access: string; refresh: string }>(
+    '/users/dj-rest-auth/google/login/',
+    dto,
+  )
   return data
 }
 

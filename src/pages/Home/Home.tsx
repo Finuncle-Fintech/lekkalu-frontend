@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Lottie from 'lottie-react'
 import { ArrowRight } from 'lucide-react'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import homeAnimation from '@/assets/home/home-animation.json'
 import Page from '@/components/Page/Page'
@@ -27,6 +28,14 @@ const assistanceItems = [
 ]
 
 export default function Home() {
+  const [searchParams] = useSearchParams()
+  const code = searchParams.get('code')
+  const navigate = useNavigate()
+  useEffect(() => {
+    if (code) {
+      navigate('/signin?code=' + code)
+    }
+  }, [code, navigate])
   return (
     <div>
       <div className='mt-16 h-[90vh] flex items-center justify-center flex-col gap-4 text-center'>

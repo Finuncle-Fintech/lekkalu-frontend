@@ -32,6 +32,14 @@ export const userClient = axios.create({
 })
 
 /**
+ * This is for google auth specific requests
+ */
+export const googleClient = axios.create({
+  baseURL: process.env.REACT_APP_BACKEND_URL,
+  headers: BASIC_HEADER,
+})
+
+/**
  * This is for token specific requests
  */
 export const tokenClient = axios.create({

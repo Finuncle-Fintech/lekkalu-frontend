@@ -10,6 +10,7 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Button } from '@/components/ui/button'
 import { useAuthContext } from '@/hooks/use-auth'
 import Page from '@/components/Page/Page'
+import GoogleAuth from '@/components/SocialAuth/GoogleAuth'
 
 export default function Signup() {
   const { tokenData, signupMutation } = useAuthContext()
@@ -160,6 +161,16 @@ export default function Signup() {
                 </Link>
               </form>
             </Form>
+            <div className='space-y-4'>
+              <div className='flex items-center gap-2'>
+                <div className='h-[1px] bg-muted w-full' />
+                <p>OR</p>
+                <div className='h-[1px] bg-muted w-full' />
+              </div>
+              <div className='flex justify-center items-center mx-0'>
+                <GoogleAuth buttonText='Signup with Google' />
+              </div>
+            </div>
           </div>
         </div>
       </Page>

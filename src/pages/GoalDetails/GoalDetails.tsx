@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react'
 import { BadgeCheckIcon, GaugeIcon, SplitIcon, TargetIcon } from 'lucide-react'
-import { useParams } from 'react-router'
+import { useParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import Page from '@/components/Page/Page'
 import { BALANCE_SHEET, GOALS } from '@/utils/query-keys'

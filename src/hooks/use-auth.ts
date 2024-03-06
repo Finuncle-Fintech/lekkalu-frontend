@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useCallback } from 'react'
 import constate from 'constate'
-import { useNavigate } from 'react-router'
+import { useNavigate } from 'react-router-dom'
 import { fetchUser, login, refreshToken, signup } from '@/queries/auth'
 import { deleteCookie, setCookie } from '@/utils/cookie'
 import { ACCESS_TOKEN_KEY, COOKIE_CONSENT, REFRESH_TOKEN_KEY } from '@/utils/constants'

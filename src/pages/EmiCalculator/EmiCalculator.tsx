@@ -4,7 +4,7 @@ import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { isEmpty } from 'lodash'
-import { useLocation } from 'react-router'
+import { useLocation } from 'react-router-dom'
 import dayjs from 'dayjs'
 import { Button } from '@/components/ui/button'
 import { useToast } from '@/components/ui/use-toast'
@@ -131,7 +131,7 @@ const EmiCalculator = () => {
     const data = {
       loanEmi: result?.summary?.loan_emi,
       totalInterestPayable: result?.summary?.total_interest_payable,
-      totalPayment: result?.summary?.total_payment
+      totalPayment: result?.summary?.total_payment,
     }
     return [{ ...values, ...data }]
   }, [values, result])

@@ -4,7 +4,7 @@ import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { isEmpty } from 'lodash'
-import { useLocation } from 'react-router'
+import { useLocation } from 'react-router-dom'
 import {
   Bar,
   BarChart,

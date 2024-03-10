@@ -21,6 +21,9 @@ const Lending = lazy(() => import('@/pages/Lending/Lending'))
 const BalanceSheet = lazy(() => import('@/pages/BalanceSheet/BalanceSheet'))
 const Settings = lazy(() => import('@/pages/Settings/Settings'))
 const Profile = lazy(() => import('@/pages/Profile/Profile'))
+const Scenarios = lazy(() => import('@/pages/Scenarios'))
+const AddScenarios = lazy(() => import('@/pages/Scenarios/AddScenario'))
+const EditScenarios = lazy(() => import('@/pages/Scenarios/EditScenario'))
 
 /** Non-Authenticated Routes */
 const Home = lazy(() => import('@/pages/Home/Home'))
@@ -71,6 +74,9 @@ function App() {
           <Route path='/balance-sheet' element={<BalanceSheet />} />
           <Route path='/settings' element={<Settings />} />
           <Route path='/profile' element={<Profile />} />
+          <Route path='/scenarios' element={<Scenarios />} />
+          <Route path='/scenarios/new' element={<AddScenarios />} />
+          <Route path='/scenarios/edit/:id' element={<EditScenarios />} />
         </Route>
 
         <Route

@@ -54,6 +54,11 @@ export const ROUTES: Array<Route> = [
     label: 'Settings',
     icon: <Settings2Icon />,
   },
+  {
+    path: '/scenarios',
+    label: 'Scenarios',
+    icon: <Settings2Icon />,
+  },
 ]
 export const UN_AUTHENTICATED_ROUTES: Array<Route> = [
   {

@@ -11,7 +11,7 @@ export default function AuthProtection({ children }: Props) {
   const location = useLocation()
   const navigate = useNavigate()
 
-  const { isAuthenticationInProgress, tokenData } = useAuthContext()
+  const { isAuthenticationInProgress, tokenData, userData } = useAuthContext()
 
   if (isAuthenticationInProgress) {
     return (
@@ -22,7 +22,7 @@ export default function AuthProtection({ children }: Props) {
     )
   }
 
-  if (tokenData) {
+  if (tokenData && userData?.email_verified) {
     return children
   } else if (!tokenData && location.pathname.includes('comparisons')) {
     navigate(`/feature${location.pathname}`)

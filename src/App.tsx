@@ -116,6 +116,7 @@ function App() {
           <Route path='/feature/comparisons/:id' element={<ComparisonDetails />} />
           <Route path='/feature/scenarios/:id' element={<ScenarioDetail />} />
           <Route path='/feature/:toolName' element={<FeaturesDetails />} />
+          <Route path='/email-verification' element={<EmailVerification />} />
         </Route>
         <Route path='*' element={<NotFound />} />
       </Routes>

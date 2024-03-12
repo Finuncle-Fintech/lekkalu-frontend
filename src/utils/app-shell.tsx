@@ -14,6 +14,7 @@ import {
   SheetIcon,
   TargetIcon,
   Wallet,
+  Scale,
 } from 'lucide-react'
 
 type Route = { path: string; label: string; icon: React.ReactElement<{ className?: string }> }
@@ -55,9 +56,9 @@ export const ROUTES: Array<Route> = [
     icon: <Settings2Icon />,
   },
   {
-    path: '/scenarios',
-    label: 'Scenarios',
-    icon: <Settings2Icon />,
+    path: '/comparisons',
+    label: 'Comparisons',
+    icon: <Scale />,
   },
 ]
 export const UN_AUTHENTICATED_ROUTES: Array<Route> = [

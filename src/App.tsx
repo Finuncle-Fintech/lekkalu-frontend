@@ -21,9 +21,10 @@ const Lending = lazy(() => import('@/pages/Lending/Lending'))
 const BalanceSheet = lazy(() => import('@/pages/BalanceSheet/BalanceSheet'))
 const Settings = lazy(() => import('@/pages/Settings/Settings'))
 const Profile = lazy(() => import('@/pages/Profile/Profile'))
-const Scenarios = lazy(() => import('@/pages/Scenarios'))
-const AddScenarios = lazy(() => import('@/pages/Scenarios/AddScenario'))
-const EditScenarios = lazy(() => import('@/pages/Scenarios/EditScenario'))
+const Comparioson = lazy(() => import('@/pages/Comparison'))
+const AddComparioson = lazy(() => import('@/pages/Comparison/AddComparison'))
+const EditComparioson = lazy(() => import('@/pages/Comparison/EditComparison'))
+const CompariosonDetails = lazy(() => import('@/pages/Comparison/ComparisonDetail'))
 
 /** Non-Authenticated Routes */
 const Home = lazy(() => import('@/pages/Home/Home'))
@@ -74,9 +75,10 @@ function App() {
           <Route path='/balance-sheet' element={<BalanceSheet />} />
           <Route path='/settings' element={<Settings />} />
           <Route path='/profile' element={<Profile />} />
-          <Route path='/scenarios' element={<Scenarios />} />
-          <Route path='/scenarios/new' element={<AddScenarios />} />
-          <Route path='/scenarios/edit/:id' element={<EditScenarios />} />
+          <Route path='/comparisons' element={<Comparioson />} />
+          <Route path='/comparisons/new' element={<AddComparioson />} />
+          <Route path='/comparisons/edit/:id' element={<EditComparioson />} />
+          <Route path='/comparisons/:id' element={<CompariosonDetails />} />
         </Route>
 
         <Route

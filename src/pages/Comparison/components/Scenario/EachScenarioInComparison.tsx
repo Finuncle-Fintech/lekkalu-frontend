@@ -1,6 +1,6 @@
 import React from 'react'
 import { User2 } from 'lucide-react'
-import ScenarioOption from './Options'
+import ScenarioOption from './EachScenarioOptions'
 import { comparisons } from '@/constants/comparisons'
 
 type ScenarioType = {

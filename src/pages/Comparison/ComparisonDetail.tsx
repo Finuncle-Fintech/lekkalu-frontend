@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { CheckCircle2, Circle, PlusCircleIcon } from 'lucide-react'
 import {
   DialogPortal,
@@ -12,9 +12,10 @@ import {
   DialogOverlay,
 } from '@/components/ui/dialog'
 import Page from '@/components/Page/Page'
-import PageTitle from './components/Title'
-import Scenario from './components/Scenario/Scenario'
+import PageTitle from './components/PageTitle'
+import Scenario from './components/Scenario/EachScenarioInComparison'
 import { scenarios, comparisons, ComparisonsType } from '@/constants/comparisons'
+import { Button } from '@/components/ui/button'
 
 const ComparisonDetail = () => {
   const comparisonId = useParams().id
@@ -71,33 +72,51 @@ const ComparisonDetail = () => {
           </DialogTrigger>
           <DialogPortal>
             <DialogOverlay className='DialogOverlay' />
-            <DialogContent className='DialogContent'>
+            <DialogContent className='DialogContent min-w-[80vw] min-h-[80vh]'>
               <DialogTitle className='DialogTitle'>Scenarios</DialogTitle>
               <DialogDescription className='DialogDescription'>
-                {`Add Scenarios to ${comparisonObject?.name}`}
+                <div className='flex justify-between'>
+                  <p>{`Add Scenarios to ${comparisonObject?.name}`}</p>
+                  <Link to='/scenario/new' className='hover:underline text-primary'>
+                    Create a new scenario
+                  </Link>
+                </div>
               </DialogDescription>
-              <div className='flex flex-col gap-5 h-52 overflow-y-auto px-5'>
-                {remaningScenarios?.map((each) => {
-                  const selected = selectedScenarios.includes(each?.id)
-                  return (
-                    <div
-                      key={each?.id}
-                      className={`flex border rounded p-2 space-x-5 hover:cursor-pointer ${
-                        selected ? 'bg-blue-500 text-white' : ''
-                      }`}
-                      onClick={() => handleScenarioSelect(each?.id)}
-                    >
-                      <div className='my-auto'>{selected ? <CheckCircle2 /> : <Circle />}</div>
-                      <div>{each?.name}</div>
+              <div className='flex flex-col gap-5 h-[550px] overflow-y-auto px-5'>
+                {remaningScenarios.length ? (
+                  remaningScenarios?.map((each) => {
+                    const selected = selectedScenarios.includes(each?.id)
+                    return (
+                      <div
+                        key={each?.id}
+                        className={`flex border rounded p-2 space-x-5 hover:cursor-pointer ${
+                          selected ? 'bg-blue-500 text-white' : ''
+                        }`}
+                        onClick={() => handleScenarioSelect(each?.id)}
+                      >
+                        <div className='my-auto'>{selected ? <CheckCircle2 /> : <Circle />}</div>
+                        <div>{each?.name}</div>
+                      </div>
+                    )
+                  })
+                ) : (
+                  <div className='h-full flex flex-col justify-center items-center gap-5'>
+                    <div>
+                      <p>No Scenarios left to add</p>
                     </div>
-                  )
-                })}
+                    <div>
+                      <Link to='/scenario/new' className='hover:underline text-primary'>
+                        Create a scenario
+                      </Link>
+                    </div>
+                  </div>
+                )}
               </div>
               <div style={{ display: 'flex', marginTop: 25, justifyContent: 'flex-end' }}>
                 <DialogClose asChild>
-                  <button className='Button green' onClick={handleAddScenariosToComparison}>
+                  <Button disabled={!remaningScenarios.length} onClick={handleAddScenariosToComparison}>
                     Add
-                  </button>
+                  </Button>
                 </DialogClose>
               </div>
             </DialogContent>

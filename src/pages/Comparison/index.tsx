@@ -6,7 +6,7 @@ import { range } from 'lodash'
 import Page from '@/components/Page/Page'
 import { buttonVariants } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
-import Comparison from './components/Comparison'
+import Comparison from './components/EachComparison'
 import { comparisons } from '@/constants/comparisons'
 
 export default function Scenarios() {

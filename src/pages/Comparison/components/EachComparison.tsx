@@ -5,7 +5,7 @@ import { Lock, UnlockIcon } from 'lucide-react'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { cn } from '@/utils/utils'
-import Options from './Options'
+import Options from './EachComparisonOptions'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 

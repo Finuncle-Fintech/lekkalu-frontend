@@ -21,10 +21,13 @@ const Lending = lazy(() => import('@/pages/Lending/Lending'))
 const BalanceSheet = lazy(() => import('@/pages/BalanceSheet/BalanceSheet'))
 const Settings = lazy(() => import('@/pages/Settings/Settings'))
 const Profile = lazy(() => import('@/pages/Profile/Profile'))
-const Comparioson = lazy(() => import('@/pages/Comparison'))
-const AddComparioson = lazy(() => import('@/pages/Comparison/AddComparison'))
-const EditComparioson = lazy(() => import('@/pages/Comparison/EditComparison'))
-const CompariosonDetails = lazy(() => import('@/pages/Comparison/ComparisonDetail'))
+const Comparison = lazy(() => import('@/pages/Comparison'))
+const AddComparison = lazy(() => import('@/pages/Comparison/AddComparison'))
+const EditComparison = lazy(() => import('@/pages/Comparison/EditComparison'))
+const ComparisonDetails = lazy(() => import('@/pages/Comparison/ComparisonDetail'))
+const Scenarios = lazy(() => import('@/pages/Scenarios'))
+const AddScenario = lazy(() => import('@/pages/Scenarios/AddScenario'))
+const EditScenario = lazy(() => import('@/pages/Scenarios/EditScenario'))
 
 /** Non-Authenticated Routes */
 const Home = lazy(() => import('@/pages/Home/Home'))
@@ -75,10 +78,13 @@ function App() {
           <Route path='/balance-sheet' element={<BalanceSheet />} />
           <Route path='/settings' element={<Settings />} />
           <Route path='/profile' element={<Profile />} />
-          <Route path='/comparisons' element={<Comparioson />} />
-          <Route path='/comparisons/new' element={<AddComparioson />} />
-          <Route path='/comparisons/edit/:id' element={<EditComparioson />} />
-          <Route path='/comparisons/:id' element={<CompariosonDetails />} />
+          <Route path='/comparisons' element={<Comparison />} />
+          <Route path='/comparisons/new' element={<AddComparison />} />
+          <Route path='/comparisons/edit/:id' element={<EditComparison />} />
+          <Route path='/comparisons/:id' element={<ComparisonDetails />} />
+          <Route path='/scenarios' element={<Scenarios />} />
+          <Route path='/scenarios/new' element={<AddScenario />} />
+          <Route path='/scenarios/edit/:id' element={<EditScenario />} />
         </Route>
 
         <Route

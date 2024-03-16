@@ -44,7 +44,7 @@ const AddNewScenarioButton = ({
           <DialogDescription className='DialogDescription'>
             <div className='flex justify-between'>
               <p>{`Add Scenarios to ${comparisonName}`}</p>
-              <Link to='/scenario/new' className='hover:underline text-primary'>
+              <Link to='/scenarios/new' className='hover:underline text-primary'>
                 Create a new scenario
               </Link>
             </div>
@@ -72,7 +72,7 @@ const AddNewScenarioButton = ({
                   <p>No Scenarios left to add</p>
                 </div>
                 <div>
-                  <Link to='/scenario/new' className='hover:underline text-primary'>
+                  <Link to='/scenarios/new' className='hover:underline text-primary'>
                     Create a scenario
                   </Link>
                 </div>

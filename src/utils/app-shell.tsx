@@ -15,6 +15,7 @@ import {
   TargetIcon,
   Wallet,
   Scale,
+  BookCopy,
 } from 'lucide-react'
 
 type Route = { path: string; label: string; icon: React.ReactElement<{ className?: string }> }
@@ -54,6 +55,11 @@ export const ROUTES: Array<Route> = [
     path: '/settings',
     label: 'Settings',
     icon: <Settings2Icon />,
+  },
+  {
+    path: '/scenarios',
+    label: 'Scenarios',
+    icon: <BookCopy />,
   },
   {
     path: '/comparisons',

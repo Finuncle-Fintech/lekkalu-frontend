@@ -1,21 +1,14 @@
 import React, { useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
-import { CheckCircle2, Circle, PlusCircleIcon } from 'lucide-react'
-import {
-  DialogPortal,
-  Dialog,
-  DialogClose,
-  DialogTrigger,
-  DialogContent,
-  DialogTitle,
-  DialogDescription,
-  DialogOverlay,
-} from '@/components/ui/dialog'
+import { useParams } from 'react-router-dom'
+import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import dayjs from 'dayjs'
 import Page from '@/components/Page/Page'
 import PageTitle from './components/PageTitle'
 import Scenario from './components/Scenario/EachScenarioInComparison'
 import { scenarios, comparisons, ComparisonsType } from '@/constants/comparisons'
-import { Button } from '@/components/ui/button'
+import AddNewScenarioButton from './components/Scenario/AddNewScenarioButton'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { cn } from '@/utils/utils'
 
 const ComparisonDetail = () => {
   const comparisonId = useParams().id
@@ -46,6 +39,10 @@ const ComparisonDetail = () => {
     setSelectedScenarios([])
   }
 
+  const isSecenarioAlreadySelected = (id: number) => {
+    return selectedScenarios.includes(id)
+  }
+
   return (
     <Page className='space-y-8'>
       <PageTitle
@@ -63,65 +60,50 @@ const ComparisonDetail = () => {
         {scenariosForThisComparison?.map(({ id, name, userName }) => (
           <Scenario key={id} id={id} name={name} username={userName} comparisonId={Number(comparisonId)} />
         ))}
-        <Dialog>
-          <DialogTrigger asChild>
-            <button className='border Button violet border-dashed p-5 rounded flex flex-col space-y-5 justify-center items-center hover:cursor-pointer h-full'>
-              <PlusCircleIcon size={50} className='text-gray-600' />
-              <span className='text-sm text-center text-gray-600'>Add scenario </span>
-            </button>
-          </DialogTrigger>
-          <DialogPortal>
-            <DialogOverlay className='DialogOverlay' />
-            <DialogContent className='DialogContent min-w-[80vw] min-h-[80vh]'>
-              <DialogTitle className='DialogTitle'>Scenarios</DialogTitle>
-              <DialogDescription className='DialogDescription'>
-                <div className='flex justify-between'>
-                  <p>{`Add Scenarios to ${comparisonObject?.name}`}</p>
-                  <Link to='/scenario/new' className='hover:underline text-primary'>
-                    Create a new scenario
-                  </Link>
-                </div>
-              </DialogDescription>
-              <div className='flex flex-col gap-5 h-[550px] overflow-y-auto px-5'>
-                {remaningScenarios.length ? (
-                  remaningScenarios?.map((each) => {
-                    const selected = selectedScenarios.includes(each?.id)
-                    return (
-                      <div
-                        key={each?.id}
-                        className={`flex border rounded p-2 space-x-5 hover:cursor-pointer ${
-                          selected ? 'bg-blue-500 text-white' : ''
-                        }`}
-                        onClick={() => handleScenarioSelect(each?.id)}
-                      >
-                        <div className='my-auto'>{selected ? <CheckCircle2 /> : <Circle />}</div>
-                        <div>{each?.name}</div>
-                      </div>
-                    )
-                  })
-                ) : (
-                  <div className='h-full flex flex-col justify-center items-center gap-5'>
-                    <div>
-                      <p>No Scenarios left to add</p>
-                    </div>
-                    <div>
-                      <Link to='/scenario/new' className='hover:underline text-primary'>
-                        Create a scenario
-                      </Link>
-                    </div>
-                  </div>
-                )}
-              </div>
-              <div style={{ display: 'flex', marginTop: 25, justifyContent: 'flex-end' }}>
-                <DialogClose asChild>
-                  <Button disabled={!remaningScenarios.length} onClick={handleAddScenariosToComparison}>
-                    Add
-                  </Button>
-                </DialogClose>
-              </div>
-            </DialogContent>
-          </DialogPortal>
-        </Dialog>
+        <AddNewScenarioButton
+          handleAddScenariosToComparison={handleAddScenariosToComparison}
+          scenarios={remaningScenarios}
+          isSelected={isSecenarioAlreadySelected}
+          comparisonName={comparisonObject?.name}
+          handleScenarioSelect={handleScenarioSelect}
+        />
+      </div>
+
+      <div>
+        <Card className={cn('h-[600px] sm:h-96 pb-20 sm:pb-0 shadow-sm')}>
+          <CardHeader className='flex flex-start flex-col sm:flex-row'>
+            <CardTitle>Graph</CardTitle>
+          </CardHeader>
+          <CardContent className='w-full h-full'>
+            <ResponsiveContainer width='100%' height='75%'>
+              <LineChart
+                data={[
+                  { time: '2022-01-11', scenario1: 16, scenario2: 22, value: 44 },
+                  { time: '2022-02-11', scenario1: 29, scenario2: 22, value: 44 },
+                  { time: '2022-03-11', scenario1: 8, scenario2: 22, value: 44 },
+                  { time: '2022-04-11', scenario1: 39, scenario2: 22, value: 44 },
+                ]}
+                width={730}
+                height={250}
+                margin={{ top: 5, right: 0, left: 10, bottom: 5 }}
+              >
+                <CartesianGrid strokeDasharray='3 1' />
+                <XAxis dataKey='time' tickFormatter={(date) => dayjs(date).format('MMM YYYY')} />
+                <YAxis dataKey={'value'} />
+                <Tooltip labelFormatter={(date) => dayjs(date).format('DD MMM YYYY')} />
+                <Line type='monotone' dataKey={'scenario1'} name='Scenario 1' strokeWidth={1} dot={false} />
+                <Line
+                  type='monotone'
+                  dataKey={'scenario2'}
+                  name='Scenario 2'
+                  stroke='red'
+                  strokeWidth={1}
+                  dot={false}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
       </div>
     </Page>
   )

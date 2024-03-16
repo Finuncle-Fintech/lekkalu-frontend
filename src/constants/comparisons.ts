@@ -6,7 +6,7 @@ export type ComparisonsType = {
   created_at: string
 }
 
-type ScenarioType = {
+export type ScenarioType = {
   name: string
   userName: string
   id: number

@@ -14,7 +14,7 @@ export const copyToClipboard = (str: string) => {
 
 export const handleShare = (data: Record<string, string | number>) => {
   const url = createUrlString(data)
-  const href = window.location.href.split('?')[0];
+  const href = window.location.href.split('?')[0]
   const share_url = `${href}?${url}`
 
   copyToClipboard(share_url)

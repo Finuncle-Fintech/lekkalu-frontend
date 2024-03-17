@@ -117,6 +117,7 @@ function App() {
           <Route path='/feature/scenarios/:id' element={<ScenarioDetail />} />
           <Route path='/feature/:toolName' element={<FeaturesDetails />} />
           <Route path='/email-verification' element={<EmailVerification />} />
+          <Route path='/feature/:toolName' element={<FeaturesDetails />} />
         </Route>
         <Route path='*' element={<NotFound />} />
       </Routes>

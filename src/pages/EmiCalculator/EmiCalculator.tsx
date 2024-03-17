@@ -122,7 +122,7 @@ const EmiCalculator = () => {
   ]
 
   const handleCopy = () => {
-    setIsCopied(true)    
+    setIsCopied(true)
     handleShare({ ...values, disbursementDate: dayjs(values.disbursementDate).valueOf() })
     setTimeout(() => setIsCopied(false), 3000)
   }
@@ -133,7 +133,7 @@ const EmiCalculator = () => {
       totalInterestPayable: result?.summary?.total_interest_payable,
       totalPayment: result?.summary?.total_payment,
     }
-    return [{ ...values,disbursementDate: dayjs(values.disbursementDate).format('MMM DD, YYYY'), ...data }]
+    return [{ ...values, disbursementDate: dayjs(values.disbursementDate).format('MMM DD, YYYY'), ...data }]
   }, [values, result])
 
   const handleExportToExcel = () => {

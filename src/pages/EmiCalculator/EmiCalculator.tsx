@@ -110,7 +110,7 @@ const EmiCalculator = () => {
       id: 'disbursementDate',
       label: 'Disbursement Date',
       type: 'date',
-      defaultDate: !isEmpty(parsedObject) ? new Date(parsedObject.disbursementDate as number) : new Date(),
+      defaultDate: !isEmpty(parsedObject) ? dayjs(parsedObject.disbursementDate).toDate() : new Date(),
       helpText: EmiHelpTexts.disbursementDate,
     },
     {
@@ -122,8 +122,8 @@ const EmiCalculator = () => {
   ]
 
   const handleCopy = () => {
-    setIsCopied(true)
-    handleShare({ ...values, disbursementDate: new Date(values.disbursementDate).getTime() })
+    setIsCopied(true)    
+    handleShare({ ...values, disbursementDate: dayjs(values.disbursementDate).valueOf() })
     setTimeout(() => setIsCopied(false), 3000)
   }
 

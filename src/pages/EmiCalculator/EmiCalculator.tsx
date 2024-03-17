@@ -110,7 +110,7 @@ const EmiCalculator = () => {
       id: 'disbursementDate',
       label: 'Disbursement Date',
       type: 'date',
-      defaultDate: !isEmpty(parsedObject) ? dayjs.unix(parsedObject.disbursementDate as number).toDate() : new Date(),
+      defaultDate: !isEmpty(parsedObject) ? new Date(parsedObject.disbursementDate as number) : new Date(),
       helpText: EmiHelpTexts.disbursementDate,
     },
     {
@@ -123,7 +123,7 @@ const EmiCalculator = () => {
 
   const handleCopy = () => {
     setIsCopied(true)
-    handleShare({ ...values, disbursementDate: dayjs(values.disbursementDate).unix() })
+    handleShare({ ...values, disbursementDate: new Date(values.disbursementDate).getTime() })
     setTimeout(() => setIsCopied(false), 3000)
   }
 
@@ -133,7 +133,7 @@ const EmiCalculator = () => {
       totalInterestPayable: result?.summary?.total_interest_payable,
       totalPayment: result?.summary?.total_payment,
     }
-    return [{ ...values, ...data }]
+    return [{ ...values,disbursementDate: dayjs(values.disbursementDate).format('MMM DD, YYYY'), ...data }]
   }, [values, result])
 
   const handleExportToExcel = () => {

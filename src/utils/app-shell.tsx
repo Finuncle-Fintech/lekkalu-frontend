@@ -17,8 +17,19 @@ import {
   Scale,
   BookCopy,
 } from 'lucide-react'
+import { comparisons, scenarios } from '@/constants/comparisons'
 
-type Route = { path: string; label: string; icon: React.ReactElement<{ className?: string }> }
+type SubRoute = {
+  path: string
+  label: string
+}
+
+type Route = {
+  path: string
+  label: string
+  icon: React.ReactElement<{ className?: string }>
+  subMenu?: Array<SubRoute>
+}
 
 export const ROUTES: Array<Route> = [
   {
@@ -60,11 +71,13 @@ export const ROUTES: Array<Route> = [
     path: '/scenarios',
     label: 'Scenarios',
     icon: <BookCopy />,
+    subMenu: scenarios.map((each) => ({ path: `/scenarios/${each.id}/`, label: each?.name })),
   },
   {
     path: '/comparisons',
     label: 'Comparisons',
     icon: <Scale />,
+    subMenu: comparisons.map((each) => ({ path: `/comparisons/${each.uid}/`, label: each?.name })),
   },
 ]
 export const UN_AUTHENTICATED_ROUTES: Array<Route> = [

@@ -1,31 +1,33 @@
 import React from 'react'
-// import { TrashIcon } from 'lucide-react'
-// import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useNavigate } from 'react-router-dom'
 import Alert from '@/components/Alert/Alert'
 import { Button } from '@/components/ui/button'
 import { useToast } from '@/components/ui/use-toast'
-// import { deleteGoal } from '@/queries/goals'
-// import { GOALS } from '@/utils/query-keys'
-// import { getErrorMessage } from '@/utils/utils'
+import { deleteScenario } from '@/queries/scenarios'
+import { SCENARIOS } from '@/utils/query-keys'
+import { getErrorMessage } from '@/utils/utils'
 
 type Props = {
   id: number
 }
 
 export default function DeleteScenario({ id }: Props) {
-  //   const qc = useQueryClient()
+  const qc = useQueryClient()
   const { toast } = useToast()
+  const navigate = useNavigate()
 
-  //   const deleteGoalMutation = useMutation(deleteGoal, {
-  //     onSuccess: () => {
-  //       qc.invalidateQueries([GOALS.GOALS])
-  //       toast({ title: 'Goal deleted successfully!' })
-  //     },
-  //     onError: (err: any) => toast(getErrorMessage(err)),
-  //   })
+  const deleteGoalMutation = useMutation(deleteScenario, {
+    onSuccess: () => {
+      qc.invalidateQueries([SCENARIOS.SCENARIOS])
+      toast({ title: 'Scenario deleted successfully!' })
+      navigate('/scenarios')
+    },
+    onError: (err: any) => toast(getErrorMessage(err)),
+  })
 
   const deleteScenarioMutation = (id: number) => {
-    toast({ title: `This will be deleted on api integration! ${id}` })
+    deleteGoalMutation.mutate(id)
   }
 
   return (
@@ -42,7 +44,6 @@ export default function DeleteScenario({ id }: Props) {
       cancelText='No'
       cancelProps={{ disabled: false }}
       onOk={() => {
-        // deleteGoalMutation.mutate(id)
         deleteScenarioMutation(id)
       }}
     />

@@ -21,3 +21,8 @@ export async function editScenario(id: number, dto: Partial<Scenario>) {
   const { data } = await v1ApiClient.put<Scenario>(`/scenario/${id}`, dto)
   return data
 }
+
+export async function deleteScenario(id: number) {
+  const { data } = await v1ApiClient.delete<Scenario>(`/scenario/${id}`)
+  return data
+}

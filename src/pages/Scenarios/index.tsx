@@ -2,14 +2,18 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { PlusIcon } from 'lucide-react'
 import { range } from 'lodash'
+import { useQuery } from '@tanstack/react-query'
 import Page from '@/components/Page/Page'
 import { buttonVariants } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
-import { scenarios } from '@/constants/comparisons'
 import EachScenario from './components/EachScenario'
+import { SCENARIOS } from '@/utils/query-keys'
+import { fetchScenarios } from '@/queries/scenarios'
 
 const ScenarioPage = () => {
   const IS_LOADING = false
+  const { data: scenarios } = useQuery([SCENARIOS.SCENARIOS], fetchScenarios)
+
   return (
     <Page className='space-y-5'>
       <div className='flex justify-end'>
@@ -27,15 +31,14 @@ const ScenarioPage = () => {
           </div>
         ) : (
           <div className='grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 gap-y-10'>
-            {scenarios?.map(({ id, userName, name, password, created_at }) => {
+            {scenarios?.map(({ id, name, imag_password, imag_username }) => {
               return (
                 <EachScenario
                   id={id}
                   name={name}
-                  userName={userName}
                   key={id}
-                  password={password}
-                  created_at={created_at}
+                  imag_username={imag_username}
+                  imag_password={imag_password}
                 />
               )
             })}

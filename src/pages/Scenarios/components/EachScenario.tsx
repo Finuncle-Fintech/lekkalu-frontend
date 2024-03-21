@@ -1,26 +1,21 @@
 import React from 'react'
 import dayjs from 'dayjs'
-import { User2 } from 'lucide-react'
 import relativeTime from 'dayjs/plugin/relativeTime'
-import { ScenarioType } from '@/constants/comparisons'
+import { Link } from 'react-router-dom'
+import { Scenario } from '@/types/scenarios'
 import EachScenarioOptions from './EachScenarioOptions'
 
 dayjs.extend(relativeTime)
 
-const EachScenario = ({ id, name, userName, created_at }: ScenarioType) => {
+const EachScenario = ({ id, name }: Scenario) => {
   return (
-    <div key={id} className='border p-5 rounded flex flex-col space-y-5 shadow hover:shadow-md'>
-      <div>
+    <div key={id} className='relative border rounded flex flex-col space-y-5 shadow hover:shadow-md'>
+      <div className='absolute top-5 right-5'>
         <EachScenarioOptions id={id} />
       </div>
-      <div className='text-center flex flex-col h-full'>
-        <h2>{name}</h2>
-        <p className='flex justify-center text-xs my-5 text-gray-500'>
-          <User2 />
-          <span className='self-end pl-2'>{userName}</span>
-        </p>
-        <p className='text-xs text-gray-500 mt-auto'>{dayjs(created_at).fromNow()}</p>
-      </div>
+      <Link to={`/scenarios/${id}`} className='text-center flex flex-col h-full p-5 pt-16'>
+        <h2 className='mb-5'>{name}</h2>
+      </Link>
     </div>
   )
 }

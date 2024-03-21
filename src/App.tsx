@@ -28,6 +28,7 @@ const ComparisonDetails = lazy(() => import('@/pages/Comparison/ComparisonDetail
 const Scenarios = lazy(() => import('@/pages/Scenarios'))
 const AddScenario = lazy(() => import('@/pages/Scenarios/AddScenario'))
 const EditScenario = lazy(() => import('@/pages/Scenarios/EditScenario'))
+const ScenarioDetail = lazy(() => import('@/pages/Scenarios/ScenarioDetail'))
 
 /** Non-Authenticated Routes */
 const Home = lazy(() => import('@/pages/Home/Home'))
@@ -85,6 +86,7 @@ function App() {
           <Route path='/scenarios' element={<Scenarios />} />
           <Route path='/scenarios/new' element={<AddScenario />} />
           <Route path='/scenarios/edit/:id' element={<EditScenario />} />
+          <Route path='/scenarios/:id' element={<ScenarioDetail />} />
         </Route>
 
         <Route

@@ -1,14 +1,32 @@
 import React, { useEffect, useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import { Link } from 'react-router-dom'
 import { cn } from '@/utils/utils'
 import NavLink from './NavLink'
-import { CALCULATOR_ROUTES, ROUTES } from '@/utils/app-shell'
+import { CALCULATOR_ROUTES, ROUTES as _routes } from '@/utils/app-shell'
 import { Button } from '@/components/ui/button'
+import { SCENARIOS } from '@/utils/query-keys'
+import { fetchScenarios } from '@/queries/scenarios'
 
 type SidebarProps = React.HTMLAttributes<HTMLDivElement>
 
 export function Sidebar({ className, ...restProps }: SidebarProps) {
   const [subMenus, setSubMenus] = useState<any>({})
+  const [ROUTES, setRoutes] = useState([..._routes])
+
+  useQuery([SCENARIOS.SCENARIOS], fetchScenarios, {
+    onSuccess(data) {
+      const _scenarioSubMenu = data.map((each) => ({ path: `/scenarios/${each?.id}`, label: each?.name }))
+      const clonedRoutes = [...ROUTES]
+      const updatedRoutes = clonedRoutes.map((each, index) => {
+        if (each.path === '/scenarios') {
+          clonedRoutes[index].subMenu = _scenarioSubMenu
+        }
+        return each
+      })
+      setRoutes(updatedRoutes)
+    },
+  })
 
   useEffect(() => {
     const _subMenus: any = {}
@@ -57,7 +75,7 @@ export function Sidebar({ className, ...restProps }: SidebarProps) {
 
           <div className='space-y-1 py-2'>
             {ROUTES.map((route) => {
-              if (route?.subMenu) {
+              if (route?.subMenu?.length) {
                 return (
                   <>
                     <NavLink
@@ -81,7 +99,7 @@ export function Sidebar({ className, ...restProps }: SidebarProps) {
                         return <></>
                       })}
                     {subMenus[route.label]?.isExpanded && route?.subMenu?.length > subMenus[route?.label]?.show && (
-                      <div className='ml-4'>
+                      <div className='ml-4 pl-4'>
                         <Button variant={'link'} onClick={() => handleShowMoreSubMenu(route.label)}>
                           Show more
                         </Button>

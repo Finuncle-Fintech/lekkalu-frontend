@@ -26,6 +26,12 @@ const EachScenarioOptions = ({ id }: GoalOptionsType) => {
               Edit
             </Link>
             <DeleteEachScenario id={id} />
+            <Link
+              to={`/scenarios/${id}`}
+              className='w-full hover:bg-accent flex justify-center p-2 rounded-lg text-sm font-medium'
+            >
+              View detail
+            </Link>
           </div>
         </PopoverContent>
       </Popover>

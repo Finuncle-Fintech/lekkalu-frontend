@@ -11,3 +11,13 @@ export async function createScenarios(dto: AddScenarioSchemas) {
   const { data } = await v1ApiClient.post<Scenario>('/scenario/', dto)
   return data
 }
+
+export async function fetchScenarioById(id: number) {
+  const { data } = await v1ApiClient.get<Scenario>(`/scenario/${id}`)
+  return data
+}
+
+export async function editScenario(id: number, dto: Partial<Scenario>) {
+  const { data } = await v1ApiClient.put<Scenario>(`/scenario/${id}`, dto)
+  return data
+}

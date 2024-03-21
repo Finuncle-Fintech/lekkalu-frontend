@@ -11,8 +11,7 @@ import { SCENARIOS } from '@/utils/query-keys'
 import { fetchScenarios } from '@/queries/scenarios'
 
 const ScenarioPage = () => {
-  const IS_LOADING = false
-  const { data: scenarios } = useQuery([SCENARIOS.SCENARIOS], fetchScenarios)
+  const { data: scenarios, isLoading } = useQuery([SCENARIOS.SCENARIOS], fetchScenarios)
 
   return (
     <Page className='space-y-5'>
@@ -23,10 +22,10 @@ const ScenarioPage = () => {
         </Link>
       </div>
       <div>
-        {IS_LOADING ? (
+        {isLoading ? (
           <div className='grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full'>
             {range(4).map((i) => (
-              <Skeleton key={i} className='h-64 w-full' />
+              <Skeleton key={i} className='h-40 w-full' />
             ))}
           </div>
         ) : (

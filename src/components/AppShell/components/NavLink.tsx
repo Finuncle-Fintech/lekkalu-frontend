@@ -17,22 +17,29 @@ export default function NavLink({ to, icon, label, isExpanded, isParent, toggleE
   const isActive = location.pathname.startsWith(to as string)
 
   return (
-    <Link
-      to={to}
-      title={label}
-      className={cn(buttonVariants({ variant: isActive ? 'default' : 'ghost' }), 'w-full justify-start gap-2')}
+    <div
+      className={cn(
+        buttonVariants({ variant: isActive ? 'default' : 'ghost' }),
+        `flex w-full justify-start gap-2 ${isActive ? 'hover:bg-primary' : ''}`,
+      )}
     >
-      {icon ? cloneElement(icon, { className: 'w-4 h-4' }) : null}
-      <span className='truncate'>{label}</span>
+      <Link
+        to={to}
+        title={label}
+        className={cn(buttonVariants({ variant: isActive ? 'default' : 'ghost' }), 'w-full justify-start gap-2')}
+      >
+        {icon ? cloneElement(icon, { className: 'w-4 h-4' }) : null}
+        <span className='truncate'>{label}</span>
+      </Link>
       {isParent ? (
         isExpanded ? (
-          <ChevronDown className='ml-auto' onClick={toggleExpand} />
+          <ChevronDown onClick={toggleExpand} className='self-center hover:cursor-pointer' />
         ) : (
-          <ChevronUp className='ml-auto' onClick={toggleExpand} />
+          <ChevronUp onClick={toggleExpand} className='self-center hover:cursor-pointer' />
         )
       ) : (
         <></>
       )}
-    </Link>
+    </div>
   )
 }

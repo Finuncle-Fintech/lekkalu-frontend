@@ -41,6 +41,14 @@ const ScenarioPage = () => {
                 />
               )
             })}
+            {!scenarios?.length && (
+              <div>
+                <p>You Have no Scenarios.</p>
+                <Link to='/scenarios/new' className='block underline mt-2'>
+                  Click here to add.
+                </Link>{' '}
+              </div>
+            )}
           </div>
         )}
       </div>

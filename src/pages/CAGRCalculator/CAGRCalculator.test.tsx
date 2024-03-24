@@ -1,8 +1,6 @@
 import React from 'react'
-import { render, fireEvent, screen } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import { BrowserRouter } from 'react-router-dom'
-import { Link } from 'react-router-dom'
-import 'resize-observer-polyfill'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import CAGRCalculator from './CAGRCalculator'
 

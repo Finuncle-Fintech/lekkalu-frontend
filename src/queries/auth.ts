@@ -21,6 +21,11 @@ export async function login(dto: Omit<LoginSchema, 'rememberMe'>) {
   return data
 }
 
+export async function loginImaginaryUser(dto: Omit<LoginSchema, 'rememberMe'>) {
+  const { data } = await tokenClient.post<{ access: string; refresh: string }>('/', dto)
+  return { ...data, username: dto.username }
+}
+
 export async function refreshToken() {
   const { data } = await tokenClient.post<{ access: string; refresh: string }>('/refresh/', {
     refresh: getCookie(REFRESH_TOKEN_KEY),

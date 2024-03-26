@@ -1,13 +1,13 @@
 import React from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useParams } from 'react-router-dom'
-import { PlusIcon } from 'lucide-react'
 import Page from '@/components/Page/Page'
 import DetailPageHeading from '@/components/DetailPageHeading'
-import { Button } from '@/components/ui/button'
 import { SCENARIOS } from '@/utils/query-keys'
 import { fetchScenarioById } from '@/queries/scenarios'
 import { Skeleton } from '@/components/ui/skeleton'
+import { useImaginaryAuth } from './context/use-imaginaryAuth'
+import CreateButton from './components/CreateButton'
 
 const LoadingSkeleton = () => {
   return (
@@ -26,7 +26,20 @@ const LoadingSkeleton = () => {
 export default function ScenarioDefault() {
   const { id } = useParams() as { id: string }
   const scenarioId = Number(id)
-  const { data, isLoading } = useQuery([`${SCENARIOS.SCENARIOS}-${scenarioId}`], () => fetchScenarioById(scenarioId))
+  const { loginImaginaryUser, setImaginaryUsers, imaginaryUsers } = useImaginaryAuth()
+  const { data, isLoading } = useQuery([`${SCENARIOS.SCENARIOS}-${scenarioId}`], () => fetchScenarioById(scenarioId), {
+    onSuccess(data) {
+      loginImaginaryUser.mutate(
+        { username: data.imag_username, password: data.imag_password },
+        {
+          onSuccess(tokens) {
+            setImaginaryUsers({ ...imaginaryUsers, [data.imag_username]: tokens })
+          },
+        },
+      )
+    },
+  })
+
   return (
     <Page className='space-y-8'>
       <DetailPageHeading
@@ -40,46 +53,7 @@ export default function ScenarioDefault() {
       ) : (
         <div>
           <div className='flex justify-between'>
-            <h2 className='text-xl self-center'>Assets & Liabilities</h2>
-            <Button variant={'default'}>
-              <PlusIcon className='mr-2' size={18} /> Create Assets
-            </Button>
-          </div>
-          <div>
-            <p>Table here</p>
-          </div>
-        </div>
-      )}
-
-      {isLoading ? (
-        <LoadingSkeleton />
-      ) : (
-        <div>
-          <div className='flex justify-between'>
-            <h2 className='text-xl self-center'>Income Expenses</h2>
-            <Button variant={'default'}>
-              <PlusIcon className='mr-2' size={18} />
-              Create Income Expenses
-            </Button>
-          </div>
-          <div>
-            <p>Table here</p>
-          </div>
-        </div>
-      )}
-
-      {isLoading ? (
-        <LoadingSkeleton />
-      ) : (
-        <div>
-          <div className='flex justify-between'>
-            <h2 className='text-xl self-center'>Lending Transactions</h2>
-            <Button variant={'default'}>
-              <PlusIcon className='mr-2' size={18} /> Create Lending Transcations
-            </Button>
-          </div>
-          <div>
-            <p>Table here</p>
+            <CreateButton username={data?.imag_username || ''} />
           </div>
         </div>
       )}

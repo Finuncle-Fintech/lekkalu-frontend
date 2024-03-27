@@ -27,14 +27,14 @@ const EachIncomeExpenseForScenario = ({
         <div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant={'ghost'}>
+              <Button variant={'ghost'} className='hover:bg-blue-600'>
                 <MoreVerticalIcon className='text-white' size={18} />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className='flex flex-col'>
               <DropdownMenuItem asChild>
                 <AddOrEditIncomeExpenseForScenario
-                  trigger={<Button variant={'ghost'}>edit</Button>}
+                  trigger={<Button variant={'ghost'}>Edit</Button>}
                   type='EXPENSE'
                   incomeStatement={incomeExpense}
                   createMutationFn={createIncomeExpense}

@@ -8,7 +8,7 @@ import { IncomeStatement } from '@/types/income-statement'
 import { Form } from '@/components/ui/form'
 import { AddIncomeStatementSchema, addIncomeStatementSchema } from '@/schema/income-statement'
 import InputFieldsRenderer from '@/components/InputFieldsRenderer/InputFieldsRenderer'
-import { INCOME_STATEMENT } from '@/utils/query-keys'
+import { AUTH, INCOME_STATEMENT } from '@/utils/query-keys'
 import { useToast } from '@/components/ui/use-toast'
 import { Button } from '@/components/ui/button'
 import { getErrorMessage } from '@/utils/utils'
@@ -33,6 +33,7 @@ export default function AddOrEditIncomeExpenseForScenario({
   const isEdit = Boolean(incomeStatement)
   const qc = useQueryClient()
   const { toast } = useToast()
+  const { data: username } = useQuery([AUTH.CURRENT_IMAGINARY_USER])
   const { data: incomeTypes } = useQuery(
     [INCOME_STATEMENT.INCOME_TYPE],
     type === 'INCOME' ? fetchIncomeSourceTypes : fetchIncomeExpensesTypes,
@@ -44,13 +45,16 @@ export default function AddOrEditIncomeExpenseForScenario({
     defaultValues: {
       name: incomeStatement?.name,
       amount: incomeStatement?.amount ? Number(incomeStatement.amount) : undefined,
+      type: incomeStatement?.type ? incomeStatement?.type : undefined,
     },
   })
 
   const createMutation = useMutation(createMutationFn, {
     onSuccess: () => {
       form.reset()
-      qc.invalidateQueries([type === 'INCOME' ? INCOME_STATEMENT.SOURCES : INCOME_STATEMENT.IS_EXPENSES])
+      qc.invalidateQueries([
+        type === 'INCOME' ? `${INCOME_STATEMENT.SOURCES}-${username}` : `${INCOME_STATEMENT.IS_EXPENSES}-${username}`,
+      ])
       setIsDialogOpen(false)
       toast({ title: `${capitalize(type)} created successfully!` })
     },
@@ -59,7 +63,9 @@ export default function AddOrEditIncomeExpenseForScenario({
 
   const updateMutation = useMutation((dto: AddIncomeStatementSchema) => updateMutationFn(incomeStatement?.id!, dto), {
     onSuccess: () => {
-      qc.invalidateQueries([type === 'INCOME' ? INCOME_STATEMENT.SOURCES : INCOME_STATEMENT.IS_EXPENSES])
+      qc.invalidateQueries([
+        type === 'INCOME' ? `${INCOME_STATEMENT.SOURCES}-${username}` : `${INCOME_STATEMENT.IS_EXPENSES}-${username}`,
+      ])
       setIsDialogOpen(false)
       toast({ title: `${capitalize(type)} updated successfully!` })
     },

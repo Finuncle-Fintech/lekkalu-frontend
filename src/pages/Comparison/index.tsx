@@ -41,7 +41,7 @@ export default function Scenarios() {
             ))}
           </div>
         )}
-        {!data?.length ? (
+        {!data?.length && !isLoading ? (
           <div>
             <p>You have no Comparison.</p>
             <Link to='/comparisons/new' className='block underline mt-2'>

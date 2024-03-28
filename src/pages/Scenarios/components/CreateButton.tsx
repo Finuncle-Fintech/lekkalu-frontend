@@ -10,9 +10,11 @@ import { AUTH, BALANCE_SHEET, INCOME_STATEMENT } from '@/utils/query-keys'
 import { IncomeStatement } from '@/types/income-statement'
 import EachIncomeExpenseForScenario from './IncomeExpenses/EachExpense'
 import AddOrEditLiabilityDialog from './Liability/AddorEditLiabilityDialog'
-import { AddLiabilitySchema } from '@/schema/balance-sheet'
-import { Liability } from '@/types/balance-sheet'
+import { AddLiabilitySchema, AddPhysicalAssetSchemaForScenario } from '@/schema/balance-sheet'
+import { Liability, PhysicalAsset } from '@/types/balance-sheet'
 import EachLiabilityForScenario from './Liability/EachLiabilityForScenario'
+import AddOrEditAssetsForScenario from './Assets/AddOrEditAssetsForScenarios'
+import EachAsset from './Assets/EachAsset'
 
 const CreateButton = ({ username }: { username: string }) => {
   const { data: imaginaryUser } = useQuery<any>([AUTH.IMAGINARY_CLIENT])
@@ -60,8 +62,29 @@ const CreateButton = ({ username }: { username: string }) => {
     return data
   }
 
+  async function fetchPhysicalAssets() {
+    const { data } = await apiClient.get<PhysicalAsset[]>('physical_assets/')
+    return data
+  }
+
+  async function deletePhysicalAsset(id: number) {
+    const { data } = await apiClient.delete<{ message: string }>(`/physical_assets/${id}`)
+    return data
+  }
+
+  async function addPhysicalAsset(dto: AddPhysicalAssetSchemaForScenario) {
+    const { data } = await apiClient.post<PhysicalAsset[]>('/physical_assets/', dto)
+    return data
+  }
+
+  async function editPhysicalAsset(id: number, dto: Partial<AddPhysicalAssetSchemaForScenario>) {
+    const { data } = await apiClient.put(`physical_assets/${id}`, dto)
+    return data
+  }
+
   const { data: expenses } = useQuery([`${INCOME_STATEMENT.IS_EXPENSES}-${username}`], fetchIncomeExpenses)
   const { data: liabilities } = useQuery([`${BALANCE_SHEET.LIABILITIES}-${username}`], fetchLiabilities)
+  const { data: assets } = useQuery([`${BALANCE_SHEET.ASSETS}-${username}`], fetchPhysicalAssets)
 
   return (
     <div className='grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 gap-y-10'>
@@ -83,6 +106,15 @@ const CreateButton = ({ username }: { username: string }) => {
           deleteLiability={deleteLiability}
         />
       ))}
+      {assets?.map((each: PhysicalAsset) => (
+        <EachAsset
+          key={each?.id}
+          asset={each}
+          createAsset={addPhysicalAsset}
+          updateAsset={editPhysicalAsset}
+          deleteAsset={deletePhysicalAsset}
+        />
+      ))}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant={'ghost'} className='border border-dashed rounded-lg p-20'>
@@ -91,7 +123,11 @@ const CreateButton = ({ username }: { username: string }) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent className='flex flex-col'>
           <DropdownMenuItem className='cursor-pointer' asChild>
-            <Button variant={'ghost'}>Asset</Button>
+            <AddOrEditAssetsForScenario
+              trigger={<Button variant={'ghost'}>Asset</Button>}
+              addAsset={addPhysicalAsset}
+              editAsset={editPhysicalAsset}
+            />
           </DropdownMenuItem>
           <DropdownMenuItem className='cursor-pointer' asChild>
             <AddOrEditLiabilityDialog

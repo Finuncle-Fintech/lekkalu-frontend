@@ -8,10 +8,11 @@ import DeleteComparison from './DeleteComparison'
 type GoalOptionsType = {
   id: number
   handleAllowRename: () => void
+  handleAccessChange: () => void
   access: string
 }
 
-const GoalOptions = ({ id, handleAllowRename, access }: GoalOptionsType) => {
+const GoalOptions = ({ id, handleAllowRename, access, handleAccessChange }: GoalOptionsType) => {
   return (
     <div className='flex w-full justify-end gap-x-2'>
       <Popover>
@@ -37,9 +38,9 @@ const GoalOptions = ({ id, handleAllowRename, access }: GoalOptionsType) => {
             </Button>
             <Button
               className='w-full bg-transparent hover:bg-accent flex justify-center p-2 rounded-lg text-sm font-medium text-black'
-              //   onClick={handleAllowRename}
+              onClick={handleAccessChange}
             >
-              {access === 'private' ? 'Set to public' : 'Set to private'}
+              {access === 'Private' ? 'Set to public' : 'Set to private'}
             </Button>
           </div>
         </PopoverContent>

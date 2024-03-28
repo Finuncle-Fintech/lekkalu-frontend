@@ -3,11 +3,16 @@ import { Link } from 'react-router-dom'
 import { Lock, UnlockIcon } from 'lucide-react'
 
 import dayjs from 'dayjs'
+import { useMutation } from '@tanstack/react-query'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { cn } from '@/utils/utils'
 import Options from './EachComparisonOptions'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
+import { Comparison as ComparisonSchemaType } from '@/types/comparison'
+import { editComparisons } from '@/queries/comparisons'
+import { queryClient } from '@/utils/client'
+import { COMPARISON } from '@/utils/query-keys'
 
 dayjs.extend(relativeTime)
 
@@ -24,8 +29,14 @@ type ComparisonType = {
 const Comparison = ({ id, access, name, style, className, scenarios }: ComparisonType) => {
   const [allowRename, setAllowRename] = useState(false)
   const [comparisonName, setComparisonName] = useState(name)
+  const { mutate } = useMutation((dto: Partial<ComparisonSchemaType>) => editComparisons(id, dto), {
+    onSuccess: () => {
+      setAllowRename(false)
+      queryClient.invalidateQueries([COMPARISON.COMPARISON])
+    },
+  })
   const handleRename = () => {
-    // goalMutation.mutate({ name: goalName })
+    mutate({ name: comparisonName })
   }
 
   const comparisonNameRef = useRef<HTMLInputElement>(null)
@@ -52,12 +63,16 @@ const Comparison = ({ id, access, name, style, className, scenarios }: Compariso
     setAllowRename(true)
   }
 
+  const handleAccessChange = () => {
+    mutate({ access: access === 'Private' ? 'Public' : 'Private' })
+  }
+
   return (
     <div
       className={cn('flex flex-col rounded-lg p-4 shadow-md hover:shadow-lg hover:cursor-pointer', className)}
       style={{ ...style }}
     >
-      <Options id={id} access={access} handleAllowRename={handleAllowRename} />
+      <Options id={id} access={access} handleAllowRename={handleAllowRename} handleAccessChange={handleAccessChange} />
       <div className='h-full'>
         <Link to={!allowRename ? `/comparisons/${id}` : ''}>
           <div className='flex flex-col gap-y-3 h-full'>

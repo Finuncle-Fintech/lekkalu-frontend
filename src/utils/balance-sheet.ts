@@ -79,6 +79,14 @@ export const ASSET_INPUTS_FOR_SCENARIO: InputField[] = [
     defaultDate: undefined,
   },
   {
+    id: 'depreciation_percent',
+    label: 'Expected return',
+    type: 'number',
+  },
+]
+
+export const ASSET_INPUTS_FOR_SCENARIO_ADVANCE: InputField[] = [
+  {
     id: 'sell_value',
     label: 'Sell value(Optional)',
     type: 'number',
@@ -88,11 +96,6 @@ export const ASSET_INPUTS_FOR_SCENARIO: InputField[] = [
     label: 'Choose the sell date',
     type: 'date',
     defaultDate: undefined,
-  },
-  {
-    id: 'depreciation_percent',
-    label: 'Choose depreciation %',
-    type: 'number',
   },
   {
     id: 'init_dep',

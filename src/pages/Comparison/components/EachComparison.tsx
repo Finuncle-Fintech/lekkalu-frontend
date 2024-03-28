@@ -17,11 +17,11 @@ type ComparisonType = {
   name: string
   style?: React.CSSProperties
   className?: string
-  created_at: string
+  created_at?: string
   scenarios: number
 }
 
-const Comparison = ({ id, access, name, style, className, scenarios, created_at }: ComparisonType) => {
+const Comparison = ({ id, access, name, style, className, scenarios }: ComparisonType) => {
   const [allowRename, setAllowRename] = useState(false)
   const [comparisonName, setComparisonName] = useState(name)
   const handleRename = () => {
@@ -63,10 +63,10 @@ const Comparison = ({ id, access, name, style, className, scenarios, created_at 
           <div className='flex flex-col gap-y-3 h-full'>
             <div
               className={`self-center p-5 text-primary p-5 rounded-full bg-${
-                access === 'private' ? 'red' : 'blue'
+                access === 'Private' ? 'red' : 'blue'
               }-200`}
             >
-              {access === 'private' ? <Lock size={80} /> : <UnlockIcon size={80} />}
+              {access === 'Private' ? <Lock size={80} /> : <UnlockIcon size={80} />}
             </div>
             {allowRename ? (
               <>
@@ -91,7 +91,7 @@ const Comparison = ({ id, access, name, style, className, scenarios, created_at 
             )}
             <div className='mb-0 mt-auto'>
               <p className='text-sm text-center text-gray-500'>{scenarios} scenario</p>
-              <p className='text-xs text-center text-gray-500 mt-5'>{dayjs(created_at)?.fromNow()}</p>
+              {/* <p className='text-xs text-center text-gray-500 mt-5'>{dayjs(created_at)?.fromNow()}</p> */}
             </div>
           </div>
         </Link>

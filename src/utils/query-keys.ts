@@ -61,3 +61,7 @@ export const LENDING = {
 export const SCENARIOS = {
   SCENARIOS: 'SCENARIOS',
 }
+
+export const COMPARISON = {
+  COMPARISON: 'COMPARISON',
+}

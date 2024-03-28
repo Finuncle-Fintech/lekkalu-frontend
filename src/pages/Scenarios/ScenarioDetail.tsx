@@ -30,7 +30,7 @@ export default function ScenarioDefault() {
   const { loginImaginaryUser } = useImaginaryAuth()
   const { data, isLoading } = useQuery([`${SCENARIOS.SCENARIOS}-${scenarioId}`], () => fetchScenarioById(scenarioId), {
     onSuccess(data) {
-      loginImaginaryUser.mutate({ username: data.imag_username, password: data.imag_password })
+      loginImaginaryUser.mutate({ username: data.imag_username, password: data.imag_password, id: data.id })
     },
   })
   const { data: currentImaginaryUser } = useQuery<string>([AUTH.CURRENT_IMAGINARY_USER])

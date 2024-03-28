@@ -17,9 +17,9 @@ const AddScenario = () => {
   })
 
   const { mutate: addScenario, isLoading } = useMutation(createScenarios, {
-    onSuccess: () => {
+    onSuccess: (data) => {
       toast({ title: 'Scenario created successfully!' })
-      navigate('/scenarios')
+      navigate(`/scenarios/${data.id}`)
     },
     onError: (response: any) => {
       const message = response?.response?.data?.message

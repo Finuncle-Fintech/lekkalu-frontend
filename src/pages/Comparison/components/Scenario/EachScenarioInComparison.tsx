@@ -1,25 +1,16 @@
 import React from 'react'
 import { User2 } from 'lucide-react'
 import ScenarioOption from './EachScenarioOptions'
-import { comparisons } from '@/constants/comparisons'
 
 type ScenarioType = {
   name: string
   username: string
   id: number
   comparisonId: number
+  handleRemoveScenario: (id: number) => void
 }
 
-const Scenario = ({ name, username, id, comparisonId }: ScenarioType) => {
-  const handleRemoveScenario = (id: number) => {
-    const index = comparisons.findIndex((each) => each.uid === comparisonId)
-    const _scenarios = comparisons[index].scenarios.filter((each) => each !== id)
-    comparisons[index] = {
-      ...comparisons[index],
-      scenarios: _scenarios,
-    }
-  }
-
+const Scenario = ({ name, username, id, handleRemoveScenario }: ScenarioType) => {
   return (
     <div className='border p-5 rounded flex flex-col space-y-5 shadow hover:shadow-md'>
       <div className='ml-auto'>

@@ -1,24 +1,47 @@
 import React, { useEffect, useState } from 'react'
-import { XCircle } from 'lucide-react'
+import { PlusCircle, XCircle } from 'lucide-react'
+import { useQuery } from '@tanstack/react-query'
+import { UseFormReturn } from 'react-hook-form'
 import { Form } from '@/components/ui/form'
 import InputFieldsRenderer, { InputField } from '@/components/InputFieldsRenderer/InputFieldsRenderer'
 import AddNewScenarioButton from './Scenario/AddNewScenarioButton'
-import { ScenarioType, scenarios } from '@/constants/comparisons'
+import { SCENARIOS } from '@/utils/query-keys'
+import { fetchScenarios } from '@/queries/scenarios'
+import { Scenario } from '@/types/scenarios'
+import { AddComaprisonSchema } from '@/schema/comparisons'
+import { Button } from '@/components/ui/button'
 
-const ComparisonForm = ({ form }: any) => {
-  const [selectedScenarios, setSelectedScenarios] = useState<Array<ScenarioType>>([])
-  const [addedSenarios, setAddedScenarios] = useState<Array<ScenarioType>>([])
-  const [remaningScenarios, setRemainingScenarios] = useState<Array<ScenarioType>>([])
+type ComparisonFormType = {
+  form: UseFormReturn<AddComaprisonSchema>
+  onSubmit: (values: AddComaprisonSchema) => void
+  isLoading: boolean
+  isEdit?: boolean
+}
+
+const ComparisonForm = ({ form, onSubmit, isLoading, isEdit }: ComparisonFormType) => {
+  const [selectedScenarios, setSelectedScenarios] = useState<Array<Scenario>>([])
+  const [addedSenarios, setAddedScenarios] = useState<Array<Scenario>>([])
+  const [remaningScenarios, setRemainingScenarios] = useState<Array<Scenario>>([])
+
+  const { data: scenarios } = useQuery([SCENARIOS.SCENARIOS], fetchScenarios)
 
   useEffect(() => {
-    const _remainingScenarios: Array<ScenarioType> = []
-    scenarios.forEach((scenario) => {
+    if (isEdit && form.getValues('scenarios')?.length) {
+      const _existingScenariosInComparison = scenarios?.filter((each) => form.getValues('scenarios').includes(each?.id))
+      setAddedScenarios(_existingScenariosInComparison || [])
+    }
+  }, [isEdit, scenarios, form.getValues().scenarios])
+
+  useEffect(() => {
+    const _remainingScenarios: Array<Scenario> = []
+    scenarios?.forEach((scenario) => {
       if (!addedSenarios.some((addedScenario) => addedScenario.id === scenario.id)) {
         _remainingScenarios.push(scenario)
       }
     })
     setRemainingScenarios(_remainingScenarios)
   }, [addedSenarios])
+
   const inputs = [
     {
       id: 'name',
@@ -30,8 +53,8 @@ const ComparisonForm = ({ form }: any) => {
       label: 'Access',
       type: 'radio',
       options: [
-        { id: 'public', label: 'Public' },
-        { id: 'private', label: 'Private' },
+        { id: 'Public', label: 'Public' },
+        { id: 'Private', label: 'Private' },
       ],
     },
   ] as InputField[]
@@ -43,13 +66,15 @@ const ComparisonForm = ({ form }: any) => {
     } else {
       _selectedScenarios.push(id)
     }
-    const scenariosObject = scenarios.filter((each) => _selectedScenarios.includes(each.id))
-    setSelectedScenarios(scenariosObject)
+    const scenariosObject = scenarios?.filter((each) => _selectedScenarios.includes(each.id))
+    setSelectedScenarios(scenariosObject || [])
   }
 
   const handleAddScenariosToComparison = () => {
-    setAddedScenarios(selectedScenarios)
+    const scenarios_id = [...addedSenarios, ...selectedScenarios].map((each) => each?.id)
+    setAddedScenarios([...addedSenarios, ...selectedScenarios])
     setSelectedScenarios([])
+    form.setValue('scenarios', scenarios_id)
   }
 
   const isSecenarioAlreadySelected = (id: number) => {
@@ -58,12 +83,14 @@ const ComparisonForm = ({ form }: any) => {
 
   const handleRemoveAddedScenario = (id: number) => {
     const _filteredScenarios = addedSenarios.filter((each) => each.id !== id)
+    const _filteredScenariosIds = _filteredScenarios?.map((each) => each?.id)
+    form.setValue('scenarios', _filteredScenariosIds)
     setAddedScenarios(_filteredScenarios)
   }
 
   return (
     <Form {...form}>
-      <form onSubmit={() => {}}>
+      <form onSubmit={form.handleSubmit(onSubmit)}>
         <div className='flex flex-col gap-y-5'>
           <InputFieldsRenderer control={form.control} inputs={inputs} />
           <div>
@@ -90,6 +117,12 @@ const ComparisonForm = ({ form }: any) => {
               isSelected={isSecenarioAlreadySelected}
             />
           </div>
+        </div>
+        <div className='mt-8'>
+          <Button type='submit' className='col-span-full w-max' loading={isLoading}>
+            <PlusCircle className='w-4 h-4 mr-2' />
+            <span>{isEdit ? 'Edit Comparison' : 'Add Comparison'}</span>
+          </Button>
         </div>
       </form>
     </Form>

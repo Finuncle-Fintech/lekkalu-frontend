@@ -61,6 +61,51 @@ export const ASSET_INPUTS: InputField[] = [
   },
 ]
 
+export const ASSET_INPUTS_FOR_SCENARIO: InputField[] = [
+  {
+    id: 'name',
+    label: 'Asset name',
+    type: 'text',
+  },
+  {
+    id: 'purchase_value',
+    label: 'Purchase value',
+    type: 'number',
+  },
+  {
+    id: 'purchase_date',
+    label: 'Choose the purchase date',
+    type: 'date',
+    defaultDate: undefined,
+  },
+  {
+    id: 'sell_value',
+    label: 'Sell value(Optional)',
+    type: 'number',
+  },
+  {
+    id: 'sell_date',
+    label: 'Choose the sell date',
+    type: 'date',
+    defaultDate: undefined,
+  },
+  {
+    id: 'depreciation_percent',
+    label: 'Choose depreciation %',
+    type: 'number',
+  },
+  {
+    id: 'init_dep',
+    label: 'Initial depreciation',
+    type: 'number',
+  },
+  {
+    id: 'market_value',
+    label: 'Market Value',
+    type: 'number',
+  },
+]
+
 export const LIABILITY_INPUTS: InputField[] = [
   {
     id: 'name',

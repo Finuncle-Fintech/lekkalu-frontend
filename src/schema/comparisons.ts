@@ -2,7 +2,7 @@ import z from 'zod'
 
 export const addComparisonSchema = z.object({
   name: z.string(),
-  access: z.enum(['private', 'public']),
+  access: z.enum(['Private', 'Public']),
   scenarios: z.array(z.number()),
 })
 

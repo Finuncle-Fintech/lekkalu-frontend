@@ -5,8 +5,8 @@ import { useState } from 'react'
 import { loginImaginaryUser } from '@/queries/auth'
 import { AUTH } from '@/utils/query-keys'
 
-type ImaginaryUser = {
-  [key: string]: { refresh: string; access: string }
+export type ImaginaryUser = {
+  [key: string]: { refresh: string; access: string; id: number }
 }
 
 export function useImaginaryAuth() {
@@ -18,7 +18,7 @@ export function useImaginaryAuth() {
     onSuccess: (data) => {
       qc.setQueryData([AUTH.IMAGINARY_CLIENT], {
         ...(imag_users as unknown as object),
-        [data?.username]: { access: data?.access, refresh: data?.refresh },
+        [data?.username]: { access: data?.access, refresh: data?.refresh, id: data?.id },
       })
       qc.setQueryData([AUTH.CURRENT_IMAGINARY_USER], data.username)
     },

@@ -21,9 +21,9 @@ export async function login(dto: Omit<LoginSchema, 'rememberMe'>) {
   return data
 }
 
-export async function loginImaginaryUser(dto: Omit<LoginSchema, 'rememberMe'>) {
+export async function loginImaginaryUser(dto: Omit<LoginSchema, 'rememberMe'> & { id: number }) {
   const { data } = await tokenClient.post<{ access: string; refresh: string }>('/', dto)
-  return { ...data, username: dto.username }
+  return { ...data, username: dto.username, id: dto.id }
 }
 
 export async function refreshToken() {

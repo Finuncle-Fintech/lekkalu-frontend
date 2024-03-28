@@ -1,14 +1,21 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import dayjs from 'dayjs'
 import Page from '@/components/Page/Page'
 import PageTitle from './components/PageTitle'
 import Scenario from './components/Scenario/EachScenarioInComparison'
-import { scenarios, comparisons, ComparisonsType } from '@/constants/comparisons'
 import AddNewScenarioButton from './components/Scenario/AddNewScenarioButton'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { cn } from '@/utils/utils'
+import { COMPARISON, SCENARIOS } from '@/utils/query-keys'
+import { editComparisons, fetchComparisonsById } from '@/queries/comparisons'
+import { fetchScenarios } from '@/queries/scenarios'
+import { type Scenario as ScenarioType } from '@/types/scenarios'
+import { Comparison } from '@/types/comparison'
+import { queryClient } from '@/utils/client'
 
 const ComparisonDetail = () => {
   const comparisonId = useParams().id
@@ -25,22 +32,40 @@ const ComparisonDetail = () => {
     setSelectedScenarios(_selectedScenarios)
   }
 
-  const comparisonObject = comparisons.find((each) => each.uid === Number(comparisonId)) as ComparisonsType
-  const scenariosForThisComparison = scenarios.filter((each) => comparisonObject?.scenarios.includes(each?.id))
-  const remaningScenarios = scenarios.filter((each) => !comparisonObject?.scenarios.includes(each?.id))
+  const { data: comparison, refetch: refetchComparison } = useQuery([`${COMPARISON.COMPARISON}-${comparisonId}`], () =>
+    fetchComparisonsById(Number(comparisonId)),
+  )
+
+  const { data: scenarios } = useQuery([SCENARIOS.SCENARIOS], fetchScenarios, {
+    enabled: Boolean(comparison?.id),
+  })
+
+  const { mutate: scenarioMutationInComparison } = useMutation(
+    (dto: Partial<Comparison>) => editComparisons(Number(comparisonId), dto),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries([`${COMPARISON.COMPARISON}-${comparisonId}`])
+        setSelectedScenarios([])
+      },
+    },
+  )
+
+  const scenariosForThisComparison = scenarios?.filter((each: ScenarioType) => comparison?.scenarios.includes(each?.id))
+  const remaningScenarios = scenarios?.filter((each) => !comparison?.scenarios.includes(each?.id))
 
   const handleAddScenariosToComparison = () => {
-    const index = comparisons.findIndex((each) => each?.uid === Number(comparisonId))
-    comparisons[index] = {
-      ...comparisonObject,
-      scenarios: [...comparisonObject.scenarios, ...selectedScenarios],
-    }
-
-    setSelectedScenarios([])
+    const _scenarios = comparison?.scenarios as Array<number>
+    const _selectedScenarios = [..._scenarios, ...selectedScenarios]
+    scenarioMutationInComparison({ scenarios: _selectedScenarios })
   }
 
   const isSecenarioAlreadySelected = (id: number) => {
     return selectedScenarios.includes(id)
+  }
+
+  const handleRemoveScenarioFromComparison = (id: number) => {
+    const remainingScenarios = comparison?.scenarios.filter((each) => each !== id)
+    scenarioMutationInComparison({ scenarios: remainingScenarios })
   }
 
   return (
@@ -48,7 +73,7 @@ const ComparisonDetail = () => {
       <PageTitle
         backUrl='/comparisons'
         backUrlTitle='Back to comparisons'
-        title={comparisonObject?.name || ''}
+        title={comparison?.name || ''}
         key={comparisonId}
       />
       <h2 className='font-bold'>
@@ -57,14 +82,21 @@ const ComparisonDetail = () => {
           : 'No Scenario in this comparison'}
       </h2>
       <div className='grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 gap-y-10'>
-        {scenariosForThisComparison?.map(({ id, name, userName }) => (
-          <Scenario key={id} id={id} name={name} username={userName} comparisonId={Number(comparisonId)} />
+        {scenariosForThisComparison?.map(({ id, name, imag_username }) => (
+          <Scenario
+            key={id}
+            id={id}
+            name={name}
+            username={imag_username}
+            comparisonId={Number(comparisonId)}
+            handleRemoveScenario={handleRemoveScenarioFromComparison}
+          />
         ))}
         <AddNewScenarioButton
           handleAddScenariosToComparison={handleAddScenariosToComparison}
-          scenarios={remaningScenarios}
+          scenarios={remaningScenarios || []}
           isSelected={isSecenarioAlreadySelected}
-          comparisonName={comparisonObject?.name}
+          comparisonName={comparison?.name || ''}
           handleScenarioSelect={handleScenarioSelect}
         />
       </div>

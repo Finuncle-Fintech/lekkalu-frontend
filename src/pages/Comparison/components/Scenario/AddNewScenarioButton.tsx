@@ -12,7 +12,7 @@ import {
   DialogOverlay,
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
-import { ScenarioType } from '@/constants/comparisons'
+import { Scenario as ScenarioType } from '@/types/scenarios'
 
 type AddNewScenarioButtonType = {
   handleAddScenariosToComparison: () => void

@@ -3,14 +3,17 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { PlusIcon } from 'lucide-react'
 import { range } from 'lodash'
+import { useQuery } from '@tanstack/react-query'
 import Page from '@/components/Page/Page'
 import { buttonVariants } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import Comparison from './components/EachComparison'
-import { comparisons } from '@/constants/comparisons'
+// import { comparisons } from '@/constants/comparisons'
+import { COMPARISON } from '@/utils/query-keys'
+import { fetchComparisons } from '@/queries/comparisons'
 
 export default function Scenarios() {
-  const IS_LOADING = false
+  const { data, isLoading } = useQuery([COMPARISON.COMPARISON], fetchComparisons)
   return (
     <Page className='space-y-4'>
       <div className='flex justify-end'>
@@ -20,7 +23,7 @@ export default function Scenarios() {
         </Link>
       </div>
       <div>
-        {IS_LOADING ? (
+        {isLoading ? (
           <div className='grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full'>
             {range(4).map((i) => (
               <Skeleton key={i} className='h-64 w-full' />
@@ -28,13 +31,13 @@ export default function Scenarios() {
           </div>
         ) : (
           <div className='grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 gap-y-10'>
-            {comparisons?.map((each) => (
+            {data?.map((each) => (
               <Comparison
                 key={each?.name}
-                id={each?.uid}
+                id={each?.id}
                 name={each?.name}
                 access={each?.access}
-                created_at={each?.created_at}
+                // created_at={each?.created_at}
                 scenarios={each?.scenarios.length}
               />
             ))}

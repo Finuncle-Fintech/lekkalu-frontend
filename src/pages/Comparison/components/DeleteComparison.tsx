@@ -1,31 +1,30 @@
 import React from 'react'
-// import { TrashIcon } from 'lucide-react'
-// import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import Alert from '@/components/Alert/Alert'
 import { Button } from '@/components/ui/button'
 import { useToast } from '@/components/ui/use-toast'
-// import { deleteGoal } from '@/queries/goals'
-// import { GOALS } from '@/utils/query-keys'
-// import { getErrorMessage } from '@/utils/utils'
+import { COMPARISON } from '@/utils/query-keys'
+import { getErrorMessage } from '@/utils/utils'
+import { deleteComparisons } from '@/queries/comparisons'
 
 type Props = {
   id: number
 }
 
 export default function DeleteComparison({ id }: Props) {
-  //   const qc = useQueryClient()
+  const qc = useQueryClient()
   const { toast } = useToast()
 
-  //   const deleteGoalMutation = useMutation(deleteGoal, {
-  //     onSuccess: () => {
-  //       qc.invalidateQueries([GOALS.GOALS])
-  //       toast({ title: 'Goal deleted successfully!' })
-  //     },
-  //     onError: (err: any) => toast(getErrorMessage(err)),
-  //   })
+  const deleteComparisonMutation = useMutation(deleteComparisons, {
+    onSuccess: () => {
+      qc.invalidateQueries([COMPARISON.COMPARISON])
+      toast({ title: 'Comparison deleted successfully!' })
+    },
+    onError: (err: any) => toast(getErrorMessage(err)),
+  })
 
-  const deleteComparisonMutation = (id: number) => {
-    toast({ title: `This will be deleted on api integration! ${id}` })
+  const handleDelete = (id: number) => {
+    deleteComparisonMutation.mutate(id)
   }
 
   return (
@@ -42,8 +41,7 @@ export default function DeleteComparison({ id }: Props) {
       cancelText='No'
       cancelProps={{ disabled: false }}
       onOk={() => {
-        // deleteGoalMutation.mutate(id)
-        deleteComparisonMutation(id)
+        handleDelete(id)
       }}
     />
   )

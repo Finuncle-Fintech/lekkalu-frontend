@@ -1,4 +1,3 @@
-/* eslint-disable no-constant-condition */
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { PlusIcon } from 'lucide-react'
@@ -8,7 +7,6 @@ import Page from '@/components/Page/Page'
 import { buttonVariants } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import Comparison from './components/EachComparison'
-// import { comparisons } from '@/constants/comparisons'
 import { COMPARISON } from '@/utils/query-keys'
 import { fetchComparisons } from '@/queries/comparisons'
 
@@ -42,6 +40,16 @@ export default function Scenarios() {
               />
             ))}
           </div>
+        )}
+        {!data?.length ? (
+          <div>
+            <p>You have no Comparison.</p>
+            <Link to='/comparisons/new' className='block underline mt-2'>
+              Click here to add.
+            </Link>{' '}
+          </div>
+        ) : (
+          <></>
         )}
       </div>
     </Page>

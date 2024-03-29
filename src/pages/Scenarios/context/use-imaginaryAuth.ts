@@ -24,9 +24,13 @@ export function useImaginaryAuth() {
     },
   })
 
-  const getAPIClientForImaginaryUser = (token: string) => {
+  const getAPIClientForImaginaryUser = (token: string, version?: string) => {
+    let baseURL = process.env.REACT_APP_V1_API_URL
+    if (version === 'v2') {
+      baseURL = process.env.REACT_APP_V2_API_URL
+    }
     const apiClient = axios.create({
-      baseURL: process.env.REACT_APP_V1_API_URL,
+      baseURL,
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',

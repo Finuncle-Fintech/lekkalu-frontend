@@ -125,7 +125,12 @@ const ComparisonDetail = () => {
           key={comparisonId}
         />
         <div>
-          <Button variant={'default'} onClick={handleSimulate} loading={isLoading}>
+          <Button
+            variant={'default'}
+            onClick={handleSimulate}
+            loading={isLoading}
+            disabled={!scenariosForThisComparison?.length}
+          >
             Simulate
           </Button>
         </div>

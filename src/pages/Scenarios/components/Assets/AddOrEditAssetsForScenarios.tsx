@@ -54,7 +54,7 @@ export default function AddOrEditAssetsForScenario({ trigger, asset, addAsset, e
 
   const addPhysicalAssetMutation = useMutation(addAsset, {
     onSuccess: () => {
-      qc.invalidateQueries([BALANCE_SHEET.ASSETS])
+      qc.invalidateQueries([`${BALANCE_SHEET.ASSETS}-${current_imag_user}`])
       toast({ title: 'Asset created successfully!' })
       setIsDialogOpen(false)
     },
@@ -65,7 +65,7 @@ export default function AddOrEditAssetsForScenario({ trigger, asset, addAsset, e
     (dto: AddPhysicalAssetSchemaForScenario) => editAsset(asset?.id!, dto),
     {
       onSuccess: () => {
-        qc.invalidateQueries([BALANCE_SHEET.ASSETS])
+        qc.invalidateQueries([`${BALANCE_SHEET.ASSETS}-${current_imag_user}`])
         toast({ title: 'Asset updated successfully!' })
         setIsDialogOpen(false)
       },
@@ -121,7 +121,6 @@ export default function AddOrEditAssetsForScenario({ trigger, asset, addAsset, e
             </Collapsible>
             <DialogFooter className='gap-2 md:col-span-2 mt-5'>
               <Button
-                loading={addPhysicalAssetMutation.isLoading || editPhysicalAssetMutation.isLoading}
                 type='button'
                 variant='outline'
                 onClick={() => {

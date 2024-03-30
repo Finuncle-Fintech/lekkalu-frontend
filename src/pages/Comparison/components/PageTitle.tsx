@@ -10,7 +10,7 @@ type PageTitleType = {
 
 const PageTitle = ({ title, backUrl, backUrlTitle }: PageTitleType) => {
   return (
-    <>
+    <div className='space-y-8'>
       <div>
         <h1 className='text-2xl font-bold'>{title}</h1>
       </div>
@@ -18,7 +18,7 @@ const PageTitle = ({ title, backUrl, backUrlTitle }: PageTitleType) => {
         <ArrowLeftIcon className='w-4 h-4' />
         {backUrlTitle}
       </Link>
-    </>
+    </div>
   )
 }
 

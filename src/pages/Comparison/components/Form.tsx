@@ -27,7 +27,9 @@ const ComparisonForm = ({ form, onSubmit, isLoading, isEdit }: ComparisonFormTyp
 
   useEffect(() => {
     if (isEdit && form.getValues('scenarios')?.length) {
-      const _existingScenariosInComparison = scenarios?.filter((each) => form.getValues('scenarios').includes(each?.id))
+      const _existingScenariosInComparison = scenarios?.filter(
+        (each) => form.getValues('scenarios')?.includes(each?.id),
+      )
       setAddedScenarios(_existingScenariosInComparison || [])
     }
   }, [isEdit, scenarios, form.getValues().scenarios])

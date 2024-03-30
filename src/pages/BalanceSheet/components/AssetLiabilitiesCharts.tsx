@@ -77,6 +77,14 @@ export default function AssetLiabilitiesChart({ className, style }: Props) {
       position: 'bottom',
       fontSize: '16px',
     },
+    // stroke: {
+    //   show: true,
+    //   curve: 'straight',
+    //   lineCap: 'butt',
+    //   colors: undefined,
+    //   width: 2,
+    //   dashArray: 0,
+    // },
     fill: {
       type: 'gradient',
     },

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useLocation, useParams } from 'react-router-dom'
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import dayjs from 'dayjs'
@@ -23,6 +23,7 @@ import { useAuth } from '@/hooks/use-auth'
 
 const ComparisonDetail = () => {
   const comparisonId = useParams().id
+  const IS_FOR_FEATURE_PAGE = useLocation().pathname.includes('feature')
   const { getAPIClientForImaginaryUser } = useImaginaryAuth()
   const { userData } = useAuth()
   const IS_AUTHENTICATED_USER = Boolean(userData?.first_name)
@@ -41,8 +42,12 @@ const ComparisonDetail = () => {
     setSelectedScenarios(_selectedScenarios)
   }
 
-  const { data: comparison } = useQuery([`${COMPARISON.COMPARISON}-${comparisonId}`], () =>
-    fetchComparisonsById(Number(comparisonId)),
+  const {
+    data: comparison,
+    isError,
+    isLoading: isFetchingComparison,
+  } = useQuery([`${COMPARISON.COMPARISON}-${comparisonId}`], () =>
+    fetchComparisonsById(Number(comparisonId), IS_FOR_FEATURE_PAGE),
   )
 
   const { data: scenarios } = useQuery([SCENARIOS.SCENARIOS], fetchScenarios, {
@@ -125,6 +130,22 @@ const ComparisonDetail = () => {
     }
   }, [isSuccess, isLoading])
 
+  if (isFetchingComparison) {
+    return (
+      <Page>
+        <div>Loading...</div>
+      </Page>
+    )
+  }
+
+  if (isError) {
+    return (
+      <Page>
+        <h3>This comparison is set to private</h3>
+      </Page>
+    )
+  }
+
   return (
     <Page className='space-y-8'>
       <div className='flex justify-between'>
@@ -150,9 +171,13 @@ const ComparisonDetail = () => {
         </div>
       </div>
       <h2 className='font-bold'>
-        {comparison?.scenarios_objects?.length
-          ? 'List of Scenarios in this comparison.'
-          : 'No Scenario in this comparison'}
+        {comparison?.scenarios_objects?.length ? (
+          'List of Scenarios in this comparison.'
+        ) : (
+          <div>
+            <p>No Scenario in this comparison</p>
+          </div>
+        )}
       </h2>
       <div className='grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 gap-y-10'>
         {scenariosForThisComparison?.map(({ id, name, imag_username }) => (

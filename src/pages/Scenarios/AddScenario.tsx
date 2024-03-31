@@ -56,9 +56,6 @@ const AddScenario = () => {
               onSuccess: () => {
                 navigate(`/scenarios/${data.id}`)
               },
-              onError: (e) => {
-                console.log('error occured', e)
-              },
             })
           },
         },

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react'
 import { PlusCircle, XCircle } from 'lucide-react'
 import { useQuery } from '@tanstack/react-query'

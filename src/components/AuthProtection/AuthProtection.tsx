@@ -1,5 +1,5 @@
 import React from 'react'
-import { useLocation, Navigate } from 'react-router-dom'
+import { useLocation, Navigate, useNavigate } from 'react-router-dom'
 import { LoaderIcon } from 'lucide-react'
 import { useAuthContext } from '@/hooks/use-auth'
 
@@ -9,6 +9,8 @@ type Props = {
 
 export default function AuthProtection({ children }: Props) {
   const location = useLocation()
+  const navigate = useNavigate()
+
   const { isAuthenticationInProgress, tokenData } = useAuthContext()
 
   if (isAuthenticationInProgress) {
@@ -22,7 +24,9 @@ export default function AuthProtection({ children }: Props) {
 
   if (tokenData) {
     return children
+  } else if (!tokenData && location.pathname.includes('comparisons')) {
+    navigate(`/feature${location.pathname}`)
+  } else {
+    return <Navigate to={{ pathname: '/signin', search: `redirectTo=${location.pathname}` }} />
   }
-
-  return <Navigate to={{ pathname: '/signin', search: `redirectTo=${location.pathname}` }} />
 }

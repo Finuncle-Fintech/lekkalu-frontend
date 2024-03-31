@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
@@ -20,10 +19,13 @@ import { Button } from '@/components/ui/button'
 import { Goal, Timeline } from '@/types/goals'
 import { useImaginaryAuth } from '../Scenarios/context/use-imaginaryAuth'
 import { generateRandomColor, mergeArraysByDate } from './utils/dateTime'
+import { useAuth } from '@/hooks/use-auth'
 
 const ComparisonDetail = () => {
   const comparisonId = useParams().id
   const { getAPIClientForImaginaryUser } = useImaginaryAuth()
+  const { userData } = useAuth()
+  const IS_AUTHENTICATED_USER = Boolean(userData?.first_name)
 
   const [selectedScenarios, setSelectedScenarios] = useState<Array<number>>([])
   const [timelineData, setTimelineData] = useState<any>()
@@ -44,7 +46,7 @@ const ComparisonDetail = () => {
   )
 
   const { data: scenarios } = useQuery([SCENARIOS.SCENARIOS], fetchScenarios, {
-    enabled: Boolean(comparison?.id),
+    enabled: Boolean(comparison?.id) && IS_AUTHENTICATED_USER,
   })
 
   const { mutate: scenarioMutationInComparison } = useMutation(
@@ -88,9 +90,15 @@ const ComparisonDetail = () => {
 
   const handleSimulate = () => {
     setTimelineData({})
-    scenariosForThisComparison?.forEach((each) => {
-      login({ password: each?.imag_password, username: each?.imag_username, scenarioName: each?.name })
-    })
+    if (IS_AUTHENTICATED_USER) {
+      scenariosForThisComparison?.forEach((each) => {
+        login({ password: each?.imag_password, username: each?.imag_username, scenarioName: each?.name })
+      })
+    } else {
+      comparison?.scenarios_objects?.forEach((each) => {
+        login({ password: each?.imag_password, username: each?.imag_username, scenarioName: each?.name })
+      })
+    }
   }
 
   const handleAddScenariosToComparison = () => {
@@ -118,25 +126,29 @@ const ComparisonDetail = () => {
   return (
     <Page className='space-y-8'>
       <div className='flex justify-between'>
-        <PageTitle
-          backUrl='/comparisons'
-          backUrlTitle='Back to comparisons'
-          title={comparison?.name || ''}
-          key={comparisonId}
-        />
+        {IS_AUTHENTICATED_USER ? (
+          <PageTitle
+            backUrl={IS_AUTHENTICATED_USER ? '/comparisons' : '/feature/comparisons'}
+            backUrlTitle='Back to comparisons'
+            title={comparison?.name || ''}
+            key={comparisonId}
+          />
+        ) : (
+          <div />
+        )}
         <div>
           <Button
             variant={'default'}
             onClick={handleSimulate}
             loading={isLoading}
-            disabled={!scenariosForThisComparison?.length}
+            disabled={!comparison?.scenarios_objects.length}
           >
             Simulate
           </Button>
         </div>
       </div>
       <h2 className='font-bold'>
-        {scenariosForThisComparison?.length
+        {comparison?.scenarios_objects?.length
           ? 'List of Scenarios in this comparison.'
           : 'No Scenario in this comparison'}
       </h2>
@@ -151,13 +163,31 @@ const ComparisonDetail = () => {
             handleRemoveScenario={handleRemoveScenarioFromComparison}
           />
         ))}
-        <AddNewScenarioButton
-          handleAddScenariosToComparison={handleAddScenariosToComparison}
-          scenarios={remaningScenarios || []}
-          isSelected={isSecenarioAlreadySelected}
-          comparisonName={comparison?.name || ''}
-          handleScenarioSelect={handleScenarioSelect}
-        />
+        {!IS_AUTHENTICATED_USER && !scenariosForThisComparison ? (
+          comparison?.scenarios_objects?.map(({ id, name, imag_username }) => (
+            <Scenario
+              key={id}
+              id={id}
+              name={name}
+              username={imag_username}
+              comparisonId={Number(comparisonId)}
+              handleRemoveScenario={() => {}}
+            />
+          ))
+        ) : (
+          <></>
+        )}
+        {IS_AUTHENTICATED_USER ? (
+          <AddNewScenarioButton
+            handleAddScenariosToComparison={handleAddScenariosToComparison}
+            scenarios={remaningScenarios || []}
+            isSelected={isSecenarioAlreadySelected}
+            comparisonName={comparison?.name || ''}
+            handleScenarioSelect={handleScenarioSelect}
+          />
+        ) : (
+          <></>
+        )}
       </div>
 
       {timelineData ? (

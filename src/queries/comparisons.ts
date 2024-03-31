@@ -1,4 +1,4 @@
-import { v1ApiClient } from '@/utils/client'
+import { v1ApiClient, v1ApiClientWithoutToken } from '@/utils/client'
 import { Comparison } from '@/types/comparison'
 import { AddComaprisonSchema } from '@/schema/comparisons'
 
@@ -13,7 +13,7 @@ export async function createComparisons(dto: AddComaprisonSchema) {
 }
 
 export async function fetchComparisonsById(id: number) {
-  const { data } = await v1ApiClient.get<Comparison>(`/comparison/${id}`)
+  const { data } = await v1ApiClientWithoutToken.get<Comparison>(`/comparison/${id}`)
   return data
 }
 

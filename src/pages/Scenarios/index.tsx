@@ -30,7 +30,7 @@ const ScenarioPage = () => {
           </div>
         ) : (
           <div className='grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 gap-y-10'>
-            {scenarios?.map(({ id, name, imag_password, imag_username }) => {
+            {scenarios?.map(({ id, name, imag_password, imag_username, access }) => {
               return (
                 <EachScenario
                   id={id}
@@ -38,6 +38,7 @@ const ScenarioPage = () => {
                   key={id}
                   imag_username={imag_username}
                   imag_password={imag_password}
+                  access={access}
                 />
               )
             })}

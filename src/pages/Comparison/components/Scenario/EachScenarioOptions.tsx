@@ -28,13 +28,13 @@ const ScenarioOption = ({ id, handleRemoveScenario }: GoalOptionsType) => {
               Remove
             </Button>
             <Link
-              to={`/scenario/${id}`}
+              to={`/scenarios/${id}`}
               className='w-full hover:bg-accent flex justify-center p-2 rounded-lg text-sm font-medium'
             >
               View Detail
             </Link>
             <Link
-              to={`/scenario/edit/${id}`}
+              to={`/scenarios/edit/${id}`}
               className='w-full hover:bg-accent flex justify-center p-2 rounded-lg text-sm font-medium'
             >
               Edit Scenario

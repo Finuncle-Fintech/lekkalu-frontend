@@ -1,5 +1,5 @@
 import React from 'react'
-import { CheckCircle2, Circle, PlusCircleIcon } from 'lucide-react'
+import { CheckCircle2, Circle, Lock, PlusCircleIcon } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import {
   DialogPortal,
@@ -56,13 +56,30 @@ const AddNewScenarioButton = ({
                 return (
                   <div
                     key={each?.id}
-                    className={`flex border rounded p-2 space-x-5 hover:cursor-pointer ${
+                    className={`flex border justify-between rounded p-2 space-x-5 hover:cursor-pointer ${
                       selected ? 'bg-blue-500 text-white' : ''
                     }`}
-                    onClick={() => handleScenarioSelect(each?.id)}
+                    onClick={() => {
+                      if (each?.access === 'Public') {
+                        handleScenarioSelect(each?.id)
+                      }
+                    }}
                   >
-                    <div className='my-auto'>{selected ? <CheckCircle2 /> : <Circle />}</div>
-                    <div>{each?.name}</div>
+                    <div className='flex'>
+                      <div className='my-auto'>
+                        {selected ? (
+                          <CheckCircle2 className={`${each?.access === 'Private' ? 'text-gray-400' : 'text-black'}`} />
+                        ) : (
+                          <Circle className={`ml-2 ${each?.access === 'Private' ? 'text-gray-400' : 'text-black'}`} />
+                        )}
+                      </div>
+                      <div>
+                        <p className={`ml-2 ${each?.access === 'Private' ? 'text-gray-400' : 'text-black'}`}>
+                          {each?.name}
+                        </p>
+                      </div>
+                    </div>
+                    <div className='pr-4'>{each?.access === 'Private' ? <Lock color='red' /> : <></>}</div>
                   </div>
                 )
               })

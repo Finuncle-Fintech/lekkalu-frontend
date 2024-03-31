@@ -3,4 +3,5 @@ export type Scenario = {
   name: string
   imag_password: string
   imag_username: string
+  access: string
 }

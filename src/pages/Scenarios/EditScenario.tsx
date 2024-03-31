@@ -41,6 +41,7 @@ const EditScenario = () => {
   useEffect(() => {
     if (!isFetchingScenario && scenario) {
       form.setValue('name', scenario.name)
+      form.setValue('access', scenario.access === 'Private' ? 'Private' : 'Public')
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scenario, isFetchingScenario])

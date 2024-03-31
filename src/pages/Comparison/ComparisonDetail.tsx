@@ -103,8 +103,10 @@ const ComparisonDetail = () => {
 
   const handleAddScenariosToComparison = () => {
     const _scenarios = comparison?.scenarios as Array<number>
-    const _selectedScenarios = [..._scenarios, ...selectedScenarios]
-    scenarioMutationInComparison({ scenarios: _selectedScenarios })
+    if (_scenarios?.length) {
+      const _selectedScenarios = [..._scenarios, ...selectedScenarios]
+      scenarioMutationInComparison({ scenarios: _selectedScenarios })
+    }
   }
 
   const isSecenarioAlreadySelected = (id: number) => {

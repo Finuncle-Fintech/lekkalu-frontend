@@ -12,9 +12,14 @@ export async function createComparisons(dto: AddComaprisonSchema) {
   return data
 }
 
-export async function fetchComparisonsById(id: number) {
-  const { data } = await v1ApiClientWithoutToken.get<Comparison>(`/comparison/${id}`)
-  return data
+export async function fetchComparisonsById(id: number, isUnAuthenticated?: boolean) {
+  if (isUnAuthenticated) {
+    const { data } = await v1ApiClientWithoutToken.get<Comparison>(`/comparison/${id}`)
+    return data
+  } else {
+    const { data } = await v1ApiClient.get<Comparison>(`/comparison/${id}`)
+    return data
+  }
 }
 
 export async function editComparisons(id: number, dto: Partial<Comparison>) {

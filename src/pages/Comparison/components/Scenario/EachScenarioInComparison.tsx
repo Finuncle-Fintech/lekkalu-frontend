@@ -1,5 +1,4 @@
 import React from 'react'
-import { User2 } from 'lucide-react'
 import ScenarioOption from './EachScenarioOptions'
 import { useAuth } from '@/hooks/use-auth'
 
@@ -11,7 +10,7 @@ type ScenarioType = {
   handleRemoveScenario: (id: number) => void
 }
 
-const Scenario = ({ name, username, id, handleRemoveScenario }: ScenarioType) => {
+const Scenario = ({ name, id, handleRemoveScenario }: ScenarioType) => {
   const { userData } = useAuth()
   const IS_AUTHENTICATED_USER = Boolean(userData?.first_name)
   return (
@@ -21,10 +20,6 @@ const Scenario = ({ name, username, id, handleRemoveScenario }: ScenarioType) =>
       </div>
       <div className='text-center'>
         <p>{name}</p>
-      </div>
-      <div className='flex mx-auto text-gray-500 text-xs h-full items-end'>
-        <User2 size={15} className='block' />
-        <p className='ml-2'>{username}</p>
       </div>
     </div>
   )

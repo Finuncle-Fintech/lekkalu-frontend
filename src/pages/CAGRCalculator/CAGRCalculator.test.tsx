@@ -19,50 +19,49 @@ class ResizeObserver {
 }
 
 describe('CAGRCalculator', () => {
-  window.ResizeObserver = ResizeObserver;
+  window.ResizeObserver = ResizeObserver
 
   test('has 1 child', () => {
     // Render the component
-    const { container } = render(<Component />);
-    
+    const { container } = render(<Component />)
+
     // Access the container's children
-    const children = container.children;
-    
+    const children = container.children
+
     // Assert that there is exactly one child
-    expect(children.length).toBe(1);
-  });
+    expect(children.length).toBe(1)
+  })
 
   test('buttons are defined', () => {
     render(<Component />)
     // Find child components by test IDs
     // const formComponent = screen.getByTestId('emi-form');
-    const shareButton = screen.getByText('Share');
-    const exportToExcelComponent = screen.getByText('Export to Excel');
-    
-    expect(shareButton).toBeInTheDocument();
-    expect(exportToExcelComponent).toBeInTheDocument();    
-  });
+    const shareButton = screen.getByText('Share')
+    const exportToExcelComponent = screen.getByText('Export to Excel')
+
+    expect(shareButton).toBeInTheDocument()
+    expect(exportToExcelComponent).toBeInTheDocument()
+  })
 
   test('inputs are correctly defined', () => {
     // Render the component
-    render(<Component />);
-  
-    const initialValueInput = screen.getByText(/Initial value \(₹\)/i);
-    expect(initialValueInput).toBeInTheDocument();    
+    render(<Component />)
 
-    const finalValueInput = screen.getByText(/Final Value Costs/i);
-    expect(finalValueInput).toBeInTheDocument();    
+    const initialValueInput = screen.getByText(/Initial value \(₹\)/i)
+    expect(initialValueInput).toBeInTheDocument()
 
-    const durationInput = screen.getByText(/Duration of Investment/i);
-    expect(durationInput).toBeInTheDocument();    
-  });
+    const finalValueInput = screen.getByText(/Final Value Costs/i)
+    expect(finalValueInput).toBeInTheDocument()
+
+    const durationInput = screen.getByText(/Duration of Investment/i)
+    expect(durationInput).toBeInTheDocument()
+  })
 
   test('renders CAGRCalculator correctly', () => {
     // Render the component
-    const { container } = render(<Component />);
-    
-    // Assert that the rendered component matches the saved snapshot
-    expect(container).toMatchSnapshot();
-  });
+    const { container } = render(<Component />)
 
+    // Assert that the rendered component matches the saved snapshot
+    expect(container).toMatchSnapshot()
+  })
 })

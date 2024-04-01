@@ -1,9 +1,9 @@
 import React from 'react'
-import { render, waitForElementToBeRemoved } from '@testing-library/react'
+import { waitForElementToBeRemoved } from '@testing-library/react'
+import { TooltipProvider } from '@radix-ui/react-tooltip'
 import { MemoryRouter } from 'react-router-dom'
 import App from './App'
 import { renderWithClient } from './__test__/utils'
-import { TooltipProvider } from '@radix-ui/react-tooltip'
 
 jest.mock('axios', () => ({
   get: jest.fn(),
@@ -54,7 +54,6 @@ describe('App', () => {
       // Assert that the "Ohh! Page Not Found" message is not present
       expect(queryByText('Ohh! Page Not Found')).not.toBeInTheDocument()
     } catch (error: any) {
-      console.log(error?.message)
       expect(error?.message).toMatch(/path is found/)
     }
   })
@@ -78,7 +77,6 @@ describe('App', () => {
       // Assert that the "Ohh! Page Not Found" message is not present
       expect(queryByText('Ohh! Page Not Found')).not.toBeInTheDocument()
     } catch (error: any) {
-      console.log(error.message)
       expect(error.message).toMatch(/path is found/)
     }
   }

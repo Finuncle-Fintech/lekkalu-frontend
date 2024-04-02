@@ -1,4 +1,4 @@
-import { v1ApiClient } from '@/utils/client'
+import { v1ApiClient, v1ApiClientWithoutToken } from '@/utils/client'
 import { Scenario } from '@/types/scenarios'
 import { AddScenarioSchemas } from '@/schema/scenarios'
 
@@ -12,9 +12,14 @@ export async function createScenarios(dto: AddScenarioSchemas) {
   return data
 }
 
-export async function fetchScenarioById(id: number) {
-  const { data } = await v1ApiClient.get<Scenario>(`/scenario/${id}`)
-  return data
+export async function fetchScenarioById(id: number, isUnAuthenticated?: boolean) {
+  if (isUnAuthenticated) {
+    const { data } = await v1ApiClientWithoutToken.get<Scenario>(`/scenario/${id}`)
+    return data
+  } else {
+    const { data } = await v1ApiClient.get<Scenario>(`/scenario/${id}`)
+    return data
+  }
 }
 
 export async function editScenario(id: number, dto: Partial<Scenario>) {

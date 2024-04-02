@@ -1,23 +1,23 @@
 import React from 'react'
 import { ArrowLeftIcon } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 type PageTitleType = {
   title: string
-  backUrl: string
   backUrlTitle: string
 }
 
-const DetailPageHeading = ({ title, backUrl, backUrlTitle }: PageTitleType) => {
+const DetailPageHeading = ({ title, backUrlTitle }: PageTitleType) => {
+  const navigate = useNavigate()
   return (
     <>
       <div>
         <h1 className='text-2xl font-bold'>{title}</h1>
       </div>
-      <Link className='flex items-center gap-2 text-muted-foreground w-52' to={backUrl}>
+      <div className='flex items-center gap-2 text-muted-foreground w-52' onClick={() => navigate(-1)}>
         <ArrowLeftIcon className='w-4 h-4' />
         {backUrlTitle}
-      </Link>
+      </div>
     </>
   )
 }

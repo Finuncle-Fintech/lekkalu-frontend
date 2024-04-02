@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { useParams } from 'react-router-dom'
+import { useLocation, useParams } from 'react-router-dom'
 import Page from '@/components/Page/Page'
 import DetailPageHeading from '@/components/DetailPageHeading'
 import { AUTH, SCENARIOS } from '@/utils/query-keys'
@@ -26,6 +26,8 @@ const LoadingSkeleton = () => {
 
 export default function ScenarioDefault() {
   const { id } = useParams() as { id: string }
+  const IS_FOR_FEATURE_PAGE = useLocation().pathname.includes('feature')
+
   const scenarioId = Number(id)
   const { loginImaginaryUser } = useImaginaryAuth()
   const { data, isLoading } = useQuery([`${SCENARIOS.SCENARIOS}-${scenarioId}`], () => fetchScenarioById(scenarioId), {
@@ -33,6 +35,21 @@ export default function ScenarioDefault() {
       loginImaginaryUser.mutate({ username: data.imag_username, password: data.imag_password, id: data.id })
     },
   })
+
+  const {
+    data: publicScenarioData,
+    isLoading: isPublicScenarioLoading,
+    isError,
+  } = useQuery(
+    [`${SCENARIOS.SCENARIOS}-public-${scenarioId}`],
+    () => fetchScenarioById(scenarioId, IS_FOR_FEATURE_PAGE),
+    {
+      onSuccess(data) {
+        loginImaginaryUser.mutate({ username: data.imag_username, password: data.imag_password, id: data.id })
+      },
+    },
+  )
+
   const { data: currentImaginaryUser } = useQuery<string>([AUTH.CURRENT_IMAGINARY_USER])
 
   useEffect(() => {
@@ -42,22 +59,29 @@ export default function ScenarioDefault() {
   }, [])
 
   const { data: imaginaryUsers } = useQuery<any>([AUTH.IMAGINARY_CLIENT])
+
   const isLoggedIn = Boolean(currentImaginaryUser && imaginaryUsers[currentImaginaryUser].access)
+
+  if (IS_FOR_FEATURE_PAGE && isError) {
+    return (
+      <Page>
+        <h3>This scenario is set to private</h3>
+      </Page>
+    )
+  }
 
   return (
     <Page className='space-y-8'>
-      <DetailPageHeading
-        backUrl='/scenarios'
-        backUrlTitle='Back to scenarios'
-        title={isLoading ? 'Loading...' : data?.name || ''}
-      />
+      <DetailPageHeading backUrlTitle='Back to scenarios' title={isLoading ? 'Loading...' : data?.name || ''} />
 
-      {isLoading || !isLoggedIn ? (
+      {isLoading || isPublicScenarioLoading || !isLoggedIn ? (
         <LoadingSkeleton />
       ) : (
         <div>
           <div className='flex justify-between'>
-            <CreateButton username={data?.imag_username || ''} />
+            <CreateButton
+              username={IS_FOR_FEATURE_PAGE ? publicScenarioData?.imag_username || '' : data?.imag_username || ''}
+            />
           </div>
         </div>
       )}

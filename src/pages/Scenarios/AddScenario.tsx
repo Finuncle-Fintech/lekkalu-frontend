@@ -73,7 +73,7 @@ const AddScenario = () => {
 
   return (
     <Page className='space-y-8'>
-      <PageTitle title='Create a scenario' backUrl='/scenarios' backUrlTitle='Back to Scenarios' />
+      <PageTitle title='Create a scenario' backUrlTitle='Back to Scenarios' />
       <ScenarioForm form={form} isLoading={isLoading} onSubmit={handleFormSubmit} />
     </Page>
   )

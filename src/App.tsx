@@ -111,8 +111,9 @@ function App() {
           <Route path='/privacy-policies' element={<PrivacyPolicies />} />
           <Route path='/pricing' element={<Pricing />} />
           <Route path='/support' element={<Support />} />
-          <Route path='/feature/comparisons' element={<></>} />
+          {/* <Route path='/feature/comparisons' element={<></>} /> */}
           <Route path='/feature/comparisons/:id' element={<ComparisonDetails />} />
+          <Route path='/feature/scenarios/:id' element={<ScenarioDetail />} />
           <Route path='/feature/:toolName' element={<FeaturesDetails />} />
         </Route>
         <Route path='*' element={<NotFound />} />

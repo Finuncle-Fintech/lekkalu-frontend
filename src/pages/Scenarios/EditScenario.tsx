@@ -51,7 +51,7 @@ const EditScenario = () => {
   }
   return (
     <Page className='space-y-8'>
-      <PageTitle title='Edit this scenario' backUrl='/scenarios' backUrlTitle='Back to Scenarios' />
+      <PageTitle title='Edit this scenario' backUrlTitle='Back to Scenarios' />
       <ScenarioForm form={form} isEdit isLoading={false} onSubmit={handleFormSubmit} />
     </Page>
   )

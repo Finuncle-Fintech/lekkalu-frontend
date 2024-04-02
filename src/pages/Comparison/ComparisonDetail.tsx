@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react'
-import { useLocation, useParams } from 'react-router-dom'
+import { Link, useLocation, useParams } from 'react-router-dom'
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import dayjs from 'dayjs'
@@ -193,14 +193,15 @@ const ComparisonDetail = () => {
         ))}
         {!IS_AUTHENTICATED_USER && !scenariosForThisComparison ? (
           comparison?.scenarios_objects?.map(({ id, name, imag_username }) => (
-            <Scenario
-              key={id}
-              id={id}
-              name={name}
-              username={imag_username}
-              comparisonId={Number(comparisonId)}
-              handleRemoveScenario={() => {}}
-            />
+            <Link key={id} to={'/feature/scenarios/' + id}>
+              <Scenario
+                id={id}
+                name={name}
+                username={imag_username}
+                comparisonId={Number(comparisonId)}
+                handleRemoveScenario={() => {}}
+              />
+            </Link>
           ))
         ) : (
           <></>

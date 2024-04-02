@@ -77,9 +77,7 @@ const Comparison = ({ id, access, name, style, className, scenarios }: Compariso
         <Link to={!allowRename ? `/comparisons/${id}` : ''}>
           <div className='flex flex-col gap-y-3 h-full'>
             <div
-              className={`self-center p-5 text-primary p-5 rounded-full bg-${
-                access === 'Private' ? 'red' : 'blue'
-              }-200`}
+              className={`self-center p-5 text-primary rounded-full bg-${access === 'Private' ? 'red' : 'blue'}-200`}
             >
               {access === 'Private' ? <Lock size={80} /> : <UnlockIcon size={80} />}
             </div>

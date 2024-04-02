@@ -15,11 +15,13 @@ import { Liability, PhysicalAsset } from '@/types/balance-sheet'
 import EachLiabilityForScenario from './Liability/EachLiabilityForScenario'
 import AddOrEditAssetsForScenario from './Assets/AddOrEditAssetsForScenarios'
 import EachAsset from './Assets/EachAsset'
+import { useAuth } from '@/hooks/use-auth'
 
 const CreateButton = ({ username }: { username: string }) => {
   const { data: imaginaryUser } = useQuery<any>([AUTH.IMAGINARY_CLIENT])
   const { getAPIClientForImaginaryUser } = useImaginaryAuth()
-
+  const { userData } = useAuth()
+  const IS_AUTHENTICATED_USER = Boolean(userData?.first_name)
   const apiClient = getAPIClientForImaginaryUser(imaginaryUser[username]?.access)
 
   async function createIncomeExpense(dto: AddIncomeStatementSchema) {
@@ -94,6 +96,7 @@ const CreateButton = ({ username }: { username: string }) => {
           createIncomeExpense={createIncomeExpense}
           updateIncomeExpense={updateIncomeExpense}
           deleteIncomeExpense={deleteIncomeExpense}
+          IS_AUTHENTICATED_USER={IS_AUTHENTICATED_USER}
           key={each?.id}
         />
       ))}
@@ -104,6 +107,7 @@ const CreateButton = ({ username }: { username: string }) => {
           addLiability={addLiability}
           editLiability={editLiability}
           deleteLiability={deleteLiability}
+          IS_AUTHENTICATED_USER={IS_AUTHENTICATED_USER}
         />
       ))}
       {assets?.map((each: PhysicalAsset) => (
@@ -113,39 +117,42 @@ const CreateButton = ({ username }: { username: string }) => {
           createAsset={addPhysicalAsset}
           updateAsset={editPhysicalAsset}
           deleteAsset={deletePhysicalAsset}
+          IS_AUTHENTICATED_USER={IS_AUTHENTICATED_USER}
         />
       ))}
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant={'ghost'} className='border border-dashed rounded-lg p-20'>
-            <PlusIcon />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent className='flex flex-col'>
-          <DropdownMenuItem className='cursor-pointer' asChild>
-            <AddOrEditAssetsForScenario
-              trigger={<Button variant={'ghost'}>Asset</Button>}
-              addAsset={addPhysicalAsset}
-              editAsset={editPhysicalAsset}
-            />
-          </DropdownMenuItem>
-          <DropdownMenuItem className='cursor-pointer' asChild>
-            <AddOrEditLiabilityDialog
-              trigger={<Button variant={'ghost'}>Liability</Button>}
-              addLiability={addLiability}
-              editLiability={editLiability}
-            />
-          </DropdownMenuItem>
-          <DropdownMenuItem className='cursor-pointer' asChild>
-            <AddOrEditIncomeExpenseForScenario
-              trigger={<Button variant={'ghost'}>Monthly Expense</Button>}
-              type='EXPENSE'
-              createMutationFn={createIncomeExpense}
-              updateMutationFn={updateIncomeExpense}
-            />
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+      {IS_AUTHENTICATED_USER && (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant={'ghost'} className='border border-dashed rounded-lg p-20'>
+              <PlusIcon />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className='flex flex-col'>
+            <DropdownMenuItem className='cursor-pointer' asChild>
+              <AddOrEditAssetsForScenario
+                trigger={<Button variant={'ghost'}>Asset</Button>}
+                addAsset={addPhysicalAsset}
+                editAsset={editPhysicalAsset}
+              />
+            </DropdownMenuItem>
+            <DropdownMenuItem className='cursor-pointer' asChild>
+              <AddOrEditLiabilityDialog
+                trigger={<Button variant={'ghost'}>Liability</Button>}
+                addLiability={addLiability}
+                editLiability={editLiability}
+              />
+            </DropdownMenuItem>
+            <DropdownMenuItem className='cursor-pointer' asChild>
+              <AddOrEditIncomeExpenseForScenario
+                trigger={<Button variant={'ghost'}>Monthly Expense</Button>}
+                type='EXPENSE'
+                createMutationFn={createIncomeExpense}
+                updateMutationFn={updateIncomeExpense}
+              />
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )}
     </div>
   )
 }

@@ -43,7 +43,7 @@ const Pricing = lazy(() => import('@/pages/Pricing/Pricing'))
 const NotFound = lazy(() => import('@/pages/NotFound/NotFound'))
 const Support = lazy(() => import('./pages/Support/Support'))
 const FeaturesDetails = lazy(() => import('./pages/Features/FeaturesDetails'))
-const EmailVerification = lazy(() => import('@/pages/EmailVerification/EmailVerification'))
+const EmailVerificationProcess = lazy(() => import('./pages/EmailVerification/EmailVerificationProcess'))
 
 function App() {
   useEffect(() => {
@@ -52,8 +52,8 @@ function App() {
   return (
     <Suspense
       fallback={
-        <div className='flex h-screen w-full items-center justify-center gap-2'>
-          <LoaderIcon className='w-4 h-4 animate-spin' />
+        <div className="flex h-screen w-full items-center justify-center gap-2">
+          <LoaderIcon className="w-4 h-4 animate-spin" />
           <div>Loading please wait...</div>
         </div>
       }
@@ -69,17 +69,17 @@ function App() {
             </AuthProtection>
           }
         >
-          <Route path='/dashboard' element={<Dashboard />} />
-          <Route path='/goals' element={<Goals />} />
-          <Route path='/goals/new' element={<CreateGoal />} />
-          <Route path='/goals/edit/:id' element={<EditGoal />} />
-          <Route path='/goals/:id' element={<GoalDetails />} />
-          <Route path='/income-statement' element={<IncomeStatement />} />
-          <Route path='/expenses' element={<Expenses />} />
-          <Route path='/lending' element={<Lending />} />
-          <Route path='/balance-sheet' element={<BalanceSheet />} />
-          <Route path='/settings' element={<Settings />} />
-          <Route path='/profile' element={<Profile />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/goals" element={<Goals />} />
+          <Route path="/goals/new" element={<CreateGoal />} />
+          <Route path="/goals/edit/:id" element={<EditGoal />} />
+          <Route path="/goals/:id" element={<GoalDetails />} />
+          <Route path="/income-statement" element={<IncomeStatement />} />
+          <Route path="/expenses" element={<Expenses />} />
+          <Route path="/lending" element={<Lending />} />
+          <Route path="/balance-sheet" element={<BalanceSheet />} />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="/profile" element={<Profile />} />
           <Route path='/comparisons' element={<Comparison />} />
           <Route path='/comparisons/new' element={<AddComparison />} />
           <Route path='/comparisons/edit/:id' element={<EditComparison />} />
@@ -95,7 +95,7 @@ function App() {
             <>
               <CookieConsent />
               <UnAuthenticatedHeader />
-              <div className='min-h-screen mt-16 lg:mt-16'>
+              <div className="min-h-screen mt-16 lg:mt-16">
                 <Outlet />
               </div>
               <Footer />
@@ -116,9 +116,9 @@ function App() {
           <Route path='/feature/comparisons/:id' element={<ComparisonDetails />} />
           <Route path='/feature/scenarios/:id' element={<ScenarioDetail />} />
           <Route path='/feature/:toolName' element={<FeaturesDetails />} />
-          <Route path='/email-verification' element={<EmailVerification />} />
+          <Route path="/email-verification/:code" element={<EmailVerificationProcess />} />
         </Route>
-        <Route path='*' element={<NotFound />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Suspense>
   )

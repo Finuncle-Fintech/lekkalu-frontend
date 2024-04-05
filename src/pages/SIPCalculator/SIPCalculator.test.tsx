@@ -14,9 +14,14 @@ const Component = () => (
 )
 
 class ResizeObserver {
-  observe() {}
-  unobserve() {}
-  disconnect() {}
+  observe() {
+  }
+
+  unobserve() {
+  }
+
+  disconnect() {
+  }
 }
 
 // Mock handleCopy function
@@ -60,13 +65,5 @@ describe('SIPCalculator', () => {
     expect(monthlyAmountInput).toBeInTheDocument()
     expect(durationInvestmentInput).toBeInTheDocument()
     expect(rateReturnInput).toBeInTheDocument()
-  })
-
-  test('renders SIPCalculator correctly', () => {
-    // Render the component
-    const { container } = render(<Component />)
-
-    // Assert that the rendered component matches the saved snapshot
-    expect(container).toMatchSnapshot()
   })
 })

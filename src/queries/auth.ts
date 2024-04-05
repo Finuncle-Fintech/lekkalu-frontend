@@ -1,13 +1,18 @@
-import { EmailVerifyPayloadType, LoginSchema, SignupSchema } from '@/schema/auth'
+import axios from 'axios'
+import { EmailVerifyPayloadType, LoginSchema, SignupSchemaNew } from '@/schema/auth'
 import { googleClient, registrationClient, tokenClient, userClient } from '@/utils/client'
 import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from '@/utils/constants'
 import { getCookie } from '@/utils/cookie'
 import { User } from '@/types/user'
 
-export async function signup(dto: Omit<SignupSchema, 'termsAndConditions' | 'privacyPolicy'>) {
-  const { data } = await userClient.post<{ email: string; username: string }>('/users_1', dto)
+export async function signup(dto: Omit<SignupSchemaNew, 'termsAndConditions' | 'privacyPolicy'>) {
+  const { data } = await axios.create({
+    baseURL: process.env.ACCOUNTS_BASE_URL,
+    headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+  }).post<{ email: string; username: string }>('/dj-rest-auth/registration/', dto)
   return data
 }
+
 export async function googleSignup(dto: { code: string }) {
   const { data } = await googleClient.post<{ access: string; refresh: string }>(
     '/users/dj-rest-auth/google/login/',
@@ -74,6 +79,8 @@ export async function resendEmail(payload: EmailVerifyPayloadType) {
     'Content-Type': 'application/json',
   }
 
-  const { data } = await registrationClient.post<{ message: string }>('/users/dj-rest-auth/registration/resend-email/', payload, { headers })
+  const { data } = await registrationClient.post<{
+    message: string
+  }>('/users/dj-rest-auth/registration/resend-email/', payload, { headers })
   return data
 }

@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { Link, useLocation, useParams } from 'react-router-dom'
 import Chart from 'react-apexcharts'
 import { useMutation, useQuery } from '@tanstack/react-query'
@@ -28,8 +28,7 @@ const ComparisonDetail = () => {
   const { getAPIClientForImaginaryUser } = useImaginaryAuth()
   const { userData } = useAuth()
   const { preferences } = useUserPreferences()
-  const IS_AUTHENTICATED_USER = Boolean(userData?.first_name)
-
+  const IS_AUTHENTICATED_USER = useMemo(() => Boolean(userData), [userData])
   const [selectedScenarios, setSelectedScenarios] = useState<Array<number>>([])
   const [timelineData, setTimelineData] = useState<any>()
 
@@ -268,11 +267,7 @@ const ComparisonDetail = () => {
             </CardHeader>
             {
               <CardContent className='w-full h-full'>
-                {isLoading ? (
-                  <p>Loading...</p>
-                ) : (
-                  <Chart options={chartOptions} series={chartSeries} type='line' height={320} />
-                )}
+                {isLoading ? <p>Loading...</p> : <ChartWrapper chartOptions={chartOptions} chartSeries={chartSeries} />}
               </CardContent>
             }
           </Card>
@@ -282,6 +277,18 @@ const ComparisonDetail = () => {
       )}
     </Page>
   )
+}
+
+// ChartWrapper component with error handling
+const ChartWrapper: React.FC<{ chartOptions: ApexCharts.ApexOptions; chartSeries: ApexAxisChartSeries }> = ({
+  chartOptions,
+  chartSeries,
+}) => {
+  try {
+    return <Chart options={chartOptions} series={chartSeries} type='line' height={320} />
+  } catch (error) {
+    return <div>Sorry, there was an error rendering the chart.</div>
+  }
 }
 
 export default ComparisonDetail

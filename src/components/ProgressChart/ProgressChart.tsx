@@ -1,5 +1,5 @@
 import React from 'react'
-import { PolarAngleAxis, RadialBar, RadialBarChart } from 'recharts'
+import Chart from 'react-apexcharts'
 import { cn } from '@/utils/utils'
 
 type Props = {
@@ -11,10 +11,49 @@ type Props = {
   unit?: string
 }
 
-const circleSize = 200
+const circleSize = 260
 
 export default function ProgressChart({ className, style, title, value, color, unit }: Props) {
-  const data = [{ name: title, value, color }]
+  const chartOptions: ApexCharts.ApexOptions = {
+    chart: {
+      height: circleSize,
+      type: 'radialBar',
+    },
+    plotOptions: {
+      radialBar: {
+        hollow: {
+          size: '60%',
+        },
+        dataLabels: {
+          name: {
+            show: false,
+          },
+          value: {
+            formatter: function (val) {
+              return val.toString() + unit
+            },
+            color: '#111',
+            fontSize: '18px',
+            show: true,
+            fontFamily: 'Poppins, sans-serif',
+            fontWeight: 700,
+            offsetY: 10,
+          },
+        },
+      },
+    },
+    fill: {
+      type: 'solid',
+      colors: [color],
+    },
+    tooltip: {
+      enabled: false,
+    },
+    stroke: {
+      lineCap: 'round',
+    },
+  }
+  const chartSeries: ApexAxisChartSeries | ApexNonAxisChartSeries = [value]
 
   return (
     <div
@@ -22,20 +61,7 @@ export default function ProgressChart({ className, style, title, value, color, u
       style={style}
     >
       <div className='text-lg font-bold'>{title}</div>
-
-      <RadialBarChart width={circleSize} height={circleSize} innerRadius={100} outerRadius={80} data={data}>
-        <PolarAngleAxis type='number' domain={[0, 100]} angleAxisId={0} tick={false} />
-        <RadialBar background dataKey='value' cornerRadius={circleSize / 2} fill={color} />
-        <text
-          x={circleSize / 2}
-          y={circleSize / 2}
-          textAnchor='middle'
-          dominantBaseline='middle'
-          className='text-lg font-bold'
-        >
-          {`${value} ${unit ?? ''}`}
-        </text>
-      </RadialBarChart>
+      <Chart options={chartOptions} series={chartSeries} type='radialBar' height={circleSize} />
     </div>
   )
 }

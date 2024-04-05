@@ -69,17 +69,17 @@ function App() {
             </AuthProtection>
           }
         >
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/goals" element={<Goals />} />
-          <Route path="/goals/new" element={<CreateGoal />} />
-          <Route path="/goals/edit/:id" element={<EditGoal />} />
-          <Route path="/goals/:id" element={<GoalDetails />} />
-          <Route path="/income-statement" element={<IncomeStatement />} />
-          <Route path="/expenses" element={<Expenses />} />
-          <Route path="/lending" element={<Lending />} />
-          <Route path="/balance-sheet" element={<BalanceSheet />} />
-          <Route path="/settings" element={<Settings />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route path='/dashboard' element={<Dashboard />} />
+          <Route path='/goals' element={<Goals />} />
+          <Route path='/goals/new' element={<CreateGoal />} />
+          <Route path='/goals/edit/:id' element={<EditGoal />} />
+          <Route path='/goals/:id' element={<GoalDetails />} />
+          <Route path='/income-statement' element={<IncomeStatement />} />
+          <Route path='/expenses' element={<Expenses />} />
+          <Route path='/lending' element={<Lending />} />
+          <Route path='/balance-sheet' element={<BalanceSheet />} />
+          <Route path='/settings' element={<Settings />} />
+          <Route path='/profile' element={<Profile />} />
           <Route path='/comparisons' element={<Comparison />} />
           <Route path='/comparisons/new' element={<AddComparison />} />
           <Route path='/comparisons/edit/:id' element={<EditComparison />} />
@@ -112,7 +112,6 @@ function App() {
           <Route path='/privacy-policies' element={<PrivacyPolicies />} />
           <Route path='/pricing' element={<Pricing />} />
           <Route path='/support' element={<Support />} />
-          {/* <Route path='/feature/comparisons' element={<></>} /> */}
           <Route path='/feature/comparisons/:id' element={<ComparisonDetails />} />
           <Route path='/feature/scenarios/:id' element={<ScenarioDetail />} />
           <Route path='/feature/:toolName' element={<FeaturesDetails />} />

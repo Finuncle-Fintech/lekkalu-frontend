@@ -43,6 +43,7 @@ const Pricing = lazy(() => import('@/pages/Pricing/Pricing'))
 const NotFound = lazy(() => import('@/pages/NotFound/NotFound'))
 const Support = lazy(() => import('./pages/Support/Support'))
 const FeaturesDetails = lazy(() => import('./pages/Features/FeaturesDetails'))
+const EmailVerificationProcess = lazy(() => import('./pages/EmailVerification/EmailVerificationProcess'))
 
 function App() {
   useEffect(() => {
@@ -51,8 +52,8 @@ function App() {
   return (
     <Suspense
       fallback={
-        <div className='flex h-screen w-full items-center justify-center gap-2'>
-          <LoaderIcon className='w-4 h-4 animate-spin' />
+        <div className="flex h-screen w-full items-center justify-center gap-2">
+          <LoaderIcon className="w-4 h-4 animate-spin" />
           <div>Loading please wait...</div>
         </div>
       }
@@ -94,7 +95,7 @@ function App() {
             <>
               <CookieConsent />
               <UnAuthenticatedHeader />
-              <div className='min-h-screen mt-16 lg:mt-16'>
+              <div className="min-h-screen mt-16 lg:mt-16">
                 <Outlet />
               </div>
               <Footer />
@@ -111,12 +112,12 @@ function App() {
           <Route path='/privacy-policies' element={<PrivacyPolicies />} />
           <Route path='/pricing' element={<Pricing />} />
           <Route path='/support' element={<Support />} />
-          {/* <Route path='/feature/comparisons' element={<></>} /> */}
           <Route path='/feature/comparisons/:id' element={<ComparisonDetails />} />
           <Route path='/feature/scenarios/:id' element={<ScenarioDetail />} />
           <Route path='/feature/:toolName' element={<FeaturesDetails />} />
+          <Route path="/email-verification/:code" element={<EmailVerificationProcess />} />
         </Route>
-        <Route path='*' element={<NotFound />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Suspense>
   )

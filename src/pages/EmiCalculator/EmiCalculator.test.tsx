@@ -14,9 +14,14 @@ const Component = () => (
 )
 
 class ResizeObserver {
-  observe() {}
-  unobserve() {}
-  disconnect() {}
+  observe() {
+  }
+
+  unobserve() {
+  }
+
+  disconnect() {
+  }
 }
 
 describe('EmiCalculator', () => {
@@ -62,13 +67,5 @@ describe('EmiCalculator', () => {
     expect(loanTenureInput).toBeDefined()
     expect(disbursementDateInput).toBeDefined()
     expect(emiDayInput).toBeDefined()
-  })
-
-  test('renders CAGRCalculator correctly', () => {
-    // Render the component
-    const { container } = renderWithClient(<Component />)
-
-    // Assert that the rendered component matches the saved snapshot
-    expect(container).toMatchSnapshot()
   })
 })

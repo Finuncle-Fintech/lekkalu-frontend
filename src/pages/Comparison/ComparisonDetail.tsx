@@ -129,7 +129,7 @@ const ComparisonDetail = () => {
       const result = mergeArraysByDate(timelineData)
       setCalculatedTimelineData(result)
     }
-  }, [isSuccess, isLoading])
+  }, [isSuccess, isLoading, timelineData])
 
   if (isFetchingComparison) {
     return (

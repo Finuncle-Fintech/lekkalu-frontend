@@ -8,15 +8,20 @@ type ScenarioType = {
   id: number
   comparisonId: number
   handleRemoveScenario: (id: number) => void
+  isPublicScenario?: boolean
 }
 
-const Scenario = ({ name, id, handleRemoveScenario }: ScenarioType) => {
+const Scenario = ({ name, id, handleRemoveScenario, isPublicScenario }: ScenarioType) => {
   const { userData } = useAuth()
   const IS_AUTHENTICATED_USER = useMemo(() => Boolean(userData), [userData])
   return (
     <div className='border p-5 rounded flex flex-col space-y-5 shadow hover:shadow-md'>
       <div className='ml-auto'>
-        {IS_AUTHENTICATED_USER ? <ScenarioOption id={id} handleRemoveScenario={handleRemoveScenario} /> : <></>}
+        {IS_AUTHENTICATED_USER ? (
+          <ScenarioOption isPublicScenario={isPublicScenario} id={id} handleRemoveScenario={handleRemoveScenario} />
+        ) : (
+          <></>
+        )}
       </div>
       <div className='text-center'>
         <p>{name}</p>

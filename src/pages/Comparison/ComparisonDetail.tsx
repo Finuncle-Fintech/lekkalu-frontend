@@ -10,7 +10,7 @@ import AddNewScenarioButton from './components/Scenario/AddNewScenarioButton'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { cn } from '@/utils/utils'
 import { COMPARISON, SCENARIOS } from '@/utils/query-keys'
-import { editComparisons, fetchComparisonsById } from '@/queries/comparisons'
+import { editComparisons, fetchComparisons, fetchComparisonsById } from '@/queries/comparisons'
 import { fetchScenarios } from '@/queries/scenarios'
 import { type Scenario as ScenarioType } from '@/types/scenarios'
 import { Comparison } from '@/types/comparison'
@@ -53,6 +53,27 @@ const ComparisonDetail = () => {
   const { data: scenarios } = useQuery([SCENARIOS.SCENARIOS], fetchScenarios, {
     enabled: Boolean(comparison?.id) && IS_AUTHENTICATED_USER,
   })
+
+  const {
+    data: comparisonData,
+    isLoading: isComparisonLoading,
+    isSuccess,
+  } = useQuery([COMPARISON.COMPARISON], fetchComparisons)
+
+  const isPublicScenario = useMemo(() => {
+    if (!isComparisonLoading || isSuccess) {
+      if (comparisonData && comparisonId) {
+        for (const item of comparisonData) {
+          if (item.id === Number(comparisonId)) {
+            return false
+          }
+        }
+      }
+    }
+    return true
+  }, [isComparisonLoading, isSuccess, comparisonData, comparisonId])
+
+  console.log(isPublicScenario)
 
   const { mutate: scenarioMutationInComparison } = useMutation(
     (dto: Partial<Comparison>) => editComparisons(Number(comparisonId), dto),
@@ -221,16 +242,21 @@ const ComparisonDetail = () => {
         )}
       </h2>
       <div className='grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 gap-y-10'>
-        {scenariosForThisComparison?.map(({ id, name, imag_username }) => (
-          <Scenario
-            key={id}
-            id={id}
-            name={name}
-            username={imag_username}
-            comparisonId={Number(comparisonId)}
-            handleRemoveScenario={handleRemoveScenarioFromComparison}
-          />
-        ))}
+        {/* {(isPublicScenario ? comparison?.scenarios_objects : scenariosForThisComparison)?.map( */}
+        {!IS_FOR_FEATURE_PAGE &&
+          (isPublicScenario ? comparison?.scenarios_objects : scenariosForThisComparison)?.map(
+            ({ id, name, imag_username }) => (
+              <Scenario
+                key={id}
+                id={id}
+                name={name}
+                username={imag_username}
+                comparisonId={Number(comparisonId)}
+                handleRemoveScenario={handleRemoveScenarioFromComparison}
+                isPublicScenario={isPublicScenario}
+              />
+            ),
+          )}
         {!IS_AUTHENTICATED_USER && !scenariosForThisComparison ? (
           comparison?.scenarios_objects?.map(({ id, name, imag_username }) => (
             <Link key={id} to={'/feature/scenarios/' + id}>
@@ -246,7 +272,7 @@ const ComparisonDetail = () => {
         ) : (
           <></>
         )}
-        {IS_AUTHENTICATED_USER ? (
+        {IS_AUTHENTICATED_USER && !isPublicScenario ? (
           <AddNewScenarioButton
             handleAddScenariosToComparison={handleAddScenariosToComparison}
             scenarios={remaningScenarios || []}

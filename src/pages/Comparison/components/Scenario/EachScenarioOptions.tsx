@@ -8,9 +8,10 @@ import { Button } from '@/components/ui/button'
 type GoalOptionsType = {
   id: number
   handleRemoveScenario: (id: number) => void
+  isPublicScenario?: boolean
 }
 
-const ScenarioOption = ({ id, handleRemoveScenario }: GoalOptionsType) => {
+const ScenarioOption = ({ id, handleRemoveScenario, isPublicScenario }: GoalOptionsType) => {
   return (
     <div className='flex w-full justify-end gap-x-2'>
       <Popover>
@@ -21,24 +22,28 @@ const ScenarioOption = ({ id, handleRemoveScenario }: GoalOptionsType) => {
         </PopoverTrigger>
         <PopoverContent className='w-[200px]'>
           <div className='flex flex-col'>
-            <Button
-              className='w-full bg-transparent hover:bg-accent flex justify-center p-2 rounded-lg text-sm font-medium text-black'
-              onClick={() => handleRemoveScenario(id)}
-            >
-              Remove
-            </Button>
+            {!isPublicScenario && (
+              <Button
+                className='w-full bg-transparent hover:bg-accent flex justify-center p-2 rounded-lg text-sm font-medium text-black'
+                onClick={() => handleRemoveScenario(id)}
+              >
+                Remove
+              </Button>
+            )}
             <Link
               to={`/scenarios/${id}`}
               className='w-full hover:bg-accent flex justify-center p-2 rounded-lg text-sm font-medium'
             >
               View Detail
             </Link>
-            <Link
-              to={`/scenarios/edit/${id}`}
-              className='w-full hover:bg-accent flex justify-center p-2 rounded-lg text-sm font-medium'
-            >
-              Edit Scenario
-            </Link>
+            {!isPublicScenario && (
+              <Link
+                to={`/scenarios/edit/${id}`}
+                className='w-full hover:bg-accent flex justify-center p-2 rounded-lg text-sm font-medium'
+              >
+                Edit Scenario
+              </Link>
+            )}
           </div>
         </PopoverContent>
       </Popover>

@@ -1,0 +1,27 @@
+name: Automated PR Review for Lekkalu Frontend
+
+on:
+  pull_request:
+    types: [ opened, synchronize, reopened ]
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'  # Match this version with your project's node version
+
+      - name: Install dependencies
+        run: |
+          npm install typescript ts-node @types/node axios dotenv
+
+      - name: Compile and run TypeScript script
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: npx ts-node .github/scripts/initial_pr_review.ts

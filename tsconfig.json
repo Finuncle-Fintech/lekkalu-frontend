@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ESNext"
+    ],
     "allowJs": false,
     "skipLibCheck": true,
     "esModuleInterop": false,
@@ -15,9 +19,14 @@
     "noEmit": true,
     "jsx": "react",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": [
+        "./src/*",
+        ".github/scripts/*"
+      ]
     }
   },
-  "include": ["src"],
+  "include": [
+    "src"
+  ],
   "extends": "./tsconfig.path.json"
 }

@@ -1,7 +1,7 @@
 import React from 'react'
+import { fireEvent, waitFor } from '@testing-library/react'
 import { renderWithClient } from '@/__test__/utils'
 import EmailVerification from './EmailVerification'
-import { fireEvent, waitFor } from '@testing-library/react'
 
 jest.mock('axios', () => ({
   get: jest.fn(),
@@ -17,7 +17,6 @@ const Component = (isOpen: any) => (
 )
 
 describe('EmailVerification Component', () => {
-
   beforeEach(() => {
     jest.clearAllMocks()
   })
@@ -35,14 +34,14 @@ describe('EmailVerification Component', () => {
   it('should call handleRemindMeLater function when Remind me later button is clicked', async () => {
     const { getByText } = renderWithClient(
       <Component isOpen={true} />
-    );
+    )
 
-    const remindMeLaterButton = getByText('Remind me later');
-    expect(remindMeLaterButton).toBeInTheDocument();
-    fireEvent.click(remindMeLaterButton);
+    const remindMeLaterButton = getByText('Remind me later')
+    expect(remindMeLaterButton).toBeInTheDocument()
+    fireEvent.click(remindMeLaterButton)
 
     await waitFor(() => {
-      expect(mockSetIsEmailVerifiedDialogOpen).toHaveBeenCalledTimes(1);
-    });
-  });
+      expect(mockSetIsEmailVerifiedDialogOpen).toHaveBeenCalledTimes(1)
+    })
+  })
 })

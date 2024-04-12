@@ -170,19 +170,19 @@ export default function SIPCalculator() {
                 <div className='flex gap-2 border-b'>
                   <div>Total invested: </div>
                   <div className='font-medium'>
-                    {result?.summary?.totalInvested} {preferences.currencyUnit}
+                    {formatIndianMoneyNotation(result?.summary?.totalInvested)} {preferences.currencyUnit}
                   </div>
                 </div>
                 <div className='flex gap-2 border-b'>
                   <div>Final value: </div>
                   <div className='font-medium'>
-                    {result?.summary?.finalValue} {preferences.currencyUnit}
+                    {formatIndianMoneyNotation(result?.summary?.finalValue)} {preferences.currencyUnit}
                   </div>
                 </div>
                 <div className='flex gap-2 border-b'>
                   <div>Wealth gained: </div>
                   <div className='font-medium'>
-                    {result?.summary?.wealthGained} {preferences.currencyUnit}
+                    {formatIndianMoneyNotation(result?.summary?.wealthGained)} {preferences.currencyUnit}
                   </div>
                 </div>
                 <Chart options={chartOptionsSIP} series={chartSeriesSIP} type='pie' width={300} />

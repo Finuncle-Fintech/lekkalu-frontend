@@ -205,15 +205,17 @@ const EmiCalculator = () => {
           <div className='flex items-center justify-center flex-col gap-4 text-center'>
             <div>
               <div>Loan EMI</div>
-              <div className='text-2xl font-medium'>{result?.summary?.loan_emi}</div>
+              <div className='text-2xl font-medium'>{formatIndianMoneyNotation(result?.summary?.loan_emi)}</div>
             </div>
             <div>
               <div>Total Interest Payable</div>
-              <div className='text-2xl font-medium'>{result?.summary?.total_interest_payable}</div>
+              <div className='text-2xl font-medium'>
+                {formatIndianMoneyNotation(result?.summary?.total_interest_payable)}
+              </div>
             </div>
             <div>
               <div>Total Payment</div>
-              <div className='text-2xl font-medium'>{result?.summary?.total_payment}</div>
+              <div className='text-2xl font-medium'>{formatIndianMoneyNotation(result?.summary?.total_payment)}</div>
             </div>
             <div>
               <Button onClick={handleExportToExcel}>Export to Excel</Button>
@@ -237,10 +239,10 @@ const EmiCalculator = () => {
           {result?.summary?.repayment_table.map((record) => (
             <TableRow key={record.month}>
               <TableCell>{Math.abs(record.month)}</TableCell>
-              <TableCell>{Math.abs(record.principal)}</TableCell>
-              <TableCell>{Math.abs(record.interest)}</TableCell>
-              <TableCell>{Math.abs(record.total_payment)}</TableCell>
-              <TableCell>{Math.abs(record.outstandingPrincipal)}</TableCell>
+              <TableCell>{formatIndianMoneyNotation(Math.abs(record.principal))}</TableCell>
+              <TableCell>{formatIndianMoneyNotation(Math.abs(record.interest))}</TableCell>
+              <TableCell>{formatIndianMoneyNotation(Math.abs(record.total_payment))}</TableCell>
+              <TableCell>{formatIndianMoneyNotation(Math.abs(record.outstandingPrincipal))}</TableCell>
             </TableRow>
           ))}
         </TableBody>

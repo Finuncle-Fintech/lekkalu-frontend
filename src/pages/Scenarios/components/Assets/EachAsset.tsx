@@ -6,6 +6,7 @@ import AddOrEditAssetsForScenarios from './AddOrEditAssetsForScenarios'
 import DeleteAssetForScenario from './DeleteAssetForScenario'
 import { PhysicalAsset } from '@/types/balance-sheet'
 import { AddPhysicalAssetSchemaForScenario } from '@/schema/balance-sheet'
+import { formatIndianMoneyNotation } from '@/utils/format-money'
 
 type EachIncomeForScenarioType = {
   asset: PhysicalAsset
@@ -52,7 +53,7 @@ const EachIncomeExpenseForScenario = ({
         )}
       </div>
       <div className='flex flex-col items-center text-white'>
-        <p>{asset.market_value}</p>
+        <p>{formatIndianMoneyNotation(asset.market_value)}</p>
         <p className='mt-5'>{asset.name}</p>
       </div>
     </div>

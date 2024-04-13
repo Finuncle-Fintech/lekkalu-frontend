@@ -9,6 +9,7 @@ import GoalTimeline from './components/GoalTimeline'
 import BackButton from './components/BackButton'
 import { fetchIncomeExpenses } from '@/queries/income-statement'
 import { convertDays, goalReachedString } from './utils/dateTime'
+import { formatIndianMoneyNotation } from '@/utils/format-money'
 
 export default function GoalDetails() {
   const { id } = useParams() as { id: string }
@@ -59,7 +60,7 @@ export default function GoalDetails() {
             <TargetIcon className='w-4 h-4' />
             <div>Target</div>
           </div>
-          <div className='flex-1 font-medium'>{data.target_value}</div>
+          <div className='flex-1 font-medium'>{formatIndianMoneyNotation(data.target_value)}</div>
         </div>
 
         <div className='flex'>

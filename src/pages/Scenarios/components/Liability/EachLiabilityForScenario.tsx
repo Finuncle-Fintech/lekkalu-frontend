@@ -6,6 +6,7 @@ import { Liability } from '@/types/balance-sheet'
 import { AddLiabilitySchema } from '@/schema/balance-sheet'
 import AddOrEditLiabilityDialog from './AddorEditLiabilityDialog'
 import DeleteLiabilityForScenario from './DeleteLiabilityForScenario'
+import { formatIndianMoneyNotation } from '@/utils/format-money'
 
 type EachLiabilityForScenarioType = {
   liability: Liability
@@ -52,7 +53,7 @@ const EachLiabilityForScenario = ({
         )}
       </div>
       <div className='flex flex-col items-center text-white'>
-        <p>{liability.principal}</p>
+        <p>{formatIndianMoneyNotation(liability.principal)}</p>
         <p className='mt-5'>{liability.name}</p>
       </div>
     </div>

@@ -8,7 +8,7 @@ export function calculateTransactionAmount(type: 'lend' | 'borrow', amount: numb
   }
 }
 
-export const TRANNACTION_TYPES = [
+export const TRANSACTION_TYPES = [
   { id: 'lend', value: 'Lend', label: 'Lend' },
   { id: 'borrow', value: 'Borrow', label: 'Borrow' },
 ]

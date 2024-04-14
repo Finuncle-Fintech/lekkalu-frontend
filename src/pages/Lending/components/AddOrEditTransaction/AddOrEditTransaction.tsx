@@ -18,7 +18,7 @@ import {
   fetchLendingAccounts,
   updateLendingTransaction,
 } from '@/queries/lending'
-import { PAYMENT_METHODS, TRANNACTION_TYPES, calculateTransactionAmount } from '@/utils/lending'
+import { PAYMENT_METHODS, TRANSACTION_TYPES, calculateTransactionAmount } from '@/utils/lending'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
 
 type Props = {
@@ -100,7 +100,7 @@ export default function AddOrEditTransaction({ transaction, trigger }: Props) {
         id: 'type',
         label: 'Select Type',
         type: 'select',
-        options: TRANNACTION_TYPES,
+        options: TRANSACTION_TYPES,
       },
       {
         id: 'lending_account',

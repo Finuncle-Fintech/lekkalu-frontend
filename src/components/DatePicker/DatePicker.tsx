@@ -16,12 +16,12 @@ export type DatePickerProps = Omit<CalendarProps, 'onSelect'> & {
 
 export default function DatePicker({ className, style, onChange, placeholder, value, ...props }: DatePickerProps) {
   const [date, setDate] = React.useState<Date | undefined>(value)
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false)
 
   useEffect(() => {
     setDate(value)
   }, [value])
 
-  const [isCalendarOpen, setIsCalendarOpen] = useState(false)
   return (
     <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
       <PopoverTrigger asChild>
@@ -39,7 +39,7 @@ export default function DatePicker({ className, style, onChange, placeholder, va
           mode='single'
           captionLayout='dropdown-buttons'
           selected={date}
-          onSelect={(selectedDate) => {
+          onDayClick={(selectedDate) => {
             setDate(selectedDate)
             onChange?.(selectedDate)
             setIsCalendarOpen(false)

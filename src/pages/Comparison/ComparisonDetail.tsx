@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from 'react'
-import { Link, useLocation, useParams } from 'react-router-dom'
+import React, { useEffect, useMemo, useState } from 'react'
+import { Link, useLocation, useParams, useNavigate, useSearchParams } from 'react-router-dom'
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import dayjs from 'dayjs'
@@ -11,7 +11,7 @@ import AddNewScenarioButton from './components/Scenario/AddNewScenarioButton'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { cn } from '@/utils/utils'
 import { COMPARISON, SCENARIOS } from '@/utils/query-keys'
-import { editComparisons, fetchComparisonsById } from '@/queries/comparisons'
+import { editComparisons, fetchComparisons, fetchComparisonsById } from '@/queries/comparisons'
 import { fetchScenarios } from '@/queries/scenarios'
 import { type Scenario as ScenarioType } from '@/types/scenarios'
 import { Comparison } from '@/types/comparison'
@@ -24,10 +24,25 @@ import { useAuth } from '@/hooks/use-auth'
 
 const ComparisonDetail = () => {
   const comparisonId = useParams().id
-  const IS_FOR_FEATURE_PAGE = useLocation().pathname.includes('feature')
+  const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
+  const shouldCopy = searchParams.get('copy')
+  const { data: allComparisons } = useQuery([COMPARISON.COMPARISON], fetchComparisons)
+  const location = useLocation()
+  const IS_FOR_FEATURE_PAGE = location?.pathname.includes('feature')
   const { getAPIClientForImaginaryUser } = useImaginaryAuth()
   const { userData } = useAuth()
-  const IS_AUTHENTICATED_USER = Boolean(userData?.first_name)
+  const MY_OWN_COMPARISON = useMemo(
+    () => Boolean(allComparisons?.find((each) => each?.id === Number(comparisonId))?.id),
+    [allComparisons],
+  )
+  const IS_AUTHENTICATED_USER = Boolean(userData?.first_name) && MY_OWN_COMPARISON
+
+  useEffect(() => {
+    if (shouldCopy === 'true') {
+      // TODO: API Call if should copy is true.
+    }
+  }, [])
 
   const [selectedScenarios, setSelectedScenarios] = useState<Array<number>>([])
   const [timelineData, setTimelineData] = useState<any>()
@@ -124,6 +139,18 @@ const ComparisonDetail = () => {
     scenarioMutationInComparison({ scenarios: remainingScenarios })
   }
 
+  const handleCopyComparison = () => {
+    if (userData?.username) {
+      // just call api and on success redirect to that comparison.
+    } else {
+      // redirect to sign up page
+      navigate({
+        pathname: '/signin',
+        search: `redirectTo=/comparisons/${comparisonId}&copy=true`,
+      })
+    }
+  }
+
   useEffect(() => {
     if (!isLoading && isSuccess) {
       const result = mergeArraysByDate(timelineData)
@@ -150,17 +177,18 @@ const ComparisonDetail = () => {
   return (
     <Page className='space-y-8'>
       <div className='flex justify-between'>
-        {IS_AUTHENTICATED_USER ? (
+        {MY_OWN_COMPARISON ? (
           <PageTitle
-            backUrl={IS_AUTHENTICATED_USER ? '/comparisons' : '/feature/comparisons'}
+            backUrl={'/comparisons'}
             backUrlTitle='Back to comparisons'
             title={comparison?.name || ''}
             key={comparisonId}
+            noBackButton={false}
           />
         ) : (
-          <div />
+          <PageTitle noBackButton={true} title={comparison?.name || ''} key={comparisonId} />
         )}
-        <div>
+        <div className='flex'>
           <Button
             variant={'default'}
             onClick={handleSimulate}
@@ -169,6 +197,13 @@ const ComparisonDetail = () => {
           >
             Simulate
           </Button>
+          {!MY_OWN_COMPARISON ? (
+            <div>
+              <Button onClick={handleCopyComparison}>Copy</Button>
+            </div>
+          ) : (
+            <></>
+          )}
         </div>
       </div>
       <h2 className='font-bold'>
@@ -191,7 +226,7 @@ const ComparisonDetail = () => {
             handleRemoveScenario={handleRemoveScenarioFromComparison}
           />
         ))}
-        {!IS_AUTHENTICATED_USER && !scenariosForThisComparison ? (
+        {!IS_AUTHENTICATED_USER && !scenariosForThisComparison?.length ? (
           comparison?.scenarios_objects?.map(({ id, name, imag_username }) => (
             <Link key={id} to={'/feature/scenarios/' + id}>
               <Scenario
@@ -200,6 +235,7 @@ const ComparisonDetail = () => {
                 username={imag_username}
                 comparisonId={Number(comparisonId)}
                 handleRemoveScenario={() => {}}
+                hideOptionsButton
               />
             </Link>
           ))

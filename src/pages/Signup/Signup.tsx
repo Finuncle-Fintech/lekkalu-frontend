@@ -16,6 +16,7 @@ export default function Signup() {
   const { tokenData, signupMutation } = useAuthContext()
   const [searchParams] = useSearchParams()
   const redirectTo = searchParams.get('redirectTo') ?? '/dashboard'
+  const shouldCopy = searchParams.get('copy')
 
   const signupFormNew = useForm<SignupSchemaNew>({
     resolver: zodResolver(signupSchemaNew),
@@ -38,33 +39,36 @@ export default function Signup() {
   }
 
   if (tokenData) {
+    if (shouldCopy === 'true') {
+      return <Navigate to={{ pathname: redirectTo, search: `copy=${shouldCopy}` }} replace />
+    }
     return <Navigate to={{ pathname: redirectTo }} replace />
   }
 
   return (
-    <div className="bg-primary">
-      <Page className="flex items-center justify-around h-screen">
-        <div className="flex-1 pt-4 hidden md:flex items-center justify-center">
-          <div className="relative">
-            <div className="absolute -top-10 -left-10 bg-white rounded-full w-10 h-10" />
-            <p className="text-white text-2xl font-medium text-center">finuncle</p>
+    <div className='bg-primary'>
+      <Page className='flex items-center justify-around h-screen'>
+        <div className='flex-1 pt-4 hidden md:flex items-center justify-center'>
+          <div className='relative'>
+            <div className='absolute -top-10 -left-10 bg-white rounded-full w-10 h-10' />
+            <p className='text-white text-2xl font-medium text-center'>finuncle</p>
           </div>
         </div>
 
-        <div className="flex-1 max-w-xl mx-auto">
-          <div className="bg-white p-4 m-4 rounded-lg">
-            <h1 className="text-2xl font-bold mb-4">Sign Up</h1>
+        <div className='flex-1 max-w-xl mx-auto'>
+          <div className='bg-white p-4 m-4 rounded-lg'>
+            <h1 className='text-2xl font-bold mb-4'>Sign Up</h1>
 
             <Form {...signupFormNew}>
-              <form onSubmit={signupFormNew.handleSubmit(handleSignup)} className="space-y-4 w-full">
+              <form onSubmit={signupFormNew.handleSubmit(handleSignup)} className='space-y-4 w-full'>
                 <FormField
                   control={signupFormNew.control}
-                  name="username"
+                  name='username'
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Username</FormLabel>
                       <FormControl>
-                        <Input disabled={signupMutation.isLoading} placeholder="Enter your username" {...field} />
+                        <Input disabled={signupMutation.isLoading} placeholder='Enter your username' {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -72,12 +76,12 @@ export default function Signup() {
                 />
                 <FormField
                   control={signupFormNew.control}
-                  name="email"
+                  name='email'
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Email</FormLabel>
                       <FormControl>
-                        <Input disabled={signupMutation.isLoading} placeholder="Enter your email" {...field} />
+                        <Input disabled={signupMutation.isLoading} placeholder='Enter your email' {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -86,12 +90,12 @@ export default function Signup() {
 
                 <FormField
                   control={signupFormNew.control}
-                  name="password1"
+                  name='password1'
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Password</FormLabel>
                       <FormControl>
-                        <Password disabled={signupMutation.isLoading} placeholder="Enter your password" {...field} />
+                        <Password disabled={signupMutation.isLoading} placeholder='Enter your password' {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -99,12 +103,12 @@ export default function Signup() {
                 />
                 <FormField
                   control={signupFormNew.control}
-                  name="password2"
+                  name='password2'
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Confirm Password</FormLabel>
                       <FormControl>
-                        <Password disabled={signupMutation.isLoading} placeholder="Enter your password" {...field} />
+                        <Password disabled={signupMutation.isLoading} placeholder='Enter your password' {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -113,23 +117,23 @@ export default function Signup() {
 
                 <FormField
                   control={signupFormNew.control}
-                  name="termsAndConditions"
+                  name='termsAndConditions'
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
-                        <div className="flex items-center space-x-2">
+                        <div className='flex items-center space-x-2'>
                           <Checkbox
                             disabled={signupMutation.isLoading}
-                            id="termsAndConditions"
+                            id='termsAndConditions'
                             checked={field.value}
                             onCheckedChange={field.onChange}
                           />
                           <label
-                            htmlFor="termsAndConditions"
-                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                            htmlFor='termsAndConditions'
+                            className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
                           >
                             I have read, understood and agreed to{' '}
-                            <Link to="/terms-and-conditions" className="underline">
+                            <Link to='/terms-and-conditions' className='underline'>
                               Finuncle&apos;s Terms and Conditions
                             </Link>
                           </label>
@@ -143,23 +147,23 @@ export default function Signup() {
                 <FormField
                   disabled={signupMutation.isLoading}
                   control={signupFormNew.control}
-                  name="privacyPolicy"
+                  name='privacyPolicy'
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
-                        <div className="flex items-center space-x-2">
+                        <div className='flex items-center space-x-2'>
                           <Checkbox
                             disabled={signupMutation.isLoading}
-                            id="privacyPolicy"
+                            id='privacyPolicy'
                             checked={field.value}
                             onCheckedChange={field.onChange}
                           />
                           <label
-                            htmlFor="privacyPolicy"
-                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                            htmlFor='privacyPolicy'
+                            className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
                           >
                             I have read, understood and agreed to{' '}
-                            <Link to="/privacy-policies" className="underline">
+                            <Link to='/privacy-policies' className='underline'>
                               Finuncle&apos;s Privacy Policy
                             </Link>
                           </label>
@@ -170,23 +174,23 @@ export default function Signup() {
                   )}
                 />
 
-                <Button type="submit" loading={signupMutation.isLoading}>
+                <Button type='submit' loading={signupMutation.isLoading}>
                   Continue
                 </Button>
 
-                <Link to="/signin" className="block text-sm text-muted-foreground my-2">
+                <Link to='/signin' className='block text-sm text-muted-foreground my-2'>
                   Already have an account? Login
                 </Link>
               </form>
             </Form>
-            <div className="space-y-4">
-              <div className="flex items-center gap-2">
-                <div className="h-[1px] bg-muted w-full" />
+            <div className='space-y-4'>
+              <div className='flex items-center gap-2'>
+                <div className='h-[1px] bg-muted w-full' />
                 <p>OR</p>
-                <div className="h-[1px] bg-muted w-full" />
+                <div className='h-[1px] bg-muted w-full' />
               </div>
-              <div className="flex justify-center items-center mx-0">
-                <GoogleAuth buttonText="Signup with Google" />
+              <div className='flex justify-center items-center mx-0'>
+                <GoogleAuth buttonText='Signup with Google' />
               </div>
             </div>
           </div>

@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useCallback } from 'react'
 import constate from 'constate'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { fetchUser, googleSignup, login, refreshToken, signup } from '@/queries/auth'
 import { deleteCookie, setCookie } from '@/utils/cookie'
 import { ACCESS_TOKEN_KEY, COOKIE_CONSENT, REFRESH_TOKEN_KEY } from '@/utils/constants'
@@ -14,6 +14,7 @@ export function useAuth() {
   const qc = useQueryClient()
   const { toast } = useToast()
   const navigate = useNavigate()
+  const location = useLocation()
   const { mutate: fetchUserData, data: userData } = useMutation(fetchUser, {})
 
   const {
@@ -49,7 +50,7 @@ export function useAuth() {
         title: 'Signup Success!',
         description: 'Your account has been created successfully now you can login to you account!',
       })
-      navigate('/signin')
+      navigate({ pathname: '/signin', search: location.search })
     },
     onError: (err: any) => toast(getErrorMessage(err)),
   })

@@ -6,9 +6,25 @@ type PageTitleType = {
   title: string
   backUrl: string
   backUrlTitle: string
+  noBackButton?: false
 }
 
-const PageTitle = ({ title, backUrl, backUrlTitle }: PageTitleType) => {
+type PageTitleTypeWithoutBackButton = {
+  title: string
+  noBackButton: true
+}
+
+const PageTitle = (props: PageTitleType | PageTitleTypeWithoutBackButton) => {
+  if (props.noBackButton) {
+    return (
+      <div className='space-y-8'>
+        <div>
+          <h1 className='text-2xl font-bold'>{props.title}</h1>
+        </div>
+      </div>
+    )
+  }
+  const { title, backUrl, backUrlTitle } = props
   return (
     <div className='space-y-8'>
       <div>

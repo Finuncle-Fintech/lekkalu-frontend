@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Link, Navigate, useSearchParams } from 'react-router-dom'
+import { Link, Navigate, useLocation, useSearchParams } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { AppleIcon, FacebookIcon } from 'lucide-react'
@@ -17,7 +17,9 @@ import GoogleAuth from '@/components/SocialAuth/GoogleAuth'
 export const Signin = () => {
   const { tokenData, loginMutation, googleSignupMutation } = useAuthContext()
   const [searchParams] = useSearchParams()
+  const location = useLocation()
   const redirectTo = searchParams.get('redirectTo') ?? '/dashboard'
+  const shouldCopy = searchParams.get('copy')
   const authCode = searchParams.get('code')
   const isUnderDevelopment = true
 
@@ -42,6 +44,9 @@ export const Signin = () => {
   }, [authCode])
 
   if (tokenData) {
+    if (shouldCopy === 'true') {
+      return <Navigate to={{ pathname: redirectTo, search: `copy=${shouldCopy}` }} replace />
+    }
     return <Navigate to={{ pathname: redirectTo }} replace />
   }
 
@@ -122,7 +127,10 @@ export const Signin = () => {
               </form>
             </Form>
 
-            <Link to='/signup' className='block text-sm text-muted-foreground my-2'>
+            <Link
+              to={{ pathname: '/signup', search: location.search }}
+              className='block text-sm text-muted-foreground my-2'
+            >
               Don&apos;t have an account? Sign Up
             </Link>
             <div className='space-y-4'>

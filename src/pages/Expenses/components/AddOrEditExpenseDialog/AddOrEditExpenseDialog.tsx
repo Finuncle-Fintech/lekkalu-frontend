@@ -179,8 +179,9 @@ export default function AddOrEditExpenseDialog({ expense, trigger }: Props) {
           for (const expense of parsedData) {
             const time = dayjs(expense.date).toDate()
             const newTags = expense.tags.split(',')
+            const amount = parseFloat(expense.amount.toFixed(2))
             const tagIds = await getOrCreateTag(newTags, tags ?? [])
-            addExpenseMutation.mutate({ amount: expense.amount, tags: tagIds, time })
+            addExpenseMutation.mutate({ amount, tags: tagIds, time })
           }
 
           toast({ title: 'Expenses created successfully!' })

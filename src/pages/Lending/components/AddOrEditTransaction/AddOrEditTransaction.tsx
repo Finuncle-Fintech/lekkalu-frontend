@@ -222,11 +222,10 @@ export default function AddOrEditTransaction({ transaction, trigger }: Props) {
       >
         {cloneElement(trigger)}
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className='max-h-[600px] overflow-y-auto'>
         <DialogHeader>
           <DialogTitle>{transaction ? 'Edit' : 'Add'} Transaction</DialogTitle>
         </DialogHeader>
-
         <Form {...form}>
           <form onSubmit={form.handleSubmit(handleAddOrEditLendingTransaction)} className='space-y-4'>
             <InputFieldsRenderer control={form.control} inputs={inputs} />

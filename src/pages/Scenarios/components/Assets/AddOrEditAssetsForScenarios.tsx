@@ -99,7 +99,7 @@ export default function AddOrEditAssetsForScenario({ trigger, asset, addAsset, e
       >
         {cloneElement(trigger)}
       </DialogTrigger>
-      <DialogContent className='max-h-[800px] overflow-auto'>
+      <DialogContent>
         <DialogHeader>
           <DialogTitle>{isEdit ? 'Edit' : 'Add'} Asset</DialogTitle>
         </DialogHeader>

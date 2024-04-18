@@ -222,7 +222,7 @@ export default function AddOrEditTransaction({ transaction, trigger }: Props) {
       >
         {cloneElement(trigger)}
       </DialogTrigger>
-      <DialogContent className='max-h-[600px] overflow-y-auto'>
+      <DialogContent>
         <DialogHeader>
           <DialogTitle>{transaction ? 'Edit' : 'Add'} Transaction</DialogTitle>
         </DialogHeader>

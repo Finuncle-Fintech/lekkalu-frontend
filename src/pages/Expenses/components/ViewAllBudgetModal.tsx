@@ -38,7 +38,7 @@ export default function ViewAllBudgetModal() {
       >
         <Button variant='outline'>View All</Button>
       </DialogTrigger>
-      <DialogContent className='max-h-[600px] overflow-y-auto'>
+      <DialogContent>
         <DialogHeader>
           <DialogTitle>Your list of budgets</DialogTitle>
         </DialogHeader>

@@ -84,7 +84,7 @@ export default function AddOrEditGoal({ trigger, goal }: Props) {
       >
         {cloneElement(trigger)}
       </DialogTrigger>
-      <DialogContent className='max-h-[800px] overflow-auto max-w-3xl'>
+      <DialogContent className='max-w-3xl'>
         <DialogHeader>
           <DialogTitle>{isEdit ? 'Edit' : 'Add'} Goal</DialogTitle>
         </DialogHeader>

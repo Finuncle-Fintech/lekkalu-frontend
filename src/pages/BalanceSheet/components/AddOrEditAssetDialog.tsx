@@ -91,7 +91,7 @@ export default function AddOrEditAssetDialog({ trigger, asset }: Props) {
       >
         {cloneElement(trigger)}
       </DialogTrigger>
-      <DialogContent className='max-h-[800px] overflow-auto'>
+      <DialogContent>
         <DialogHeader>
           <DialogTitle>{isEdit ? 'Edit' : 'Add'} Asset</DialogTitle>
         </DialogHeader>

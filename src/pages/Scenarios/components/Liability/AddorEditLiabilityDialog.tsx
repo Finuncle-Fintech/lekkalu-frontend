@@ -85,7 +85,7 @@ export default function AddOrEditLiabilityDialog({ trigger, liability, editLiabi
       >
         {cloneElement(trigger)}
       </DialogTrigger>
-      <DialogContent className='max-h-[800px] overflow-auto'>
+      <DialogContent>
         <DialogHeader>
           <DialogTitle>{isEdit ? 'Edit' : 'Add'} Liability</DialogTitle>
         </DialogHeader>

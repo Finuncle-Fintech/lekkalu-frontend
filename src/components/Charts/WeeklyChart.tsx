@@ -68,9 +68,9 @@ export const WeeklyChart = () => {
     },
     xaxis: {
       type: 'datetime',
-      min: weeklyData[Math.floor(weeklyData.length / 4)].date.getTime(), // Set min to quarter of the data
-      max: weeklyData[Math.floor((weeklyData.length * 3) / 4)].date.getTime(),
-      categories: weeklyData.map((item) => item.date),
+      min: weeklyData[Math.floor(weeklyData.length / 4)]?.date.getTime(), // Set min to quarter of the data
+      max: weeklyData[Math.floor((weeklyData.length * 3) / 4)]?.date.getTime(),
+      categories: weeklyData.map((item) => item?.date),
       labels: {
         datetimeFormatter: {
           year: 'yyyy',

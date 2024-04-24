@@ -36,6 +36,7 @@ export default function BudgetChart() {
         ...budget,
         month: parseInt(dayjs(budget.month, 'YYYY-MM-DD').format('MM')),
         limit: parseInt(budget.limit),
+        year: parseInt(dayjs(budget.month, 'YYYY-MM-DD').format('YYYY')),
       }))
     },
   })
@@ -48,7 +49,10 @@ export default function BudgetChart() {
     }
 
     return data
-      ?.map((ele) => ({ ...ele, budget: budgetData?.find((item) => item.month === ele.month)?.limit ?? 0 }))
+      ?.map((ele) => ({
+        ...ele,
+        budget: budgetData?.find((item) => item.month === ele.month && item.year === ele.year)?.limit ?? 0,
+      }))
       .sort((a, b) => {
         if (a.year !== b.year) {
           return b.year - a.year

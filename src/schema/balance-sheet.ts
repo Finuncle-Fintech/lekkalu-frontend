@@ -24,11 +24,19 @@ export type AddPhysicalAssetTypeSchema = {
   type: AssetsType
 }
 
-export type AddPhysicalAssetSchema = Omit<z.infer<typeof addPhysicalAssetSchema>, 'purchase_date' | 'sell_date'> & {
+export type AddPhysicalAssetSchema = {
+  name: string
+  purchase_value: number
   purchase_date: string
-  sell_date: string
+  depreciation_percent_per_year: number
+  type: number
   depreciation_frequency: number
 }
+// export type AddPhysicalAssetSchema = Omit<z.infer<typeof addPhysicalAssetSchema>, 'purchase_date' | 'sell_date'> & {
+//   purchase_date: string
+//   sell_date: string
+//   depreciation_frequency: number
+// }
 
 export const addPhysicalAssetSchemaForScenario = z.object({
   name: z.string().min(1, 'Asset name is required!'),
@@ -137,7 +145,7 @@ export const addPhysicalAssetTypePhysicalSchema = z.object({
   type: z.string({ required_error: 'Type is required!' }),
 })
 
-export type AddPhysicalAssetTypePhysicalSchema = {
+export type AddPhysicalAssetType = {
   name: string
   purchase_value: number
   purchase_date: Date
@@ -146,3 +154,13 @@ export type AddPhysicalAssetTypePhysicalSchema = {
   months?: number
   years?: number
 }
+
+// export type AddPhysicalAssetTypePhysicalSchema = {
+//   name: string
+//   purchase_value: number
+//   purchase_date: Date
+//   percentage_value: number
+//   type: 'depreciation' | 'apprecitaion'
+//   months?: number
+//   years?: number
+// }

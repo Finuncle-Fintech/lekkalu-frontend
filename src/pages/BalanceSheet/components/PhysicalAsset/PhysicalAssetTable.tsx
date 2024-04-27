@@ -4,15 +4,15 @@ import { LoaderIcon, PencilIcon } from 'lucide-react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Button } from '@/components/ui/button'
 import When from '@/components/When/When'
-import { AddPhysicalAssetTypeCashSchema } from '@/schema/balance-sheet'
-import AddOrEditAssetsCash from './AddOrEditAssetsCash'
-import DeleteCashDialog from './DeleteCashDialog'
+import DeleteCashDialog from './DeletePhysicalAssetDialog'
 import { formatIndianMoneyNotation } from '@/utils/format-money'
+import AddOrEditAssetsCash from '../Cash/AddOrEditAssetsCash'
+import { PhysicalAsset } from '@/types/balance-sheet'
 
-export default function CashTable({
+export default function PhysicalAssetTable({
   queryData: { data, isLoading },
 }: {
-  queryData: UseQueryResult<AddPhysicalAssetTypeCashSchema[], unknown>
+  queryData: UseQueryResult<PhysicalAsset[], unknown>
 }) {
   return (
     <div className='space-y-2'>
@@ -20,7 +20,9 @@ export default function CashTable({
         <TableHeader className='bg-gray-100/50'>
           <TableRow>
             <TableHead>Name</TableHead>
-            <TableHead>Balance</TableHead>
+            <TableHead>Current Value</TableHead>
+            <TableHead>Purchase Value</TableHead>
+            <TableHead>Sell Value</TableHead>
             <TableHead>Action</TableHead>
           </TableRow>
         </TableHeader>
@@ -34,7 +36,9 @@ export default function CashTable({
           {data?.map((asset) => (
             <TableRow key={asset.id}>
               <TableCell>{asset.name}</TableCell>
-              <TableCell>{formatIndianMoneyNotation(asset.balance)}</TableCell>
+              <TableCell>{formatIndianMoneyNotation(asset.market_value ?? 0)}</TableCell>
+              <TableCell>{formatIndianMoneyNotation(asset.purchase_value ?? 0)}</TableCell>
+              <TableCell>{formatIndianMoneyNotation(asset.sell_value ?? 0)}</TableCell>
               <TableCell className='space-x-2'>
                 <AddOrEditAssetsCash
                   trigger={
@@ -42,7 +46,7 @@ export default function CashTable({
                       <PencilIcon className='w-4 h-5' />
                     </Button>
                   }
-                  asset={asset}
+                  // asset={asset}
                 />
 
                 <DeleteCashDialog id={Number(asset.id)} />

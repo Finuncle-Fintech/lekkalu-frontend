@@ -3,10 +3,11 @@ import React, { cloneElement, useEffect, useMemo, useState } from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import dayjs from 'dayjs'
 import { useToast } from '@/components/ui/use-toast'
 import {
   AddPhysicalAssetSchema,
-  AddPhysicalAssetTypePhysicalSchema,
+  AddPhysicalAssetType,
   addPhysicalAssetTypePhysicalSchema,
 } from '@/schema/balance-sheet'
 import InputFieldsRenderer, { InputField } from '@/components/InputFieldsRenderer/InputFieldsRenderer'
@@ -19,6 +20,8 @@ import { PhysicalAsset } from '@/types/balance-sheet'
 import { getErrorMessage } from '@/utils/utils'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { ASSET_MONTHS, ASSET_YEARS } from '@/utils/balance-sheet'
+import { monthsToSeconds, yearsToSeconds } from '@/utils/time'
+import { SERVER_DATE_FORMAT } from '@/utils/constants'
 
 type Props = {
   trigger: React.ReactElement
@@ -42,7 +45,7 @@ export default function AddOrEditAssetsPhysical({ trigger, asset }: Props) {
     return addPhysicalAssetTypePhysicalSchema
   }
 
-  const form = useForm<AddPhysicalAssetTypePhysicalSchema>({
+  const form = useForm<AddPhysicalAssetType>({
     resolver: zodResolver(getProperSchema(type)),
     mode: 'onChange',
     defaultValues: {
@@ -76,12 +79,39 @@ export default function AddOrEditAssetsPhysical({ trigger, asset }: Props) {
     },
     onError: (err) => toast(getErrorMessage(err)),
   })
-
-  const handleAddOrEditPhysicalAsset = (values: AddPhysicalAssetTypePhysicalSchema) => {
+  const handleAddOrEditPhysicalAsset = (values: AddPhysicalAssetType) => {
     console.log('Submitting Values', values)
+    //   {
+    //     "name": "Hello",
+    //     "purchase_value": 111,
+    //     "purchase_date": "2024-04-27T15:36:23.963Z",
+    //     "percentage_value": 12,
+    //     "type": "depreciation",
+    //     "months": "8",
+    //     "years": "6"
+    // }
+    //   {
+    //     "name": "Hello",
+    //     "purchase_value": 111,
+    //     "purchase_date": "Sat Apr 27 2024 21:08:09 GMT+0530 (India Standard Time)",
+    //     "depreciation_percent_per_year": 12,
+    //     "type": 1,
+    //     "months": "8",
+    //     "years": "6"
+    // }
     const type = values.type
-    const depreciation_percent_per_year = type === 'depreciation' ? values.percentage_value : -values.percentage_value
-    console.log(depreciation_percent_per_year)
+    const { name, purchase_value, purchase_date, percentage_value, months, years } = values
+    const depreciation_percent_per_year = type === 'depreciation' ? percentage_value : -percentage_value
+    const depreciation_frequency = monthsToSeconds(months!) + yearsToSeconds(years!)
+    const payLoad = {
+      name,
+      purchase_value,
+      purchase_date: dayjs(purchase_date).format(SERVER_DATE_FORMAT),
+      depreciation_percent_per_year,
+      type: 1,
+      depreciation_frequency,
+    }
+    addPhysicalAssetMutation.mutate(payLoad)
     //  1   "name": "hardik",
     //   1  "purchase_value": null,
     //   1  "purchase_date": null,

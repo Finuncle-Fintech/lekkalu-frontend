@@ -9,7 +9,7 @@ import AddOrEditAssetsAccount from '@/pages/BalanceSheet/components/AddOrEditAss
 import AddOrEditAssetsMutualFund from '@/pages/BalanceSheet/components/AddOrEditAssetsMutualFund'
 import AddOrEditAssetsGold from '@/pages/BalanceSheet/components/AddOrEditAssetsGold'
 import AddOrEditAssetsRealEstate from '@/pages/BalanceSheet/components/AddOrEditAssetsRealEstate'
-import AddOrEditAssetsPhysical from '@/pages/BalanceSheet/components/AddOrEditAssetsPhysical'
+import AddOrEditAssetsPhysical from '@/pages/BalanceSheet/components/PhysicalAsset/AddOrEditAssetsPhysical'
 
 dayjs.extend(customParseFormat)
 

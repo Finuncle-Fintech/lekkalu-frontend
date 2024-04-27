@@ -13,6 +13,8 @@ export type PhysicalAsset = {
   tags: []
 }
 
+export type AssetsType = 'cash' | 'account' | 'mutual_funds' | 'gold' | 'real_estate' | 'physical_assets'
+
 export type Liability = {
   id: number
   balance: string
@@ -35,4 +37,16 @@ export type LoanTransaction = {
   type: number
   user: number
   user_remark: string
+}
+
+// ** Cash Assets Type
+
+export type AddPhysicalAssetTypeSchema = {
+  type: AssetsType
+}
+
+export type CashAssets = {
+  name: string
+  balance: number
+  id: number
 }

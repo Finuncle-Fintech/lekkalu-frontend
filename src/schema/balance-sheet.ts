@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { AssetsType } from '@/types/balance-sheet'
 
 export const addPhysicalAssetSchema = z.object({
   name: z.string().min(1, 'Asset name is required!'),
@@ -15,6 +16,13 @@ export const addPhysicalAssetSchema = z.object({
   years: z.coerce.number(),
   user: z.number(),
 })
+export const addPhysicalAssetTypeSchema = z.object({
+  type: z.string(),
+})
+
+export type AddPhysicalAssetTypeSchema = {
+  type: AssetsType
+}
 
 export type AddPhysicalAssetSchema = Omit<z.infer<typeof addPhysicalAssetSchema>, 'purchase_date' | 'sell_date'> & {
   purchase_date: string
@@ -59,4 +67,82 @@ export const addLiabilitySchema = z.object({
 })
 export type AddLiabilitySchema = Omit<z.infer<typeof addLiabilitySchema>, 'disbursement_date'> & {
   disbursement_date: string
+}
+
+// ** Assets Schemas & Types
+
+// ** Cash
+export const addPhysicalAssetTypeCashSchema = z.object({
+  balance: z.number({ required_error: 'Amount is required!' }),
+  name: z.string({ required_error: 'Name is required!' }),
+})
+
+export type AddPhysicalAssetTypeCashSchema = {
+  name: string
+  balance: number
+  id?: number
+}
+
+// ** Account
+export const addPhysicalAssetTypeAccountSchema = z.object({
+  amount: z.number({ required_error: 'Amount is required!' }),
+})
+
+export type AddPhysicalAssetTypeAccountSchema = {
+  account_name: string
+  amount: number
+  rate_return: number
+}
+
+// ** Mutual Fund
+export const addPhysicalAssetTypeMutualFundSchema = z.object({
+  invested_amount: z.number({ required_error: 'Invested amount is required!' }),
+  expected_return: z.number({ required_error: 'Expected return is required!' }),
+  purchase_date: z.date({ required_error: 'Date is required!' }),
+})
+
+export type AddPhysicalAssetTypeMutualFundSchema = {
+  name: string
+  invested_amount: number
+  expected_return: number
+  purchase_date: Date
+}
+
+// ** Gold
+export const addPhysicalAssetTypeGoldSchema = z.object({
+  weight: z.number({ required_error: 'Weight is required!' }),
+})
+
+export type AddPhysicalAssetTypeGoldSchema = {
+  weight: number
+}
+
+// ** Real Estate
+export const addPhysicalAssetTypeRealEstateSchema = z.object({
+  area: z.number({ required_error: 'Area is required!' }),
+})
+
+export type AddPhysicalAssetTypeRealEstateSchema = {
+  pincode: number
+  area: number
+  land_name: string
+}
+
+// ** Physical
+export const addPhysicalAssetTypePhysicalSchema = z.object({
+  name: z.string({ required_error: 'Name is required!' }),
+  purchase_value: z.number({ required_error: 'Purchase value is required!' }),
+  purchase_date: z.date({ required_error: 'Date is required!' }),
+  percentage_value: z.number({ required_error: 'Percentage is required!' }),
+  type: z.string({ required_error: 'Type is required!' }),
+})
+
+export type AddPhysicalAssetTypePhysicalSchema = {
+  name: string
+  purchase_value: number
+  purchase_date: Date
+  percentage_value: number
+  type: 'depreciation' | 'apprecitaion'
+  months?: number
+  years?: number
 }

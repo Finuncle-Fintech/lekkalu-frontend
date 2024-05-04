@@ -6,6 +6,8 @@ export type PhysicalAsset = {
   purchase_date: string
   sell_date: string
   depreciation_percent: string
+  depreciation_percent_per_year: string
+  init_dep: number | null
   depreciation_frequency: number
   market_value: string
   user: number
@@ -49,4 +51,21 @@ export type CashAssets = {
   name: string
   balance: number
   id: number
+}
+
+export type MutualFunds = {
+  id: number
+  name: string
+  isin: string
+  investment_type: string
+  current_nav: string | null
+}
+export type SecurityTransaction = {
+  id: number
+  type: string
+  value: number
+  quantity: number
+  transaction_date: string
+  security_type: number
+  security_object_id: number
 }

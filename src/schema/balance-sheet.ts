@@ -30,7 +30,7 @@ export type AddPhysicalAssetSchema = {
   purchase_date: string
   depreciation_percent_per_year: number
   type: number
-  depreciation_frequency: number
+  // depreciation_frequency: number
 }
 // export type AddPhysicalAssetSchema = Omit<z.infer<typeof addPhysicalAssetSchema>, 'purchase_date' | 'sell_date'> & {
 //   purchase_date: string
@@ -104,9 +104,16 @@ export type AddPhysicalAssetTypeAccountSchema = {
 
 // ** Mutual Fund
 export const addPhysicalAssetTypeMutualFundSchema = z.object({
-  invested_amount: z.number({ required_error: 'Invested amount is required!' }),
-  expected_return: z.number({ required_error: 'Expected return is required!' }),
+  invested_amount: z.number({
+    required_error: 'Invested amount is required!',
+    invalid_type_error: 'Invested amount should be number',
+  }),
+  expected_return: z.number({
+    required_error: 'Expected return is required!',
+    invalid_type_error: 'Expected return should be number',
+  }),
   purchase_date: z.date({ required_error: 'Date is required!' }),
+  quantity: z.number({ required_error: 'Quantity is required!', invalid_type_error: 'Quantity should be number' }),
 })
 
 export type AddPhysicalAssetTypeMutualFundSchema = {
@@ -114,6 +121,17 @@ export type AddPhysicalAssetTypeMutualFundSchema = {
   invested_amount: number
   expected_return: number
   purchase_date: Date
+  quantity: number
+}
+
+export type MutualFundSchema = {
+  id?: number
+  type: string
+  value: number
+  quantity: number
+  security_object_id: number
+  transaction_date: string
+  security_type: string
 }
 
 // ** Gold
@@ -139,9 +157,15 @@ export type AddPhysicalAssetTypeRealEstateSchema = {
 // ** Physical
 export const addPhysicalAssetTypePhysicalSchema = z.object({
   name: z.string({ required_error: 'Name is required!' }),
-  purchase_value: z.number({ required_error: 'Purchase value is required!' }),
+  purchase_value: z.number({
+    required_error: 'Purchase value is required!',
+    invalid_type_error: 'Purchase value should be number',
+  }),
   purchase_date: z.date({ required_error: 'Date is required!' }),
-  percentage_value: z.number({ required_error: 'Percentage is required!' }),
+  percentage_value: z.number({
+    required_error: 'Percentage is required!',
+    invalid_type_error: 'Percentage should be number',
+  }),
   type: z.string({ required_error: 'Type is required!' }),
 })
 

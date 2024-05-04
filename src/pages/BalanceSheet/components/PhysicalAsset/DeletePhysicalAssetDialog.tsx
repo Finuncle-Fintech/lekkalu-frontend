@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { BALANCE_SHEET } from '@/utils/query-keys'
 import { useToast } from '@/components/ui/use-toast'
 import { getErrorMessage } from '@/utils/utils'
-import { deleteCashAsset } from '@/queries/assets'
+import { deletePhysicalAsset } from '@/queries/balance-sheet'
 
 type Props = {
   id: number
@@ -16,10 +16,10 @@ export default function DeletePhysicalAssetDialog({ id }: Props) {
   const qc = useQueryClient()
   const { toast } = useToast()
 
-  const deleteAssetMutation = useMutation(deleteCashAsset, {
+  const deleteAssetMutation = useMutation(deletePhysicalAsset, {
     onSuccess: () => {
-      qc.invalidateQueries([BALANCE_SHEET.CASH])
-      toast({ title: 'Cash deleted successfully!' })
+      qc.invalidateQueries([BALANCE_SHEET.ASSETS])
+      toast({ title: 'Asset deleted successfully!' })
     },
     onError: (err: any) => toast(getErrorMessage(err)),
   })
@@ -32,7 +32,7 @@ export default function DeletePhysicalAssetDialog({ id }: Props) {
         </Button>
       }
       title='Delete Asset'
-      description='Are you sure you want to delete this asset ?'
+      description='Are you sure you want to delete this asset?'
       okText='Yes, Delete'
       okButtonProps={{ disabled: deleteAssetMutation.isLoading, className: 'bg-red-500 hover:bg-red-400' }}
       cancelText='No'

@@ -1,6 +1,11 @@
-import { AddLiabilitySchema, AddPhysicalAssetSchema } from '@/schema/balance-sheet'
-import { Liability, LoanTransaction, PhysicalAsset } from '@/types/balance-sheet'
-import { v1ApiClient } from '@/utils/client'
+import {
+  AddLiabilitySchema,
+  AddPhysicalAssetSchema,
+  AddPhysicalAssetTypeCashSchema,
+  MutualFundSchema,
+} from '@/schema/balance-sheet'
+import { CashAssets, Liability, LoanTransaction, MutualFunds, PhysicalAsset } from '@/types/balance-sheet'
+import { v1ApiClient, v2ApiClient } from '@/utils/client'
 
 export async function fetchPhysicalAssets() {
   const { data } = await v1ApiClient.get<PhysicalAsset[]>('physical_assets/')
@@ -56,5 +61,63 @@ export async function fetchLoanTransactions() {
 
 export async function fetchTransactionsForLoan(loan_id: number) {
   const { data } = await v1ApiClient.get<LoanTransaction[]>('loan_transactions', { params: { loan_id } })
+  return data
+}
+
+/** Mutual Fund  **/
+export async function fetchMutualFunds() {
+  const { data } = await v1ApiClient.get<MutualFunds[]>('mutual_funds/')
+  return data
+}
+export async function fetchSecurityTransaction() {
+  const { data } = await v1ApiClient.get<MutualFundSchema[]>('securities_transaction/')
+  return data
+}
+export async function addSecurityTransaction(dto: MutualFundSchema) {
+  const { data } = await v1ApiClient.post<MutualFunds>('securities_transaction/', dto)
+  return data
+}
+export async function editSecurityTransaction(id: number, dto: MutualFundSchema) {
+  const { data } = await v1ApiClient.put(`securities_transaction/${id}`, dto)
+  return data
+}
+
+export async function deleteSecurityTransaction(id: number) {
+  const { data } = await v1ApiClient.delete<{ message: string }>(`/securities_transaction/${id}`)
+  return data
+}
+
+export async function addMutualFund(dto: MutualFundSchema) {
+  const { data } = await v1ApiClient.post<MutualFunds>('/mutual_funds', dto)
+  return data
+}
+
+export async function editMutualFund(id: number, dto: Partial<MutualFunds>) {
+  const { data } = await v1ApiClient.put(`mutual_funds/${id}`, dto)
+  return data
+}
+
+export async function deleteMutualFund(id: number) {
+  const { data } = await v1ApiClient.delete<{ message: string }>(`/mutual_funds/${id}`)
+  return data
+}
+
+// Cash Assets
+export async function addCashAsset(dto: AddPhysicalAssetTypeCashSchema) {
+  const { data } = await v2ApiClient.post<CashAssets>('/cash', dto)
+  return data
+}
+export async function editCashAsset(id: number, dto: Partial<AddPhysicalAssetTypeCashSchema>) {
+  const { data } = await v2ApiClient.put(`cash/${id}`, dto)
+  return data
+}
+
+export async function fetchCashAsset() {
+  const { data } = await v2ApiClient.get<AddPhysicalAssetTypeCashSchema[]>('/cash')
+  return data
+}
+
+export async function deleteCashAsset(id: number) {
+  const { data } = await v2ApiClient.delete<{ message: string }>(`/cash/${id}`)
   return data
 }

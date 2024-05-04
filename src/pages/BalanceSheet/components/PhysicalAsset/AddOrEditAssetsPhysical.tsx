@@ -1,6 +1,5 @@
+import React, { cloneElement, useMemo, useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import React, { cloneElement, useEffect, useMemo, useState } from 'react'
-import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import dayjs from 'dayjs'
@@ -15,58 +14,41 @@ import { addPhysicalAsset, editPhysicalAsset } from '@/queries/balance-sheet'
 import { BALANCE_SHEET } from '@/utils/query-keys'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { Form } from '@/components/ui/form'
 import { PhysicalAsset } from '@/types/balance-sheet'
 import { getErrorMessage } from '@/utils/utils'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { ASSET_MONTHS, ASSET_YEARS } from '@/utils/balance-sheet'
-import { monthsToSeconds, yearsToSeconds } from '@/utils/time'
 import { SERVER_DATE_FORMAT } from '@/utils/constants'
 
 type Props = {
   trigger: React.ReactElement
   asset?: PhysicalAsset
+  closeModal?: () => void
 }
 
-export default function AddOrEditAssetsPhysical({ trigger, asset }: Props) {
+export default function AddOrEditAssetsPhysical({ trigger, asset, closeModal }: Props) {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
-  const [type, setType] = useState<'depreciation' | 'apprecitaion'>('depreciation')
   const { toast } = useToast()
   const qc = useQueryClient()
   const isEdit = Boolean(asset)
 
-  const getProperSchema = (type: 'depreciation' | 'apprecitaion') => {
-    if (type === 'depreciation') {
-      return addPhysicalAssetTypePhysicalSchema.extend({
-        months: z.string({ required_error: 'Months is required!' }),
-        years: z.string({ required_error: 'Years is required!' }),
-      })
-    }
-    return addPhysicalAssetTypePhysicalSchema
-  }
-
   const form = useForm<AddPhysicalAssetType>({
-    resolver: zodResolver(getProperSchema(type)),
+    resolver: zodResolver(addPhysicalAssetTypePhysicalSchema),
     mode: 'onChange',
     defaultValues: {
-      name: undefined,
-      purchase_date: new Date(),
-      purchase_value: undefined,
-      percentage_value: undefined,
-      type: 'depreciation',
+      name: asset?.name ?? undefined,
+      purchase_date: asset?.purchase_date ? new Date(asset?.purchase_date) : new Date(),
+      purchase_value: Number(asset?.purchase_value) ?? undefined,
+      percentage_value: Math.abs(Number(asset?.depreciation_percent_per_year)) ?? undefined,
+      type: Number(asset?.depreciation_percent) < 0 ? 'apprecitaion' : 'depreciation',
     },
   })
-
-  useEffect(() => {
-    setType(form.watch('type'))
-    // eslint-disable-next-line
-  }, [form.watch('type')])
 
   const addPhysicalAssetMutation = useMutation(addPhysicalAsset, {
     onSuccess: () => {
       qc.invalidateQueries([BALANCE_SHEET.ASSETS])
       toast({ title: 'Asset created successfully!' })
       setIsDialogOpen(false)
+      closeModal?.()
     },
     onError: (err) => toast(getErrorMessage(err)),
   })
@@ -76,40 +58,40 @@ export default function AddOrEditAssetsPhysical({ trigger, asset }: Props) {
       qc.invalidateQueries([BALANCE_SHEET.ASSETS])
       toast({ title: 'Asset updated successfully!' })
       setIsDialogOpen(false)
+      closeModal?.()
     },
     onError: (err) => toast(getErrorMessage(err)),
   })
   const handleAddOrEditPhysicalAsset = (values: AddPhysicalAssetType) => {
-    console.log('Submitting Values', values)
-    //   {
-    //     "name": "Hello",
-    //     "purchase_value": 111,
-    //     "purchase_date": "2024-04-27T15:36:23.963Z",
-    //     "percentage_value": 12,
-    //     "type": "depreciation",
-    //     "months": "8",
-    //     "years": "6"
-    // }
-    //   {
-    //     "name": "Hello",
-    //     "purchase_value": 111,
-    //     "purchase_date": "Sat Apr 27 2024 21:08:09 GMT+0530 (India Standard Time)",
-    //     "depreciation_percent_per_year": 12,
-    //     "type": 1,
-    //     "months": "8",
-    //     "years": "6"
-    // }
     const type = values.type
-    const { name, purchase_value, purchase_date, percentage_value, months, years } = values
+    const { name, purchase_value, purchase_date, percentage_value } = values
     const depreciation_percent_per_year = type === 'depreciation' ? percentage_value : -percentage_value
-    const depreciation_frequency = monthsToSeconds(months!) + yearsToSeconds(years!)
+    // const depreciation_frequency = monthsToSeconds(months!) + yearsToSeconds(years!)
+
+    // {
+    //   "name": "sample by hardik",
+    //   "purchase_value": 20000,
+    //   "purchase_date": "2024-05-08",
+    //   "sell_date": "2024-05-01",
+    //   "depreciation_percent": 10,
+    //   "init_dep": 1,
+    //   "type": 1,
+    //   "tags": [],
+    //   "months": 8,
+    //   "years": 3,
+    //   "user": 1,
+    //   "depreciation_frequency": 115712928
+    // }
     const payLoad = {
       name,
       purchase_value,
       purchase_date: dayjs(purchase_date).format(SERVER_DATE_FORMAT),
       depreciation_percent_per_year,
       type: 1,
-      depreciation_frequency,
+    }
+    if (isEdit) {
+      editPhysicalAssetMutation.mutate(payLoad)
+      return
     }
     addPhysicalAssetMutation.mutate(payLoad)
     //  1   "name": "hardik",
@@ -143,7 +125,7 @@ export default function AddOrEditAssetsPhysical({ trigger, asset }: Props) {
         },
         {
           id: 'percentage_value',
-          label: 'Percentage Value',
+          label: 'Depreciation/Appreciation % value (year)',
           type: 'number',
         },
         {
@@ -187,62 +169,6 @@ export default function AddOrEditAssetsPhysical({ trigger, asset }: Props) {
             <div className='md:col-span-2 space-y-2'>
               <div className='flex flex-col my-5 gap-2 w-full'>
                 <InputFieldsRenderer control={form.control} inputs={assetsInputOptionsCash} />
-
-                {type === 'depreciation' && (
-                  <div className='md:col-span-2 space-y-2'>
-                    <FormLabel>Depreciation Frequency</FormLabel>
-                    <div className='flex gap-2 w-full'>
-                      <FormField
-                        control={form.control}
-                        name='months'
-                        render={({ field }) => (
-                          <FormItem className='flex-1'>
-                            <FormLabel>Months</FormLabel>
-                            <FormControl>
-                              <Select onValueChange={field.onChange} {...field} value={field.value?.toString()}>
-                                <SelectTrigger>
-                                  <SelectValue placeholder='Select Months' />
-                                </SelectTrigger>
-                                <SelectContent className='max-h-72'>
-                                  {ASSET_MONTHS.map(({ id, label }) => (
-                                    <SelectItem value={id} key={id}>
-                                      {label}
-                                    </SelectItem>
-                                  ))}
-                                </SelectContent>
-                              </Select>
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name='years'
-                        render={({ field }) => (
-                          <FormItem className='flex-1'>
-                            <FormLabel>Years</FormLabel>
-                            <FormControl>
-                              <Select onValueChange={field.onChange} {...field} value={field.value?.toString()}>
-                                <SelectTrigger>
-                                  <SelectValue placeholder='Select Years' />
-                                </SelectTrigger>
-                                <SelectContent className='max-h-72'>
-                                  {ASSET_YEARS.map(({ id, label }) => (
-                                    <SelectItem value={id} key={id}>
-                                      {label}
-                                    </SelectItem>
-                                  ))}
-                                </SelectContent>
-                              </Select>
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-                  </div>
-                )}
               </div>
             </div>
 

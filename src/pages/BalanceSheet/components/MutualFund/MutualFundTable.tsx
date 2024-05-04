@@ -1,30 +1,29 @@
 import React from 'react'
 import { UseQueryResult } from '@tanstack/react-query'
 import { LoaderIcon, PencilIcon } from 'lucide-react'
-import dayjs from 'dayjs'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Button } from '@/components/ui/button'
 import When from '@/components/When/When'
-import DeletePhysicalAssetDialog from './DeletePhysicalAssetDialog'
+import AddOrEditAssetsMutualFund from './AddOrEditAssetsMutualFund'
 import { formatIndianMoneyNotation } from '@/utils/format-money'
-import { PhysicalAsset } from '@/types/balance-sheet'
-import AddOrEditAssetsPhysical from './AddOrEditAssetsPhysical'
+import DeleteMutualFundDialog from './DeleteMutualFundDialog'
+import { MutualFundSchema } from '@/schema/balance-sheet'
 
-export default function PhysicalAssetTable({
+export default function MutualFundTable({
   queryData: { data, isLoading },
 }: {
-  queryData: UseQueryResult<PhysicalAsset[], unknown>
+  queryData: UseQueryResult<MutualFundSchema[], unknown>
 }) {
   return (
     <div className='space-y-2'>
       <Table className='border rounded'>
         <TableHeader className='bg-gray-100/50'>
           <TableRow>
-            <TableHead>Name</TableHead>
-            <TableHead>Purchase Value</TableHead>
-            <TableHead>Purchase Date</TableHead>
-            <TableHead>Depreciation Percent</TableHead>
-            <TableHead>Action</TableHead>
+            <TableHead>Type</TableHead>
+            <TableHead>Value</TableHead>
+            <TableHead>Transaction Date</TableHead>
+            <TableHead>Quantity</TableHead>
+            <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody className='relative'>
@@ -34,14 +33,14 @@ export default function PhysicalAssetTable({
             </div>
           </When>
 
-          {data?.map((asset: PhysicalAsset) => (
+          {data?.map((asset) => (
             <TableRow key={asset.id}>
-              <TableCell>{asset.name}</TableCell>
-              <TableCell>{formatIndianMoneyNotation(asset.purchase_value ?? 0)}</TableCell>
-              <TableCell>{dayjs(asset.purchase_date).format('MMM DD, YYYY')}</TableCell>
-              <TableCell>{formatIndianMoneyNotation(asset.depreciation_percent_per_year ?? 0)}%</TableCell>
+              <TableCell>{asset.type}</TableCell>
+              <TableCell>{formatIndianMoneyNotation(asset.value)}</TableCell>
+              <TableCell>{asset.transaction_date}</TableCell>
+              <TableCell>{formatIndianMoneyNotation(asset.quantity, 2)}</TableCell>
               <TableCell className='space-x-2'>
-                <AddOrEditAssetsPhysical
+                <AddOrEditAssetsMutualFund
                   trigger={
                     <Button size='sm' variant='outline'>
                       <PencilIcon className='w-4 h-5' />
@@ -50,7 +49,7 @@ export default function PhysicalAssetTable({
                   asset={asset}
                 />
 
-                <DeletePhysicalAssetDialog id={Number(asset.id)} />
+                <DeleteMutualFundDialog id={Number(asset.id)} />
               </TableCell>
             </TableRow>
           ))}

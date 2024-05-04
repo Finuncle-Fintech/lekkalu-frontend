@@ -6,7 +6,7 @@ import { SERVER_DATE_FORMAT } from './constants'
 // assets components
 import AddOrEditAssetsCash from '@/pages/BalanceSheet/components/Cash/AddOrEditAssetsCash'
 import AddOrEditAssetsAccount from '@/pages/BalanceSheet/components/AddOrEditAssetsAccount'
-import AddOrEditAssetsMutualFund from '@/pages/BalanceSheet/components/AddOrEditAssetsMutualFund'
+import AddOrEditAssetsMutualFund from '@/pages/BalanceSheet/components/MutualFund/AddOrEditAssetsMutualFund'
 import AddOrEditAssetsGold from '@/pages/BalanceSheet/components/AddOrEditAssetsGold'
 import AddOrEditAssetsRealEstate from '@/pages/BalanceSheet/components/AddOrEditAssetsRealEstate'
 import AddOrEditAssetsPhysical from '@/pages/BalanceSheet/components/PhysicalAsset/AddOrEditAssetsPhysical'

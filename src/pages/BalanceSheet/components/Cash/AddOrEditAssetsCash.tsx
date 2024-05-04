@@ -10,7 +10,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogT
 import { Button } from '@/components/ui/button'
 import { Form } from '@/components/ui/form'
 import { getErrorMessage } from '@/utils/utils'
-import { addCashAsset, editCashAsset } from '@/queries/assets'
+import { addCashAsset, editCashAsset } from '@/queries/balance-sheet'
 
 type Props = {
   trigger: React.ReactElement

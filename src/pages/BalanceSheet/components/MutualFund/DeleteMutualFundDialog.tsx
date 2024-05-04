@@ -6,20 +6,20 @@ import { Button } from '@/components/ui/button'
 import { BALANCE_SHEET } from '@/utils/query-keys'
 import { useToast } from '@/components/ui/use-toast'
 import { getErrorMessage } from '@/utils/utils'
-import { deleteCashAsset } from '@/queries/balance-sheet'
+import { deleteSecurityTransaction } from '@/queries/balance-sheet'
 
 type Props = {
   id: number
 }
 
-export default function DeleteCashDialog({ id }: Props) {
+export default function DeleteMutualFundDialog({ id }: Props) {
   const qc = useQueryClient()
   const { toast } = useToast()
 
-  const deleteCashMutation = useMutation(deleteCashAsset, {
+  const deleteTransactionMutation = useMutation(deleteSecurityTransaction, {
     onSuccess: () => {
-      qc.invalidateQueries([BALANCE_SHEET.CASH])
-      toast({ title: 'Cash deleted successfully!' })
+      qc.invalidateQueries([BALANCE_SHEET.SECURITIES_TRANSACTIONS])
+      toast({ title: 'Transaction deleted successfully!' })
     },
     onError: (err: any) => toast(getErrorMessage(err)),
   })
@@ -31,14 +31,14 @@ export default function DeleteCashDialog({ id }: Props) {
           <TrashIcon className='w-4 h-4 text-red-500' />
         </Button>
       }
-      title='Delete Cash'
-      description='Are you sure you want to delete this cash?'
+      title='Delete Transaction'
+      description='Are you sure you want to delete this transaction?'
       okText='Yes, Delete'
-      okButtonProps={{ disabled: deleteCashMutation.isLoading, className: 'bg-red-500 hover:bg-red-400' }}
+      okButtonProps={{ disabled: deleteTransactionMutation.isLoading, className: 'bg-red-500 hover:bg-red-400' }}
       cancelText='No'
-      cancelProps={{ disabled: deleteCashMutation.isLoading }}
+      cancelProps={{ disabled: deleteTransactionMutation.isLoading }}
       onOk={() => {
-        deleteCashMutation.mutate(id)
+        deleteTransactionMutation.mutate(id)
       }}
     />
   )

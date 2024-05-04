@@ -1,62 +1,104 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import React, { cloneElement, useMemo, useState } from 'react'
+import dayjs from 'dayjs'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useToast } from '@/components/ui/use-toast'
 import {
-  AddPhysicalAssetSchema,
   AddPhysicalAssetTypeMutualFundSchema,
+  MutualFundSchema,
   addPhysicalAssetTypeMutualFundSchema,
 } from '@/schema/balance-sheet'
 import InputFieldsRenderer, { InputField } from '@/components/InputFieldsRenderer/InputFieldsRenderer'
-import { addPhysicalAsset, editPhysicalAsset } from '@/queries/balance-sheet'
+import { addSecurityTransaction, editSecurityTransaction, fetchMutualFunds } from '@/queries/balance-sheet'
 import { BALANCE_SHEET } from '@/utils/query-keys'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Form } from '@/components/ui/form'
-import { PhysicalAsset } from '@/types/balance-sheet'
 import { getErrorMessage } from '@/utils/utils'
+import { SERVER_DATE_FORMAT } from '@/utils/constants'
 
 type Props = {
   trigger: React.ReactElement
-  asset?: PhysicalAsset
+  asset?: MutualFundSchema
+  closeModal?: () => void
 }
 
-export default function AddOrEditAssetsMutualFund({ trigger, asset }: Props) {
+export default function AddOrEditAssetsMutualFund({ trigger, asset, closeModal }: Props) {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const { toast } = useToast()
   const qc = useQueryClient()
   const isEdit = Boolean(asset)
+  const { data: mutualFunds } = useQuery([BALANCE_SHEET.MUTUAL_FUNDS], fetchMutualFunds)
+
+  const mutualFundsOptions = useMemo(() => {
+    return (
+      mutualFunds?.map((acc) => ({
+        id: acc.id?.toString(),
+        label: acc.name,
+        value: acc.id,
+      })) ?? []
+    )
+  }, [mutualFunds])
 
   const form = useForm<AddPhysicalAssetTypeMutualFundSchema>({
     resolver: zodResolver(addPhysicalAssetTypeMutualFundSchema),
     defaultValues: {
       expected_return: undefined,
-      invested_amount: undefined,
+      invested_amount: Number(asset?.value) ?? undefined,
       name: undefined,
-      purchase_date: new Date(),
+      purchase_date: asset?.transaction_date ? new Date(asset?.transaction_date) : new Date(),
+      quantity: Number(asset?.quantity) ?? 1,
     },
   })
 
-  const addPhysicalAssetMutation = useMutation(addPhysicalAsset, {
+  const addMutualFundMutation = useMutation(addSecurityTransaction, {
     onSuccess: () => {
-      qc.invalidateQueries([BALANCE_SHEET.ASSETS])
-      toast({ title: 'Asset created successfully!' })
+      qc.invalidateQueries([BALANCE_SHEET.SECURITIES_TRANSACTIONS])
+      toast({ title: 'Mutual fund created successfully!' })
       setIsDialogOpen(false)
+      closeModal?.()
     },
     onError: (err) => toast(getErrorMessage(err)),
   })
 
-  const editPhysicalAssetMutation = useMutation((dto: AddPhysicalAssetSchema) => editPhysicalAsset(asset?.id!, dto), {
+  const editMutualFundMutation = useMutation((dto: MutualFundSchema) => editSecurityTransaction(asset?.id!, dto), {
     onSuccess: () => {
-      qc.invalidateQueries([BALANCE_SHEET.ASSETS])
-      toast({ title: 'Asset updated successfully!' })
+      qc.invalidateQueries([BALANCE_SHEET.SECURITIES_TRANSACTIONS])
+      toast({ title: 'Mutual fund updated successfully!' })
       setIsDialogOpen(false)
+      closeModal?.()
     },
     onError: (err) => toast(getErrorMessage(err)),
   })
-    const handleAddOrEditMutualFundAsset = (values: AddPhysicalAssetTypeMutualFundSchema) => {
-    console.log('Submitting Values', values)
+  console.log(mutualFunds)
+  const handleAddOrEditMutualFundAsset = (values: AddPhysicalAssetTypeMutualFundSchema) => {
+    const { quantity, expected_return, invested_amount, purchase_date } = values
+    const fund = mutualFunds?.find((fund) => fund.id?.toString() === form.getValues('name'))
+    console.log({ fund, expected_return })
+    const payLoad = {
+      type: 'Buy',
+      value: invested_amount,
+      quantity,
+      security_object_id: 1,
+      transaction_date: dayjs(purchase_date).format(SERVER_DATE_FORMAT),
+      security_type: 'MutualFund',
+    }
+    if (asset) {
+      editMutualFundMutation.mutate(payLoad)
+    } else {
+      addMutualFundMutation.mutate(payLoad)
+    }
+    // {
+    //   "type": "Buy",
+    //   "value": 14000,
+    //   "quantity": 12,
+    //   "transaction_date": "2019-08-24",
+    //   "security_type": "MutualFund",
+    //   "security_object_id": 1
+    // }
+
+    console.log(payLoad)
   }
 
   const assetsInputOptionsCash = useMemo(
@@ -65,7 +107,8 @@ export default function AddOrEditAssetsMutualFund({ trigger, asset }: Props) {
         {
           id: 'name',
           label: 'Name',
-          type: 'text',
+          type: 'select',
+          options: mutualFundsOptions,
         },
         {
           id: 'invested_amount',
@@ -78,12 +121,17 @@ export default function AddOrEditAssetsMutualFund({ trigger, asset }: Props) {
           type: 'number',
         },
         {
+          id: 'quantity',
+          label: 'Quantity',
+          type: 'number',
+        },
+        {
           id: 'purchase_date',
           label: 'Purchase Date',
           type: 'date',
         },
       ] as InputField[],
-    [],
+    [mutualFundsOptions],
   )
 
   return (
@@ -98,7 +146,7 @@ export default function AddOrEditAssetsMutualFund({ trigger, asset }: Props) {
       </DialogTrigger>
       <DialogContent className='max-h-[800px] overflow-auto'>
         <DialogHeader>
-          <DialogTitle>{isEdit ? 'Edit' : 'Add'} Mutual Fund</DialogTitle>
+          <DialogTitle>{isEdit ? 'Edit' : 'Add'} Mutual Fund Transaction</DialogTitle>
         </DialogHeader>
 
         <Form {...form}>
@@ -111,7 +159,7 @@ export default function AddOrEditAssetsMutualFund({ trigger, asset }: Props) {
 
             <DialogFooter className='gap-2 md:col-span-2'>
               <Button
-                loading={addPhysicalAssetMutation.isLoading || editPhysicalAssetMutation.isLoading}
+                loading={addMutualFundMutation.isLoading || editMutualFundMutation.isLoading}
                 type='button'
                 variant='outline'
                 onClick={() => {
@@ -120,7 +168,7 @@ export default function AddOrEditAssetsMutualFund({ trigger, asset }: Props) {
               >
                 Cancel
               </Button>
-              <Button type='submit' loading={addPhysicalAssetMutation.isLoading || editPhysicalAssetMutation.isLoading}>
+              <Button type='submit' loading={addMutualFundMutation.isLoading || editMutualFundMutation.isLoading}>
                 {isEdit ? 'Edit' : 'Add'}
               </Button>
             </DialogFooter>

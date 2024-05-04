@@ -4,11 +4,7 @@ import dayjs from 'dayjs'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useToast } from '@/components/ui/use-toast'
-import {
-  AddPhysicalAssetTypeMutualFundSchema,
-  MutualFundSchema,
-  addPhysicalAssetTypeMutualFundSchema,
-} from '@/schema/balance-sheet'
+import { addMutualFundSchema } from '@/schema/balance-sheet'
 import InputFieldsRenderer, { InputField } from '@/components/InputFieldsRenderer/InputFieldsRenderer'
 import { addSecurityTransaction, editSecurityTransaction, fetchMutualFunds } from '@/queries/balance-sheet'
 import { BALANCE_SHEET } from '@/utils/query-keys'
@@ -17,6 +13,7 @@ import { Button } from '@/components/ui/button'
 import { Form } from '@/components/ui/form'
 import { getErrorMessage } from '@/utils/utils'
 import { SERVER_DATE_FORMAT } from '@/utils/constants'
+import { AddMutualFundType, MutualFundSchema } from '@/types/balance-sheet'
 
 type Props = {
   trigger: React.ReactElement
@@ -41,8 +38,8 @@ export default function AddOrEditAssetsMutualFund({ trigger, asset, closeModal }
     )
   }, [mutualFunds])
 
-  const form = useForm<AddPhysicalAssetTypeMutualFundSchema>({
-    resolver: zodResolver(addPhysicalAssetTypeMutualFundSchema),
+  const form = useForm<AddMutualFundType>({
+    resolver: zodResolver(addMutualFundSchema),
     defaultValues: {
       expected_return: undefined,
       invested_amount: Number(asset?.value) ?? undefined,
@@ -71,8 +68,7 @@ export default function AddOrEditAssetsMutualFund({ trigger, asset, closeModal }
     },
     onError: (err) => toast(getErrorMessage(err)),
   })
-  console.log(mutualFunds)
-  const handleAddOrEditMutualFundAsset = (values: AddPhysicalAssetTypeMutualFundSchema) => {
+  const handleAddOrEditMutualFundAsset = (values: AddMutualFundType) => {
     const { quantity, expected_return, invested_amount, purchase_date } = values
     const fund = mutualFunds?.find((fund) => fund.id?.toString() === form.getValues('name'))
     console.log({ fund, expected_return })
@@ -97,8 +93,6 @@ export default function AddOrEditAssetsMutualFund({ trigger, asset, closeModal }
     //   "security_type": "MutualFund",
     //   "security_object_id": 1
     // }
-
-    console.log(payLoad)
   }
 
   const assetsInputOptionsCash = useMemo(

@@ -3,18 +3,14 @@ import React, { cloneElement, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useToast } from '@/components/ui/use-toast'
-import {
-  AddPhysicalAssetSchema,
-  AddPhysicalAssetTypeRealEstateSchema,
-  addPhysicalAssetTypeRealEstateSchema,
-} from '@/schema/balance-sheet'
+import { addRealEstateSchema } from '@/schema/balance-sheet'
 import InputFieldsRenderer, { InputField } from '@/components/InputFieldsRenderer/InputFieldsRenderer'
 import { addPhysicalAsset, editPhysicalAsset } from '@/queries/balance-sheet'
 import { BALANCE_SHEET } from '@/utils/query-keys'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Form } from '@/components/ui/form'
-import { PhysicalAsset } from '@/types/balance-sheet'
+import { AddPhysicalAssetSchema, AddRealEstateTypes, PhysicalAsset } from '@/types/balance-sheet'
 import { getErrorMessage } from '@/utils/utils'
 
 type Props = {
@@ -28,8 +24,8 @@ export default function AddOrEditAssetsRealEstate({ trigger, asset }: Props) {
   const qc = useQueryClient()
   const isEdit = Boolean(asset)
 
-  const form = useForm<AddPhysicalAssetTypeRealEstateSchema>({
-    resolver: zodResolver(addPhysicalAssetTypeRealEstateSchema),
+  const form = useForm<AddRealEstateTypes>({
+    resolver: zodResolver(addRealEstateSchema),
     defaultValues: {
       area: undefined,
       land_name: '',
@@ -55,7 +51,7 @@ export default function AddOrEditAssetsRealEstate({ trigger, asset }: Props) {
     onError: (err) => toast(getErrorMessage(err)),
   })
 
-  const handleAddOrEditRealEstateAsset = (values: AddPhysicalAssetTypeRealEstateSchema) => {
+  const handleAddOrEditRealEstateAsset = (values: AddRealEstateTypes) => {
     console.log('Submitting Values', values)
   }
 

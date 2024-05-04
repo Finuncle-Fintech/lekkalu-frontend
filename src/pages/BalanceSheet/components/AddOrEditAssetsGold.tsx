@@ -3,18 +3,14 @@ import React, { cloneElement, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useToast } from '@/components/ui/use-toast'
-import {
-  AddPhysicalAssetSchema,
-  AddPhysicalAssetTypeGoldSchema,
-  addPhysicalAssetTypeGoldSchema,
-} from '@/schema/balance-sheet'
+import { addGoldSchema } from '@/schema/balance-sheet'
 import InputFieldsRenderer, { InputField } from '@/components/InputFieldsRenderer/InputFieldsRenderer'
 import { addPhysicalAsset, editPhysicalAsset } from '@/queries/balance-sheet'
 import { BALANCE_SHEET } from '@/utils/query-keys'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Form } from '@/components/ui/form'
-import { PhysicalAsset } from '@/types/balance-sheet'
+import { AddPhysicalAssetSchema, AddGoldType, PhysicalAsset } from '@/types/balance-sheet'
 import { getErrorMessage } from '@/utils/utils'
 
 type Props = {
@@ -28,8 +24,8 @@ export default function AddOrEditAssetsGold({ trigger, asset }: Props) {
   const qc = useQueryClient()
   const isEdit = Boolean(asset)
 
-  const form = useForm<AddPhysicalAssetTypeGoldSchema>({
-    resolver: zodResolver(addPhysicalAssetTypeGoldSchema),
+  const form = useForm<AddGoldType>({
+    resolver: zodResolver(addGoldSchema),
     defaultValues: {
       weight: undefined,
     },
@@ -53,7 +49,7 @@ export default function AddOrEditAssetsGold({ trigger, asset }: Props) {
     onError: (err) => toast(getErrorMessage(err)),
   })
 
-  const handleAddOrEditGoldAsset = (values: AddPhysicalAssetTypeGoldSchema) => {
+  const handleAddOrEditGoldAsset = (values: AddGoldType) => {
     console.log('Submitting Values', values)
   }
 

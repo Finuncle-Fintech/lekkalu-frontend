@@ -1,5 +1,6 @@
 import React from 'react'
 import { UseQueryResult } from '@tanstack/react-query'
+import dayjs from 'dayjs'
 import { LoaderIcon, PencilIcon } from 'lucide-react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Button } from '@/components/ui/button'
@@ -7,7 +8,7 @@ import When from '@/components/When/When'
 import AddOrEditAssetsMutualFund from './AddOrEditAssetsMutualFund'
 import { formatIndianMoneyNotation } from '@/utils/format-money'
 import DeleteMutualFundDialog from './DeleteMutualFundDialog'
-import { MutualFundSchema } from '@/schema/balance-sheet'
+import { MutualFundSchema } from '@/types/balance-sheet'
 
 export default function MutualFundTable({
   queryData: { data, isLoading },
@@ -37,7 +38,7 @@ export default function MutualFundTable({
             <TableRow key={asset.id}>
               <TableCell>{asset.type}</TableCell>
               <TableCell>{formatIndianMoneyNotation(asset.value)}</TableCell>
-              <TableCell>{asset.transaction_date}</TableCell>
+              <TableCell>{dayjs(asset.transaction_date).format('MMM DD, YYYY')}</TableCell>
               <TableCell>{formatIndianMoneyNotation(asset.quantity, 2)}</TableCell>
               <TableCell className='space-x-2'>
                 <AddOrEditAssetsMutualFund

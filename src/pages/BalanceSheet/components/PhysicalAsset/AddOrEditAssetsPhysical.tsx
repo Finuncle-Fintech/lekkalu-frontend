@@ -1,21 +1,17 @@
 import React, { cloneElement, useMemo, useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import dayjs from 'dayjs'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import dayjs from 'dayjs'
 import { useToast } from '@/components/ui/use-toast'
-import {
-  AddPhysicalAssetSchema,
-  AddPhysicalAssetType,
-  addPhysicalAssetTypePhysicalSchema,
-} from '@/schema/balance-sheet'
+import { addPhysicalAssetSchema } from '@/schema/balance-sheet'
 import InputFieldsRenderer, { InputField } from '@/components/InputFieldsRenderer/InputFieldsRenderer'
 import { addPhysicalAsset, editPhysicalAsset } from '@/queries/balance-sheet'
 import { BALANCE_SHEET } from '@/utils/query-keys'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Form } from '@/components/ui/form'
-import { PhysicalAsset } from '@/types/balance-sheet'
+import { AddPhysicalAssetSchema, AddPhysicalAssetType, PhysicalAsset } from '@/types/balance-sheet'
 import { getErrorMessage } from '@/utils/utils'
 import { SERVER_DATE_FORMAT } from '@/utils/constants'
 
@@ -32,7 +28,7 @@ export default function AddOrEditAssetsPhysical({ trigger, asset, closeModal }: 
   const isEdit = Boolean(asset)
 
   const form = useForm<AddPhysicalAssetType>({
-    resolver: zodResolver(addPhysicalAssetTypePhysicalSchema),
+    resolver: zodResolver(addPhysicalAssetSchema),
     mode: 'onChange',
     defaultValues: {
       name: asset?.name ?? undefined,
@@ -62,6 +58,7 @@ export default function AddOrEditAssetsPhysical({ trigger, asset, closeModal }: 
     },
     onError: (err) => toast(getErrorMessage(err)),
   })
+
   const handleAddOrEditPhysicalAsset = (values: AddPhysicalAssetType) => {
     const type = values.type
     const { name, purchase_value, purchase_date, percentage_value } = values

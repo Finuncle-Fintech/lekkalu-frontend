@@ -4,15 +4,15 @@ import { LoaderIcon, PencilIcon } from 'lucide-react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Button } from '@/components/ui/button'
 import When from '@/components/When/When'
-import { AddPhysicalAssetTypeCashSchema } from '@/schema/balance-sheet'
 import AddOrEditAssetsCash from './AddOrEditAssetsCash'
 import DeleteCashDialog from './DeleteCashDialog'
 import { formatIndianMoneyNotation } from '@/utils/format-money'
+import { AddCashType } from '@/types/balance-sheet'
 
 export default function CashTable({
   queryData: { data, isLoading },
 }: {
-  queryData: UseQueryResult<AddPhysicalAssetTypeCashSchema[], unknown>
+  queryData: UseQueryResult<AddCashType[], unknown>
 }) {
   return (
     <div className='space-y-2'>

@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import { AssetsType } from '@/types/balance-sheet'
 
-export const addPhysicalAssetSchema = z.object({
+export const addPhysicalAssetSchemaOld = z.object({
   name: z.string().min(1, 'Asset name is required!'),
   purchase_value: z.coerce.number().min(1, 'Purchase value is required!'),
   purchase_date: z.date(),
@@ -24,14 +24,6 @@ export type AddPhysicalAssetTypeSchema = {
   type: AssetsType
 }
 
-export type AddPhysicalAssetSchema = {
-  name: string
-  purchase_value: number
-  purchase_date: string
-  depreciation_percent_per_year: number
-  type: number
-  // depreciation_frequency: number
-}
 // export type AddPhysicalAssetSchema = Omit<z.infer<typeof addPhysicalAssetSchema>, 'purchase_date' | 'sell_date'> & {
 //   purchase_date: string
 //   sell_date: string
@@ -73,37 +65,22 @@ export const addLiabilitySchema = z.object({
   interest_rate: z.coerce.number({ required_error: 'Interest Rage is required!' }),
   closure_charges: z.coerce.number({ required_error: 'Closure Charges is required!' }),
 })
-export type AddLiabilitySchema = Omit<z.infer<typeof addLiabilitySchema>, 'disbursement_date'> & {
-  disbursement_date: string
-}
 
-// ** Assets Schemas & Types
+// ** Assets Schemas
 
 // ** Cash
-export const addPhysicalAssetTypeCashSchema = z.object({
+export const addCashSchema = z.object({
   balance: z.number({ required_error: 'Amount is required!' }),
   name: z.string({ required_error: 'Name is required!' }),
 })
 
-export type AddPhysicalAssetTypeCashSchema = {
-  name: string
-  balance: number
-  id?: number
-}
-
 // ** Account
-export const addPhysicalAssetTypeAccountSchema = z.object({
+export const addAccountSchema = z.object({
   amount: z.number({ required_error: 'Amount is required!' }),
 })
 
-export type AddPhysicalAssetTypeAccountSchema = {
-  account_name: string
-  amount: number
-  rate_return: number
-}
-
 // ** Mutual Fund
-export const addPhysicalAssetTypeMutualFundSchema = z.object({
+export const addMutualFundSchema = z.object({
   invested_amount: z.number({
     required_error: 'Invested amount is required!',
     invalid_type_error: 'Invested amount should be number',
@@ -116,46 +93,18 @@ export const addPhysicalAssetTypeMutualFundSchema = z.object({
   quantity: z.number({ required_error: 'Quantity is required!', invalid_type_error: 'Quantity should be number' }),
 })
 
-export type AddPhysicalAssetTypeMutualFundSchema = {
-  name: string
-  invested_amount: number
-  expected_return: number
-  purchase_date: Date
-  quantity: number
-}
-
-export type MutualFundSchema = {
-  id?: number
-  type: string
-  value: number
-  quantity: number
-  security_object_id: number
-  transaction_date: string
-  security_type: string
-}
-
 // ** Gold
-export const addPhysicalAssetTypeGoldSchema = z.object({
+export const addGoldSchema = z.object({
   weight: z.number({ required_error: 'Weight is required!' }),
 })
 
-export type AddPhysicalAssetTypeGoldSchema = {
-  weight: number
-}
-
 // ** Real Estate
-export const addPhysicalAssetTypeRealEstateSchema = z.object({
+export const addRealEstateSchema = z.object({
   area: z.number({ required_error: 'Area is required!' }),
 })
 
-export type AddPhysicalAssetTypeRealEstateSchema = {
-  pincode: number
-  area: number
-  land_name: string
-}
-
 // ** Physical
-export const addPhysicalAssetTypePhysicalSchema = z.object({
+export const addPhysicalAssetSchema = z.object({
   name: z.string({ required_error: 'Name is required!' }),
   purchase_value: z.number({
     required_error: 'Purchase value is required!',
@@ -168,23 +117,3 @@ export const addPhysicalAssetTypePhysicalSchema = z.object({
   }),
   type: z.string({ required_error: 'Type is required!' }),
 })
-
-export type AddPhysicalAssetType = {
-  name: string
-  purchase_value: number
-  purchase_date: Date
-  percentage_value: number
-  type: 'depreciation' | 'apprecitaion'
-  months?: number
-  years?: number
-}
-
-// export type AddPhysicalAssetTypePhysicalSchema = {
-//   name: string
-//   purchase_value: number
-//   purchase_date: Date
-//   percentage_value: number
-//   type: 'depreciation' | 'apprecitaion'
-//   months?: number
-//   years?: number
-// }

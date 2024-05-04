@@ -1,3 +1,6 @@
+import { z } from 'zod'
+import { addLiabilitySchema } from '@/schema/balance-sheet'
+
 export type PhysicalAsset = {
   id: number
   name: string
@@ -15,8 +18,6 @@ export type PhysicalAsset = {
   tags: []
 }
 
-export type AssetsType = 'cash' | 'account' | 'mutual_funds' | 'gold' | 'real_estate' | 'physical_assets'
-
 export type Liability = {
   id: number
   balance: string
@@ -30,7 +31,9 @@ export type Liability = {
   tenure: number
   user: number
 }
-
+export type AddLiabilitySchema = Omit<z.infer<typeof addLiabilitySchema>, 'disbursement_date'> & {
+  disbursement_date: string
+}
 export type LoanTransaction = {
   id: number
   amount: number
@@ -41,25 +44,39 @@ export type LoanTransaction = {
   user_remark: string
 }
 
-// ** Cash Assets Type
+// ** Assets Types
+export type AssetsType = 'cash' | 'account' | 'mutual_funds' | 'gold' | 'real_estate' | 'physical_assets'
 
-export type AddPhysicalAssetTypeSchema = {
-  type: AssetsType
+// ** Cash
+export type AddCashType = {
+  name: string
+  balance: number
+  id?: number
 }
-
 export type CashAssets = {
   name: string
   balance: number
   id: number
 }
 
-export type MutualFunds = {
-  id: number
-  name: string
-  isin: string
-  investment_type: string
-  current_nav: string | null
+// ** Account
+export type AddPhysicalAssetTypeAccountSchema = {
+  account_name: string
+  amount: number
+  rate_return: number
 }
+
+// ** Security Transaction
+export type SecurityTransactionSchema = {
+  id?: number
+  type: string
+  value: number
+  quantity: number
+  security_object_id: number
+  transaction_date: string
+  security_type: string
+}
+
 export type SecurityTransaction = {
   id: number
   type: string
@@ -68,4 +85,64 @@ export type SecurityTransaction = {
   transaction_date: string
   security_type: number
   security_object_id: number
+}
+
+// ** Mutual Fund
+export type AddMutualFundType = {
+  name: string
+  invested_amount: number
+  expected_return: number
+  purchase_date: Date
+  quantity: number
+}
+export type MutualFunds = {
+  id: number
+  name: string
+  isin: string
+  investment_type: string
+  current_nav: string | null
+}
+export type MutualFundSchema = {
+  id?: number
+  type: string
+  value: number
+  quantity: number
+  security_object_id: number
+  transaction_date: string
+  security_type: string
+}
+
+// ** Gold
+export type AddGoldType = {
+  weight: number
+}
+
+// ** Real Estate
+export type AddRealEstateTypes = {
+  pincode: number
+  area: number
+  land_name: string
+}
+
+// ** Physical
+export type AddPhysicalAssetSchema = {
+  name: string
+  purchase_value: number
+  purchase_date: string
+  depreciation_percent_per_year: number
+  type: number
+}
+
+export type AddPhysicalAssetTypeSchema = {
+  type: AssetsType
+}
+
+export type AddPhysicalAssetType = {
+  name: string
+  purchase_value: number
+  purchase_date: Date
+  percentage_value: number
+  type: 'depreciation' | 'apprecitaion'
+  months?: number
+  years?: number
 }

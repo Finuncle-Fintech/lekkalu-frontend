@@ -4,6 +4,19 @@ import { BrowserRouter } from 'react-router-dom'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import CAGRCalculator from './CAGRCalculator'
 
+// Mock ApexCharts
+jest.mock('react-apexcharts', () => ({ __esModule: true, default: () => <div /> }))
+
+// Mock ResizeObserver
+class ResizeObserverMock {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+}
+
+// Mock window.ResizeObserver
+window.ResizeObserver = ResizeObserverMock
+
 const Component = () => (
   <BrowserRouter>
     <TooltipProvider>
@@ -11,17 +24,6 @@ const Component = () => (
     </TooltipProvider>
   </BrowserRouter>
 )
-
-class ResizeObserver {
-  observe() {
-  }
-
-  unobserve() {
-  }
-
-  disconnect() {
-  }
-}
 
 describe('CAGRCalculator', () => {
   window.ResizeObserver = ResizeObserver
@@ -39,13 +41,14 @@ describe('CAGRCalculator', () => {
 
   test('buttons are defined', () => {
     render(<Component />)
-    // Find child components by test IDs
-    // const formComponent = screen.getByTestId('emi-form');
-    const shareButton = screen.getByText('Share')
-    const exportToExcelComponent = screen.getByText('Export to Excel')
 
+    // Find buttons
+    const shareButton = screen.getByText('Share')
+    const exportToExcelButton = screen.getByText('Export to Excel')
+
+    // Assert buttons are in the document
     expect(shareButton).toBeInTheDocument()
-    expect(exportToExcelComponent).toBeInTheDocument()
+    expect(exportToExcelButton).toBeInTheDocument()
   })
 
   test('inputs are correctly defined', () => {

@@ -5,6 +5,19 @@ import { TooltipProvider } from '@/components/ui/tooltip'
 import SIPCalculator from './SIPCalculator'
 import { renderWithClient } from '@/__test__/utils'
 
+// Mock ApexCharts
+jest.mock('react-apexcharts', () => ({ __esModule: true, default: () => <div /> }))
+
+// Mock ResizeObserver
+class ResizeObserverMock {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+}
+
+// Mock window.ResizeObserver
+window.ResizeObserver = ResizeObserverMock
+
 const Component = () => (
   <BrowserRouter>
     <TooltipProvider>
@@ -13,23 +26,10 @@ const Component = () => (
   </BrowserRouter>
 )
 
-class ResizeObserver {
-  observe() {
-  }
-
-  unobserve() {
-  }
-
-  disconnect() {
-  }
-}
-
 // Mock handleCopy function
 // const mockHandleCopy = jest.fn()
 
 describe('SIPCalculator', () => {
-  window.ResizeObserver = ResizeObserver
-
   test('has 1 child', () => {
     // Render the component
     const { container } = render(<Component />)
@@ -43,13 +43,13 @@ describe('SIPCalculator', () => {
 
   test('buttons are defined', () => {
     renderWithClient(<Component />)
-    // Find child components by test IDs
-    // const formComponent = screen.getByTestId('emi-form');
+    // Find buttons
     const shareButton = screen.getByText('Share')
-    const exportToExcelComponent = screen.getByText('Export to Excel')
+    const exportToExcelButton = screen.getByText('Export to Excel')
 
+    // Assert buttons are in the document
     expect(shareButton).toBeInTheDocument()
-    expect(exportToExcelComponent).toBeInTheDocument()
+    expect(exportToExcelButton).toBeInTheDocument()
   })
 
   test('inputs are correctly defined', () => {

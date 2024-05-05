@@ -6,14 +6,20 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useToast } from '@/components/ui/use-toast'
 import { addMutualFundSchema } from '@/schema/balance-sheet'
 import InputFieldsRenderer, { InputField } from '@/components/InputFieldsRenderer/InputFieldsRenderer'
-import { addSecurityTransaction, editSecurityTransaction, fetchMutualFunds } from '@/queries/balance-sheet'
+import {
+  addSecurityTransaction,
+  editAssetsPropertiesById,
+  editSecurityTransaction,
+  fetchAssetsPropertiesById,
+  fetchMutualFunds,
+} from '@/queries/balance-sheet'
 import { BALANCE_SHEET } from '@/utils/query-keys'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Form } from '@/components/ui/form'
 import { getErrorMessage } from '@/utils/utils'
+import { AddAssetsPropertiesType, AddMutualFundType, MutualFundSchema } from '@/types/balance-sheet'
 import { SERVER_DATE_FORMAT } from '@/utils/constants'
-import { AddMutualFundType, MutualFundSchema } from '@/types/balance-sheet'
 
 type Props = {
   trigger: React.ReactElement
@@ -26,17 +32,6 @@ export default function AddOrEditAssetsMutualFund({ trigger, asset, closeModal }
   const { toast } = useToast()
   const qc = useQueryClient()
   const isEdit = Boolean(asset)
-  const { data: mutualFunds } = useQuery([BALANCE_SHEET.MUTUAL_FUNDS], fetchMutualFunds)
-
-  const mutualFundsOptions = useMemo(() => {
-    return (
-      mutualFunds?.map((acc) => ({
-        id: acc.id?.toString(),
-        label: acc.name,
-        value: acc.id,
-      })) ?? []
-    )
-  }, [mutualFunds])
 
   const form = useForm<AddMutualFundType>({
     resolver: zodResolver(addMutualFundSchema),
@@ -48,6 +43,35 @@ export default function AddOrEditAssetsMutualFund({ trigger, asset, closeModal }
       quantity: Number(asset?.quantity) ?? 1,
     },
   })
+
+  const { data: mutualFunds } = useQuery([BALANCE_SHEET.MUTUAL_FUNDS], fetchMutualFunds, {
+    enabled: isDialogOpen,
+    onSuccess: (data) => {
+      const fund = data.find((fund) => fund.id === asset?.security_object_id)
+      form.setValue('name', fund?.id as any)
+    },
+  })
+
+  const { data: assetProperties } = useQuery(
+    [BALANCE_SHEET.ASSETS_PROPERTIES],
+    () => fetchAssetsPropertiesById(asset ? asset?.security_object_id : Number(form.watch('name'))),
+    {
+      onSuccess: (data) => {
+        form.setValue('expected_return', Number(data.expected_rate_of_return))
+      },
+      enabled: !!form.watch('name'),
+    },
+  )
+
+  const mutualFundsOptions = useMemo(() => {
+    return (
+      mutualFunds?.map((acc) => ({
+        id: acc.id?.toString(),
+        label: acc.name,
+        value: acc.id,
+      })) ?? []
+    )
+  }, [mutualFunds])
 
   const addMutualFundMutation = useMutation(addSecurityTransaction, {
     onSuccess: () => {
@@ -68,10 +92,15 @@ export default function AddOrEditAssetsMutualFund({ trigger, asset, closeModal }
     },
     onError: (err) => toast(getErrorMessage(err)),
   })
+
+  const editAssetPropertiesMutation = useMutation((dto: AddAssetsPropertiesType) =>
+    editAssetsPropertiesById(dto.security_object_id, dto),
+  )
+
   const handleAddOrEditMutualFundAsset = (values: AddMutualFundType) => {
     const { quantity, expected_return, invested_amount, purchase_date } = values
     const fund = mutualFunds?.find((fund) => fund.id?.toString() === form.getValues('name'))
-    console.log({ fund, expected_return })
+    const expectedRate = parseFloat(assetProperties?.expected_rate_of_return || '0')
     const payLoad = {
       type: 'Buy',
       value: invested_amount,
@@ -80,19 +109,31 @@ export default function AddOrEditAssetsMutualFund({ trigger, asset, closeModal }
       transaction_date: dayjs(purchase_date).format(SERVER_DATE_FORMAT),
       security_type: 'MutualFund',
     }
-    if (asset) {
-      editMutualFundMutation.mutate(payLoad)
+    // checking weather expected return value is changed or not
+    if (expectedRate !== expected_return) {
+      editAssetPropertiesMutation.mutate(
+        {
+          expected_rate_of_return: expected_return?.toString(),
+          security_type: 'MutualFund',
+          security_object_id: fund?.id ?? 1,
+        },
+        {
+          onSuccess: () => {
+            if (asset) {
+              editMutualFundMutation.mutate(payLoad)
+            } else {
+              addMutualFundMutation.mutate(payLoad)
+            }
+          },
+        },
+      )
     } else {
-      addMutualFundMutation.mutate(payLoad)
+      if (asset) {
+        editMutualFundMutation.mutate(payLoad)
+      } else {
+        addMutualFundMutation.mutate(payLoad)
+      }
     }
-    // {
-    //   "type": "Buy",
-    //   "value": 14000,
-    //   "quantity": 12,
-    //   "transaction_date": "2019-08-24",
-    //   "security_type": "MutualFund",
-    //   "security_object_id": 1
-    // }
   }
 
   const assetsInputOptionsCash = useMemo(

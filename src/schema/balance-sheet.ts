@@ -90,6 +90,7 @@ export const addMutualFundSchema = z.object({
     invalid_type_error: 'Expected return should be number',
   }),
   purchase_date: z.date({ required_error: 'Date is required!' }),
+  name: z.string({ required_error: 'Name is required!' }),
   quantity: z.number({ required_error: 'Quantity is required!', invalid_type_error: 'Quantity should be number' }),
 })
 

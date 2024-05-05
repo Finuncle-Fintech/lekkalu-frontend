@@ -87,6 +87,23 @@ export type SecurityTransaction = {
   security_object_id: number
 }
 
+// ** Assets Properties
+export type AssetsPropertiesType = {
+  id?: number
+  expected_rate_of_return: string
+  sip_type: string
+  sip_base: string
+  sip_inc: string
+  sip_day: number
+  security_type: number
+  security_object_id: number
+}
+export type AddAssetsPropertiesType = {
+  expected_rate_of_return: string
+  security_type: string
+  security_object_id: number
+}
+
 // ** Mutual Fund
 export type AddMutualFundType = {
   name: string

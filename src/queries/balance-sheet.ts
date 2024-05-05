@@ -9,6 +9,8 @@ import {
   MutualFundSchema,
   AddLiabilitySchema,
   SecurityTransactionSchema,
+  AssetsPropertiesType,
+  AddAssetsPropertiesType,
 } from '@/types/balance-sheet'
 import { v1ApiClient, v2ApiClient } from '@/utils/client'
 
@@ -66,6 +68,16 @@ export async function fetchLoanTransactions() {
 
 export async function fetchTransactionsForLoan(loan_id: number) {
   const { data } = await v1ApiClient.get<LoanTransaction[]>('loan_transactions', { params: { loan_id } })
+  return data
+}
+
+// ** Assets Properties
+export async function fetchAssetsPropertiesById(id: number) {
+  const { data } = await v1ApiClient.get<AssetsPropertiesType>(`/asset_properties/${id}`)
+  return data
+}
+export async function editAssetsPropertiesById(id: number, dto: Partial<AddAssetsPropertiesType>) {
+  const { data } = await v1ApiClient.put(`asset_properties/${id}`, dto)
   return data
 }
 

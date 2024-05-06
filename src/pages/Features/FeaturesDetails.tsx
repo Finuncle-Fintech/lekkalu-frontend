@@ -8,6 +8,7 @@ const FinancialGoal = lazy(() => import('./components/FinancialGoal'))
 const IncomeAndExpense = lazy(() => import('./components/IncomeAndExpense'))
 const BalanceSheetDetails = lazy(() => import('./components/BalanceSheetDetails'))
 const Calculators = lazy(() => import('./components/Calculators'))
+const Scenarios = lazy(() => import('./components/ScanriosDetails'))
 
 const FeaturesDetails = () => {
   const { toolName } = useParams()
@@ -30,6 +31,9 @@ const FeaturesDetails = () => {
         break
       case 'calculators':
         ToolDetailComponent = Calculators
+        break
+      case 'scenarios':
+        ToolDetailComponent = Scenarios
         break
       default:
         ToolDetailComponent = NotFound

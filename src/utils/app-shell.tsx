@@ -140,4 +140,10 @@ export const FEATURES_ROUTES: { title: string; href: string; description: string
     description: 'Empower yourself with financial calculators for smart planning and decision-making.',
     icon: <Calculator size={30} />,
   },
+  {
+    title: 'Scenario',
+    href: '/feature/scenarios',
+    description: 'Empower yourself with financial calculators for smart planning and decision-making.',
+    icon: <Calculator size={30} />,
+  },
 ]

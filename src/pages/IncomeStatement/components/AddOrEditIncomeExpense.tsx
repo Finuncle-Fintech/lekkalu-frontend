@@ -11,7 +11,7 @@ import InputFieldsRenderer from '@/components/InputFieldsRenderer/InputFieldsRen
 import { INCOME_STATEMENT } from '@/utils/query-keys'
 import { useToast } from '@/components/ui/use-toast'
 import { Button } from '@/components/ui/button'
-import { getErrorMessage } from '@/utils/utils'
+
 import { fetchIncomeExpensesTypes, fetchIncomeSourceTypes } from '@/queries/income-statement'
 
 type Props = {
@@ -54,7 +54,10 @@ export default function AddOrEditIncomeExpense({
       setIsDialogOpen(false)
       toast({ title: `${capitalize(type)} created successfully!` })
     },
-    onError: (err: any) => toast(getErrorMessage(err)),
+    onError: (err: any) => {
+      const message = err?.response?.status === 400 ? err?.response?.data[0] : 'Something went wrong.'
+      toast({ title: message, variant: 'destructive' })
+    },
   })
 
   const updateMutation = useMutation((dto: AddIncomeStatementSchema) => updateMutationFn(incomeStatement?.id!, dto), {
@@ -63,7 +66,10 @@ export default function AddOrEditIncomeExpense({
       setIsDialogOpen(false)
       toast({ title: `${capitalize(type)} updated successfully!` })
     },
-    onError: (err: any) => toast(getErrorMessage(err)),
+    onError: (err: any) => {
+      const message = err?.response?.status === 400 ? err?.response?.data[0] : 'Something went wrong.'
+      toast({ title: message, variant: 'destructive' })
+    },
   })
 
   const handleAddOrEdit = (values: AddIncomeStatementSchema) => {
@@ -120,7 +126,6 @@ export default function AddOrEditIncomeExpense({
 
             <DialogFooter>
               <Button
-                loading={createMutation.isLoading || updateMutation.isLoading}
                 type='button'
                 variant='outline'
                 onClick={() => {

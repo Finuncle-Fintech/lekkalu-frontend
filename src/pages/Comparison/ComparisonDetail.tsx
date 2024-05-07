@@ -218,6 +218,18 @@ const ComparisonDetail = () => {
         )}
       </div>
 
+      <div className='flex justify-end'>
+        <Button
+          variant={'default'}
+          onClick={handleSimulate}
+          loading={isPending}
+          disabled={!comparison?.scenarios_objects.length}
+        >
+          Simulate
+        </Button>
+        <div className={isPending ? '' : 'ripple'} />
+      </div>
+
       {timelineData ? (
         <div>
           <Card className={cn('h-[600px] sm:h-96 pb-20 sm:pb-0 shadow-sm')}>

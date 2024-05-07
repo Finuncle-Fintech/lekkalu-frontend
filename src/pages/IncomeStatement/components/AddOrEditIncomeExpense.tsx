@@ -44,6 +44,7 @@ export default function AddOrEditIncomeExpense({
     defaultValues: {
       name: incomeStatement?.name,
       amount: incomeStatement?.amount ? Number(incomeStatement.amount) : undefined,
+      type: incomeStatement?.type ? incomeStatement?.type : undefined,
     },
   })
 

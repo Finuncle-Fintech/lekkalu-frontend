@@ -9,6 +9,7 @@ import Page from '@/components/Page/Page'
 import { AddGoalSchema, addGoalSchema } from '@/schema/goals'
 import { addGoal } from '@/queries/goals'
 import { useToast } from '@/components/ui/use-toast'
+import { TooltipTrigger, TooltipProvider, TooltipContent, Tooltip } from '@/components/ui/tooltip'
 import Form from '../components/Form'
 
 export default function CreateGoal() {
@@ -40,10 +41,33 @@ export default function CreateGoal() {
   return (
     <Page className='space-y-8'>
       <div>
-        <h1 className='text-2xl font-bold'>Create a new goal</h1>
+        <div className='flex justify-between'>
+          <h1 className='text-2xl font-bold'>Create a new goal</h1>
+          <div>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <p className='text-sm underline hover:cursor-pointer'>what is a goal?</p>
+                </TooltipTrigger>
+                <TooltipContent side={'bottom'}>
+                  <div className='w-[300px]'>
+                    <ul>
+                      <li className='p-2 text-gray-500'>
+                        Creating a goal allows you to keep track of your income and expenses with visualized graphs.
+                      </li>
+                      <li className='px-2 underline text-blue-500'>
+                        <Link to=''>View detail</Link>
+                      </li>
+                    </ul>
+                  </div>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
+        </div>
         <div className='w-full h-[1px] bg-gray-200 my-2' />
       </div>
-      <Link className='flex items-center gap-2 text-muted-foreground' to='/goals'>
+      <Link className='flex items-center gap-2 text-muted-foreground w-fit' to='/goals'>
         <ArrowLeftIcon className='w-4 h-4' />
         Back to Goals
       </Link>

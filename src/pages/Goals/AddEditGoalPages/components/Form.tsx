@@ -21,6 +21,8 @@ type GoalFormType = {
 export default function GoalForm({ form, onSubmit, isLoading, isEdit = false }: GoalFormType) {
   const { incomeExpenses, goalProportionality, getTargetKpi, isFetchingOptions } = useGetSelectOptionsForGoal()
 
+  const kpi_value = form.watch('track_kpi')
+
   if (isFetchingOptions) {
     return <></>
   }
@@ -147,32 +149,50 @@ export default function GoalForm({ form, onSubmit, isLoading, isEdit = false }: 
             </FormItem>
           )}
         />
+        <div className='flex flex-col lg:flex-row gap-5'>
+          <div className='w-full'>
+            <FormField
+              control={form.control}
+              name='track_kpi'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>KPI*</FormLabel>
+                  <FormControl>
+                    <Select
+                      value={field.value}
+                      onValueChange={field.onChange}
+                      disabled={Boolean(!getTargetKpi?.length)}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder='KPI' />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {getTargetKpi?.map((item) => (
+                          <SelectItem key={item.id} value={item.value}>
+                            {item.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <div>
+                    {!getTargetKpi?.length ? <p className='text-red-500 text-xs'>No Target KPI found.</p> : <></>}
+                  </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
 
-        <FormField
-          control={form.control}
-          name='track_kpi'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>KPI*</FormLabel>
-              <FormControl>
-                <Select value={field.value} onValueChange={field.onChange} disabled={Boolean(!getTargetKpi?.length)}>
-                  <SelectTrigger>
-                    <SelectValue placeholder='KPI' />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {getTargetKpi?.map((item) => (
-                      <SelectItem key={item.id} value={item.value}>
-                        {item.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </FormControl>
-              <div>{!getTargetKpi?.length ? <p className='text-red-500 text-xs'>No Target KPI found.</p> : <></>}</div>
-              <FormMessage />
-            </FormItem>
+          {kpi_value === 'Cash' ? (
+            <div className='lg:w-2/3'>
+              <label className='text-sm font-medium'>Multiply Income By</label>
+              <Input type='number' className='mt-2' />
+            </div>
+          ) : (
+            <></>
           )}
-        />
+        </div>
 
         <Button type='submit' className='col-span-full w-max' loading={isLoading}>
           <PlusCircle className='w-4 h-4 mr-2' />

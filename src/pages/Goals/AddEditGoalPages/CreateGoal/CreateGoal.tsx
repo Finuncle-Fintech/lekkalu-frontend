@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { ArrowLeftIcon } from 'lucide-react'
+import { ArrowLeftIcon, InfoIcon } from 'lucide-react'
 import { useMutation } from '@tanstack/react-query'
 import { useNavigate, Link } from 'react-router-dom'
 import dayjs from 'dayjs'
@@ -14,6 +14,7 @@ import Form from '../components/Form'
 
 export default function CreateGoal() {
   const { toast } = useToast()
+  const [isGoalInfoPopOverOpen, setIsGoalInfoPopOverOpen] = useState(false)
   const navigate = useNavigate()
   const form = useForm<AddGoalSchema>({
     resolver: zodResolver(addGoalSchema),
@@ -45,11 +46,20 @@ export default function CreateGoal() {
           <h1 className='text-2xl font-bold'>Create a new goal</h1>
           <div>
             <TooltipProvider>
-              <Tooltip>
+              <Tooltip open={isGoalInfoPopOverOpen}>
                 <TooltipTrigger asChild>
-                  <p className='text-sm underline hover:cursor-pointer'>what is a goal?</p>
+                  <p className='text-sm underline hover:cursor-pointer'>
+                    <InfoIcon
+                      onMouseEnter={() => setIsGoalInfoPopOverOpen(true)}
+                      onMouseLeave={() => setIsGoalInfoPopOverOpen(false)}
+                    />
+                  </p>
                 </TooltipTrigger>
-                <TooltipContent side={'bottom'}>
+                <TooltipContent
+                  side={'bottom'}
+                  onMouseEnter={() => setIsGoalInfoPopOverOpen(true)}
+                  onMouseLeave={() => setIsGoalInfoPopOverOpen(false)}
+                >
                   <div className='w-[300px]'>
                     <ul>
                       <li className='p-2 text-gray-500'>

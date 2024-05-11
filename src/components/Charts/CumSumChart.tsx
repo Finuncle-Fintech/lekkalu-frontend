@@ -58,7 +58,7 @@ export const CumSumChart = () => {
       },
     },
     xaxis: {
-      categories: cumSumData.map((item) => item.month.slice(0, 3)),
+      categories: cumSumData.map((item) => item.month.slice(0, 3) + ' ' + item.year),
       labels: {
         formatter: (value) => value,
       },

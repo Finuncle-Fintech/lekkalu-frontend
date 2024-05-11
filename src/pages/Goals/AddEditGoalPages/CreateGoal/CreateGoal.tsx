@@ -66,7 +66,9 @@ export default function CreateGoal() {
                         Creating a goal allows you to keep track of your income and expenses with visualized graphs.
                       </li>
                       <li className='px-2 underline text-blue-500'>
-                        <Link to=''>View detail</Link>
+                        <Link to='http://kb.finuncle.com' target='_blank'>
+                          View detail
+                        </Link>
                       </li>
                     </ul>
                   </div>

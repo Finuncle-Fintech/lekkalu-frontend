@@ -14,16 +14,19 @@ import { Form } from '@/components/ui/form'
 import { AddPhysicalAssetSchema, AddPhysicalAssetType, PhysicalAsset } from '@/types/balance-sheet'
 import { getErrorMessage } from '@/utils/utils'
 import { SERVER_DATE_FORMAT } from '@/utils/constants'
+import { useStepper } from '@/components/ui/stepper'
 
 type Props = {
   trigger: React.ReactElement
   asset?: PhysicalAsset
   closeModal?: () => void
+  isSteeper?: boolean
 }
 
-export default function AddOrEditAssetsPhysical({ trigger, asset, closeModal }: Props) {
+export default function AddOrEditAssetsPhysical({ trigger, asset, closeModal, isSteeper }: Props) {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const { toast } = useToast()
+  const { prevStep } = useStepper()
   const qc = useQueryClient()
   const isEdit = Boolean(asset)
 
@@ -146,47 +149,56 @@ export default function AddOrEditAssetsPhysical({ trigger, asset, closeModal }: 
     [],
   )
 
+  const FormContent = (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(handleAddOrEditPhysicalAsset)} className='gap-4'>
+        <div className='md:col-span-2 space-y-2'>
+          <div className='flex flex-col my-5 gap-2 w-full'>
+            <InputFieldsRenderer control={form.control} inputs={assetsInputOptionsCash} />
+          </div>
+        </div>
+
+        <DialogFooter className='gap-2 md:col-span-2'>
+          <Button
+            loading={addPhysicalAssetMutation.isLoading || editPhysicalAssetMutation.isLoading}
+            type='button'
+            variant='outline'
+            onClick={() => {
+              isSteeper ? prevStep() : setIsDialogOpen(false)
+            }}
+          >
+            {isSteeper ? 'Prev' : 'Cancel'}
+          </Button>
+          <Button type='submit' loading={addPhysicalAssetMutation.isLoading || editPhysicalAssetMutation.isLoading}>
+            {isEdit ? 'Edit' : 'Add'}
+          </Button>
+        </DialogFooter>
+      </form>
+    </Form>
+  )
+
   return (
-    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-      <DialogTrigger
-        asChild
-        onClick={() => {
-          setIsDialogOpen(true)
-        }}
-      >
-        {cloneElement(trigger)}
-      </DialogTrigger>
-      <DialogContent className='max-h-[800px] overflow-auto'>
-        <DialogHeader>
-          <DialogTitle>{isEdit ? 'Edit' : 'Add'} Physical Asset</DialogTitle>
-        </DialogHeader>
-
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleAddOrEditPhysicalAsset)} className='gap-4'>
-            <div className='md:col-span-2 space-y-2'>
-              <div className='flex flex-col my-5 gap-2 w-full'>
-                <InputFieldsRenderer control={form.control} inputs={assetsInputOptionsCash} />
-              </div>
-            </div>
-
-            <DialogFooter className='gap-2 md:col-span-2'>
-              <Button
-                loading={addPhysicalAssetMutation.isLoading || editPhysicalAssetMutation.isLoading}
-                type='button'
-                variant='outline'
-                onClick={() => {
-                  setIsDialogOpen(false)
-                }}
-              >
-                Cancel
-              </Button>
-              <Button type='submit' loading={addPhysicalAssetMutation.isLoading || editPhysicalAssetMutation.isLoading}>
-                {isEdit ? 'Edit' : 'Add'}
-              </Button>
-            </DialogFooter>
-          </form>
-        </Form>
-      </DialogContent>
-    </Dialog>
+    <>
+      {isSteeper ? (
+        FormContent
+      ) : (
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <DialogTrigger
+            asChild
+            onClick={() => {
+              setIsDialogOpen(true)
+            }}
+          >
+            {trigger && cloneElement(trigger)}
+          </DialogTrigger>
+          <DialogContent className='max-h-[800px] overflow-auto'>
+            <DialogHeader>
+              <DialogTitle>{isEdit ? 'Edit' : 'Add'} Physical Asset</DialogTitle>
+            </DialogHeader>
+            {FormContent}
+          </DialogContent>
+        </Dialog>
+      )}
+    </>
   )
 }

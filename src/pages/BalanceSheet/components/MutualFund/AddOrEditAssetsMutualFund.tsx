@@ -20,18 +20,21 @@ import { Form } from '@/components/ui/form'
 import { getErrorMessage } from '@/utils/utils'
 import { AddAssetsPropertiesType, AddMutualFundType, MutualFundSchema } from '@/types/balance-sheet'
 import { SERVER_DATE_FORMAT } from '@/utils/constants'
+import { useStepper } from '@/components/ui/stepper'
 
 type Props = {
   trigger: React.ReactElement
   asset?: MutualFundSchema
   closeModal?: () => void
+  isSteeper?: boolean
 }
 
-export default function AddOrEditAssetsMutualFund({ trigger, asset, closeModal }: Props) {
+export default function AddOrEditAssetsMutualFund({ trigger, asset, closeModal, isSteeper }: Props) {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const { toast } = useToast()
   const qc = useQueryClient()
   const isEdit = Boolean(asset)
+  const { prevStep } = useStepper()
 
   const form = useForm<AddMutualFundType>({
     resolver: zodResolver(addMutualFundSchema),
@@ -45,10 +48,10 @@ export default function AddOrEditAssetsMutualFund({ trigger, asset, closeModal }
   })
 
   const { data: mutualFunds } = useQuery([BALANCE_SHEET.MUTUAL_FUNDS], fetchMutualFunds, {
-    enabled: isDialogOpen,
+    enabled: isDialogOpen || isSteeper,
     onSuccess: (data) => {
       const fund = data.find((fund) => fund.id === asset?.security_object_id)
-      form.setValue('name', fund?.id as any)
+      form.setValue('name', fund?.id?.toString() as any)
     },
   })
 
@@ -169,47 +172,56 @@ export default function AddOrEditAssetsMutualFund({ trigger, asset, closeModal }
     [mutualFundsOptions],
   )
 
+  const FormContent = (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(handleAddOrEditMutualFundAsset)} className='gap-4'>
+        <div className='md:col-span-2 space-y-2'>
+          <div className='flex flex-col my-5 gap-2 w-full'>
+            <InputFieldsRenderer control={form.control} inputs={assetsInputOptionsCash} />
+          </div>
+        </div>
+
+        <DialogFooter className='gap-2 md:col-span-2'>
+          <Button
+            loading={addMutualFundMutation.isLoading || editMutualFundMutation.isLoading}
+            type='button'
+            variant='outline'
+            onClick={() => {
+              isSteeper ? prevStep() : setIsDialogOpen(false)
+            }}
+          >
+            {isSteeper ? 'Prev' : 'Cancel'}
+          </Button>
+          <Button type='submit' loading={addMutualFundMutation.isLoading || editMutualFundMutation.isLoading}>
+            {isEdit ? 'Edit' : 'Add'}
+          </Button>
+        </DialogFooter>
+      </form>
+    </Form>
+  )
+
   return (
-    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-      <DialogTrigger
-        asChild
-        onClick={() => {
-          setIsDialogOpen(true)
-        }}
-      >
-        {cloneElement(trigger)}
-      </DialogTrigger>
-      <DialogContent className='max-h-[800px] overflow-auto'>
-        <DialogHeader>
-          <DialogTitle>{isEdit ? 'Edit' : 'Add'} Mutual Fund Transaction</DialogTitle>
-        </DialogHeader>
-
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleAddOrEditMutualFundAsset)} className='gap-4'>
-            <div className='md:col-span-2 space-y-2'>
-              <div className='flex flex-col my-5 gap-2 w-full'>
-                <InputFieldsRenderer control={form.control} inputs={assetsInputOptionsCash} />
-              </div>
-            </div>
-
-            <DialogFooter className='gap-2 md:col-span-2'>
-              <Button
-                loading={addMutualFundMutation.isLoading || editMutualFundMutation.isLoading}
-                type='button'
-                variant='outline'
-                onClick={() => {
-                  setIsDialogOpen(false)
-                }}
-              >
-                Cancel
-              </Button>
-              <Button type='submit' loading={addMutualFundMutation.isLoading || editMutualFundMutation.isLoading}>
-                {isEdit ? 'Edit' : 'Add'}
-              </Button>
-            </DialogFooter>
-          </form>
-        </Form>
-      </DialogContent>
-    </Dialog>
+    <>
+      {isSteeper ? (
+        FormContent
+      ) : (
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <DialogTrigger
+            asChild
+            onClick={() => {
+              setIsDialogOpen(true)
+            }}
+          >
+            {trigger && cloneElement(trigger)}
+          </DialogTrigger>
+          <DialogContent className='max-h-[800px] overflow-auto'>
+            <DialogHeader>
+              <DialogTitle>{isEdit ? 'Edit' : 'Add'} Mutual Fund Transaction</DialogTitle>
+            </DialogHeader>
+            {FormContent}
+          </DialogContent>
+        </Dialog>
+      )}
+    </>
   )
 }

@@ -70,7 +70,7 @@ export const addLiabilitySchema = z.object({
 
 // ** Cash
 export const addCashSchema = z.object({
-  balance: z.number({ required_error: 'Amount is required!' }),
+  balance: z.number({ required_error: 'Amount is required!', invalid_type_error: 'Amount should be number' }),
   name: z.string({ required_error: 'Name is required!' }),
 })
 
@@ -96,12 +96,12 @@ export const addMutualFundSchema = z.object({
 
 // ** Gold
 export const addGoldSchema = z.object({
-  weight: z.number({ required_error: 'Weight is required!' }),
+  weight: z.number({ required_error: 'Weight is required!', invalid_type_error: 'Weight should be number' }),
 })
 
 // ** Real Estate
 export const addRealEstateSchema = z.object({
-  area: z.number({ required_error: 'Area is required!' }),
+  area: z.number({ required_error: 'Area is required!', invalid_type_error: 'Area should be number' }),
 })
 
 // ** Physical

@@ -12,16 +12,20 @@ import { Button } from '@/components/ui/button'
 import { Form } from '@/components/ui/form'
 import { AddPhysicalAssetSchema, AddPhysicalAssetTypeAccountSchema, PhysicalAsset } from '@/types/balance-sheet'
 import { getErrorMessage } from '@/utils/utils'
+import { useStepper } from '@/components/ui/stepper'
 
 type Props = {
   trigger: React.ReactElement
   asset?: PhysicalAsset
+  closeModal?: () => void
+  isSteeper?: boolean
 }
 
-export default function AddOrEditAssetsAccount({ trigger, asset }: Props) {
+export default function AddOrEditAssetsAccount({ trigger, asset, closeModal, isSteeper }: Props) {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const { toast } = useToast()
   const qc = useQueryClient()
+  const { prevStep } = useStepper()
   const isEdit = Boolean(asset)
 
   const form = useForm<AddPhysicalAssetTypeAccountSchema>({
@@ -53,6 +57,7 @@ export default function AddOrEditAssetsAccount({ trigger, asset }: Props) {
 
   const handleAddOrEditAccountAsset = (values: AddPhysicalAssetTypeAccountSchema) => {
     console.log('Submitting Values', values)
+    closeModal?.()
   }
 
   const assetsInputOptionsCash = useMemo(
@@ -76,7 +81,38 @@ export default function AddOrEditAssetsAccount({ trigger, asset }: Props) {
       ] as InputField[],
     [],
   )
-  return (
+
+  const FormContent = (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(handleAddOrEditAccountAsset)} className='gap-4'>
+        <div className='md:col-span-2 space-y-2'>
+          <div className='flex flex-col my-5 gap-2 w-full'>
+            <InputFieldsRenderer control={form.control} inputs={assetsInputOptionsCash} />
+          </div>
+        </div>
+
+        <DialogFooter className='gap-2 md:col-span-2'>
+          <Button
+            loading={addPhysicalAssetMutation.isLoading || editPhysicalAssetMutation.isLoading}
+            type='button'
+            variant='outline'
+            onClick={() => {
+              isSteeper ? prevStep() : setIsDialogOpen(false)
+            }}
+          >
+            {isSteeper ? 'Prev' : 'Cancel'}
+          </Button>
+          <Button type='submit' loading={addPhysicalAssetMutation.isLoading || editPhysicalAssetMutation.isLoading}>
+            {isEdit ? 'Edit' : 'Add'}
+          </Button>
+        </DialogFooter>
+      </form>
+    </Form>
+  )
+
+  return isSteeper ? (
+    FormContent
+  ) : (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger
         asChild
@@ -84,38 +120,13 @@ export default function AddOrEditAssetsAccount({ trigger, asset }: Props) {
           setIsDialogOpen(true)
         }}
       >
-        {cloneElement(trigger)}
+        {trigger && cloneElement(trigger)}
       </DialogTrigger>
       <DialogContent className='max-h-[800px] overflow-auto'>
         <DialogHeader>
           <DialogTitle>{isEdit ? 'Edit' : 'Add'} Account</DialogTitle>
         </DialogHeader>
-
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleAddOrEditAccountAsset)} className='gap-4'>
-            <div className='md:col-span-2 space-y-2'>
-              <div className='flex flex-col my-5 gap-2 w-full'>
-                <InputFieldsRenderer control={form.control} inputs={assetsInputOptionsCash} />
-              </div>
-            </div>
-
-            <DialogFooter className='gap-2 md:col-span-2'>
-              <Button
-                loading={addPhysicalAssetMutation.isLoading || editPhysicalAssetMutation.isLoading}
-                type='button'
-                variant='outline'
-                onClick={() => {
-                  setIsDialogOpen(false)
-                }}
-              >
-                Cancel
-              </Button>
-              <Button type='submit' loading={addPhysicalAssetMutation.isLoading || editPhysicalAssetMutation.isLoading}>
-                {isEdit ? 'Edit' : 'Add'}
-              </Button>
-            </DialogFooter>
-          </form>
-        </Form>
+        {FormContent}
       </DialogContent>
     </Dialog>
   )

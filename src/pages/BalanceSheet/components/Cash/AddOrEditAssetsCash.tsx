@@ -12,16 +12,19 @@ import { Form } from '@/components/ui/form'
 import { getErrorMessage } from '@/utils/utils'
 import { addCashAsset, editCashAsset } from '@/queries/balance-sheet'
 import { AddCashType } from '@/types/balance-sheet'
+import { useStepper } from '@/components/ui/stepper'
 
 type Props = {
   trigger: React.ReactElement
   asset?: AddCashType
   closeModal?: () => void
+  isSteeper?: boolean
 }
 
-export default function AddOrEditAssetsCash({ trigger, asset, closeModal }: Props) {
+export default function AddOrEditAssetsCash({ trigger, asset, closeModal, isSteeper }: Props) {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const { toast } = useToast()
+  const { prevStep } = useStepper()
   const qc = useQueryClient()
   const isEdit = Boolean(asset)
   const form = useForm<AddCashType>({
@@ -76,7 +79,37 @@ export default function AddOrEditAssetsCash({ trigger, asset, closeModal }: Prop
     [],
   )
 
-  return (
+  const FormContent = (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(handleAddOrEditCashAsset)} className='gap-4'>
+        <div className='md:col-span-2 space-y-2'>
+          <div className='flex flex-col my-5 gap-2 w-full'>
+            <InputFieldsRenderer control={form.control} inputs={assetsInputOptionsCash} />
+          </div>
+        </div>
+
+        <DialogFooter className='gap-2 md:col-span-2'>
+          <Button
+            loading={addCashMutation.isLoading || editCashMutation.isLoading}
+            type='button'
+            variant='outline'
+            onClick={() => {
+              isSteeper ? prevStep() : setIsDialogOpen(false)
+            }}
+          >
+            {isSteeper ? 'Prev' : 'Cancel'}
+          </Button>
+          <Button type='submit' loading={addCashMutation.isLoading || editCashMutation.isLoading}>
+            {isEdit ? 'Edit' : 'Add'}
+          </Button>
+        </DialogFooter>
+      </form>
+    </Form>
+  )
+
+  return isSteeper ? (
+    FormContent
+  ) : (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger
         asChild
@@ -84,37 +117,13 @@ export default function AddOrEditAssetsCash({ trigger, asset, closeModal }: Prop
           setIsDialogOpen(true)
         }}
       >
-        {cloneElement(trigger)}
+        {trigger && cloneElement(trigger)}
       </DialogTrigger>
       <DialogContent className='max-h-[800px] overflow-auto'>
         <DialogHeader>
           <DialogTitle>{isEdit ? 'Edit' : 'Add'} Cash</DialogTitle>
         </DialogHeader>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleAddOrEditCashAsset)} className='gap-4'>
-            <div className='md:col-span-2 space-y-2'>
-              <div className='flex flex-col my-5 gap-2 w-full'>
-                <InputFieldsRenderer control={form.control} inputs={assetsInputOptionsCash} />
-              </div>
-            </div>
-
-            <DialogFooter className='gap-2 md:col-span-2'>
-              <Button
-                loading={addCashMutation.isLoading || editCashMutation.isLoading}
-                type='button'
-                variant='outline'
-                onClick={() => {
-                  setIsDialogOpen(false)
-                }}
-              >
-                Cancel
-              </Button>
-              <Button type='submit' loading={addCashMutation.isLoading || editCashMutation.isLoading}>
-                {isEdit ? 'Edit' : 'Add'}
-              </Button>
-            </DialogFooter>
-          </form>
-        </Form>
+        {FormContent}
       </DialogContent>
     </Dialog>
   )

@@ -4,7 +4,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { ArrowLeftIcon } from 'lucide-react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useNavigate, useParams, Link } from 'react-router-dom'
-import { range } from 'lodash'
 import Page from '@/components/Page/Page'
 import { addGoalSchema, AddGoalSchema } from '@/schema/goals'
 import { GOALS } from '@/utils/query-keys'
@@ -78,11 +77,8 @@ export default function EditGoal() {
         </Link>
       </div>
       {isFetchingGoal ? (
-        <div className='grid md:grid-cols-2 gap-4 items-center'>
-          {range(6).map((i) => (
-            <Skeleton key={i} className='w-full h-[50px]' />
-          ))}
-          <Skeleton className='w-20 h-[50px]' />
+        <div className='grid gap-4 items-center'>
+          <Skeleton className='w-full h-[350px]' />
         </div>
       ) : (
         <Form form={form} onSubmit={handleGoalEdit} isLoading={editGoalMutation.isPending} isEdit />

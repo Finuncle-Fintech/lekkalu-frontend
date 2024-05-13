@@ -231,7 +231,7 @@ export default function GoalForm({ form, onSubmit, isLoading, isEdit = false }: 
                             />
                             <div className='flex mt-2 justify-between lg:justify-start'>
                               <p className='text-sm text-gray-500 self-center'>
-                                Suggested target is: {suggestedTargetValue}
+                                Suggested target is: {suggestedTargetValue?.toLocaleString()}
                               </p>
                               <Button
                                 type='button'

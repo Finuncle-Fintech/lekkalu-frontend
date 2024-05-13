@@ -1,8 +1,16 @@
 import React from 'react'
 import { Button } from '@/components/ui/button'
 import { useStepper } from '@/components/ui/stepper'
+import { AddGoalSchema } from '@/schema/goals'
 
-const StepFooter = ({ isEdit, values, handleCreate, isLoading }: any) => {
+type StepperFooterType = {
+  isEdit: boolean
+  values: AddGoalSchema
+  handleCreate: () => void
+  isLoading: boolean
+}
+
+const StepFooter = ({ isEdit, values, handleCreate, isLoading }: StepperFooterType) => {
   const { nextStep, prevStep, isLastStep, isDisabledStep, hasCompletedAllSteps } = useStepper()
 
   const FinishLabel = isEdit ? 'Edit' : 'Create'

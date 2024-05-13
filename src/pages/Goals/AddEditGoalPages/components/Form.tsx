@@ -229,14 +229,14 @@ export default function GoalForm({ form, onSubmit, isLoading, isEdit = false }: 
                               onChange={(event) => setMultiplyTargetBy(Number(event?.target?.value))}
                               min={1}
                             />
-                            <div className='flex mt-1'>
-                              <p className='text-xs text-gray-500 self-center'>
+                            <div className='flex mt-2 justify-between lg:justify-start'>
+                              <p className='text-sm text-gray-500 self-center'>
                                 Suggested target is: {suggestedTargetValue}
                               </p>
                               <Button
                                 type='button'
                                 variant={'link'}
-                                className='p-0 h-fit ml-5'
+                                className='p-0 h-fit ml-5 min-w-fit'
                                 onClick={setSuggestedTargetValueInForm}
                               >
                                 Set target
@@ -255,7 +255,7 @@ export default function GoalForm({ form, onSubmit, isLoading, isEdit = false }: 
             })}
             <StepFooter
               isEdit={isEdit}
-              values={form.getValues()}
+              values={form.watch()}
               handleCreate={form.handleSubmit(onSubmit)}
               isLoading={isLoading}
             />

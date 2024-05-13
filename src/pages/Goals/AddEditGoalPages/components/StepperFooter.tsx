@@ -52,7 +52,7 @@ const StepFooter = ({ isEdit, values, handleCreate, isLoading }: StepperFooterTy
           Prev
         </Button>
         <Button size='sm' onClick={handleNext} disabled={shouldDisable()} type='button' loading={isLoading}>
-          {isLastStep ? FinishLabel : 'Next'}
+          {isLastStep || hasCompletedAllSteps ? FinishLabel : 'Next'}
         </Button>
       </div>
     </>

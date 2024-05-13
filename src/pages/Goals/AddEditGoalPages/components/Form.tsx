@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import dayjs from 'dayjs'
 import { UseFormReturn } from 'react-hook-form'
 import { Link } from 'react-router-dom'
+import { InfoIcon } from 'lucide-react'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -11,6 +12,7 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@
 import useGetSelectOptionsForGoal from '../hooks/useGetSelectOptionsForGoal'
 import { AddGoalSchema } from '@/schema/goals'
 import { StepFooter } from './StepperFooter'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 
 type GoalFormType = {
   form: UseFormReturn<AddGoalSchema>
@@ -220,15 +222,29 @@ export default function GoalForm({ form, onSubmit, isLoading, isEdit = false }: 
 
                         {kpi_value === 'Cash' ? (
                           <div>
-                            <label className='text-sm font-medium'>x months of expenses</label>
-                            <Input
-                              type='number'
-                              className='mt-2'
-                              defaultValue={6}
-                              value={multiplyTargetBy}
-                              onChange={(event) => setMultiplyTargetBy(Number(event?.target?.value))}
-                              min={1}
-                            />
+                            <div className='flex justify-between'>
+                              <label className='text-sm font-medium'>x months of expenses</label>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <div className='cursor-pointer'>
+                                    <InfoIcon className='w-4 h-4' />
+                                  </div>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  Set your cash goal target to meet 3-6 months of living expenses
+                                </TooltipContent>
+                              </Tooltip>
+                            </div>
+                            <div className='relative flex'>
+                              <Input
+                                type='number'
+                                className='mt-2'
+                                defaultValue={6}
+                                value={multiplyTargetBy}
+                                onChange={(event) => setMultiplyTargetBy(Number(event?.target?.value))}
+                                min={1}
+                              />
+                            </div>
                             <div className='flex mt-2 justify-between lg:justify-start'>
                               <p className='text-sm text-gray-500 self-center'>
                                 Suggested target is: {suggestedTargetValue?.toLocaleString()}

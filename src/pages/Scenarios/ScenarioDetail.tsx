@@ -30,16 +30,13 @@ export default function ScenarioDefault() {
 
   const scenarioId = Number(id)
   const { loginImaginaryUser } = useImaginaryAuth()
+
   const {
     data,
     isLoading,
     isError: errorForAuthorizedUser,
     isSuccess: isSuccessScenario,
-  } = useQuery([`${SCENARIOS.SCENARIOS}-${scenarioId}`], () => fetchScenarioById(scenarioId), {
-    onSuccess(data) {
-      loginImaginaryUser.mutate({ username: data.imag_username, password: data.imag_password, id: data.id })
-    },
-  })
+  } = useQuery({ queryKey: [`${SCENARIOS.SCENARIOS}-${scenarioId}`], queryFn: () => fetchScenarioById(scenarioId) })
 
   useEffect(() => {
     if (isSuccessScenario) {

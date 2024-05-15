@@ -19,11 +19,12 @@ type GoalFormType = {
   onSubmit: (values: AddGoalSchema) => void
   isLoading: boolean
   isEdit?: boolean
+  isError: boolean
 }
 
 const steps = [{ id: '1' }, { id: '2' }] satisfies StepItem[]
 
-export default function GoalForm({ form, onSubmit, isLoading, isEdit = false }: GoalFormType) {
+export default function GoalForm({ form, onSubmit, isLoading, isError, isEdit = false }: GoalFormType) {
   const { incomeExpenses, goalProportionality, getTargetKpi, isFetchingOptions, totalExpenses } =
     useGetSelectOptionsForGoal()
 
@@ -187,7 +188,7 @@ export default function GoalForm({ form, onSubmit, isLoading, isEdit = false }: 
                           name='target_contribution_source'
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Source*</FormLabel>
+                              <FormLabel>Source</FormLabel>
                               <FormControl>
                                 <Select
                                   value={field.value?.toString()}
@@ -221,44 +222,47 @@ export default function GoalForm({ form, onSubmit, isLoading, isEdit = false }: 
                         />
 
                         {kpi_value === 'Cash' ? (
-                          <div>
-                            <div className='flex justify-between'>
-                              <label className='text-sm font-medium'>x months of expenses</label>
-                              <Tooltip>
-                                <TooltipTrigger asChild>
-                                  <div className='cursor-pointer'>
-                                    <InfoIcon className='w-4 h-4' />
-                                  </div>
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                  Set your cash goal target to meet 3-6 months of living expenses
-                                </TooltipContent>
-                              </Tooltip>
+                          <>
+                            <div>
+                              <div className='flex justify-start'>
+                                <label className='text-sm font-medium mr-2 mb-2'>x months of expenses</label>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <div className='cursor-pointer'>
+                                      <InfoIcon className='w-4 h-4' />
+                                    </div>
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    Set your cash goal target to meet 3-6 months of living expenses
+                                  </TooltipContent>
+                                </Tooltip>
+                              </div>
+                              <div className='flex gap-x-5'>
+                                <Input
+                                  type='number'
+                                  className='w-20 self-center'
+                                  defaultValue={6}
+                                  value={multiplyTargetBy}
+                                  onChange={(event) => setMultiplyTargetBy(Number(event?.target?.value))}
+                                  min={1}
+                                />
+                                <Button
+                                  type='button'
+                                  variant={'default'}
+                                  className='self-center'
+                                  onClick={setSuggestedTargetValueInForm}
+                                >
+                                  Set target
+                                </Button>
+                              </div>
+                              <div className='flex mt-2 justify-between lg:justify-start'>
+                                <p className='text-xs text-gray-500 self-center'>
+                                  Suggested target based on current expenses is:{' '}
+                                  {suggestedTargetValue?.toLocaleString()}
+                                </p>
+                              </div>
                             </div>
-                            <div className='relative flex'>
-                              <Input
-                                type='number'
-                                className='mt-2'
-                                defaultValue={6}
-                                value={multiplyTargetBy}
-                                onChange={(event) => setMultiplyTargetBy(Number(event?.target?.value))}
-                                min={1}
-                              />
-                            </div>
-                            <div className='flex mt-2 justify-between lg:justify-start'>
-                              <p className='text-sm text-gray-500 self-center'>
-                                Suggested target is: {suggestedTargetValue?.toLocaleString()}
-                              </p>
-                              <Button
-                                type='button'
-                                variant={'link'}
-                                className='p-0 h-fit ml-5 min-w-fit'
-                                onClick={setSuggestedTargetValueInForm}
-                              >
-                                Set target
-                              </Button>
-                            </div>
-                          </div>
+                          </>
                         ) : (
                           <></>
                         )}
@@ -274,6 +278,7 @@ export default function GoalForm({ form, onSubmit, isLoading, isEdit = false }: 
               values={form.watch()}
               handleCreate={form.handleSubmit(onSubmit)}
               isLoading={isLoading}
+              isError={isError}
             />
           </Stepper>
         </form>

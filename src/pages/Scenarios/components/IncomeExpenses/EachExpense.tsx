@@ -10,7 +10,7 @@ import { formatIndianMoneyNotation } from '@/utils/format-money'
 
 type EachIncomeForScenarioType = {
   incomeExpense: IncomeStatement
-  createIncomeExpense: (dto: AddIncomeStateSchemaForScenario) => Promise<any>
+  createIncomeExpense: (dto: any) => Promise<any>
   updateIncomeExpense: (id: number, dto: Partial<AddIncomeStateSchemaForScenario>) => Promise<any>
   deleteIncomeExpense: (id: number) => Promise<any>
   IS_AUTHENTICATED_USER?: boolean

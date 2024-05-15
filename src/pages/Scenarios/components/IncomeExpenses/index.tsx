@@ -18,8 +18,8 @@ type Props = {
   trigger: React.ReactElement
   type: 'INCOME' | 'EXPENSE'
   incomeStatement?: IncomeStatement
-  createMutationFn: (dto: AddIncomeStateSchemaForScenario) => Promise<void>
-  updateMutationFn: (id: number, dto: AddIncomeStateSchemaForScenario) => Promise<void>
+  createMutationFn: (dto: any) => Promise<void>
+  updateMutationFn: (id: number, dto: any) => Promise<void>
 }
 
 export default function AddOrEditIncomeExpenseForScenario({

@@ -8,9 +8,10 @@ type StepperFooterType = {
   values: AddGoalSchema
   handleCreate: () => void
   isLoading: boolean
+  isError: boolean
 }
 
-const StepFooter = ({ isEdit, values, handleCreate, isLoading }: StepperFooterType) => {
+const StepFooter = ({ isEdit, values, handleCreate, isLoading, isError }: StepperFooterType) => {
   const { nextStep, prevStep, isLastStep, isDisabledStep, hasCompletedAllSteps } = useStepper()
 
   const FinishLabel = isEdit ? 'Edit' : 'Create'
@@ -23,7 +24,7 @@ const StepFooter = ({ isEdit, values, handleCreate, isLoading }: StepperFooterTy
   }
 
   const disableCreate = () => {
-    if (values.target_value && values.target_contribution_source) {
+    if (values.target_value) {
       return false
     }
     return true
@@ -42,6 +43,17 @@ const StepFooter = ({ isEdit, values, handleCreate, isLoading }: StepperFooterTy
       handleCreate()
     }
     nextStep()
+  }
+
+  if (isError && hasCompletedAllSteps) {
+    return (
+      <div>
+        <p className='py-5 text-gray-500'>Something went wrong.</p>
+        <Button onClick={prevStep} type='button'>
+          Retry
+        </Button>
+      </div>
+    )
   }
 
   return (

@@ -83,7 +83,12 @@ export default function CreateGoal() {
         <ArrowLeftIcon className='w-4 h-4' />
         Back to Goals
       </Link>
-      <Form form={form} onSubmit={handleGoalCreate} isLoading={createGoalMutation.isPending} />
+      <Form
+        form={form}
+        onSubmit={handleGoalCreate}
+        isLoading={createGoalMutation.isPending}
+        // isError={createGoalMutation?.isError}
+      />
     </Page>
   )
 }

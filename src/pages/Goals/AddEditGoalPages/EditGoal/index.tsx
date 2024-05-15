@@ -81,7 +81,13 @@ export default function EditGoal() {
           <Skeleton className='w-full h-[350px]' />
         </div>
       ) : (
-        <Form form={form} onSubmit={handleGoalEdit} isLoading={editGoalMutation.isPending} isEdit />
+        <Form
+          form={form}
+          onSubmit={handleGoalEdit}
+          isLoading={editGoalMutation.isPending}
+          isEdit
+          // isError={editGoalMutation.isError}
+        />
       )}
     </Page>
   )

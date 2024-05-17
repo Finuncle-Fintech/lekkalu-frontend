@@ -5,10 +5,10 @@ import { AssetsType, PhysicalAsset } from '@/types/balance-sheet'
 import { SERVER_DATE_FORMAT } from './constants'
 // assets components
 import AddOrEditAssetsCash from '@/pages/BalanceSheet/components/Cash/AddOrEditAssetsCash'
-import AddOrEditAssetsAccount from '@/pages/BalanceSheet/components/AddOrEditAssetsAccount'
+import AddOrEditAssetsAccount from '@/pages/BalanceSheet/components/Account/AddOrEditAssetsAccount'
 import AddOrEditAssetsMutualFund from '@/pages/BalanceSheet/components/MutualFund/AddOrEditAssetsMutualFund'
-import AddOrEditAssetsGold from '@/pages/BalanceSheet/components/AddOrEditAssetsGold'
-import AddOrEditAssetsRealEstate from '@/pages/BalanceSheet/components/AddOrEditAssetsRealEstate'
+import AddOrEditAssetsGold from '@/pages/BalanceSheet/components/Gold/AddOrEditAssetsGold'
+import AddOrEditAssetsRealEstate from '@/pages/BalanceSheet/components/RealEstate/AddOrEditAssetsRealEstate'
 import AddOrEditAssetsPhysical from '@/pages/BalanceSheet/components/PhysicalAsset/AddOrEditAssetsPhysical'
 
 dayjs.extend(customParseFormat)

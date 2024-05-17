@@ -10,17 +10,21 @@ import { BALANCE_SHEET } from '@/utils/query-keys'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Form } from '@/components/ui/form'
-import { AddPhysicalAssetSchema, AddRealEstateTypes, PhysicalAsset } from '@/types/balance-sheet'
+import { AddPhysicalAssetSchema, AddRealEstateTypes } from '@/types/balance-sheet'
 import { getErrorMessage } from '@/utils/utils'
+import { useStepper } from '@/components/ui/stepper'
 
 type Props = {
   trigger: React.ReactElement
-  asset?: PhysicalAsset
+  asset?: AddRealEstateTypes
+  closeModal?: () => void
+  isSteeper?: boolean
 }
 
-export default function AddOrEditAssetsRealEstate({ trigger, asset }: Props) {
+export default function AddOrEditAssetsRealEstate({ trigger, asset, closeModal, isSteeper }: Props) {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const { toast } = useToast()
+  const { prevStep } = useStepper()
   const qc = useQueryClient()
   const isEdit = Boolean(asset)
 
@@ -38,6 +42,7 @@ export default function AddOrEditAssetsRealEstate({ trigger, asset }: Props) {
       qc.invalidateQueries([BALANCE_SHEET.ASSETS])
       toast({ title: 'Asset created successfully!' })
       setIsDialogOpen(false)
+      closeModal?.()
     },
     onError: (err) => toast(getErrorMessage(err)),
   })
@@ -47,6 +52,7 @@ export default function AddOrEditAssetsRealEstate({ trigger, asset }: Props) {
       qc.invalidateQueries([BALANCE_SHEET.ASSETS])
       toast({ title: 'Asset updated successfully!' })
       setIsDialogOpen(false)
+      closeModal?.()
     },
     onError: (err) => toast(getErrorMessage(err)),
   })
@@ -55,7 +61,7 @@ export default function AddOrEditAssetsRealEstate({ trigger, asset }: Props) {
     console.log('Submitting Values', values)
   }
 
-  const assetsInputOptionsCash = useMemo(
+  const assetsInputOptions = useMemo(
     () =>
       [
         {
@@ -65,19 +71,58 @@ export default function AddOrEditAssetsRealEstate({ trigger, asset }: Props) {
         },
         {
           id: 'area',
-          label: 'Area',
+          label: 'Area (sq ft)',
           type: 'number',
         },
         {
           id: 'land_name',
-          label: 'Land/Building',
-          type: 'text',
+          label: 'Select Type',
+          type: 'select',
+          options: [
+            {
+              id: 'building',
+              label: 'Building',
+            },
+            {
+              id: 'land',
+              label: 'Land',
+            },
+          ],
         },
       ] as InputField[],
     [],
   )
+  const FormContent = (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(handleAddOrEditRealEstateAsset)} className='gap-4'>
+        <div className='md:col-span-2 space-y-2'>
+          <div className='flex flex-col my-5 gap-2 w-full'>
+            <InputFieldsRenderer control={form.control} inputs={assetsInputOptions} />
+          </div>
+        </div>
 
-  return (
+        <DialogFooter className='gap-2 md:col-span-2'>
+          <Button
+            loading={addPhysicalAssetMutation.isLoading || editPhysicalAssetMutation.isLoading}
+            type='button'
+            variant='outline'
+            onClick={() => {
+              isSteeper ? prevStep() : setIsDialogOpen(false)
+            }}
+          >
+            {isSteeper ? 'Prev' : 'Cancel'}
+          </Button>
+          <Button type='submit' loading={addPhysicalAssetMutation.isLoading || editPhysicalAssetMutation.isLoading}>
+            {isEdit ? 'Edit' : 'Add'}
+          </Button>
+        </DialogFooter>
+      </form>
+    </Form>
+  )
+
+  return isSteeper ? (
+    FormContent
+  ) : (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger
         asChild
@@ -85,38 +130,13 @@ export default function AddOrEditAssetsRealEstate({ trigger, asset }: Props) {
           setIsDialogOpen(true)
         }}
       >
-        {cloneElement(trigger)}
+        {trigger && cloneElement(trigger)}
       </DialogTrigger>
       <DialogContent className='max-h-[800px] overflow-auto'>
         <DialogHeader>
           <DialogTitle>{isEdit ? 'Edit' : 'Add'} Real Estate Asset</DialogTitle>
         </DialogHeader>
-
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleAddOrEditRealEstateAsset)} className='gap-4'>
-            <div className='md:col-span-2 space-y-2'>
-              <div className='flex flex-col my-5 gap-2 w-full'>
-                <InputFieldsRenderer control={form.control} inputs={assetsInputOptionsCash} />
-              </div>
-            </div>
-
-            <DialogFooter className='gap-2 md:col-span-2'>
-              <Button
-                loading={addPhysicalAssetMutation.isLoading || editPhysicalAssetMutation.isLoading}
-                type='button'
-                variant='outline'
-                onClick={() => {
-                  setIsDialogOpen(false)
-                }}
-              >
-                Cancel
-              </Button>
-              <Button type='submit' loading={addPhysicalAssetMutation.isLoading || editPhysicalAssetMutation.isLoading}>
-                {isEdit ? 'Edit' : 'Add'}
-              </Button>
-            </DialogFooter>
-          </form>
-        </Form>
+        {FormContent}
       </DialogContent>
     </Dialog>
   )

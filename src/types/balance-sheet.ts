@@ -136,6 +136,7 @@ export type AddGoldType = {
 
 // ** Real Estate
 export type AddRealEstateTypes = {
+  id?: number
   pincode: number
   area: number
   land_name: string

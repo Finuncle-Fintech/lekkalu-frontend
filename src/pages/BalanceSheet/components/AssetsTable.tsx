@@ -11,6 +11,8 @@ import { formatIndianMoneyNotation } from '@/utils/format-money'
 import PhysicalAssetTable from './PhysicalAsset/PhysicalAssetTable'
 import { fetchCashAsset, fetchPhysicalAssets, fetchSecurityTransaction } from '@/queries/balance-sheet'
 import MutualFundTable from './MutualFund/MutualFundTable'
+import RealEstateTable from './RealEstate/RealEstateTable'
+import GoldTable from './Gold/GoldTable'
 
 export default function AssetsTable() {
   const cashQueryData = useQuery([BALANCE_SHEET.CASH], fetchCashAsset)
@@ -50,14 +52,14 @@ export default function AssetsTable() {
             <CashTable queryData={cashQueryData} />
           </AccordionContent>
         </AccordionItem>
-        <AccordionItem className='bg-gray-100/50 px-3 rounded-md my-2' value='assets'>
+        <AccordionItem className='bg-gray-100/50 px-3 rounded-md my-2' value='account'>
           <AccordionTrigger className='text-lg'>
-            <div>Physical Asset</div>
+            <div>Account</div>
             <div className='me-4'>
-              {physicalAssetsQueryData.data &&
+              {mutualFundQueryData.data &&
                 formatIndianMoneyNotation(
-                  physicalAssetsQueryData.data.reduce(
-                    (totalBalance, asset) => totalBalance + parseFloat(asset.purchase_value as any),
+                  mutualFundQueryData.data.reduce(
+                    (totalBalance, asset) => totalBalance + parseFloat(asset.value as any),
                     0,
                   ),
                 )}{' '}
@@ -65,7 +67,7 @@ export default function AssetsTable() {
             </div>
           </AccordionTrigger>
           <AccordionContent>
-            <PhysicalAssetTable queryData={physicalAssetsQueryData} />
+            <GoldTable queryData={mutualFundQueryData as any} />
           </AccordionContent>
         </AccordionItem>
         <AccordionItem className='bg-gray-100/50 px-3 rounded-md my-2' value='mutual-funds'>
@@ -84,6 +86,60 @@ export default function AssetsTable() {
           </AccordionTrigger>
           <AccordionContent>
             <MutualFundTable queryData={mutualFundQueryData} />
+          </AccordionContent>
+        </AccordionItem>
+        <AccordionItem className='bg-gray-100/50 px-3 rounded-md my-2' value='gold'>
+          <AccordionTrigger className='text-lg'>
+            <div>Gold</div>
+            <div className='me-4'>
+              {mutualFundQueryData.data &&
+                formatIndianMoneyNotation(
+                  mutualFundQueryData.data.reduce(
+                    (totalBalance, asset) => totalBalance + parseFloat(asset.value as any),
+                    0,
+                  ),
+                )}{' '}
+              {preferences.currencyUnit}
+            </div>
+          </AccordionTrigger>
+          <AccordionContent>
+            <GoldTable queryData={mutualFundQueryData as any} />
+          </AccordionContent>
+        </AccordionItem>
+        <AccordionItem className='bg-gray-100/50 px-3 rounded-md my-2' value='real-estate'>
+          <AccordionTrigger className='text-lg'>
+            <div>Real Estate</div>
+            <div className='me-4'>
+              {mutualFundQueryData.data &&
+                formatIndianMoneyNotation(
+                  mutualFundQueryData.data.reduce(
+                    (totalBalance, asset) => totalBalance + parseFloat(asset.value as any),
+                    0,
+                  ),
+                )}{' '}
+              {preferences.currencyUnit}
+            </div>
+          </AccordionTrigger>
+          <AccordionContent>
+            <RealEstateTable queryData={mutualFundQueryData as any} />
+          </AccordionContent>
+        </AccordionItem>
+        <AccordionItem className='bg-gray-100/50 px-3 rounded-md my-2' value='assets'>
+          <AccordionTrigger className='text-lg'>
+            <div>Physical Asset</div>
+            <div className='me-4'>
+              {physicalAssetsQueryData.data &&
+                formatIndianMoneyNotation(
+                  physicalAssetsQueryData.data.reduce(
+                    (totalBalance, asset) => totalBalance + parseFloat(asset.purchase_value as any),
+                    0,
+                  ),
+                )}{' '}
+              {preferences.currencyUnit}
+            </div>
+          </AccordionTrigger>
+          <AccordionContent>
+            <PhysicalAssetTable queryData={physicalAssetsQueryData} />
           </AccordionContent>
         </AccordionItem>
       </Accordion>

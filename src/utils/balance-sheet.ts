@@ -28,22 +28,22 @@ export const ASSET_CATEGORY_TYPE: { label: string; id: AssetsType }[] = [
     label: 'Cash',
     id: 'cash',
   },
-  {
-    label: 'Account',
-    id: 'account',
-  },
+  // {
+  //   label: 'Account',
+  //   id: 'account',
+  // },
   {
     label: 'Mutual Funds / Equity',
     id: 'mutual_funds',
   },
-  {
-    label: 'Gold',
-    id: 'gold',
-  },
-  {
-    label: 'Real Estate Property',
-    id: 'real_estate',
-  },
+  // {
+  //   label: 'Gold',
+  //   id: 'gold',
+  // },
+  // {
+  //   label: 'Real Estate Property',
+  //   id: 'real_estate',
+  // },
   {
     label: 'Physical Assets',
     id: 'physical_assets',

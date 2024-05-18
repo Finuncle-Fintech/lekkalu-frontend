@@ -11,8 +11,6 @@ import { formatIndianMoneyNotation } from '@/utils/format-money'
 import PhysicalAssetTable from './PhysicalAsset/PhysicalAssetTable'
 import { fetchCashAsset, fetchPhysicalAssets, fetchSecurityTransaction } from '@/queries/balance-sheet'
 import MutualFundTable from './MutualFund/MutualFundTable'
-import RealEstateTable from './RealEstate/RealEstateTable'
-import GoldTable from './Gold/GoldTable'
 
 export default function AssetsTable() {
   const cashQueryData = useQuery([BALANCE_SHEET.CASH], fetchCashAsset)
@@ -52,7 +50,7 @@ export default function AssetsTable() {
             <CashTable queryData={cashQueryData} />
           </AccordionContent>
         </AccordionItem>
-        <AccordionItem className='bg-gray-100/50 px-3 rounded-md my-2' value='account'>
+        {/* <AccordionItem className='bg-gray-100/50 px-3 rounded-md my-2' value='account'>
           <AccordionTrigger className='text-lg'>
             <div>Account</div>
             <div className='me-4'>
@@ -69,7 +67,7 @@ export default function AssetsTable() {
           <AccordionContent>
             <GoldTable queryData={mutualFundQueryData as any} />
           </AccordionContent>
-        </AccordionItem>
+        </AccordionItem> */}
         <AccordionItem className='bg-gray-100/50 px-3 rounded-md my-2' value='mutual-funds'>
           <AccordionTrigger className='text-lg'>
             <div>Mutual Funds / Equity</div>
@@ -88,7 +86,7 @@ export default function AssetsTable() {
             <MutualFundTable queryData={mutualFundQueryData} />
           </AccordionContent>
         </AccordionItem>
-        <AccordionItem className='bg-gray-100/50 px-3 rounded-md my-2' value='gold'>
+        {/* <AccordionItem className='bg-gray-100/50 px-3 rounded-md my-2' value='gold'>
           <AccordionTrigger className='text-lg'>
             <div>Gold</div>
             <div className='me-4'>
@@ -123,7 +121,7 @@ export default function AssetsTable() {
           <AccordionContent>
             <RealEstateTable queryData={mutualFundQueryData as any} />
           </AccordionContent>
-        </AccordionItem>
+        </AccordionItem> */}
         <AccordionItem className='bg-gray-100/50 px-3 rounded-md my-2' value='assets'>
           <AccordionTrigger className='text-lg'>
             <div>Physical Asset</div>

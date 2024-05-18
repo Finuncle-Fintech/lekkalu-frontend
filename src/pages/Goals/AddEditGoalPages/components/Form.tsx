@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import dayjs from 'dayjs'
 import { UseFormReturn } from 'react-hook-form'
 import { Link } from 'react-router-dom'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Step, StepItem, Stepper } from '@/components/ui/stepper'
 import DatePicker from '@/components/DatePicker/DatePicker'
@@ -10,7 +10,6 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@
 import useGetSelectOptionsForGoal from '../hooks/useGetSelectOptionsForGoal'
 import { AddGoalSchema } from '@/schema/goals'
 import { StepFooter } from './StepperFooter'
-import { TooltipForGoals } from '../../components/Tooltip'
 import { FormLabelForGoalForm } from '../../components/FormLabel'
 
 type GoalFormType = {
@@ -72,14 +71,12 @@ export default function GoalForm({ form, onSubmit, isLoading, isError, isEdit = 
                           name='name'
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>
-                                <div className='flex gap-2'>
-                                  <p className='self-center'>Name*</p>
-                                  <TooltipForGoals iconSize={'small'}>
-                                    <div>Name of the goal</div>
-                                  </TooltipForGoals>
-                                </div>
-                              </FormLabel>
+                              <FormLabelForGoalForm
+                                required
+                                label='Name'
+                                info="Think of a name that really captures what you're aiming for. This should sum up your goal in a nutshell."
+                                example='Slash That Debt!'
+                              />
                               <FormControl>
                                 <Input value={field.value} onChange={field.onChange} />
                               </FormControl>
@@ -96,7 +93,8 @@ export default function GoalForm({ form, onSubmit, isLoading, isError, isEdit = 
                                 <FormLabelForGoalForm
                                   required
                                   label='Target Date'
-                                  info='Set Target date for this goal'
+                                  info='Pick a date when you want to have this goal wrapped up. It’s like setting a personal deadline—helps keep you focused.'
+                                  example='By the end of the year, December 31, 2024'
                                 />
                                 <FormControl>
                                   <DatePicker
@@ -114,7 +112,12 @@ export default function GoalForm({ form, onSubmit, isLoading, isError, isEdit = 
                           name='goal_proportionality'
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabelForGoalForm required info='Placeholder for now' label='Goal Proportionality' />
+                              <FormLabelForGoalForm
+                                required
+                                label='Goal Proportionality'
+                                info="Decide if you’re trying to increase or decrease something. It's like choosing which way you want the scales to tip."
+                                example='Lower the Better — let’s cut down that liability percentage!'
+                              />
                               <FormControl>
                                 <Select
                                   value={field.value}
@@ -149,7 +152,13 @@ export default function GoalForm({ form, onSubmit, isLoading, isError, isEdit = 
                           name='track_kpi'
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabelForGoalForm required info='Placeholder for now' label='KPI' />
+                              <FormLabelForGoalForm
+                                required
+                                label='KPI'
+                                info='Choose a way to measure your progress. Think of it as your scoreboard showing how close you are to your goal.'
+                                example='Liability Outstanding Percentage'
+                                tooltipSide='top'
+                              />
                               <FormControl>
                                 <Select
                                   value={field.value}
@@ -194,7 +203,12 @@ export default function GoalForm({ form, onSubmit, isLoading, isError, isEdit = 
                           name='target_value'
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabelForGoalForm required info='Placeholder for now' label='Target' />
+                              <FormLabelForGoalForm
+                                required
+                                label='Target'
+                                info='Pinpoint which part of your spending is going to help knock down that liability. Think of it as identifying the tools in your toolkit that are really doing the work.'
+                                example='Interest Expense Reductions'
+                              />
                               <FormControl>
                                 <Input
                                   type='number'
@@ -211,7 +225,12 @@ export default function GoalForm({ form, onSubmit, isLoading, isError, isEdit = 
                           name='target_contribution_source'
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabelForGoalForm required={false} info='Placeholder for now' label='Source' />
+                              <FormLabelForGoalForm
+                                required={false}
+                                info='Set a clear mark to hit. It’s like putting a flag on the top of the hill you want to climb.'
+                                label='Source'
+                                example='Aim to cut your liability percentage by 15%'
+                              />
                               <FormControl>
                                 <Select
                                   value={field.value?.toString()}

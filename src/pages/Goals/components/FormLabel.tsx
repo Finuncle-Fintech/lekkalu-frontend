@@ -6,9 +6,11 @@ type FormLabelForGoalFormType = {
   label: string
   info?: string
   required?: boolean
+  example?: string
+  tooltipSide?: 'bottom' | 'top' | 'right' | 'left' | undefined
 }
 
-const FormLabelForGoalForm = ({ label, info, required }: FormLabelForGoalFormType) => {
+const FormLabelForGoalForm = ({ label, info, required, example, tooltipSide = 'bottom' }: FormLabelForGoalFormType) => {
   return (
     <FormLabel>
       <div className='flex gap-2'>
@@ -17,8 +19,18 @@ const FormLabelForGoalForm = ({ label, info, required }: FormLabelForGoalFormTyp
           {required ? '*' : ''}
         </p>
         {info && (
-          <TooltipForGoals iconSize={'small'}>
-            <div className='max-w-[200px]'>{info}</div>
+          <TooltipForGoals iconSize={'small'} side={tooltipSide}>
+            <div className='p-2 max-w-[230px] font-normal'>
+              <p>{info}</p>
+              {example && (
+                <div className='font-medium mt-2'>
+                  <p>
+                    <span>Example: </span>
+                    <span>{example}</span>
+                  </p>
+                </div>
+              )}
+            </div>
           </TooltipForGoals>
         )}
       </div>

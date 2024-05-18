@@ -5,9 +5,10 @@ import { TooltipTrigger, TooltipProvider, TooltipContent, Tooltip } from '@/comp
 type TooltipForGoalsType = {
   iconSize?: 'default' | 'small'
   children: React.ReactNode
+  side?: 'bottom' | 'top' | 'right' | 'left' | undefined
 }
 
-const TooltipForGoals = ({ iconSize, children }: TooltipForGoalsType) => {
+const TooltipForGoals = ({ iconSize, children, side = 'bottom' }: TooltipForGoalsType) => {
   const [isGoalInfoPopOverOpen, setIsGoalInfoPopOverOpen] = useState(false)
   return (
     <TooltipProvider>
@@ -22,7 +23,7 @@ const TooltipForGoals = ({ iconSize, children }: TooltipForGoalsType) => {
           </p>
         </TooltipTrigger>
         <TooltipContent
-          side={'bottom'}
+          side={side}
           avoidCollisions
           align='start'
           sideOffset={0}

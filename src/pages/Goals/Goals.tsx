@@ -1,18 +1,17 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import colors from 'tailwindcss/colors'
 import { Link } from 'react-router-dom'
-import { PlusIcon } from 'lucide-react'
 import dayjs from 'dayjs'
 import { useQuery } from '@tanstack/react-query'
 import { range } from 'lodash'
 import Page from '@/components/Page/Page'
 import ProgressChart from '@/components/ProgressChart/ProgressChart'
-import { buttonVariants } from '@/components/ui/button'
 import Goal from './components/Goal'
 import { GOALS } from '@/utils/query-keys'
 import { fetchGoals } from '@/queries/goals'
 import { Skeleton } from '@/components/ui/skeleton'
 import { GoalStatus } from '@/types/goals'
+import { AddGoalDialog } from './components/AddGoalDialog'
 
 const TODAY = new Date()
 
@@ -67,13 +66,6 @@ export default function Goals() {
 
   return (
     <Page className='space-y-4'>
-      <div className='flex justify-end'>
-        <Link to='/goals/new' className={buttonVariants({ variant: 'default' })}>
-          <PlusIcon className='w-4 h-4 mr-2' />
-          <span>Add Goal</span>
-        </Link>
-      </div>
-
       <div className='grid sm:grid-cols-2 md:grid-cols-3 gap-4'>
         <ProgressChart
           title='On Track'
@@ -93,6 +85,10 @@ export default function Goals() {
           value={getPercentage(goalStatus?.completed, goalStatus?.total)}
           unit='%'
         />
+      </div>
+
+      <div className='flex justify-end'>
+        <AddGoalDialog />
       </div>
 
       <div className='text-2xl font-bold truncate block py-4'>Your ongoing financial goals</div>

@@ -2,9 +2,7 @@ import React, { useEffect, useState } from 'react'
 import dayjs from 'dayjs'
 import { UseFormReturn } from 'react-hook-form'
 import { Link } from 'react-router-dom'
-import { InfoIcon } from 'lucide-react'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
-import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Step, StepItem, Stepper } from '@/components/ui/stepper'
 import DatePicker from '@/components/DatePicker/DatePicker'
@@ -12,7 +10,8 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@
 import useGetSelectOptionsForGoal from '../hooks/useGetSelectOptionsForGoal'
 import { AddGoalSchema } from '@/schema/goals'
 import { StepFooter } from './StepperFooter'
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
+import { TooltipForGoals } from '../../components/Tooltip'
+import { FormLabelForGoalForm } from '../../components/FormLabel'
 
 type GoalFormType = {
   form: UseFormReturn<AddGoalSchema>
@@ -31,24 +30,31 @@ export default function GoalForm({ form, onSubmit, isLoading, isError, isEdit = 
   const kpi_value = form.watch('track_kpi')
 
   const [multiplyTargetBy, setMultiplyTargetBy] = useState(6)
-  const [suggestedTargetValue, setSuggestedTargetValue] = useState<number>()
 
   useEffect(() => {
-    if (totalExpenses) {
-      setSuggestedTargetValue(totalExpenses * multiplyTargetBy)
+    if (!isEdit && kpi_value === 'Cash' && totalExpenses) {
+      form.setValue('target_value', totalExpenses * multiplyTargetBy)
     }
-  }, [kpi_value, multiplyTargetBy, totalExpenses])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [totalExpenses, kpi_value])
 
-  const setSuggestedTargetValueInForm = () => {
-    form.setValue('target_value', Number(suggestedTargetValue))
-  }
+  useEffect(() => {
+    if (kpi_value === 'Cash') {
+      form.setValue('target_value', Number(totalExpenses) * multiplyTargetBy)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [multiplyTargetBy])
 
   if (isFetchingOptions) {
-    return <></>
+    return (
+      <div>
+        <p>Loading, please wait...</p>
+      </div>
+    )
   }
 
   return (
-    <div className='border p-5 shadow my-5 rounded'>
+    <div>
       <Form {...form}>
         <form>
           <Stepper initialStep={0} steps={steps}>
@@ -57,13 +63,23 @@ export default function GoalForm({ form, onSubmit, isLoading, isError, isEdit = 
                 case '1':
                   return (
                     <Step>
-                      <div className='grid sm:grid-cols-2 gap-4 px-2 my-5'>
+                      <div>
+                        <p className='mt-5'>Step 1: Basic Information about goal.</p>
+                      </div>
+                      <div className='grid sm:grid-cols-1 gap-4 px-2 my-5'>
                         <FormField
                           control={form.control}
                           name='name'
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Name*</FormLabel>
+                              <FormLabel>
+                                <div className='flex gap-2'>
+                                  <p className='self-center'>Name*</p>
+                                  <TooltipForGoals iconSize={'small'}>
+                                    <div>Name of the goal</div>
+                                  </TooltipForGoals>
+                                </div>
+                              </FormLabel>
                               <FormControl>
                                 <Input value={field.value} onChange={field.onChange} />
                               </FormControl>
@@ -77,7 +93,11 @@ export default function GoalForm({ form, onSubmit, isLoading, isError, isEdit = 
                           render={({ field }) => {
                             return (
                               <FormItem>
-                                <FormLabel>Target Date*</FormLabel>
+                                <FormLabelForGoalForm
+                                  required
+                                  label='Target Date'
+                                  info='Set Target date for this goal'
+                                />
                                 <FormControl>
                                   <DatePicker
                                     onChange={(value) => field.onChange(value?.toString())}
@@ -94,7 +114,7 @@ export default function GoalForm({ form, onSubmit, isLoading, isError, isEdit = 
                           name='goal_proportionality'
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Goal Proportionality*</FormLabel>
+                              <FormLabelForGoalForm required info='Placeholder for now' label='Goal Proportionality' />
                               <FormControl>
                                 <Select
                                   value={field.value}
@@ -129,7 +149,7 @@ export default function GoalForm({ form, onSubmit, isLoading, isError, isEdit = 
                           name='track_kpi'
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>KPI*</FormLabel>
+                              <FormLabelForGoalForm required info='Placeholder for now' label='KPI' />
                               <FormControl>
                                 <Select
                                   value={field.value}
@@ -165,13 +185,16 @@ export default function GoalForm({ form, onSubmit, isLoading, isError, isEdit = 
                 case '2':
                   return (
                     <Step>
-                      <div className='grid sm:grid-cols-2 gap-4 p-5'>
+                      <div>
+                        <p className='mt-5'>Step 2: Set target for this goal.</p>
+                      </div>
+                      <div className='grid sm:grid-cols-1 gap-4 p-5'>
                         <FormField
                           control={form.control}
                           name='target_value'
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Target*</FormLabel>
+                              <FormLabelForGoalForm required info='Placeholder for now' label='Target' />
                               <FormControl>
                                 <Input
                                   type='number'
@@ -188,7 +211,7 @@ export default function GoalForm({ form, onSubmit, isLoading, isError, isEdit = 
                           name='target_contribution_source'
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Source</FormLabel>
+                              <FormLabelForGoalForm required={false} info='Placeholder for now' label='Source' />
                               <FormControl>
                                 <Select
                                   value={field.value?.toString()}
@@ -225,40 +248,26 @@ export default function GoalForm({ form, onSubmit, isLoading, isError, isEdit = 
                           <>
                             <div>
                               <div className='flex justify-start'>
-                                <label className='text-sm font-medium mr-2 mb-2'>x months of expenses</label>
-                                <Tooltip>
-                                  <TooltipTrigger asChild>
-                                    <div className='cursor-pointer'>
-                                      <InfoIcon className='w-4 h-4' />
-                                    </div>
-                                  </TooltipTrigger>
-                                  <TooltipContent>
-                                    Set your cash goal target to meet 3-6 months of living expenses
-                                  </TooltipContent>
-                                </Tooltip>
+                                <FormLabelForGoalForm
+                                  label='x months of expenses'
+                                  info='Set your cash goal target to meet 3-6 months of living expenses'
+                                />
                               </div>
-                              <div className='flex gap-x-5'>
+                              <div className='flex gap-x-5 mt-3'>
                                 <Input
                                   type='number'
                                   className='w-20 self-center'
-                                  defaultValue={6}
                                   value={multiplyTargetBy}
-                                  onChange={(event) => setMultiplyTargetBy(Number(event?.target?.value))}
+                                  onChange={(event) => {
+                                    const value = Number(event?.target?.value)
+                                    setMultiplyTargetBy(value)
+                                  }}
                                   min={1}
                                 />
-                                <Button
-                                  type='button'
-                                  variant={'default'}
-                                  className='self-center'
-                                  onClick={setSuggestedTargetValueInForm}
-                                >
-                                  Set target
-                                </Button>
                               </div>
                               <div className='flex mt-2 justify-between lg:justify-start'>
                                 <p className='text-xs text-gray-500 self-center'>
-                                  Suggested target based on current expenses is:{' '}
-                                  {suggestedTargetValue?.toLocaleString()}
+                                  Set a cash target to meet x months of expenses
                                 </p>
                               </div>
                             </div>

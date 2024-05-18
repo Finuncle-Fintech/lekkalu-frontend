@@ -86,7 +86,7 @@ export default function EditGoal() {
           onSubmit={handleGoalEdit}
           isLoading={editGoalMutation.isPending}
           isEdit
-          // isError={editGoalMutation.isError}
+          isError={editGoalMutation.isError}
         />
       )}
     </Page>

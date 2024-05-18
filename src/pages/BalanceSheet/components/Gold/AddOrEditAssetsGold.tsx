@@ -55,9 +55,10 @@ export default function AddOrEditAssetsGold({ trigger, asset, closeModal, isStee
     onError: (err) => toast(getErrorMessage(err)),
   })
 
-  const handleAddOrEditGoldAsset = (values: AddGoldType) => {
-    console.log('Submitting Values', values)
-  }
+  const handleAddOrEditGoldAsset = () => {}
+  // const handleAddOrEditGoldAsset = (values: AddGoldType) => {
+  //   console.log('Submitting Values', values)
+  // }
 
   const assetsInputOptionsCash = useMemo(
     () =>

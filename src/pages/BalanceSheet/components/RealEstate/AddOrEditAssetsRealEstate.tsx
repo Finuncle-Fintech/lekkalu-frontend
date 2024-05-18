@@ -57,9 +57,10 @@ export default function AddOrEditAssetsRealEstate({ trigger, asset, closeModal, 
     onError: (err) => toast(getErrorMessage(err)),
   })
 
-  const handleAddOrEditRealEstateAsset = (values: AddRealEstateTypes) => {
-    console.log('Submitting Values', values)
-  }
+  const handleAddOrEditRealEstateAsset = () => {}
+  // const handleAddOrEditRealEstateAsset = (values: AddRealEstateTypes) => {
+  //   console.log('Submitting Values', values)
+  // }
 
   const assetsInputOptions = useMemo(
     () =>

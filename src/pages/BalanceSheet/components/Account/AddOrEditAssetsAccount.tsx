@@ -55,10 +55,13 @@ export default function AddOrEditAssetsAccount({ trigger, asset, closeModal, isS
     onError: (err) => toast(getErrorMessage(err)),
   })
 
-  const handleAddOrEditAccountAsset = (values: AddPhysicalAssetTypeAccountSchema) => {
-    console.log('Submitting Values', values)
+  const handleAddOrEditAccountAsset = () => {
     closeModal?.()
   }
+  // const handleAddOrEditAccountAsset = (values: AddPhysicalAssetTypeAccountSchema) => {
+  //   console.log('Submitting Values', values)
+  //   closeModal?.()
+  // }
 
   const assetsInputOptionsCash = useMemo(
     () =>

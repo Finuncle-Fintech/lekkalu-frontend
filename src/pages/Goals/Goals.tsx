@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import colors from 'tailwindcss/colors'
-import { Link } from 'react-router-dom'
 import dayjs from 'dayjs'
 import { useQuery } from '@tanstack/react-query'
 import { range } from 'lodash'
@@ -106,6 +105,7 @@ export default function Goals() {
               <Goal
                 key={goal.id}
                 id={goal.id}
+                goal={goal}
                 goalTitle={goal.name}
                 category={goal.track_kpi}
                 createdAt={dayjs(goal.created_at).toISOString()}
@@ -115,10 +115,7 @@ export default function Goals() {
             ))
           ) : (
             <div>
-              <p>You Have no financial goals.</p>
-              <Link to='/goals/new' className='block underline mt-2'>
-                Click here to add.
-              </Link>{' '}
+              <p>You have no financial goals.</p>
             </div>
           )}
         </div>

@@ -32,7 +32,7 @@ const FeaturesDetails = () => {
       case 'calculators':
         ToolDetailComponent = Calculators
         break
-      case 'scenarios':
+      case 'scenario':
         ToolDetailComponent = Scenarios
         break
       default:

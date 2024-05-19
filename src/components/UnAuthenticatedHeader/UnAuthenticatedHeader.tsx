@@ -59,7 +59,7 @@ const ListItem = ({ title, href, ...restProps }: { title: string; href: string }
   return (
     <li>
       <NavigationMenuLink asChild>
-        <NavLink to={href as string} label={title as string} {...restProps} />
+        <NavLink isOpen to={href as string} label={title as string} {...restProps} />
       </NavigationMenuLink>
     </li>
   )
@@ -108,8 +108,8 @@ export default function UnAuthenticatedHeader() {
               </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
-          <NavLink to='/pricing' label='Pricing' />
-          <NavLink to='/support' label='Support' />
+          <NavLink isOpen to='/pricing' label='Pricing' />
+          <NavLink isOpen to='/support' label='Support' />
         </div>
         <div className='block'>
           <When

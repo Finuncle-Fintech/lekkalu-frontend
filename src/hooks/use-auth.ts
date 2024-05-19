@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useCallback } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import constate from 'constate'
 import { useNavigate } from 'react-router-dom'
 import { fetchUser, googleSignup, login, refreshToken, signup } from '@/queries/auth'
@@ -16,6 +16,16 @@ export function useAuth() {
   const navigate = useNavigate()
   const { mutate: fetchUserData, data: userData } = useMutation(fetchUser, {})
 
+  const [isOpen, setIsOpen] = useState<boolean>(() => {
+    const storedIsOpen = localStorage.getItem('isOpen')
+    return storedIsOpen !== null ? JSON.parse(storedIsOpen) : true
+  })
+
+  useEffect(() => {
+    localStorage.setItem('isOpen', JSON.stringify(isOpen))
+  }, [isOpen])
+
+  const toggle = () => setIsOpen((prev) => !prev)
   const {
     isLoading: isAuthenticationInProgress,
     data: tokenData,
@@ -87,6 +97,8 @@ export function useAuth() {
     userData,
     fetchUserData,
     googleSignupMutation,
+    isOpen,
+    toggle,
   }
 }
 

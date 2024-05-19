@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { PlusIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTrigger } from '@/components/ui/dialog'
 import EditGoal from '../AddEditGoalPages/EditGoal'
@@ -14,10 +13,7 @@ const EditGoalDialog = ({ goalId, goal }: any) => {
           setIsDialogOpen(true)
         }}
       >
-        <Button>
-          <PlusIcon className='w-4 h-4 mr-2' />
-          <span>Edit Goal</span>
-        </Button>
+        <Button variant={'ghost'}>Edit Goal</Button>
       </DialogTrigger>
       <DialogContent className='min-w-auto'>
         <DialogHeader>

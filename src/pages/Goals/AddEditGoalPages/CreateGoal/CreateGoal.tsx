@@ -1,12 +1,13 @@
 import React from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import dayjs from 'dayjs'
 import { AddGoalSchema, addGoalSchema } from '@/schema/goals'
 import { addGoal } from '@/queries/goals'
 import { useToast } from '@/components/ui/use-toast'
 import Form from '../components/Form'
+import { GOALS } from '@/utils/query-keys'
 
 type CreateGoalType = {
   setIsDialogOpen: React.Dispatch<React.SetStateAction<boolean>>
@@ -14,6 +15,7 @@ type CreateGoalType = {
 
 export default function CreateGoal({ setIsDialogOpen }: CreateGoalType) {
   const { toast } = useToast()
+  const queryClient = useQueryClient()
   const form = useForm<AddGoalSchema>({
     resolver: zodResolver(addGoalSchema),
     defaultValues: {
@@ -24,6 +26,7 @@ export default function CreateGoal({ setIsDialogOpen }: CreateGoalType) {
   const createGoalMutation = useMutation({
     mutationFn: addGoal,
     onSuccess: () => {
+      queryClient.invalidateQueries([GOALS.GOALS])
       toast({ title: 'Goal created successfully!' })
       setIsDialogOpen(false)
     },

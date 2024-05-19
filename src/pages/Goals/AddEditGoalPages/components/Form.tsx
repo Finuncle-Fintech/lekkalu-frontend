@@ -156,7 +156,7 @@ export default function GoalForm({ form, onSubmit, isLoading, isError, isEdit = 
                                 required
                                 label='KPI'
                                 info='Choose a way to measure your progress. Think of it as your scoreboard showing how close you are to your goal.'
-                                example='Liability Outstanding Percentage'
+                                example='Liability Percentage'
                                 tooltipSide='top'
                               />
                               <FormControl>
@@ -230,6 +230,7 @@ export default function GoalForm({ form, onSubmit, isLoading, isError, isEdit = 
                                 info='Set a clear mark to hit. It’s like putting a flag on the top of the hill you want to climb.'
                                 label='Source'
                                 example='Aim to cut your liability percentage by 15%'
+                                tooltipSide='top'
                               />
                               <FormControl>
                                 <Select

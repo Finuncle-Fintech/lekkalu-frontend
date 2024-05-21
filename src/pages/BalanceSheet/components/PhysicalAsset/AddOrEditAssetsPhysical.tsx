@@ -66,22 +66,6 @@ export default function AddOrEditAssetsPhysical({ trigger, asset, closeModal, is
     const type = values.type
     const { name, purchase_value, purchase_date, percentage_value } = values
     const depreciation_percent_per_year = type === 'depreciation' ? percentage_value : -percentage_value
-    // const depreciation_frequency = monthsToSeconds(months!) + yearsToSeconds(years!)
-
-    // {
-    //   "name": "sample by hardik",
-    //   "purchase_value": 20000,
-    //   "purchase_date": "2024-05-08",
-    //   "sell_date": "2024-05-01",
-    //   "depreciation_percent": 10,
-    //   "init_dep": 1,
-    //   "type": 1,
-    //   "tags": [],
-    //   "months": 8,
-    //   "years": 3,
-    //   "user": 1,
-    //   "depreciation_frequency": 115712928
-    // }
     const payLoad = {
       name,
       purchase_value,
@@ -94,15 +78,6 @@ export default function AddOrEditAssetsPhysical({ trigger, asset, closeModal, is
       return
     }
     addPhysicalAssetMutation.mutate(payLoad)
-    //  1   "name": "hardik",
-    //   1  "purchase_value": null,
-    //   1  "purchase_date": null,
-    //     "depreciation_percent_per_year": "0.000000",
-    //     "init_dep": null,
-    //     "type": 1,
-    //     "depreciation_percent": "-10.000000",
-    //     "depreciation_frequency": 31536000,
-    //     "market_value": null
   }
 
   const assetsInputOptionsCash = useMemo(
@@ -112,26 +87,24 @@ export default function AddOrEditAssetsPhysical({ trigger, asset, closeModal, is
           id: 'name',
           label: 'Name',
           type: 'text',
+          helpText: 'Enter the name of the physical asset. This could be vehicle, or equipment.',
         },
         {
           id: 'purchase_date',
           label: 'Purchase Date',
           type: 'date',
+          helpText: 'Select the date when the asset was purchased.',
         },
         {
           id: 'purchase_value',
           label: 'Purchase Value',
           type: 'number',
-        },
-        {
-          id: 'percentage_value',
-          label: 'Depreciation/Appreciation % value (year)',
-          type: 'number',
+          helpText: 'Enter the value of the asset at the time of purchase.',
         },
         {
           id: 'type',
-          label: '',
           type: 'select',
+          label: 'Type',
           options: [
             {
               label: 'Depreciation',
@@ -144,6 +117,13 @@ export default function AddOrEditAssetsPhysical({ trigger, asset, closeModal, is
               value: 'Apprecitaion',
             },
           ],
+          helpText: 'Select whether the asset is subject to depreciation or appreciation.',
+        },
+        {
+          id: 'percentage_value',
+          label: 'Annual % value (year)',
+          type: 'number',
+          helpText: 'Enter the annual percentage rate of depreciation or appreciation for the asset.',
         },
       ] as InputField[],
     [],
@@ -191,7 +171,7 @@ export default function AddOrEditAssetsPhysical({ trigger, asset, closeModal, is
           >
             {trigger && cloneElement(trigger)}
           </DialogTrigger>
-          <DialogContent className='max-h-[800px] overflow-auto'>
+          <DialogContent style={{ maxWidth: '800px !important' }} className='max-h-[800px] overflow-auto'>
             <DialogHeader>
               <DialogTitle>{isEdit ? 'Edit' : 'Add'} Physical Asset</DialogTitle>
             </DialogHeader>

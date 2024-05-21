@@ -69,11 +69,13 @@ export default function AddOrEditAssetsCash({ trigger, asset, closeModal, isStee
         id: 'name',
         label: 'Name',
         type: 'text',
+        helpText: 'Enter the name of the cash asset.',
       },
       {
         id: 'balance',
         label: 'Amount',
         type: 'number',
+        helpText: 'Enter the total amount of cash available',
       },
     ],
     [],

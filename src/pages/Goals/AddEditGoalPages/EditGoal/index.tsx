@@ -42,7 +42,10 @@ export default function EditGoal({ goal, goalId, setIsDialogOpen }: any) {
   }, [goal])
 
   const handleGoalEdit = (values: AddGoalSchema) => {
-    editGoalMutation.mutate(values)
+    editGoalMutation.mutate({
+      ...values,
+      target_contribution_source: values.target_contribution_source ? values.target_contribution_source : undefined,
+    })
   }
 
   return (

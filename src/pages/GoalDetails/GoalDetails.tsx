@@ -127,9 +127,11 @@ export default function GoalDetails() {
     <Page className='space-y-4'>
       <div>
         {allowRename ? (
-          <div className='flex w-96 gap-4'>
+          <div className='flex lg:w-96 gap-4'>
             <Input
               type='text'
+              id='goalname'
+              autoFocus
               value={name}
               onChange={(e) => setName(e?.target?.value)}
               onKeyDown={(e) => {
@@ -147,13 +149,19 @@ export default function GoalDetails() {
             </Button>
           </div>
         ) : (
-          <h1 className='text-2xl font-bold mb-8 w-fit' onClick={() => setAllowRename(true)} title='Click to edit'>
+          <h1
+            className='text-2xl font-bold mb-8 w-fit'
+            onClick={() => {
+              setAllowRename(true)
+            }}
+            title='Click to edit'
+          >
             {name}
           </h1>
         )}
       </div>
       <BackButton />
-      <div className='grid md:grid-cols-2 gap-4'>
+      <div className='grid md:grid-cols-2 gap-4 lg:gap-x-20'>
         <div className='flex'>
           <div className='flex gap-2 flex-1 items-center'>
             <TargetIcon className='w-4 h-4' />
@@ -161,9 +169,10 @@ export default function GoalDetails() {
           </div>
           <div className='flex-1 font-medium self-center'>
             {allowEditTarget ? (
-              <div className='flex gap-4 w-72'>
+              <div className='flex gap-4 w-fit'>
                 <Input
                   type='number'
+                  autoFocus
                   value={target}
                   onChange={(e) => setTarget(e.target.value)}
                   onKeyDown={(e) => {
@@ -227,9 +236,9 @@ export default function GoalDetails() {
               }}
             >
               <SelectTrigger>
-                <SelectValue placeholder='Select a source'>{source}</SelectValue>
+                <SelectValue placeholder='N/A'>{source}</SelectValue>
               </SelectTrigger>
-              <SelectContent placeholder='Select a source'>
+              <SelectContent>
                 {incomeExpenses?.map((item) => (
                   <SelectItem key={item.id} value={item.name}>
                     {item.name}
@@ -249,10 +258,11 @@ export default function GoalDetails() {
           </div>
           <div className='flex-1 font-medium self-center'>
             {allowEditReachableDate ? (
-              <div className='flex gap-4 w-72'>
+              <div className='flex gap-4 w-fit'>
                 <Input
                   type='number'
                   value={reachableDate}
+                  autoFocus
                   onChange={(e) => setRechableDate(e.target.value)}
                   onKeyDown={(e) => {
                     if (e.code === 'Enter') {

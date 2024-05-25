@@ -98,18 +98,6 @@ export default function Goals() {
         </div>
       ) : (
         <div className='grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 gap-y-10'>
-          {data?.map((goal) => (
-            <Suspense key={goal.id} fallback={<Skeleton className='h-64 w-full' />}>
-              <Goal
-                id={goal.id}
-                goalTitle={goal.name}
-                category={goal.track_kpi}
-                createdAt={dayjs(goal.created_at).toISOString()}
-                color={goal?.reachable_by_days > 0 ? colors.violet['500'] : colors.red['500']}
-                reachable_by_days={goal?.reachable_by_days}
-              />
-            </Suspense>
-          ))}
           {data?.length ? (
             data?.map((goal) => (
               <Suspense key={goal.id} fallback={<Skeleton className='h-64 w-full' />}>

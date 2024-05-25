@@ -43,7 +43,8 @@ export default function Profile() {
     }
   }, [userData, userProfileForm])
 
-  const updateUserDetailMutation = useMutation(updateUserDetails, {
+  const updateUserDetailMutation = useMutation({
+    mutationFn: updateUserDetails,
     onSuccess: () => {
       fetchUserData()
       toast({

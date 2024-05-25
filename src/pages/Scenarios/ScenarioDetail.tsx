@@ -30,27 +30,40 @@ export default function ScenarioDefault() {
 
   const scenarioId = Number(id)
   const { loginImaginaryUser } = useImaginaryAuth()
-  const { data, isLoading } = useQuery([`${SCENARIOS.SCENARIOS}-${scenarioId}`], () => fetchScenarioById(scenarioId), {
-    onSuccess(data) {
-      loginImaginaryUser.mutate({ username: data.imag_username, password: data.imag_password, id: data.id })
-    },
+  const {
+    data,
+    isLoading,
+    isSuccess: isSuccessScenario,
+  } = useQuery({
+    queryKey: [`${SCENARIOS.SCENARIOS}-${scenarioId}`],
+    queryFn: () => fetchScenarioById(scenarioId),
   })
+
+  useEffect(() => {
+    if (isSuccessScenario) {
+      loginImaginaryUser.mutate({ username: data.imag_username, password: data.imag_password, id: data.id })
+    }
+    // eslint-disable-next-line
+  }, [isSuccessScenario, data])
 
   const {
     data: publicScenarioData,
     isLoading: isPublicScenarioLoading,
+    isSuccess: isSuccessPublicScenario,
     isError,
-  } = useQuery(
-    [`${SCENARIOS.SCENARIOS}-public-${scenarioId}`],
-    () => fetchScenarioById(scenarioId, IS_FOR_FEATURE_PAGE),
-    {
-      onSuccess(data) {
-        loginImaginaryUser.mutate({ username: data.imag_username, password: data.imag_password, id: data.id })
-      },
-    },
-  )
+  } = useQuery({
+    queryKey: [`${SCENARIOS.SCENARIOS}-public-${scenarioId}`],
+    queryFn: () => fetchScenarioById(scenarioId, IS_FOR_FEATURE_PAGE),
+  })
 
-  const { data: currentImaginaryUser } = useQuery<string>([AUTH.CURRENT_IMAGINARY_USER])
+  useEffect(() => {
+    if (isSuccessPublicScenario && data) {
+      loginImaginaryUser.mutate({ username: data.imag_username, password: data.imag_password, id: data.id })
+    }
+    // eslint-disable-next-line
+  }, [isSuccessPublicScenario, data])
+
+  const { data: currentImaginaryUser } = useQuery<string>({ queryKey: [AUTH.CURRENT_IMAGINARY_USER] })
 
   useEffect(() => {
     return () => {
@@ -58,7 +71,7 @@ export default function ScenarioDefault() {
     }
   }, [])
 
-  const { data: imaginaryUsers } = useQuery<any>([AUTH.IMAGINARY_CLIENT])
+  const { data: imaginaryUsers } = useQuery<any>({ queryKey: [AUTH.IMAGINARY_CLIENT] })
 
   const isLoggedIn = Boolean(currentImaginaryUser && imaginaryUsers[currentImaginaryUser].access)
 

@@ -46,7 +46,7 @@ export default function Expenses() {
 
   const page = searchParams.get('page') ? Number(searchParams.get('page')) : 0
 
-  const { data: budgets } = useQuery([BUDGET_QUERY_KEYS.BUDGETS], fetchBudgets)
+  const { data: budgets } = useQuery({ queryKey: [BUDGET_QUERY_KEYS.BUDGETS], queryFn: fetchBudgets })
 
   const filtersForm = useForm<ExpenseFiltersSchema>({
     resolver: zodResolver(expenseFiltersSchema),

@@ -33,9 +33,10 @@ export default function EditBudgetModal({ budget }: Props) {
     },
   })
 
-  const updateBudgetMutation = useMutation((dto: UpdateBudgetSchema) => updateBudget(budget.id, dto), {
+  const updateBudgetMutation = useMutation({
+    mutationFn: (dto: UpdateBudgetSchema) => updateBudget(budget.id, dto),
     onSuccess: () => {
-      qc.invalidateQueries([BUDGET_QUERY_KEYS.BUDGETS])
+      qc.invalidateQueries({ queryKey: [BUDGET_QUERY_KEYS.BUDGETS] })
       form.reset()
       setIsDialogOpen(false)
     },
@@ -77,7 +78,7 @@ export default function EditBudgetModal({ budget }: Props) {
             />
 
             <DialogFooter className='gap-2'>
-              <Button type='submit' className='flex-grow' loading={updateBudgetMutation.isLoading}>
+              <Button type='submit' className='flex-grow' loading={updateBudgetMutation.isPending}>
                 Update
               </Button>
               <Button
@@ -86,7 +87,7 @@ export default function EditBudgetModal({ budget }: Props) {
                 onClick={() => {
                   setIsDialogOpen(false)
                 }}
-                loading={updateBudgetMutation.isLoading}
+                loading={updateBudgetMutation.isPending}
               >
                 Cancel
               </Button>

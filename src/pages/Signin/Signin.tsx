@@ -69,7 +69,7 @@ export const Signin = () => {
                     <FormItem>
                       <FormLabel>Username</FormLabel>
                       <FormControl>
-                        <Input disabled={loginMutation.isLoading} placeholder='Enter your username' {...field} />
+                        <Input disabled={loginMutation.isPending} placeholder='Enter your username' {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -83,7 +83,7 @@ export const Signin = () => {
                     <FormItem>
                       <FormLabel>Password</FormLabel>
                       <FormControl>
-                        <Password disabled={loginMutation.isLoading} placeholder='Enter your password' {...field} />
+                        <Password disabled={loginMutation.isPending} placeholder='Enter your password' {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -98,7 +98,7 @@ export const Signin = () => {
                       <FormControl>
                         <div className='flex items-center space-x-2'>
                           <Checkbox
-                            disabled={loginMutation.isLoading}
+                            disabled={loginMutation.isPending}
                             id='rememberMe'
                             checked={field.value}
                             onCheckedChange={field.onChange}
@@ -116,7 +116,7 @@ export const Signin = () => {
                   )}
                 />
 
-                <Button type='submit' loading={loginMutation.isLoading}>
+                <Button type='submit' loading={loginMutation.isPending}>
                   Continue
                 </Button>
               </form>

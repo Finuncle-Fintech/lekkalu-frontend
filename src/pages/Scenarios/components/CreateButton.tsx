@@ -18,7 +18,7 @@ import EachAsset from './Assets/EachAsset'
 import { useAuth } from '@/hooks/use-auth'
 
 const CreateButton = ({ username }: { username: string }) => {
-  const { data: imaginaryUser } = useQuery<any>([AUTH.IMAGINARY_CLIENT])
+  const { data: imaginaryUser } = useQuery<any>({ queryKey: [AUTH.IMAGINARY_CLIENT] })
   const { getAPIClientForImaginaryUser } = useImaginaryAuth()
   const { userData } = useAuth()
   const IS_AUTHENTICATED_USER = Boolean(userData?.first_name)
@@ -84,9 +84,15 @@ const CreateButton = ({ username }: { username: string }) => {
     return data
   }
 
-  const { data: expenses } = useQuery([`${INCOME_STATEMENT.IS_EXPENSES}-${username}`], fetchIncomeExpenses)
-  const { data: liabilities } = useQuery([`${BALANCE_SHEET.LIABILITIES}-${username}`], fetchLiabilities)
-  const { data: assets } = useQuery([`${BALANCE_SHEET.ASSETS}-${username}`], fetchPhysicalAssets)
+  const { data: expenses } = useQuery({
+    queryKey: [`${INCOME_STATEMENT.IS_EXPENSES}-${username}`],
+    queryFn: fetchIncomeExpenses,
+  })
+  const { data: liabilities } = useQuery({
+    queryKey: [`${BALANCE_SHEET.LIABILITIES}-${username}`],
+    queryFn: fetchLiabilities,
+  })
+  const { data: assets } = useQuery({ queryKey: [`${BALANCE_SHEET.ASSETS}-${username}`], queryFn: fetchPhysicalAssets })
 
   return (
     <div className='grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 gap-y-10'>

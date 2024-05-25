@@ -9,7 +9,7 @@ import { EXPENSES } from '@/utils/query-keys'
 import { formatIndianMoneyNotation } from '@/utils/format-money'
 
 export const CumSumChart = () => {
-  const { data, isLoading } = useQuery([EXPENSES.MONTHLY_EXPENSES], fetchMonthlyExpenses)
+  const { data, isLoading } = useQuery({ queryKey: [EXPENSES.MONTHLY_EXPENSES], queryFn: fetchMonthlyExpenses })
 
   const { preferences } = useUserPreferences()
 

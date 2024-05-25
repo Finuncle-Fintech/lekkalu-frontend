@@ -22,7 +22,8 @@ export default function Settings() {
     setPreferences((prev) => ({ ...prev, currencyUnit: symbol }))
   }
 
-  const deleteUserAccountMutation = useMutation(deleteUserAccount, {
+  const deleteUserAccountMutation = useMutation({
+    mutationFn: deleteUserAccount,
     onSuccess: () => {
       queryClient.invalidateQueries()
       logout()
@@ -80,8 +81,8 @@ export default function Settings() {
         description='Do you really want to delete your account? This process cannot be undone.'
         okText='Yes, Delete'
         cancelText='No'
-        cancelProps={{ disabled: deleteUserAccountMutation.isLoading }}
-        okButtonProps={{ disabled: deleteUserAccountMutation.isLoading, className: 'bg-red-500 hover:bg-red-400' }}
+        cancelProps={{ disabled: deleteUserAccountMutation.isPending }}
+        okButtonProps={{ disabled: deleteUserAccountMutation.isPending, className: 'bg-red-500 hover:bg-red-400' }}
         onOk={() => {
           deleteUserAccountMutation.mutate()
         }}

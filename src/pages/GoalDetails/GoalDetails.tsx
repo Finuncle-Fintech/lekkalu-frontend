@@ -23,12 +23,10 @@ export default function GoalDetails() {
   const [target, setTarget] = useState<number | string>()
   const [kpi, setKpi] = useState<string>()
   const [source, setSource] = useState<string>()
-  const [reachableDate, setRechableDate] = useState<number | string>()
   const [name, setName] = useState<string>()
 
   const [allowRename, setAllowRename] = useState(false)
   const [allowEditTarget, setAllowEditTarget] = useState(false)
-  const [allowEditReachableDate, setAllowEditReachableDate] = useState(false)
 
   const { data: incomeExpenses } = useQuery({ queryKey: [BALANCE_SHEET.INCOME_EXPENSES], queryFn: fetchIncomeExpenses })
 
@@ -54,7 +52,6 @@ export default function GoalDetails() {
       setTarget(data?.target_value)
       setKpi(data?.track_kpi)
       setSource(data?.target_contribution_source)
-      setRechableDate(data?.reachable_by_days)
       setName(data?.name)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -70,7 +67,6 @@ export default function GoalDetails() {
       setTarget(data?.target_value)
       setKpi(data?.track_kpi)
       setSource(data?.target_contribution_source)
-      setRechableDate(data?.reachable_by_days)
       toast({ title: 'Something went wrong.', variant: 'destructive' })
     },
   })
@@ -96,11 +92,6 @@ export default function GoalDetails() {
   const editTarget = () => {
     goalMutation.mutate({ target_value: Number(target) })
     setAllowEditTarget(false)
-  }
-
-  const editReachableDays = () => {
-    goalMutation.mutate({ reachable_by_days: Number(reachableDate) })
-    setAllowEditReachableDate(false)
   }
 
   if (isLoading) {
@@ -256,33 +247,7 @@ export default function GoalDetails() {
               <p>{data?.reachable_by_days < 0 ? 'Reached' : 'Reachable by'}</p>
             </div>
           </div>
-          <div className='flex-1 font-medium self-center'>
-            {allowEditReachableDate ? (
-              <div className='flex gap-4 w-fit'>
-                <Input
-                  type='number'
-                  value={reachableDate}
-                  autoFocus
-                  onChange={(e) => setRechableDate(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.code === 'Enter') {
-                      editReachableDays()
-                    } else if (e.code === 'Escape') {
-                      setRechableDate(data?.reachable_by_days)
-                      setAllowEditReachableDate(false)
-                    }
-                  }}
-                />
-                <Button type='button' variant={'ghost'} onClick={editReachableDays}>
-                  Edit
-                </Button>
-              </div>
-            ) : (
-              <p title='Click to edit' onClick={() => setAllowEditReachableDate(true)}>
-                {reachableDaysString}
-              </p>
-            )}
-          </div>
+          <div className='flex-1 font-medium self-center'>{reachableDaysString}</div>
         </div>
       </div>
 

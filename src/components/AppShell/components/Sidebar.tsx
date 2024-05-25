@@ -19,8 +19,13 @@ export function Sidebar({ className, ...restProps }: SidebarProps) {
 
   const [ROUTES, setRoutes] = useState([..._routes])
 
-  useQuery([SCENARIOS.SCENARIOS], fetchScenarios, {
-    onSuccess(data) {
+  const { data, isSuccess: isScenariosSuccess } = useQuery({
+    queryKey: [SCENARIOS.SCENARIOS],
+    queryFn: fetchScenarios,
+  })
+
+  useEffect(() => {
+    if (isScenariosSuccess && data) {
       const _scenarioSubMenu = data.map((each) => ({ path: `/scenarios/${each?.id}`, label: each?.name }))
       const clonedRoutes = [...ROUTES]
       const updatedRoutes = clonedRoutes.map((each, index) => {
@@ -30,8 +35,8 @@ export function Sidebar({ className, ...restProps }: SidebarProps) {
         return each
       })
       setRoutes(updatedRoutes)
-    },
-  })
+    }
+  }, [isScenariosSuccess, data])
 
   useEffect(() => {
     const _subMenus: any = {}

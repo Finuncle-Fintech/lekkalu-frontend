@@ -26,7 +26,7 @@ type Props = {
 
 export default function AddOrEditLiabilityDialog({ trigger, liability, editLiability, addLiability }: Props) {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
-  const { data: username } = useQuery<any>([AUTH.CURRENT_IMAGINARY_USER])
+  const { data: username } = useQuery<any>({ queryKey: [AUTH.CURRENT_IMAGINARY_USER] })
   const { toast } = useToast()
   const qc = useQueryClient()
   const isEdit = Boolean(liability)
@@ -44,19 +44,21 @@ export default function AddOrEditLiabilityDialog({ trigger, liability, editLiabi
     },
   })
 
-  const addLiabilityMutation = useMutation(addLiability, {
+  const addLiabilityMutation = useMutation({
+    mutationFn: addLiability,
     onSuccess: () => {
       form.reset()
-      qc.invalidateQueries([`${BALANCE_SHEET.LIABILITIES}-${username}`])
+      qc.invalidateQueries({ queryKey: [`${BALANCE_SHEET.LIABILITIES}-${username}`] })
       toast({ title: 'Liability created successfully!' })
       setIsDialogOpen(false)
     },
     onError: (err: any) => toast(getErrorMessage(err)),
   })
 
-  const editLiabilityMutation = useMutation((dto: AddLiabilitySchema) => editLiability(liability?.id!, dto), {
+  const editLiabilityMutation = useMutation({
+    mutationFn: (dto: AddLiabilitySchema) => editLiability(liability?.id!, dto),
     onSuccess: () => {
-      qc.invalidateQueries([`${BALANCE_SHEET.LIABILITIES}-${username}`])
+      qc.invalidateQueries({ queryKey: [`${BALANCE_SHEET.LIABILITIES}-${username}`] })
       toast({ title: 'Liability edited successfully!' })
       setIsDialogOpen(false)
     },
@@ -107,7 +109,7 @@ export default function AddOrEditLiabilityDialog({ trigger, liability, editLiabi
             </Collapsible>
             <DialogFooter className='gap-2 md:col-span-2 mt-5'>
               <Button
-                loading={addLiabilityMutation.isLoading || editLiabilityMutation.isLoading}
+                loading={addLiabilityMutation.isPending || editLiabilityMutation.isPending}
                 type='button'
                 variant='outline'
                 onClick={() => {
@@ -116,7 +118,7 @@ export default function AddOrEditLiabilityDialog({ trigger, liability, editLiabi
               >
                 Cancel
               </Button>
-              <Button type='submit' loading={addLiabilityMutation.isLoading || editLiabilityMutation.isLoading}>
+              <Button type='submit' loading={addLiabilityMutation.isPending || editLiabilityMutation.isPending}>
                 {isEdit ? 'Edit' : 'Add'} Liability
               </Button>
             </DialogFooter>

@@ -15,11 +15,12 @@ type Props = {
 export default function DeleteIncomeExpense({ id, deleteLiability }: Props) {
   const qc = useQueryClient()
   const { toast } = useToast()
-  const { data: username } = useQuery<string>([AUTH.CURRENT_IMAGINARY_USER])
+  const { data: username } = useQuery<string>({ queryKey: [AUTH.CURRENT_IMAGINARY_USER] })
 
-  const deleteMutation = useMutation(deleteLiability, {
+  const deleteMutation = useMutation({
+    mutationFn: deleteLiability,
     onSuccess: () => {
-      qc.invalidateQueries([`${BALANCE_SHEET.LIABILITIES}-${username}`])
+      qc.invalidateQueries({ queryKey: [`${BALANCE_SHEET.LIABILITIES}-${username}`] })
       toast({ title: 'Liability deleted successfully!' })
     },
     onError: (err: any) => toast(getErrorMessage(err)),
@@ -35,9 +36,9 @@ export default function DeleteIncomeExpense({ id, deleteLiability }: Props) {
       title='Delete Liability'
       description='Are you sure you want to delete this Liability ?'
       okText='Yes, Delete'
-      okButtonProps={{ disabled: deleteMutation.isLoading, className: 'bg-red-500 hover:bg-red-400' }}
+      okButtonProps={{ disabled: deleteMutation.isPending, className: 'bg-red-500 hover:bg-red-400' }}
       cancelText='No'
-      cancelProps={{ disabled: deleteMutation.isLoading }}
+      cancelProps={{ disabled: deleteMutation.isPending }}
       onOk={() => {
         deleteMutation.mutate(id)
       }}

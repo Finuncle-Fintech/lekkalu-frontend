@@ -20,15 +20,23 @@ const EditScenario = () => {
 
   const queryName = `${SCENARIOS.SCENARIOS}-${scenarioId}`
 
-  const { data: scenario, isLoading: isFetchingScenario } = useQuery([queryName], () => fetchScenarioById(scenarioId), {
-    onError() {
-      toast({ title: 'Something went wrong' })
-    },
+  const {
+    data: scenario,
+    isLoading: isFetchingScenario,
+    isError: fetchingScenarioError,
+  } = useQuery({
+    queryKey: [queryName],
+    queryFn: () => fetchScenarioById(scenarioId),
   })
 
-  const { mutate } = useMutation((dto: Partial<Scenario>) => editScenario(scenarioId, dto), {
+  if (fetchingScenarioError) {
+    toast({ title: 'Something went wrong' })
+  }
+
+  const { mutate } = useMutation({
+    mutationFn: (dto: Partial<Scenario>) => editScenario(scenarioId, dto),
     onSuccess() {
-      queryClient.invalidateQueries([queryName])
+      queryClient.invalidateQueries({ queryKey: [queryName] })
       toast({ title: 'Scenario Edited Successfully!' })
       navigate('/scenarios')
     },

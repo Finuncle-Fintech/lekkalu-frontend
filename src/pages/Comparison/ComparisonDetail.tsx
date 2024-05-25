@@ -47,23 +47,24 @@ const ComparisonDetail = () => {
     data: comparison,
     isError,
     isLoading: isFetchingComparison,
-  } = useQuery([`${COMPARISON.COMPARISON}-${comparisonId}`], () =>
-    fetchComparisonsById(Number(comparisonId), IS_FOR_FEATURE_PAGE),
-  )
+  } = useQuery({
+    queryKey: [`${COMPARISON.COMPARISON}-${comparisonId}`],
+    queryFn: () => fetchComparisonsById(Number(comparisonId), IS_FOR_FEATURE_PAGE),
+  })
 
-  const { data: scenarios } = useQuery([SCENARIOS.SCENARIOS], fetchScenarios, {
+  const { data: scenarios } = useQuery({
+    queryKey: [SCENARIOS.SCENARIOS],
+    queryFn: fetchScenarios,
     enabled: Boolean(comparison?.id) && IS_AUTHENTICATED_USER,
   })
 
-  const { mutate: scenarioMutationInComparison } = useMutation(
-    (dto: Partial<Comparison>) => editComparisons(Number(comparisonId), dto),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries([`${COMPARISON.COMPARISON}-${comparisonId}`])
-        setSelectedScenarios([])
-      },
+  const { mutate: scenarioMutationInComparison } = useMutation({
+    mutationFn: (dto: Partial<Comparison>) => editComparisons(Number(comparisonId), dto),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [`${COMPARISON.COMPARISON}-${comparisonId}`] })
+      setSelectedScenarios([])
     },
-  )
+  })
 
   const scenariosForThisComparison = scenarios?.filter((each: ScenarioType) => comparison?.scenarios.includes(each?.id))
   const remaningScenarios = scenarios?.filter((each) => !comparison?.scenarios.includes(each?.id))
@@ -79,20 +80,18 @@ const ComparisonDetail = () => {
   const {
     mutate: login,
     isSuccess,
-    isLoading,
-  } = useMutation(
-    async ({ password, username, scenarioName }: any) => {
+    isPending,
+  } = useMutation({
+    mutationFn: async ({ password, username, scenarioName }: any) => {
       const results = await timelineDataAPICall({ password, username, scenarioName })
       return results
     },
-    {
-      onSuccess: (data) => {
-        setTimelineData((prevData: any) => {
-          return { ...prevData, ...data }
-        })
-      },
+    onSuccess: (data) => {
+      setTimelineData((prevData: any) => {
+        return { ...prevData, ...data }
+      })
     },
-  )
+  })
 
   const handleSimulate = () => {
     setTimelineData({})
@@ -125,11 +124,11 @@ const ComparisonDetail = () => {
   }
 
   useEffect(() => {
-    if (!isLoading && isSuccess) {
+    if (!isPending && isSuccess) {
       const result = mergeArraysByDate(timelineData)
       setCalculatedTimelineData(result)
     }
-  }, [isSuccess, isLoading, timelineData])
+  }, [isSuccess, isPending, timelineData])
 
   if (isFetchingComparison) {
     return (
@@ -164,7 +163,7 @@ const ComparisonDetail = () => {
           <Button
             variant={'default'}
             onClick={handleSimulate}
-            loading={isLoading}
+            loading={isPending}
             disabled={!comparison?.scenarios_objects.length}
           >
             Simulate
@@ -227,7 +226,7 @@ const ComparisonDetail = () => {
             </CardHeader>
             {
               <CardContent className='w-full h-full'>
-                {isLoading ? (
+                {isPending ? (
                   <p>Loading...</p>
                 ) : (
                   <ResponsiveContainer width='100%' height='75%'>

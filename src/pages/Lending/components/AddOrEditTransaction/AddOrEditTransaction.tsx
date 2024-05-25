@@ -30,7 +30,7 @@ export default function AddOrEditTransaction({ transaction, trigger }: Props) {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const { toast } = useToast()
   const queryClient = useQueryClient()
-  const { data: lendingAccounts } = useQuery([LENDING.ACCOUNTS], fetchLendingAccounts)
+  const { data: lendingAccounts } = useQuery({ queryKey: [LENDING.ACCOUNTS], queryFn: fetchLendingAccounts })
   const form = useForm<AddTransactionSchema>({
     resolver: zodResolver(addTransactionSchema),
     defaultValues: {
@@ -50,9 +50,10 @@ export default function AddOrEditTransaction({ transaction, trigger }: Props) {
     () => Array.isArray(lendingAccount) && lendingAccount.length > 0 && lendingAccount[0]?.id === undefined,
     [lendingAccount],
   )
-  const addAccountMutation = useMutation(addLendingAccount, {
+  const addAccountMutation = useMutation({
+    mutationFn: addLendingAccount,
     onSuccess: () => {
-      queryClient.invalidateQueries([LENDING.ACCOUNTS])
+      queryClient.invalidateQueries({ queryKey: [LENDING.ACCOUNTS] })
       form.reset()
       setIsDialogOpen(false)
       toast({ title: 'Account created successfully!' })
@@ -60,10 +61,11 @@ export default function AddOrEditTransaction({ transaction, trigger }: Props) {
     onError: (err: any) => toast(getErrorMessage(err)),
   })
 
-  const addTransactionMutation = useMutation(addLendingTransaction, {
+  const addTransactionMutation = useMutation({
+    mutationFn: addLendingTransaction,
     onSuccess: () => {
-      queryClient.invalidateQueries([LENDING.ACCOUNTS])
-      queryClient.invalidateQueries([LENDING.TRANSACTIONS])
+      queryClient.invalidateQueries({ queryKey: [LENDING.ACCOUNTS] })
+      queryClient.invalidateQueries({ queryKey: [LENDING.TRANSACTIONS] })
       form.reset()
       toast({ title: 'Transaction created successfully!' })
       setIsDialogOpen(false)
@@ -71,18 +73,16 @@ export default function AddOrEditTransaction({ transaction, trigger }: Props) {
     onError: (err: any) => toast(getErrorMessage(err)),
   })
 
-  const updateTransactionMutation = useMutation(
-    (dto: AddTransactionSchema) => updateLendingTransaction(transaction?.id!, dto),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries([LENDING.ACCOUNTS])
-        queryClient.invalidateQueries([LENDING.TRANSACTIONS])
-        toast({ title: 'Transaction updated successfully!' })
-        setIsDialogOpen(false)
-      },
-      onError: (err: any) => toast(getErrorMessage(err)),
+  const updateTransactionMutation = useMutation({
+    mutationFn: (dto: AddTransactionSchema) => updateLendingTransaction(transaction?.id!, dto),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [LENDING.ACCOUNTS] })
+      queryClient.invalidateQueries({ queryKey: [LENDING.TRANSACTIONS] })
+      toast({ title: 'Transaction updated successfully!' })
+      setIsDialogOpen(false)
     },
-  )
+    onError: (err: any) => toast(getErrorMessage(err)),
+  })
 
   const lendingAccountOptions = useMemo(() => {
     return (
@@ -249,7 +249,7 @@ export default function AddOrEditTransaction({ transaction, trigger }: Props) {
               >
                 Cancel
               </Button>
-              <Button type='submit' loading={addTransactionMutation.isLoading || updateTransactionMutation.isLoading}>
+              <Button type='submit' loading={addTransactionMutation.isPending || updateTransactionMutation.isPending}>
                 {transaction ? 'Update' : 'Add'}
               </Button>
             </DialogFooter>

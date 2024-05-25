@@ -15,7 +15,7 @@ const TYPE_ICON_MAP: Record<string, React.ReactElement> = {
 }
 
 export default function NotificationsPopover() {
-  const { data, isLoading } = useQuery([NOTIFICATION.NOTIFICATION], fetchNotifications)
+  const { data, isLoading } = useQuery({ queryKey: [NOTIFICATION.NOTIFICATION], queryFn: fetchNotifications })
   return (
     <Popover>
       <PopoverTrigger asChild>

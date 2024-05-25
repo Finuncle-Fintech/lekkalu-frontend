@@ -11,7 +11,7 @@ import { SCENARIOS } from '@/utils/query-keys'
 import { fetchScenarios } from '@/queries/scenarios'
 
 const ScenarioPage = () => {
-  const { data: scenarios, isLoading } = useQuery([SCENARIOS.SCENARIOS], fetchScenarios)
+  const { data: scenarios, isLoading } = useQuery({ queryKey: [SCENARIOS.SCENARIOS], queryFn: fetchScenarios })
 
   return (
     <Page className='space-y-5'>

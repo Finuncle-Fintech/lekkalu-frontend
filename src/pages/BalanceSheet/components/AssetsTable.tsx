@@ -11,7 +11,7 @@ import DeleteAssetDialog from './DeleteAssetDialog'
 import { formatIndianMoneyNotation } from '@/utils/format-money'
 
 export default function AssetsTable() {
-  const { data, isFetching } = useQuery([BALANCE_SHEET.ASSETS], fetchPhysicalAssets)
+  const { data, isFetching } = useQuery({ queryKey: [BALANCE_SHEET.ASSETS], queryFn: fetchPhysicalAssets })
 
   return (
     <div className='space-y-2'>

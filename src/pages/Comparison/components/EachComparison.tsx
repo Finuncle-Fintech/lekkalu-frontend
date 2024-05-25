@@ -29,10 +29,11 @@ type ComparisonType = {
 const Comparison = ({ id, access, name, style, className, scenarios }: ComparisonType) => {
   const [allowRename, setAllowRename] = useState(false)
   const [comparisonName, setComparisonName] = useState(name)
-  const { mutate } = useMutation((dto: Partial<ComparisonSchemaType>) => editComparisons(id, dto), {
+  const { mutate } = useMutation({
+    mutationFn: (dto: Partial<ComparisonSchemaType>) => editComparisons(id, dto),
     onSuccess: () => {
       setAllowRename(false)
-      queryClient.invalidateQueries([COMPARISON.COMPARISON])
+      queryClient.invalidateQueries({ queryKey: [COMPARISON.COMPARISON] })
     },
   })
   const handleRename = () => {

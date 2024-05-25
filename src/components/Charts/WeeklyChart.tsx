@@ -10,7 +10,7 @@ import { formatIndianMoneyNotation } from '@/utils/format-money'
 
 export const WeeklyChart = () => {
   const { preferences } = useUserPreferences()
-  const { data, isLoading } = useQuery([EXPENSES.WEEKLY_EXPENSES], fetchWeeklyExpenses)
+  const { data, isLoading } = useQuery({ queryKey: [EXPENSES.WEEKLY_EXPENSES], queryFn: fetchWeeklyExpenses })
 
   const weeklyData = useMemo(() => {
     if (!data) {

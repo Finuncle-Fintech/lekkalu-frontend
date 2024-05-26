@@ -28,10 +28,10 @@ export const ASSET_CATEGORY_TYPE: { label: string; id: AssetsType }[] = [
     label: 'Cash',
     id: 'cash',
   },
-  // {
-  //   label: 'Account',
-  //   id: 'account',
-  // },
+  {
+    label: 'Account',
+    id: 'account',
+  },
   {
     label: 'Mutual Funds / Equity',
     id: 'mutual_funds',

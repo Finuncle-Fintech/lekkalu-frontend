@@ -4,14 +4,14 @@ import { LoaderIcon, PencilIcon } from 'lucide-react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Button } from '@/components/ui/button'
 import When from '@/components/When/When'
-import { AddRealEstateTypes } from '@/types/balance-sheet'
 import DeleteRealEstateDialog from './DeleteAccountDialog'
 import AddOrEditAssetsAccount from './AddOrEditAssetsAccount'
+import { AccountSchema } from '@/types/balance-sheet'
 
 export default function AccountTable({
   queryData: { data, isLoading },
 }: {
-  queryData: UseQueryResult<AddRealEstateTypes[], unknown>
+  queryData: UseQueryResult<AccountSchema[], unknown>
 }) {
   return (
     <div className='space-y-2'>
@@ -32,6 +32,8 @@ export default function AccountTable({
 
           {data?.map((asset) => (
             <TableRow key={asset.id}>
+              <TableCell>{asset.name}</TableCell>
+              <TableCell>{asset.balance}</TableCell>
               <TableCell className='space-x-2'>
                 <AddOrEditAssetsAccount
                   trigger={

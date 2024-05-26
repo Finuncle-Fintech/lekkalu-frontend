@@ -60,10 +60,15 @@ export type CashAssets = {
 }
 
 // ** Account
-export type AddPhysicalAssetTypeAccountSchema = {
+export type AddAccountSchema = {
   account_name: string
   amount: number
   rate_return: number
+}
+export type AccountSchema = {
+  name: string
+  balance: string
+  id: string
 }
 
 // ** Security Transaction

@@ -10,7 +10,7 @@ import { BALANCE_SHEET } from '@/utils/query-keys'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Form } from '@/components/ui/form'
-import { AddPhysicalAssetSchema, AddPhysicalAssetTypeAccountSchema, PhysicalAsset } from '@/types/balance-sheet'
+import { AddPhysicalAssetSchema, AddAccountSchema, PhysicalAsset } from '@/types/balance-sheet'
 import { getErrorMessage } from '@/utils/utils'
 import { useStepper } from '@/components/ui/stepper'
 
@@ -28,7 +28,7 @@ export default function AddOrEditAssetsAccount({ trigger, asset, closeModal, isS
   const { prevStep } = useStepper()
   const isEdit = Boolean(asset)
 
-  const form = useForm<AddPhysicalAssetTypeAccountSchema>({
+  const form = useForm<AddAccountSchema>({
     resolver: zodResolver(addAccountSchema),
     defaultValues: {
       amount: undefined,
@@ -58,7 +58,7 @@ export default function AddOrEditAssetsAccount({ trigger, asset, closeModal, isS
   const handleAddOrEditAccountAsset = () => {
     closeModal?.()
   }
-  // const handleAddOrEditAccountAsset = (values: AddPhysicalAssetTypeAccountSchema) => {
+  // const handleAddOrEditAccountAsset = (values: AddAccountSchema) => {
   //   console.log('Submitting Values', values)
   //   closeModal?.()
   // }
@@ -70,16 +70,21 @@ export default function AddOrEditAssetsAccount({ trigger, asset, closeModal, isS
           id: 'account_name',
           label: 'Account Name',
           type: 'text',
+          helpText:
+            'Enter the name of the account. This could be a savings account, checking account, or any other type of financial account.',
         },
         {
           id: 'amount',
           label: 'Amount',
           type: 'number',
+          helpText: 'Enter the total amount of money currently held in the account.',
         },
         {
           id: 'rate_return',
           label: 'Rate Return',
           type: 'number',
+          helpText:
+            'Enter the annual rate of return for the account. This is the percentage of interest or growth expected per year.',
         },
       ] as InputField[],
     [],

@@ -11,6 +11,7 @@ import {
   SecurityTransactionSchema,
   AssetsPropertiesType,
   AddAssetsPropertiesType,
+  AccountSchema,
 } from '@/types/balance-sheet'
 import { v1ApiClient, v2ApiClient } from '@/utils/client'
 
@@ -68,6 +69,12 @@ export async function fetchLoanTransactions() {
 
 export async function fetchTransactionsForLoan(loan_id: number) {
   const { data } = await v1ApiClient.get<LoanTransaction[]>('loan_transactions', { params: { loan_id } })
+  return data
+}
+
+// ** Account Assets
+export async function fetchAccountAssets() {
+  const { data } = await v1ApiClient.get<AccountSchema[]>('accounts/')
   return data
 }
 

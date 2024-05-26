@@ -9,13 +9,20 @@ import { BALANCE_SHEET } from '@/utils/query-keys'
 import { useUserPreferences } from '@/hooks/use-user-preferences'
 import { formatIndianMoneyNotation } from '@/utils/format-money'
 import PhysicalAssetTable from './PhysicalAsset/PhysicalAssetTable'
-import { fetchCashAsset, fetchPhysicalAssets, fetchSecurityTransaction } from '@/queries/balance-sheet'
+import {
+  fetchAccountAssets,
+  fetchCashAsset,
+  fetchPhysicalAssets,
+  fetchSecurityTransaction,
+} from '@/queries/balance-sheet'
 import MutualFundTable from './MutualFund/MutualFundTable'
+import AccountTable from './Account/AccountTable'
 
 export default function AssetsTable() {
   const cashQueryData = useQuery([BALANCE_SHEET.CASH], fetchCashAsset)
   const physicalAssetsQueryData = useQuery([BALANCE_SHEET.ASSETS], fetchPhysicalAssets)
   const mutualFundQueryData = useQuery([BALANCE_SHEET.SECURITIES_TRANSACTIONS], fetchSecurityTransaction)
+  const accountQueryData = useQuery([BALANCE_SHEET.ACCOUNT], fetchAccountAssets)
   const { preferences } = useUserPreferences()
 
   return (
@@ -50,24 +57,21 @@ export default function AssetsTable() {
             <CashTable queryData={cashQueryData} />
           </AccordionContent>
         </AccordionItem>
-        {/* <AccordionItem className='bg-gray-100/50 px-3 rounded-md my-2' value='account'>
+        <AccordionItem className='bg-gray-100/50 px-3 rounded-md my-2' value='account'>
           <AccordionTrigger className='text-lg'>
             <div>Account</div>
             <div className='me-4'>
-              {mutualFundQueryData.data &&
+              {accountQueryData.data &&
                 formatIndianMoneyNotation(
-                  mutualFundQueryData.data.reduce(
-                    (totalBalance, asset) => totalBalance + parseFloat(asset.value as any),
-                    0,
-                  ),
+                  accountQueryData.data.reduce((totalBalance, asset) => totalBalance + parseFloat(asset.balance), 0),
                 )}{' '}
               {preferences.currencyUnit}
             </div>
           </AccordionTrigger>
           <AccordionContent>
-            <GoldTable queryData={mutualFundQueryData as any} />
+            <AccountTable queryData={accountQueryData} />
           </AccordionContent>
-        </AccordionItem> */}
+        </AccordionItem>
         <AccordionItem className='bg-gray-100/50 px-3 rounded-md my-2' value='mutual-funds'>
           <AccordionTrigger className='text-lg'>
             <div>Mutual Funds / Equity</div>

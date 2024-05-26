@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useMemo, useState } from 'react'
 import { BadgeCheckIcon, GaugeIcon, SplitIcon, TargetIcon } from 'lucide-react'
 import { useParams } from 'react-router-dom'
@@ -42,7 +43,8 @@ export default function GoalDetails() {
     select: (data) => {
       return {
         ...data,
-        target_contribution_source: incomeExpenses?.find((each) => each?.id === data?.target_contribution_source)?.name,
+        target_contribution_source:
+          incomeExpenses?.find((each) => each?.id === data?.target_contribution_source)?.name || 'N/A',
       }
     },
   })
@@ -223,13 +225,17 @@ export default function GoalDetails() {
             <Select
               value={source}
               onValueChange={(value) => {
-                goalMutation.mutate({ target_contribution_source: data ? getTargetId(value) : undefined })
+                const target_contribution_source = value === 'N/A' ? null : Number(getTargetId(value))
+                goalMutation.mutate({ target_contribution_source })
               }}
             >
               <SelectTrigger>
                 <SelectValue placeholder='N/A'>{source}</SelectValue>
               </SelectTrigger>
               <SelectContent>
+                <SelectItem key={'no-source'} value='N/A'>
+                  N/A
+                </SelectItem>
                 {incomeExpenses?.map((item) => (
                   <SelectItem key={item.id} value={item.name}>
                     {item.name}

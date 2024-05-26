@@ -11,6 +11,7 @@ import useGetSelectOptionsForGoal from '../hooks/useGetSelectOptionsForGoal'
 import { AddGoalSchema } from '@/schema/goals'
 import { StepFooter } from './StepperFooter'
 import { FormLabelForGoalForm } from '../../components/FormLabel'
+import { Button } from '@/components/ui/button'
 
 type GoalFormType = {
   form: UseFormReturn<AddGoalSchema>
@@ -233,22 +234,33 @@ export default function GoalForm({ form, onSubmit, isLoading, isError, isEdit = 
                                 tooltipSide='top'
                               />
                               <FormControl>
-                                <Select
-                                  value={field.value?.toString()}
-                                  onValueChange={field.onChange}
-                                  disabled={Boolean(!incomeExpenses?.length)}
-                                >
-                                  <SelectTrigger>
-                                    <SelectValue placeholder='Source' />
-                                  </SelectTrigger>
-                                  <SelectContent>
-                                    {incomeExpenses?.map((item) => (
-                                      <SelectItem key={item.id} value={item.id.toString()}>
-                                        {item.name}
-                                      </SelectItem>
-                                    ))}
-                                  </SelectContent>
-                                </Select>
+                                <div className='flex gap-5'>
+                                  <Select
+                                    value={field.value?.toString()}
+                                    onValueChange={field.onChange}
+                                    disabled={Boolean(!incomeExpenses?.length)}
+                                  >
+                                    <SelectTrigger>
+                                      <SelectValue placeholder='Source' />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      {incomeExpenses?.map((item) => (
+                                        <SelectItem key={item.id} value={item.id.toString()}>
+                                          {item.name}
+                                        </SelectItem>
+                                      ))}
+                                    </SelectContent>
+                                  </Select>
+                                  <Button
+                                    type='button'
+                                    disabled={!field.value}
+                                    onClick={() => {
+                                      form.setValue('target_contribution_source', null)
+                                    }}
+                                  >
+                                    Clear
+                                  </Button>
+                                </div>
                               </FormControl>
                               <div>
                                 {!incomeExpenses?.length ? (

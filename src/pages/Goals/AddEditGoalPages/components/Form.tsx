@@ -213,6 +213,7 @@ export default function GoalForm({ form, onSubmit, isLoading, isError, isEdit = 
                               <FormControl>
                                 <Input
                                   type='number'
+                                  min={1}
                                   value={field.value}
                                   onChange={(e) => field.onChange(e.target.valueAsNumber)}
                                 />

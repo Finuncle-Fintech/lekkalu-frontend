@@ -221,60 +221,57 @@ export default function GoalForm({ form, onSubmit, isLoading, isError, isEdit = 
                             </FormItem>
                           )}
                         />
-                        <FormField
-                          control={form.control}
-                          name='target_contribution_source'
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabelForGoalForm
-                                required={false}
-                                info='Set a clear mark to hit. It’s like putting a flag on the top of the hill you want to climb.'
-                                label='Source'
-                                example='Aim to cut your liability percentage by 15%'
-                                tooltipSide='top'
-                              />
-                              <FormControl>
-                                <div className='flex gap-5'>
-                                  <Select
-                                    value={field.value?.toString()}
-                                    onValueChange={field.onChange}
-                                    disabled={Boolean(!incomeExpenses?.length)}
-                                  >
-                                    <SelectTrigger>
-                                      <SelectValue placeholder='Source' />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                      {incomeExpenses?.map((item) => (
-                                        <SelectItem key={item.id} value={item.id.toString()}>
-                                          {item.name}
-                                        </SelectItem>
-                                      ))}
-                                    </SelectContent>
-                                  </Select>
-                                  <Button
-                                    type='button'
-                                    disabled={!field.value}
-                                    onClick={() => {
-                                      form.setValue('target_contribution_source', null)
-                                    }}
-                                  >
-                                    Clear
-                                  </Button>
-                                </div>
-                              </FormControl>
-                              <div>
-                                {!incomeExpenses?.length ? (
-                                  <Link to='/income-statement' className='text-gray-500 text-xs hover:underline'>
-                                    No Income Expense found. Click here to add.
-                                  </Link>
-                                ) : (
-                                  <></>
-                                )}
-                              </div>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
+
+                        <FormItem>
+                          <FormLabelForGoalForm
+                            required={false}
+                            info='Set a clear mark to hit. It’s like putting a flag on the top of the hill you want to climb.'
+                            label='Source'
+                            example='Aim to cut your liability percentage by 15%'
+                            tooltipSide='top'
+                          />
+                          <FormControl>
+                            <div className='flex gap-5'>
+                              <Select
+                                value={String(form.watch().target_contribution_source) || undefined}
+                                onValueChange={(value) => {
+                                  form.setValue('target_contribution_source', value ? Number(value) : null)
+                                }}
+                                disabled={Boolean(!incomeExpenses?.length)}
+                              >
+                                <SelectTrigger placeholder='Source'>
+                                  <SelectValue placeholder='Source' />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {incomeExpenses?.map((item) => (
+                                    <SelectItem key={item.id} value={item.id.toString()}>
+                                      {item.name}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                              <Button
+                                type='button'
+                                disabled={!form.watch().target_contribution_source}
+                                onClick={() => {
+                                  form.setValue('target_contribution_source', null)
+                                }}
+                              >
+                                Clear
+                              </Button>
+                            </div>
+                          </FormControl>
+                          <div>
+                            {!incomeExpenses?.length ? (
+                              <Link to='/income-statement' className='text-gray-500 text-xs hover:underline'>
+                                No Income Expense found. Click here to add.
+                              </Link>
+                            ) : (
+                              <></>
+                            )}
+                          </div>
+                          <FormMessage />
+                        </FormItem>
 
                         {kpi_value === 'Cash' ? (
                           <>

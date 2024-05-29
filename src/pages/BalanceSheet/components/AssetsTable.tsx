@@ -19,10 +19,13 @@ import MutualFundTable from './MutualFund/MutualFundTable'
 import AccountTable from './Account/AccountTable'
 
 export default function AssetsTable() {
-  const cashQueryData = useQuery([BALANCE_SHEET.CASH], fetchCashAsset)
-  const physicalAssetsQueryData = useQuery([BALANCE_SHEET.ASSETS], fetchPhysicalAssets)
-  const mutualFundQueryData = useQuery([BALANCE_SHEET.SECURITIES_TRANSACTIONS], fetchSecurityTransaction)
-  const accountQueryData = useQuery([BALANCE_SHEET.ACCOUNT], fetchAccountAssets)
+  const cashQueryData = useQuery({ queryKey: [BALANCE_SHEET.CASH], queryFn: fetchCashAsset })
+  const physicalAssetsQueryData = useQuery({ queryKey: [BALANCE_SHEET.ASSETS], queryFn: fetchPhysicalAssets })
+  const mutualFundQueryData = useQuery({
+    queryKey: [BALANCE_SHEET.SECURITIES_TRANSACTIONS],
+    queryFn: fetchSecurityTransaction,
+  })
+  const accountQueryData = useQuery({ queryKey: [BALANCE_SHEET.ACCOUNT], queryFn: fetchAccountAssets })
   const { preferences } = useUserPreferences()
 
   return (

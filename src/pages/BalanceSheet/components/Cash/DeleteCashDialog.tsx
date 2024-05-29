@@ -16,9 +16,10 @@ export default function DeleteCashDialog({ id }: Props) {
   const qc = useQueryClient()
   const { toast } = useToast()
 
-  const deleteCashMutation = useMutation(deleteCashAsset, {
+  const deleteCashMutation = useMutation({
+    mutationFn: deleteCashAsset,
     onSuccess: () => {
-      qc.invalidateQueries([BALANCE_SHEET.CASH])
+      qc.invalidateQueries({ queryKey: [BALANCE_SHEET.CASH] })
       toast({ title: 'Cash deleted successfully!' })
     },
     onError: (err: any) => toast(getErrorMessage(err)),
@@ -34,9 +35,9 @@ export default function DeleteCashDialog({ id }: Props) {
       title='Delete Cash'
       description='Are you sure you want to delete this cash?'
       okText='Yes, Delete'
-      okButtonProps={{ disabled: deleteCashMutation.isLoading, className: 'bg-red-500 hover:bg-red-400' }}
+      okButtonProps={{ disabled: deleteCashMutation.isPending, className: 'bg-red-500 hover:bg-red-400' }}
       cancelText='No'
-      cancelProps={{ disabled: deleteCashMutation.isLoading }}
+      cancelProps={{ disabled: deleteCashMutation.isPending }}
       onOk={() => {
         deleteCashMutation.mutate(id)
       }}

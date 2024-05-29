@@ -35,9 +35,10 @@ export default function AddOrEditAssetsCash({ trigger, asset, closeModal, isStee
     },
   })
 
-  const addCashMutation = useMutation(addCashAsset, {
+  const addCashMutation = useMutation({
+    mutationFn: addCashAsset,
     onSuccess: () => {
-      qc.invalidateQueries([BALANCE_SHEET.CASH])
+      qc.invalidateQueries({ queryKey: [BALANCE_SHEET.CASH] })
       toast({ title: 'Cash added successfully!' })
       setIsDialogOpen(false)
       closeModal?.()
@@ -45,9 +46,10 @@ export default function AddOrEditAssetsCash({ trigger, asset, closeModal, isStee
     onError: (err) => toast(getErrorMessage(err)),
   })
 
-  const editCashMutation = useMutation((dto: AddCashType) => editCashAsset(asset?.id!, dto), {
+  const editCashMutation = useMutation({
+    mutationFn: (dto: AddCashType) => editCashAsset(asset?.id!, dto),
     onSuccess: () => {
-      qc.invalidateQueries([BALANCE_SHEET.CASH])
+      qc.invalidateQueries({ queryKey: [BALANCE_SHEET.CASH] })
       toast({ title: 'Cash updated successfully!' })
       setIsDialogOpen(false)
       closeModal?.()
@@ -92,7 +94,7 @@ export default function AddOrEditAssetsCash({ trigger, asset, closeModal, isStee
 
         <DialogFooter className='gap-2 md:col-span-2'>
           <Button
-            loading={addCashMutation.isLoading || editCashMutation.isLoading}
+            loading={addCashMutation.isPending || editCashMutation.isPending}
             type='button'
             variant='outline'
             onClick={() => {
@@ -101,7 +103,7 @@ export default function AddOrEditAssetsCash({ trigger, asset, closeModal, isStee
           >
             {isSteeper ? 'Prev' : 'Cancel'}
           </Button>
-          <Button type='submit' loading={addCashMutation.isLoading || editCashMutation.isLoading}>
+          <Button type='submit' loading={addCashMutation.isPending || editCashMutation.isPending}>
             {isEdit ? 'Edit' : 'Add'}
           </Button>
         </DialogFooter>

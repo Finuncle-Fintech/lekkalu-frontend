@@ -37,18 +37,20 @@ export default function AddOrEditAssetsAccount({ trigger, asset, closeModal, isS
     },
   })
 
-  const addPhysicalAssetMutation = useMutation(addPhysicalAsset, {
+  const addPhysicalAssetMutation = useMutation({
+    mutationFn: addPhysicalAsset,
     onSuccess: () => {
-      qc.invalidateQueries([BALANCE_SHEET.ASSETS])
+      qc.invalidateQueries({ queryKey: [BALANCE_SHEET.ASSETS] })
       toast({ title: 'Asset created successfully!' })
       setIsDialogOpen(false)
     },
     onError: (err) => toast(getErrorMessage(err)),
   })
 
-  const editPhysicalAssetMutation = useMutation((dto: AddPhysicalAssetSchema) => editPhysicalAsset(asset?.id!, dto), {
+  const editPhysicalAssetMutation = useMutation({
+    mutationFn: (dto: AddPhysicalAssetSchema) => editPhysicalAsset(asset?.id!, dto),
     onSuccess: () => {
-      qc.invalidateQueries([BALANCE_SHEET.ASSETS])
+      qc.invalidateQueries({ queryKey: [BALANCE_SHEET.ASSETS] })
       toast({ title: 'Asset updated successfully!' })
       setIsDialogOpen(false)
     },
@@ -101,7 +103,7 @@ export default function AddOrEditAssetsAccount({ trigger, asset, closeModal, isS
 
         <DialogFooter className='gap-2 md:col-span-2'>
           <Button
-            loading={addPhysicalAssetMutation.isLoading || editPhysicalAssetMutation.isLoading}
+            loading={addPhysicalAssetMutation.isPending || editPhysicalAssetMutation.isPending}
             type='button'
             variant='outline'
             onClick={() => {
@@ -110,7 +112,7 @@ export default function AddOrEditAssetsAccount({ trigger, asset, closeModal, isS
           >
             {isSteeper ? 'Prev' : 'Cancel'}
           </Button>
-          <Button type='submit' loading={addPhysicalAssetMutation.isLoading || editPhysicalAssetMutation.isLoading}>
+          <Button type='submit' loading={addPhysicalAssetMutation.isPending || editPhysicalAssetMutation.isPending}>
             {isEdit ? 'Edit' : 'Add'}
           </Button>
         </DialogFooter>

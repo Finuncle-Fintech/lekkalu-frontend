@@ -16,9 +16,10 @@ export default function DeletePhysicalAssetDialog({ id }: Props) {
   const qc = useQueryClient()
   const { toast } = useToast()
 
-  const deleteAssetMutation = useMutation(deletePhysicalAsset, {
+  const deleteAssetMutation = useMutation({
+    mutationFn: deletePhysicalAsset,
     onSuccess: () => {
-      qc.invalidateQueries([BALANCE_SHEET.ASSETS])
+      qc.invalidateQueries({ queryKey: [BALANCE_SHEET.ASSETS] })
       toast({ title: 'Asset deleted successfully!' })
     },
     onError: (err: any) => toast(getErrorMessage(err)),
@@ -34,9 +35,9 @@ export default function DeletePhysicalAssetDialog({ id }: Props) {
       title='Delete Asset'
       description='Are you sure you want to delete this asset?'
       okText='Yes, Delete'
-      okButtonProps={{ disabled: deleteAssetMutation.isLoading, className: 'bg-red-500 hover:bg-red-400' }}
+      okButtonProps={{ disabled: deleteAssetMutation.isPending, className: 'bg-red-500 hover:bg-red-400' }}
       cancelText='No'
-      cancelProps={{ disabled: deleteAssetMutation.isLoading }}
+      cancelProps={{ disabled: deleteAssetMutation.isPending }}
       onOk={() => {
         deleteAssetMutation.mutate(id)
       }}

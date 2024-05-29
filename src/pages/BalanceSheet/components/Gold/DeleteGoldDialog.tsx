@@ -16,9 +16,10 @@ export default function DeleteGoldDialog({ id }: Props) {
   const qc = useQueryClient()
   const { toast } = useToast()
 
-  const deleteGoldMutation = useMutation(deleteCashAsset, {
+  const deleteGoldMutation = useMutation({
+    mutationFn: deleteCashAsset,
     onSuccess: () => {
-      qc.invalidateQueries([BALANCE_SHEET.CASH])
+      qc.invalidateQueries({ queryKey: [BALANCE_SHEET.CASH] })
       toast({ title: 'Gold deleted successfully!' })
     },
     onError: (err: any) => toast(getErrorMessage(err)),
@@ -34,9 +35,9 @@ export default function DeleteGoldDialog({ id }: Props) {
       title='Delete Cash'
       description='Are you sure you want to delete this cash?'
       okText='Yes, Delete'
-      okButtonProps={{ disabled: deleteGoldMutation.isLoading, className: 'bg-red-500 hover:bg-red-400' }}
+      okButtonProps={{ disabled: deleteGoldMutation.isPending, className: 'bg-red-500 hover:bg-red-400' }}
       cancelText='No'
-      cancelProps={{ disabled: deleteGoldMutation.isLoading }}
+      cancelProps={{ disabled: deleteGoldMutation.isPending }}
       onOk={() => {
         deleteGoldMutation.mutate(id)
       }}

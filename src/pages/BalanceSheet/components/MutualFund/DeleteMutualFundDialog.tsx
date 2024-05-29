@@ -16,9 +16,10 @@ export default function DeleteMutualFundDialog({ id }: Props) {
   const qc = useQueryClient()
   const { toast } = useToast()
 
-  const deleteTransactionMutation = useMutation(deleteSecurityTransaction, {
+  const deleteTransactionMutation = useMutation({
+    mutationFn: deleteSecurityTransaction,
     onSuccess: () => {
-      qc.invalidateQueries([BALANCE_SHEET.SECURITIES_TRANSACTIONS])
+      qc.invalidateQueries({ queryKey: [BALANCE_SHEET.SECURITIES_TRANSACTIONS] })
       toast({ title: 'Transaction deleted successfully!' })
     },
     onError: (err: any) => toast(getErrorMessage(err)),
@@ -34,9 +35,9 @@ export default function DeleteMutualFundDialog({ id }: Props) {
       title='Delete Transaction'
       description='Are you sure you want to delete this transaction?'
       okText='Yes, Delete'
-      okButtonProps={{ disabled: deleteTransactionMutation.isLoading, className: 'bg-red-500 hover:bg-red-400' }}
+      okButtonProps={{ disabled: deleteTransactionMutation.isPending, className: 'bg-red-500 hover:bg-red-400' }}
       cancelText='No'
-      cancelProps={{ disabled: deleteTransactionMutation.isLoading }}
+      cancelProps={{ disabled: deleteTransactionMutation.isPending }}
       onOk={() => {
         deleteTransactionMutation.mutate(id)
       }}

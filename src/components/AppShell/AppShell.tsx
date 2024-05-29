@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { LogOutIcon, UserIcon } from 'lucide-react'
 import { Sidebar } from './components/Sidebar'
 import MobileMenu from './components/MobileMenu'
@@ -21,6 +21,7 @@ type Props = {
 
 export default function AppShell({ children }: Props) {
   const { logout, userData } = useAuthContext()
+  const location = useLocation()
   const greeting = () => {
     const currentHour = new Date().getHours()
     if (currentHour >= 5 && currentHour < 12) {
@@ -59,9 +60,11 @@ export default function AppShell({ children }: Props) {
                 <DropdownMenuLabel>{userData?.email}</DropdownMenuLabel>
               </When>
 
-              <DropdownMenuItem className='cursor-pointer' asChild>
-                <Link to='/profile'>Profile</Link>
-              </DropdownMenuItem>
+              {location.pathname !== '/profile' && (
+                <DropdownMenuItem className='cursor-pointer' asChild>
+                  <Link to='/profile'>Profile</Link>
+                </DropdownMenuItem>
+              )}
               <DropdownMenuItem className='cursor-pointer' onClick={logout}>
                 <LogOutIcon className='mr-2 h-4 w-4' />
                 <span>Logout</span>

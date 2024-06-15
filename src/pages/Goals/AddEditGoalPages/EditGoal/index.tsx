@@ -23,14 +23,23 @@ export default function EditGoal() {
   const goalId = Number(id)
   const QUERY_NAME = `${GOALS.GOAL}-${goalId}`
 
-  const { data: goal, isLoading: isFetchingGoal } = useQuery([QUERY_NAME], () => fetchGoalDetails(goalId), {
-    onError: () => {
-      toast({ title: 'Something went wrong.' })
-    },
+  const {
+    data: goal,
+    isLoading: isFetchingGoal,
+    isError: isFetchingGoalError,
+  } = useQuery({
+    queryKey: [QUERY_NAME],
+    queryFn: () => fetchGoalDetails(goalId),
   })
-  const editGoalMutation = useMutation((dto: Partial<Goal>) => editGoal(goalId, dto), {
+
+  if (isFetchingGoalError) {
+    toast({ title: 'Something went wrong.' })
+  }
+
+  const editGoalMutation = useMutation({
+    mutationFn: (dto: Partial<Goal>) => editGoal(goalId, dto),
     onSuccess: () => {
-      queryClient.invalidateQueries([QUERY_NAME])
+      queryClient.invalidateQueries({ queryKey: [QUERY_NAME] })
       toast({ title: 'Goal edited successfully!' })
       navigate('/goals')
     },
@@ -76,7 +85,7 @@ export default function EditGoal() {
           <Skeleton className='w-20 h-[50px]' />
         </div>
       ) : (
-        <Form form={form} onSubmit={handleGoalEdit} isLoading={editGoalMutation.isLoading} isEdit />
+        <Form form={form} onSubmit={handleGoalEdit} isLoading={editGoalMutation.isPending} isEdit />
       )}
     </Page>
   )

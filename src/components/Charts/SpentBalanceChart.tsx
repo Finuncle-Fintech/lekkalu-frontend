@@ -9,7 +9,7 @@ import { fetchMonthlyExpenses } from '@/queries/expense'
 import { formatIndianMoneyNotation } from '@/utils/format-money'
 
 export const SpentBalanceChart = () => {
-  const { data, isLoading } = useQuery([EXPENSES.MONTHLY_EXPENSES], fetchMonthlyExpenses)
+  const { data, isLoading } = useQuery({ queryKey: [EXPENSES.MONTHLY_EXPENSES], queryFn: fetchMonthlyExpenses })
 
   const { preferences } = useUserPreferences()
 

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { LogOutIcon, UserIcon } from 'lucide-react'
 import { Sidebar } from './components/Sidebar'
 import MobileMenu from './components/MobileMenu'
@@ -21,6 +21,7 @@ type Props = {
 
 export default function AppShell({ children }: Props) {
   const { logout, userData } = useAuthContext()
+  const location = useLocation()
   const greeting = () => {
     const currentHour = new Date().getHours()
     if (currentHour >= 5 && currentHour < 12) {
@@ -33,46 +34,52 @@ export default function AppShell({ children }: Props) {
   }
 
   return (
-    <div className='h-screen grid grid-cols-12'>
-      <Sidebar className='hidden md:block md:col-span-2' />
-      <div className='relative col-span-12 md:col-span-10 overflow-y-auto'>
-        <div className='md:justify-end border-b sticky top-0 left-0 h-16 bg-white/50 backdrop-blur-lg w-full z-50 flex items-center justify-between px-4'>
-          <div className='text-2xl font-bold md:hidden'>finuncle</div>
-          <div className='capitalize text-[1] mr-auto max-md:hidden'>
-            <span>
-              {greeting()}{' '}
-              <span className='font-bold text-primary'>
-                {userData && (userData.first_name ? userData.first_name : userData.username)}
-              </span>
+    <>
+      <div className='md:justify-end border-b sticky top-0 left-0 h-16 bg-white/50 backdrop-blur-lg w-full z-50 flex items-center justify-between px-4'>
+        <Link className='text-center text-2xl font-bold text-primary block me-10' to='/dashboard'>
+          finuncle
+        </Link>
+        <div className='capitalize text-[1] mr-auto max-md:hidden'>
+          <span>
+            {greeting()}{' '}
+            <span className='font-bold text-primary'>
+              {userData && (userData.first_name ? userData.first_name : userData.username)}
             </span>
-          </div>
-          <div className='flex items-center gap-2'>
-            <NotificationPopover />
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button className='hidden md:block'>
-                  <UserIcon className='w-5 h-5' />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <When truthy={Boolean(userData?.email)}>
-                  <DropdownMenuLabel>{userData?.email}</DropdownMenuLabel>
-                </When>
+          </span>
+        </div>
+        <div className='flex items-center gap-2'>
+          <NotificationPopover />
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button className='hidden md:block'>
+                <UserIcon className='w-5 h-5' />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <When truthy={Boolean(userData?.email)}>
+                <DropdownMenuLabel>{userData?.email}</DropdownMenuLabel>
+              </When>
 
+              {location.pathname !== '/profile' && (
                 <DropdownMenuItem className='cursor-pointer' asChild>
                   <Link to='/profile'>Profile</Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem className='cursor-pointer' onClick={logout}>
-                  <LogOutIcon className='mr-2 h-4 w-4' />
-                  <span>Logout</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-            <MobileMenu />
-          </div>
+              )}
+              <DropdownMenuItem className='cursor-pointer' onClick={logout}>
+                <LogOutIcon className='mr-2 h-4 w-4' />
+                <span>Logout</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <MobileMenu />
         </div>
-        {children}
       </div>
-    </div>
+      <div style={{ height: 'calc(100vh - 64px)' }} className='flex border-collapse overflow-hidden'>
+        <Sidebar className='hidden md:block' />
+        <main id='layout' className='flex-1 overflow-y-auto overflow-x-hidden bg-secondary/10 pb-1'>
+          {children}
+        </main>
+      </div>
+    </>
   )
 }

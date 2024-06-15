@@ -239,13 +239,13 @@ export default function CAGRCalculator() {
             <div className='flex gap-2 border-b'>
               <div>You absolute returns: </div>
               <div className='font-medium'>
-                {result?.summary?.absoluteReturns} {preferences.currencyUnit}
+                {formatIndianMoneyNotation(result?.summary?.absoluteReturns)} {preferences.currencyUnit}
               </div>
             </div>
             <div className='flex gap-2 border-b'>
               <div>You absolute CAGR: </div>
               <div className='font-medium'>
-                {result?.summary?.absoluteCAGR} {preferences.currencyUnit}
+                {formatIndianMoneyNotation(result?.summary?.absoluteCAGR)} {preferences.currencyUnit}
               </div>
             </div>
             <div className='flex gap-2 border-b'>

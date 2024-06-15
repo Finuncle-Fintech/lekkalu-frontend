@@ -16,9 +16,10 @@ export default function DeleteGoal({ id }: Props) {
   const qc = useQueryClient()
   const { toast } = useToast()
 
-  const deleteGoalMutation = useMutation(deleteGoal, {
+  const deleteGoalMutation = useMutation({
+    mutationFn: deleteGoal,
     onSuccess: () => {
-      qc.invalidateQueries([GOALS.GOALS])
+      qc.invalidateQueries({ queryKey: [GOALS.GOALS] })
       toast({ title: 'Goal deleted successfully!' })
     },
     onError: (err: any) => toast(getErrorMessage(err)),
@@ -34,9 +35,9 @@ export default function DeleteGoal({ id }: Props) {
       title='Delete Goal'
       description='Are you sure you want to delete this goal ?'
       okText='Yes, Delete'
-      okButtonProps={{ disabled: deleteGoalMutation.isLoading, className: 'bg-red-500 hover:bg-red-400' }}
+      okButtonProps={{ disabled: deleteGoalMutation.isPending, className: 'bg-red-500 hover:bg-red-400' }}
       cancelText='No'
-      cancelProps={{ disabled: deleteGoalMutation.isLoading }}
+      cancelProps={{ disabled: deleteGoalMutation.isPending }}
       onOk={() => {
         deleteGoalMutation.mutate(id)
       }}

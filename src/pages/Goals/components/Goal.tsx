@@ -40,15 +40,19 @@ export default function Goal({
   color,
   reachable_by_days,
 }: Props) {
-  const { data: progressQuery } = useQuery([`${GOALS.PROGRESS}_${id}`], () => getGoalProgress(id))
+  const { data: progressQuery } = useQuery({
+    queryKey: [`${GOALS.PROGRESS}_${id}`],
+    queryFn: () => getGoalProgress(id),
+  })
   const qc = useQueryClient()
   const [allowRename, setAllowRename] = useState(false)
   const [goalName, setGoalName] = useState(goalTitle)
 
-  const goalMutation = useMutation((dto: Partial<GoalType>) => editGoal(id, dto), {
+  const goalMutation = useMutation({
+    mutationFn: (dto: Partial<GoalType>) => editGoal(id, dto),
     onSuccess: () => {
       setAllowRename(false)
-      qc.invalidateQueries([GOALS.GOALS])
+      qc.invalidateQueries({ queryKey: [GOALS.GOALS] })
     },
   })
 
@@ -146,7 +150,7 @@ export default function Goal({
               type='textarea'
             />
             <div className='flex gap-2'>
-              <Button onClick={handleRename} loading={goalMutation.isLoading}>
+              <Button onClick={handleRename} loading={goalMutation.isPending}>
                 Rename
               </Button>
               <Button onClick={handleRenameCancel} variant={'secondary'}>

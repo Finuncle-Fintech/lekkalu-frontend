@@ -6,6 +6,7 @@ import { IncomeStatement } from '@/types/income-statement'
 import { AddIncomeStatementSchema } from '@/schema/income-statement'
 import AddOrEditIncomeExpenseForScenario from '.'
 import DeleteIncomeExpense from './DeleteIncomeExpense'
+import { formatIndianMoneyNotation } from '@/utils/format-money'
 
 type EachIncomeForScenarioType = {
   incomeExpense: IncomeStatement
@@ -53,7 +54,7 @@ const EachIncomeExpenseForScenario = ({
         )}
       </div>
       <div className='flex flex-col items-center text-white'>
-        <p>{incomeExpense.amount}</p>
+        <p>{formatIndianMoneyNotation(incomeExpense.amount)}</p>
         <p className='mt-5'>{incomeExpense.name}</p>
       </div>
     </div>

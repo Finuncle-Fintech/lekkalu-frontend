@@ -11,7 +11,7 @@ import InputFieldsRenderer from '@/components/InputFieldsRenderer/InputFieldsRen
 import { INCOME_STATEMENT } from '@/utils/query-keys'
 import { useToast } from '@/components/ui/use-toast'
 import { Button } from '@/components/ui/button'
-import { getErrorMessage } from '@/utils/utils'
+
 import { fetchIncomeExpensesTypes, fetchIncomeSourceTypes } from '@/queries/income-statement'
 
 type Props = {
@@ -33,37 +33,46 @@ export default function AddOrEditIncomeExpense({
   const isEdit = Boolean(incomeStatement)
   const qc = useQueryClient()
   const { toast } = useToast()
-  const { data: incomeTypes } = useQuery(
-    [INCOME_STATEMENT.INCOME_TYPE],
-    type === 'INCOME' ? fetchIncomeSourceTypes : fetchIncomeExpensesTypes,
-    { enabled: !!isDialogOpen },
-  )
+  const { data: incomeTypes } = useQuery({
+    queryKey: [INCOME_STATEMENT.INCOME_TYPE],
+    queryFn: type === 'INCOME' ? fetchIncomeSourceTypes : fetchIncomeExpensesTypes,
+    enabled: !!isDialogOpen,
+  })
 
   const form = useForm<AddIncomeStatementSchema>({
     resolver: zodResolver(addIncomeStatementSchema),
     defaultValues: {
       name: incomeStatement?.name,
       amount: incomeStatement?.amount ? Number(incomeStatement.amount) : undefined,
+      type: incomeStatement?.type ? incomeStatement?.type : undefined,
     },
   })
 
-  const createMutation = useMutation(createMutationFn, {
+  const createMutation = useMutation({
+    mutationFn: createMutationFn,
     onSuccess: () => {
       form.reset()
-      qc.invalidateQueries([type === 'INCOME' ? INCOME_STATEMENT.SOURCES : INCOME_STATEMENT.IS_EXPENSES])
+      qc.invalidateQueries({ queryKey: [type === 'INCOME' ? INCOME_STATEMENT.SOURCES : INCOME_STATEMENT.IS_EXPENSES] })
       setIsDialogOpen(false)
       toast({ title: `${capitalize(type)} created successfully!` })
     },
-    onError: (err: any) => toast(getErrorMessage(err)),
+    onError: (err: any) => {
+      const message = err?.response?.status === 400 ? err?.response?.data[0] : 'Something went wrong.'
+      toast({ title: message, variant: 'destructive' })
+    },
   })
 
-  const updateMutation = useMutation((dto: AddIncomeStatementSchema) => updateMutationFn(incomeStatement?.id!, dto), {
+  const updateMutation = useMutation({
+    mutationFn: (dto: AddIncomeStatementSchema) => updateMutationFn(incomeStatement?.id!, dto),
     onSuccess: () => {
-      qc.invalidateQueries([type === 'INCOME' ? INCOME_STATEMENT.SOURCES : INCOME_STATEMENT.IS_EXPENSES])
+      qc.invalidateQueries({ queryKey: [type === 'INCOME' ? INCOME_STATEMENT.SOURCES : INCOME_STATEMENT.IS_EXPENSES] })
       setIsDialogOpen(false)
       toast({ title: `${capitalize(type)} updated successfully!` })
     },
-    onError: (err: any) => toast(getErrorMessage(err)),
+    onError: (err: any) => {
+      const message = err?.response?.status === 400 ? err?.response?.data[0] : 'Something went wrong.'
+      toast({ title: message, variant: 'destructive' })
+    },
   })
 
   const handleAddOrEdit = (values: AddIncomeStatementSchema) => {
@@ -120,7 +129,6 @@ export default function AddOrEditIncomeExpense({
 
             <DialogFooter>
               <Button
-                loading={createMutation.isLoading || updateMutation.isLoading}
                 type='button'
                 variant='outline'
                 onClick={() => {
@@ -129,7 +137,7 @@ export default function AddOrEditIncomeExpense({
               >
                 Cancel
               </Button>
-              <Button type='submit' loading={createMutation.isLoading || updateMutation.isLoading}>
+              <Button type='submit' loading={createMutation.isPending || updateMutation.isPending}>
                 {isEdit ? 'Edit' : 'Add'} {capitalize(type)}
               </Button>
             </DialogFooter>

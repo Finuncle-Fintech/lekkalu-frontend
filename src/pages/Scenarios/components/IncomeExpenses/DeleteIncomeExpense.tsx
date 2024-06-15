@@ -15,11 +15,12 @@ type Props = {
 export default function DeleteIncomeExpense({ id, deleteIncomeExpense }: Props) {
   const qc = useQueryClient()
   const { toast } = useToast()
-  const { data: username } = useQuery<string>([AUTH.CURRENT_IMAGINARY_USER])
+  const { data: username } = useQuery<string>({ queryKey: [AUTH.CURRENT_IMAGINARY_USER] })
 
-  const deleteMutation = useMutation(deleteIncomeExpense, {
+  const deleteMutation = useMutation({
+    mutationFn: deleteIncomeExpense,
     onSuccess: () => {
-      qc.invalidateQueries([`${INCOME_STATEMENT.IS_EXPENSES}-${username}`])
+      qc.invalidateQueries({ queryKey: [`${INCOME_STATEMENT.IS_EXPENSES}-${username}`] })
       toast({ title: 'Montly Income Expense deleted successfully!' })
     },
     onError: (err: any) => toast(getErrorMessage(err)),
@@ -35,9 +36,9 @@ export default function DeleteIncomeExpense({ id, deleteIncomeExpense }: Props) 
       title='Delete Monthly Expense'
       description='Are you sure you want to delete this Monthly Expense ?'
       okText='Yes, Delete'
-      okButtonProps={{ disabled: deleteMutation.isLoading, className: 'bg-red-500 hover:bg-red-400' }}
+      okButtonProps={{ disabled: deleteMutation.isPending, className: 'bg-red-500 hover:bg-red-400' }}
       cancelText='No'
-      cancelProps={{ disabled: deleteMutation.isLoading }}
+      cancelProps={{ disabled: deleteMutation.isPending }}
       onOk={() => {
         deleteMutation.mutate(id)
       }}

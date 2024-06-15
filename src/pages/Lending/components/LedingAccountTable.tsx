@@ -69,7 +69,7 @@ const ClickableTableRow = ({
 }
 export default function LedingAccountTable() {
   const [activeTab, setActiveTab] = React.useState<number[]>([])
-  const { data, isFetching } = useQuery([LENDING.ACCOUNTS], fetchLendingAccounts)
+  const { data, isFetching } = useQuery({ queryKey: [LENDING.ACCOUNTS], queryFn: fetchLendingAccounts })
 
   const handleSetActiveTab = useCallback((deps: number) => {
     setActiveTab((prevActiveTab) => {

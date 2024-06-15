@@ -12,6 +12,10 @@ jest.mock('axios', () => ({
   delete: jest.fn(),
   create: jest.fn(),
 }))
+// Mock ApexCharts
+jest.mock('react-apexcharts', () => ({ __esModule: true, default: () => <div /> }))
+
+// Mock ResizeObserver
 global.ResizeObserver = class ResizeObserver {
   observe() {}
   unobserve() {}

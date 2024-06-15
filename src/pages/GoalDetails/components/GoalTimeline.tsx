@@ -54,7 +54,9 @@ const roundBorder = (index: number) => {
 export default function GoalTimeline({ className, style, goalId, target }: GoalTimelineProps) {
   const [viewAs, setViewAs] = useState<ChartView>('day')
   const { preferences } = useUserPreferences()
-  const timelineQuery = useQuery([GOALS.TIMELINE, goalId], () => fetchGoalTimeline(goalId), {
+  const timelineQuery = useQuery({
+    queryKey: [GOALS.TIMELINE, goalId],
+    queryFn: () => fetchGoalTimeline(goalId),
     select: (data) => {
       return data.map((each) => ({ ...each, kpi_value: Number(each.kpi_value.toFixed(2)), target }))
     },

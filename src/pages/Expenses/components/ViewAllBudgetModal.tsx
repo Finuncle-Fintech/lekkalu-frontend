@@ -12,6 +12,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import When from '@/components/When/When'
 import { getErrorMessage } from '@/utils/utils'
 import { toast } from '@/components/ui/use-toast'
+import { formatIndianMoneyNotation } from '@/utils/format-money'
 
 dayjs.extend(customParseFormat)
 
@@ -19,10 +20,15 @@ export default function ViewAllBudgetModal() {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const qc = useQueryClient()
 
-  const { data, isFetching } = useQuery([BUDGET_QUERY_KEYS.BUDGETS], fetchBudgets, { enabled: !!open })
-  const deleteBudgetMutation = useMutation(deleteBudget, {
+  const { data, isFetching } = useQuery({
+    queryKey: [BUDGET_QUERY_KEYS.BUDGETS],
+    queryFn: fetchBudgets,
+    enabled: !!open,
+  })
+  const deleteBudgetMutation = useMutation({
+    mutationFn: deleteBudget,
     onSuccess: () => {
-      qc.invalidateQueries([BUDGET_QUERY_KEYS.BUDGETS])
+      qc.invalidateQueries({ queryKey: [BUDGET_QUERY_KEYS.BUDGETS] })
     },
     onError: (err: any) => toast(getErrorMessage(err)),
   })
@@ -37,7 +43,7 @@ export default function ViewAllBudgetModal() {
       >
         <Button variant='outline'>View All</Button>
       </DialogTrigger>
-      <DialogContent className='max-h-[600px] overflow-y-auto'>
+      <DialogContent>
         <DialogHeader>
           <DialogTitle>Your list of budgets</DialogTitle>
         </DialogHeader>
@@ -61,9 +67,9 @@ export default function ViewAllBudgetModal() {
             {data?.map((budget) => (
               <TableRow key={budget.id}>
                 <TableCell>{dayjs(budget.month, 'YYYY-MM-DD').format('MMMM YYYY')}</TableCell>
-                <TableCell>{budget.limit}</TableCell>
+                <TableCell>{formatIndianMoneyNotation(budget.limit)}</TableCell>
                 <TableCell className='flex items-center gap-2'>
-                  <Button loading={deleteBudgetMutation.isLoading} variant='ghost' size='sm'>
+                  <Button loading={deleteBudgetMutation.isPending} variant='ghost' size='sm'>
                     <TrashIcon
                       className='w-4 h-4 text-red-500'
                       onClick={() => {

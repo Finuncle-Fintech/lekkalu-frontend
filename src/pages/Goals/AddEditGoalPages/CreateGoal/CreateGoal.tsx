@@ -21,7 +21,8 @@ export default function CreateGoal() {
     },
   })
 
-  const createGoalMutation = useMutation(addGoal, {
+  const createGoalMutation = useMutation({
+    mutationFn: addGoal,
     onSuccess: () => {
       toast({ title: 'Goal created successfully!' })
       navigate('/goals')
@@ -46,7 +47,7 @@ export default function CreateGoal() {
         <ArrowLeftIcon className='w-4 h-4' />
         Back to Goals
       </Link>
-      <Form form={form} onSubmit={handleGoalCreate} isLoading={createGoalMutation.isLoading} />
+      <Form form={form} onSubmit={handleGoalCreate} isLoading={createGoalMutation.isPending} />
     </Page>
   )
 }

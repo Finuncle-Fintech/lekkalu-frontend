@@ -1,0 +1,14 @@
+.comparison-animation-parent-div {
+    animation: animate 1s infinite ease-in-out;
+}
+
+@keyframes animate {
+    0% {
+        /* background-color: #dfe6e9; */
+        background: linear-gradient(#dfe6e9, #dfe6e9f1);
+    }
+
+    100% {
+        background: linear-gradient(#dfe6e9, #dfe6e9e5);
+    }
+}

@@ -24,7 +24,8 @@ export default function FeedbackForm() {
     resolver: zodResolver(feedbackSchema),
   })
 
-  const feedbackMutation = useMutation(submitFeedback, {
+  const feedbackMutation = useMutation({
+    mutationFn: submitFeedback,
     onSuccess: () => {
       form.reset()
       setStatus('SUBMITTED')
@@ -106,7 +107,7 @@ export default function FeedbackForm() {
 
               <DialogFooter className='gap-2'>
                 <Button
-                  loading={feedbackMutation.isLoading}
+                  loading={feedbackMutation.isPending}
                   type='button'
                   variant='outline'
                   onClick={() => {
@@ -115,7 +116,7 @@ export default function FeedbackForm() {
                 >
                   Cancel
                 </Button>
-                <Button type='submit' loading={feedbackMutation.isLoading}>
+                <Button type='submit' loading={feedbackMutation.isPending}>
                   Submit
                 </Button>
               </DialogFooter>

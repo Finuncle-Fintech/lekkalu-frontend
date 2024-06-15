@@ -6,15 +6,18 @@ import { BALANCE_SHEET, GOALS } from '@/utils/query-keys'
 
 const useGetSelectOptionsForGoal = () => {
   const [isFetchingOptions, setIsFetchingOptions] = useState(true)
-  const { data: incomeExpenses, isFetched: hasFetchedIncomeExpenses } = useQuery(
-    [BALANCE_SHEET.INCOME_EXPENSES],
-    fetchIncomeExpenses,
-  )
-  const { data: goalProportionality, isFetched: hasFetchedGoalProportionality } = useQuery(
-    [GOALS.GOAL_PROPORTIONALITY_TYPES],
-    fetchGoalProportionalityTypes,
-  )
-  const { data: getTargetKpi, isFetched: hasFetchedTargetKpi } = useQuery([GOALS.KPI_TYPES], fetchKPITypes)
+  const { data: incomeExpenses, isFetched: hasFetchedIncomeExpenses } = useQuery({
+    queryKey: [BALANCE_SHEET.INCOME_EXPENSES],
+    queryFn: fetchIncomeExpenses,
+  })
+  const { data: goalProportionality, isFetched: hasFetchedGoalProportionality } = useQuery({
+    queryKey: [GOALS.GOAL_PROPORTIONALITY_TYPES],
+    queryFn: fetchGoalProportionalityTypes,
+  })
+  const { data: getTargetKpi, isFetched: hasFetchedTargetKpi } = useQuery({
+    queryKey: [GOALS.KPI_TYPES],
+    queryFn: fetchKPITypes,
+  })
 
   useEffect(() => {
     if (hasFetchedIncomeExpenses && hasFetchedGoalProportionality && hasFetchedTargetKpi) {

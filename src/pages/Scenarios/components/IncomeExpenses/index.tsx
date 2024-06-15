@@ -33,12 +33,12 @@ export default function AddOrEditIncomeExpenseForScenario({
   const isEdit = Boolean(incomeStatement)
   const qc = useQueryClient()
   const { toast } = useToast()
-  const { data: username } = useQuery([AUTH.CURRENT_IMAGINARY_USER])
-  const { data: incomeTypes } = useQuery(
-    [INCOME_STATEMENT.INCOME_TYPE],
-    type === 'INCOME' ? fetchIncomeSourceTypes : fetchIncomeExpensesTypes,
-    { enabled: !!isDialogOpen },
-  )
+  const { data: username } = useQuery({ queryKey: [AUTH.CURRENT_IMAGINARY_USER] })
+  const { data: incomeTypes } = useQuery({
+    queryKey: [INCOME_STATEMENT.INCOME_TYPE],
+    queryFn: type === 'INCOME' ? fetchIncomeSourceTypes : fetchIncomeExpensesTypes,
+    enabled: !!isDialogOpen,
+  })
 
   const form = useForm<AddIncomeStatementSchema>({
     resolver: zodResolver(addIncomeStatementSchema),
@@ -49,23 +49,29 @@ export default function AddOrEditIncomeExpenseForScenario({
     },
   })
 
-  const createMutation = useMutation(createMutationFn, {
+  const createMutation = useMutation({
+    mutationFn: createMutationFn,
     onSuccess: () => {
       form.reset()
-      qc.invalidateQueries([
-        type === 'INCOME' ? `${INCOME_STATEMENT.SOURCES}-${username}` : `${INCOME_STATEMENT.IS_EXPENSES}-${username}`,
-      ])
+      qc.invalidateQueries({
+        queryKey: [
+          type === 'INCOME' ? `${INCOME_STATEMENT.SOURCES}-${username}` : `${INCOME_STATEMENT.IS_EXPENSES}-${username}`,
+        ],
+      })
       setIsDialogOpen(false)
       toast({ title: `${capitalize(type)} created successfully!` })
     },
     onError: (err: any) => toast(getErrorMessage(err)),
   })
 
-  const updateMutation = useMutation((dto: AddIncomeStatementSchema) => updateMutationFn(incomeStatement?.id!, dto), {
+  const updateMutation = useMutation({
+    mutationFn: (dto: AddIncomeStatementSchema) => updateMutationFn(incomeStatement?.id!, dto),
     onSuccess: () => {
-      qc.invalidateQueries([
-        type === 'INCOME' ? `${INCOME_STATEMENT.SOURCES}-${username}` : `${INCOME_STATEMENT.IS_EXPENSES}-${username}`,
-      ])
+      qc.invalidateQueries({
+        queryKey: [
+          type === 'INCOME' ? `${INCOME_STATEMENT.SOURCES}-${username}` : `${INCOME_STATEMENT.IS_EXPENSES}-${username}`,
+        ],
+      })
       setIsDialogOpen(false)
       toast({ title: `${capitalize(type)} updated successfully!` })
     },
@@ -126,7 +132,7 @@ export default function AddOrEditIncomeExpenseForScenario({
 
             <DialogFooter>
               <Button
-                loading={createMutation.isLoading || updateMutation.isLoading}
+                loading={createMutation.isPending || updateMutation.isPending}
                 type='button'
                 variant='outline'
                 onClick={() => {
@@ -135,7 +141,7 @@ export default function AddOrEditIncomeExpenseForScenario({
               >
                 Cancel
               </Button>
-              <Button type='submit' loading={createMutation.isLoading || updateMutation.isLoading}>
+              <Button type='submit' loading={createMutation.isPending || updateMutation.isPending}>
                 {isEdit ? 'Edit' : 'Add'} {capitalize(type)}
               </Button>
             </DialogFooter>

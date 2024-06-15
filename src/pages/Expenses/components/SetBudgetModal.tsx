@@ -27,11 +27,16 @@ export default function SetBudgetModal() {
     },
   })
 
-  const { data, isFetching } = useQuery([BUDGET_QUERY_KEYS.BUDGETS], fetchBudgets, { enabled: !!open })
+  const { data, isFetching } = useQuery({
+    queryKey: [BUDGET_QUERY_KEYS.BUDGETS],
+    queryFn: fetchBudgets,
+    enabled: !!open,
+  })
 
-  const setBudgetMutation = useMutation(setBudget, {
+  const setBudgetMutation = useMutation({
+    mutationFn: setBudget,
     onSuccess: () => {
-      qc.invalidateQueries([BUDGET_QUERY_KEYS.BUDGETS])
+      qc.invalidateQueries({ queryKey: [BUDGET_QUERY_KEYS.BUDGETS] })
       form.reset()
       setIsDialogOpen(false)
       toast({ title: 'Successfully set the budget' })
@@ -49,16 +54,16 @@ export default function SetBudgetModal() {
       }
     })
     !monthAlreadyPresent &&
-    setBudgetMutation.mutate({
-      ...values,
-      month: dayjs(`${values.year}-${values.month}-01`).format(SERVER_DATE_FORMAT),
-      limit: Number(values.limit.toFixed(2)),
-    })
+      setBudgetMutation.mutate({
+        ...values,
+        month: dayjs(`${values.year}-${values.month}-01`).format(SERVER_DATE_FORMAT),
+        limit: Number(values.limit.toFixed(2)),
+      })
   }
 
   interface YearOption {
-    id: string;
-    label: string;
+    id: string
+    label: string
   }
 
   const currentYear = new Date().getFullYear()
@@ -68,8 +73,8 @@ export default function SetBudgetModal() {
   }))
 
   interface MonthOption {
-    id: string;
-    label: string;
+    id: string
+    label: string
   }
 
   const monthOptions: MonthOption[] = [
@@ -97,14 +102,14 @@ export default function SetBudgetModal() {
       >
         <Button>Set Budget</Button>
       </DialogTrigger>
-      <DialogContent className="m-4">
+      <DialogContent className='m-4'>
         <DialogHeader>
           <DialogTitle>Set Budget</DialogTitle>
         </DialogHeader>
 
         <When truthy={!isFetching}>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(handleCreateBudget)} className="space-y-2">
+            <form onSubmit={form.handleSubmit(handleCreateBudget)} className='space-y-2'>
               <InputFieldsRenderer
                 control={form.control}
                 inputs={[
@@ -128,17 +133,17 @@ export default function SetBudgetModal() {
                 ]}
               />
 
-              <DialogFooter className="gap-2">
-                <Button type="submit" className="flex-grow" disabled={setBudgetMutation.isLoading}>
+              <DialogFooter className='gap-2'>
+                <Button type='submit' className='flex-grow' disabled={setBudgetMutation.isPending}>
                   Set
                 </Button>
                 <Button
-                  variant="outline"
-                  className="flex-grow"
+                  variant='outline'
+                  className='flex-grow'
                   onClick={() => {
                     setIsDialogOpen(false)
                   }}
-                  disabled={setBudgetMutation.isLoading}
+                  disabled={setBudgetMutation.isPending}
                 >
                   Cancel
                 </Button>

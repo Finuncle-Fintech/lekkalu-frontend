@@ -17,9 +17,10 @@ export default function DeleteScenario({ id }: Props) {
   const { toast } = useToast()
   const navigate = useNavigate()
 
-  const deleteGoalMutation = useMutation(deleteScenario, {
+  const deleteGoalMutation = useMutation({
+    mutationFn: deleteScenario,
     onSuccess: () => {
-      qc.invalidateQueries([SCENARIOS.SCENARIOS])
+      qc.invalidateQueries({ queryKey: [SCENARIOS.SCENARIOS] })
       toast({ title: 'Scenario deleted successfully!' })
       navigate('/scenarios')
     },

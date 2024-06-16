@@ -28,6 +28,23 @@ jobs:
       - name: Use docker buildx drive
         uses: docker/setup-buildx-action@v2
 
+      - name: Extract Git Tag
+        id: git_tag
+        run: echo "TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+        continue-on-error: true
+
+      - name: Set Docker Tags
+        id: set_tags
+        run: |
+          if [ -z "${{ env.TAG }}" ]; then
+            echo "TAGS=${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_TAG }}:latest" >> $GITHUB_ENV
+          else
+            echo "TAGS=${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_TAG }}:latest,${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_TAG }}:${{ env.TAG }}" >> $GITHUB_ENV
+          fi
+
+      - name: Debugging - Print Docker Tags
+        run: echo "The Docker tags are ${{ env.TAGS }}"
+
       - name: Build and push images
         uses: docker/build-push-action@v4
         with:

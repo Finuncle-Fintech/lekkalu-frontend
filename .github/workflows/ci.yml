@@ -35,6 +35,8 @@ jobs:
           file: Dockerfile
           pull: true
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_TAG }}:latest
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_TAG }}:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_TAG }}:${{ env.TAG }}
           cache-from: type=gha
           cache-to: type=gha,mode=max

@@ -28,10 +28,14 @@ jobs:
       - name: Use docker buildx drive
         uses: docker/setup-buildx-action@v2
 
-      - name: Extract Git Tag
+      - name: Determine Git Tag
         id: git_tag
-        run: echo "TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
-        continue-on-error: true
+        run: |
+          if [[ $GITHUB_REF == refs/tags/* ]]; then
+            echo "TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+          else
+            echo "TAG=" >> $GITHUB_ENV
+          fi
 
       - name: Set Docker Tags
         id: set_tags

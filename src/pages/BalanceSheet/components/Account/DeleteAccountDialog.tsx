@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { BALANCE_SHEET } from '@/utils/query-keys'
 import { useToast } from '@/components/ui/use-toast'
 import { getErrorMessage } from '@/utils/utils'
-import { deleteCashAsset } from '@/queries/balance-sheet'
+import { deleteAccountAsset } from '@/queries/balance-sheet'
 
 type Props = {
   id: number
@@ -16,11 +16,11 @@ export default function DeleteAccountDialog({ id }: Props) {
   const qc = useQueryClient()
   const { toast } = useToast()
 
-  const deleteGoldMutation = useMutation({
-    mutationFn: deleteCashAsset,
+  const deleteAccountMutation = useMutation({
+    mutationFn: deleteAccountAsset,
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: [BALANCE_SHEET.CASH] })
-      toast({ title: 'Gold deleted successfully!' })
+      qc.invalidateQueries({ queryKey: [BALANCE_SHEET.ACCOUNT] })
+      toast({ title: 'Account deleted successfully!' })
     },
     onError: (err: any) => toast(getErrorMessage(err)),
   })
@@ -32,14 +32,14 @@ export default function DeleteAccountDialog({ id }: Props) {
           <TrashIcon className='w-4 h-4 text-red-500' />
         </Button>
       }
-      title='Delete Cash'
-      description='Are you sure you want to delete this cash?'
+      title='Delete Account'
+      description='Are you sure you want to delete this account?'
       okText='Yes, Delete'
-      okButtonProps={{ disabled: deleteGoldMutation.isPending, className: 'bg-red-500 hover:bg-red-400' }}
+      okButtonProps={{ disabled: deleteAccountMutation.isPending, className: 'bg-red-500 hover:bg-red-400' }}
       cancelText='No'
-      cancelProps={{ disabled: deleteGoldMutation.isPending }}
+      cancelProps={{ disabled: deleteAccountMutation.isPending }}
       onOk={() => {
-        deleteGoldMutation.mutate(id)
+        deleteAccountMutation.mutate(id)
       }}
     />
   )

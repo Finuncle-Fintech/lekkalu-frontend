@@ -61,9 +61,9 @@ export type CashAssets = {
 
 // ** Account
 export type AddAccountSchema = {
-  account_name: string
+  name: string
   amount: number
-  rate_return: number
+  // rate_return: number
 }
 export type AccountSchema = {
   name: string

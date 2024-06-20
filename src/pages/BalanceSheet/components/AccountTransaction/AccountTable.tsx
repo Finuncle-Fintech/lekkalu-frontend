@@ -4,7 +4,7 @@ import { LoaderIcon, PencilIcon } from 'lucide-react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Button } from '@/components/ui/button'
 import When from '@/components/When/When'
-import AddOrEditAssetsAccount from './AddOrEditAssetsAccount'
+import AddOrEditAssetsAccount from './AddOrEditAssetsAccountTransaction'
 import { AccountSchema } from '@/types/balance-sheet'
 import DeleteAccountDialog from './DeleteAccountDialog'
 

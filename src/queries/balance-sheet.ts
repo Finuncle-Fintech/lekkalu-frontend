@@ -12,6 +12,7 @@ import {
   AssetsPropertiesType,
   AddAssetsPropertiesType,
   AccountSchema,
+  AddAccountSchema,
 } from '@/types/balance-sheet'
 import { v1ApiClient, v2ApiClient } from '@/utils/client'
 
@@ -75,6 +76,21 @@ export async function fetchTransactionsForLoan(loan_id: number) {
 // ** Account Assets
 export async function fetchAccountAssets() {
   const { data } = await v1ApiClient.get<AccountSchema[]>('accounts/')
+  return data
+}
+
+export async function addAccountAsset(dto: AddAccountSchema) {
+  const { data } = await v1ApiClient.post<AccountSchema[]>('accounts/', dto)
+  return data
+}
+
+export async function deleteAccountAsset(id: number) {
+  const { data } = await v1ApiClient.delete<{ message: string }>(`/accounts/${id}`)
+  return data
+}
+
+export async function editAccountAsset(id: string, dto: AccountSchema) {
+  const { data } = await v1ApiClient.put(`accounts/${id}`, dto)
   return data
 }
 

@@ -1,5 +1,6 @@
-import React, { Dispatch, SetStateAction, cloneElement, useMemo, useState } from 'react'
+import React, { Dispatch, SetStateAction, cloneElement, useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { addPhysicalAssetTypeSchema } from '@/schema/balance-sheet'
 import InputFieldsRenderer, { InputField } from '@/components/InputFieldsRenderer/InputFieldsRenderer'
@@ -19,6 +20,7 @@ export default function AddOrEditAssetDialog({ trigger, asset }: Props) {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const isEdit = Boolean(asset)
   const [selectedType, setSelectedType] = useState<AssetsType>('cash')
+  const navigate = useNavigate()
 
   const AppropriateAssetDialog = useMemo(() => {
     return getAppropriateAssetsTypeDialog(selectedType)
@@ -28,7 +30,13 @@ export default function AddOrEditAssetDialog({ trigger, asset }: Props) {
   const stepsData = [{ label: 'Select Type' }, { label: 'Add Form' }] as StepItem[]
 
   return (
-    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+    <Dialog
+      open={isDialogOpen}
+      onOpenChange={(e) => {
+        setIsDialogOpen(e)
+        navigate('/balance-sheet')
+      }}
+    >
       <DialogTrigger
         asChild
         onClick={() => {
@@ -52,7 +60,13 @@ export default function AddOrEditAssetDialog({ trigger, asset }: Props) {
             }
             return (
               <Step key={stepProps.label} {...stepProps}>
-                <AppropriateAssetDialog isSteeper closeModal={() => setIsDialogOpen(false)} />
+                <AppropriateAssetDialog
+                  isSteeper
+                  closeModal={() => {
+                    setIsDialogOpen(false)
+                    navigate('/balance-sheet')
+                  }}
+                />
               </Step>
             )
           })}
@@ -64,7 +78,8 @@ export default function AddOrEditAssetDialog({ trigger, asset }: Props) {
 function SelectTypeForm({ setSelectedType }: { setSelectedType: Dispatch<SetStateAction<AssetsType>> }) {
   const { nextStep, prevStep, resetSteps, isDisabledStep, hasCompletedAllSteps, isLastStep, isOptionalStep } =
     useStepper()
-
+  const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
   const form = useForm<AddPhysicalAssetTypeSchema>({
     resolver: zodResolver(addPhysicalAssetTypeSchema),
     defaultValues: {
@@ -86,7 +101,14 @@ function SelectTypeForm({ setSelectedType }: { setSelectedType: Dispatch<SetStat
   function onSubmit(data: AddPhysicalAssetTypeSchema) {
     setSelectedType(data.type)
     nextStep()
+    navigate(`?for=${data.type}`)
   }
+
+  useEffect(() => {
+    if (searchParams.get('for')) {
+      form.reset({ type: searchParams.get('for') as AssetsType })
+    }
+  }, [searchParams, form])
 
   return (
     <Form {...form}>

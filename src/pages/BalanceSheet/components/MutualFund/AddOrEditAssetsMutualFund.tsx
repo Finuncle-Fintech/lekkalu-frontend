@@ -47,14 +47,14 @@ export default function AddOrEditAssetsMutualFund({ trigger, asset, closeModal, 
     },
   })
 
-  const { data: mutualFunds, isSuccess: isMutualFundsSuccess } = useQuery({
+  const { data: mutualFunds, status: isMutualFundsSuccess } = useQuery({
     queryKey: [BALANCE_SHEET.MUTUAL_FUNDS],
     queryFn: fetchMutualFunds,
     enabled: isDialogOpen || isSteeper,
   })
 
   useEffect(() => {
-    if (isMutualFundsSuccess) {
+    if (isMutualFundsSuccess === 'success') {
       const fund = mutualFunds.find((fund) => fund.id === asset?.security_object_id)
       form.setValue('name', fund?.id?.toString() as any)
     }
@@ -66,12 +66,13 @@ export default function AddOrEditAssetsMutualFund({ trigger, asset, closeModal, 
     enabled: !!form.watch('name'),
   })
 
+  console.log({ name: form.watch('name'), expected_return: form.watch('expected_return') })
+
   useEffect(() => {
     if (isAssetPropertiesSuccess) {
       form.setValue('expected_return', Number(assetProperties?.expected_rate_of_return))
     }
   }, [isAssetPropertiesSuccess, assetProperties, form])
-
   const mutualFundsOptions = useMemo(() => {
     return (
       mutualFunds?.map((acc) => ({
@@ -109,9 +110,10 @@ export default function AddOrEditAssetsMutualFund({ trigger, asset, closeModal, 
   })
 
   const handleAddOrEditMutualFundAsset = (values: AddMutualFundType) => {
-    const { quantity, expected_return, invested_amount, purchase_date } = values
+    const { quantity, invested_amount, purchase_date } = values
     const fund = mutualFunds?.find((fund) => fund.id?.toString() === form.getValues('name'))
     const expectedRate = parseFloat(assetProperties?.expected_rate_of_return || '0')
+    const expected_return = form.getValues('expected_return')
     const payLoad = {
       type: 'Buy',
       value: invested_amount,

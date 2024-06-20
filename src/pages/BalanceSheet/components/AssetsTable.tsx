@@ -17,6 +17,7 @@ import {
 } from '@/queries/balance-sheet'
 import MutualFundTable from './MutualFund/MutualFundTable'
 import AccountTable from './Account/AccountTable'
+import AddOrEditAssetsAccountTransaction from './AccountTransaction/AddOrEditAssetsAccountTransaction'
 
 export default function AssetsTable() {
   const cashQueryData = useQuery({ queryKey: [BALANCE_SHEET.CASH], queryFn: fetchCashAsset })
@@ -30,7 +31,16 @@ export default function AssetsTable() {
 
   return (
     <div className='space-y-2'>
-      <div className='flex justify-end'>
+      <div className='flex gap-3 justify-end'>
+        <AddOrEditAssetsAccountTransaction
+          trigger={
+            <Button>
+              <PlusIcon className='mr-2 w-4 h-4' />
+              <span>Account Transaction</span>
+            </Button>
+          }
+        />
+
         <AddOrEditAssetDialog
           trigger={
             <Button>

@@ -10,7 +10,7 @@ import { BALANCE_SHEET } from '@/utils/query-keys'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Form } from '@/components/ui/form'
-import { AddPhysicalAssetSchema, AddAccountSchema, AccountSchema } from '@/types/balance-sheet'
+import { AddAccountSchema, AccountSchema } from '@/types/balance-sheet'
 import { getErrorMessage } from '@/utils/utils'
 import { useStepper } from '@/components/ui/stepper'
 
@@ -30,7 +30,7 @@ export default function AddOrEditAssetsAccount({ trigger, asset, closeModal, isS
   const form = useForm<AddAccountSchema>({
     resolver: zodResolver(addAccountSchema),
     defaultValues: {
-      amount: Number(asset?.balance) ?? undefined,
+      balance: Number(asset?.balance) ?? undefined,
       name: asset?.name ?? '',
       // rate_return: undefined,
     },
@@ -48,7 +48,7 @@ export default function AddOrEditAssetsAccount({ trigger, asset, closeModal, isS
   })
 
   const editAccountAssetMutation = useMutation({
-    mutationFn: (dto: AccountSchema) => editAccountAsset(asset?.id!, dto),
+    mutationFn: (dto: AddAccountSchema) => editAccountAsset(asset?.id!, dto),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: [BALANCE_SHEET.ACCOUNT] })
       toast({ title: 'Asset updated successfully!' })
@@ -59,8 +59,12 @@ export default function AddOrEditAssetsAccount({ trigger, asset, closeModal, isS
   })
 
   const handleAddOrEditAccountAsset = (values: AddAccountSchema) => {
-    addAccountAssetMutation.mutate(values)
-    // closeModal?.()
+    if (isEdit) {
+      editAccountAssetMutation.mutate(values)
+    } else {
+      addAccountAssetMutation.mutate(values)
+    }
+    closeModal?.()
   }
 
   const assetsInputOptionsCash = useMemo(
@@ -74,7 +78,7 @@ export default function AddOrEditAssetsAccount({ trigger, asset, closeModal, isS
             'Enter the name of the account. This could be a savings account, checking account, or any other type of financial account.',
         },
         {
-          id: 'amount',
+          id: 'balance',
           label: 'Amount',
           type: 'number',
           helpText: 'Enter the total amount of money currently held in the account.',

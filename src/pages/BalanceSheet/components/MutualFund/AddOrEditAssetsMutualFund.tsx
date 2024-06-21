@@ -66,8 +66,6 @@ export default function AddOrEditAssetsMutualFund({ trigger, asset, closeModal, 
     enabled: !!form.watch('name'),
   })
 
-  console.log({ name: form.watch('name'), expected_return: form.watch('expected_return') })
-
   useEffect(() => {
     if (isAssetPropertiesSuccess) {
       form.setValue('expected_return', Number(assetProperties?.expected_rate_of_return))

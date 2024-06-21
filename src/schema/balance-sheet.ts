@@ -76,7 +76,7 @@ export const addCashSchema = z.object({
 
 // ** Account
 export const addAccountSchema = z.object({
-  amount: z.number({ required_error: 'Amount is required!' }),
+  balance: z.number({ required_error: 'Balance is required!' }),
   name: z.string().min(1, 'Account name is required!').trim(),
   // rate_return: z.number({ required_error: 'Rate return is required!' }),
 })

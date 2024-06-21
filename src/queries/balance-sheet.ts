@@ -89,7 +89,7 @@ export async function deleteAccountAsset(id: number) {
   return data
 }
 
-export async function editAccountAsset(id: string, dto: AccountSchema) {
+export async function editAccountAsset(id: string, dto: AddAccountSchema) {
   const { data } = await v1ApiClient.put(`accounts/${id}`, dto)
   return data
 }

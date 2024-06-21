@@ -14,9 +14,7 @@ export function useAuth() {
   const qc = useQueryClient()
   const { toast } = useToast()
   const navigate = useNavigate()
-  const { mutate: fetchUserData, data: userData } = useMutation({
-    mutationFn: fetchUser,
-  })
+  const { data: userData, refetch: fetchUserData } = useQuery({ queryKey: [AUTH.USER], queryFn: fetchUser })
 
   const [isOpen, setIsOpen] = useState<boolean>(() => {
     const storedIsOpen = localStorage.getItem('isOpen')

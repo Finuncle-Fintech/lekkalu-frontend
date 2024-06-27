@@ -22,7 +22,7 @@ const INITIAL_GOAL_STATUS: GoalStatus = {
 }
 
 export default function Goals() {
-  const { data, isLoading, isFetching } = useQuery({ queryKey: [GOALS.GOALS], queryFn: fetchGoals })
+  const { data, isLoading, isFetching } = useQuery({ queryKey: [GOALS.GOALS], queryFn: fetchGoals, staleTime: 0 })
   const [goalStatus, setGoalStatus] = useState<GoalStatus>(INITIAL_GOAL_STATUS)
 
   useEffect(() => {

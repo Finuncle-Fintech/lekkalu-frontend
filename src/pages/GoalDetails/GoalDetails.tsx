@@ -38,7 +38,7 @@ export default function GoalDetails() {
     isLoading,
     isSuccess: goalDetailFetchedSuccess,
   } = useQuery({
-    queryKey: [GOALS.DETAILS, Number(id)],
+    queryKey: [`${GOALS.DETAILS}-${id}`],
     queryFn: () => fetchGoalDetails(Number(id)),
     select: (data) => {
       return {
@@ -63,7 +63,7 @@ export default function GoalDetails() {
     mutationFn: (dto: Partial<GoalType>) => editGoal(Number(id), dto),
     onSuccess: () => {
       toast({ title: 'Goal edited successfully!', variant: 'default' })
-      qc.invalidateQueries({ queryKey: [GOALS.DETAILS, Number(id)] })
+      qc.invalidateQueries({ queryKey: [`${GOALS.DETAILS}-${id}`] })
     },
     onError: () => {
       setTarget(data?.target_value)
@@ -226,6 +226,7 @@ export default function GoalDetails() {
               value={source}
               onValueChange={(value) => {
                 const target_contribution_source = value === 'N/A' ? null : Number(getTargetId(value))
+                setSource(value)
                 goalMutation.mutate({ target_contribution_source })
               }}
             >

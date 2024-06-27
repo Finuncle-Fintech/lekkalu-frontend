@@ -12,7 +12,7 @@ import Form from '@/pages/Goals/AddEditGoalPages/components/Form'
 export default function EditGoal({ goal, goalId, setIsDialogOpen }: any) {
   const { toast } = useToast()
   const queryClient = useQueryClient()
-  const QUERY_NAME = `${GOALS.GOAL}-${goalId}`
+  const QUERY_NAME = `${GOALS.GOALS}`
 
   const editGoalMutation = useMutation({ mutationFn: (dto: Partial<Goal>) => editGoal(goalId, dto) })
 

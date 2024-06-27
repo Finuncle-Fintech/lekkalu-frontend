@@ -26,7 +26,7 @@ export default function CreateGoal({ setIsDialogOpen }: CreateGoalType) {
   const createGoalMutation = useMutation({
     mutationFn: addGoal,
     onSuccess: () => {
-      queryClient.invalidateQueries([GOALS.GOALS])
+      queryClient.invalidateQueries({ queryKey: [GOALS.GOALS] })
       toast({ title: 'Goal created successfully!' })
       setIsDialogOpen(false)
     },

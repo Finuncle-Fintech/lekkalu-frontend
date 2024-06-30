@@ -60,17 +60,20 @@ export default function AddOrEditAssetsMutualFund({ trigger, asset, closeModal, 
     }
   }, [isMutualFundsSuccess, mutualFunds, asset?.security_object_id, form])
 
-  const { data: assetProperties, isSuccess: isAssetPropertiesSuccess } = useQuery({
+  const { data: assetProperties, status: isAssetPropertiesSuccess } = useQuery({
     queryKey: [BALANCE_SHEET.ASSETS_PROPERTIES],
     queryFn: () => fetchAssetsPropertiesById(asset ? asset?.security_object_id : Number(form.watch('name'))),
     enabled: !!form.watch('name'),
   })
 
   useEffect(() => {
-    if (isAssetPropertiesSuccess) {
+    if (isAssetPropertiesSuccess === 'success') {
       form.setValue('expected_return', Number(assetProperties?.expected_rate_of_return))
+    } else if (isAssetPropertiesSuccess === 'error') {
+      form.setValue('expected_return', 0)
     }
   }, [isAssetPropertiesSuccess, assetProperties, form])
+
   const mutualFundsOptions = useMemo(() => {
     return (
       mutualFunds?.map((acc) => ({

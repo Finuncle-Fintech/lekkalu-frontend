@@ -8,7 +8,6 @@ import AppShell from './components/AppShell/AppShell'
 import UnAuthenticatedHeader from './components/UnAuthenticatedHeader/UnAuthenticatedHeader'
 import Footer from './components/Footer/Footer'
 import CookieConsent from './components/CookieConsent/CookieConsent'
-import XIRRCalculator from './pages/XIRRCalculator/XIRRCalculator'
 
 /** Authenticated Routes */
 const Dashboard = lazy(() => import('@/pages/Dashboard/Dashboard'))
@@ -38,6 +37,7 @@ const Signup = lazy(() => import('@/pages/Signup/Signup'))
 const SipCalculator = lazy(() => import('@/pages/SIPCalculator/SIPCalculator'))
 const CagrCalculator = lazy(() => import('@/pages/CAGRCalculator/CAGRCalculator'))
 const EmiCalculator = lazy(() => import('@/pages/EmiCalculator/EmiCalculator'))
+const XirrCalculator = lazy(() => import('@/pages/XIRRCalculator/XIRRCalculator'))
 const TermsAndConditions = lazy(() => import('@/pages/TermsAndConditions/TermsAndConditions'))
 const PrivacyPolicies = lazy(() => import('@/pages/PrivacyPolicies/PrivacyPolicies'))
 const Pricing = lazy(() => import('@/pages/Pricing/Pricing'))
@@ -109,7 +109,7 @@ function App() {
           <Route path='/sip-calculator' element={<SipCalculator />} />
           <Route path='/cagr-calculator' element={<CagrCalculator />} />
           <Route path='/emi-calculator' element={<EmiCalculator />} />
-          <Route path='/xirr-calculator' element={<XIRRCalculator />} />
+          <Route path='/xirr-calculator' element={<XirrCalculator />} />
           <Route path='/terms-and-conditions' element={<TermsAndConditions />} />
           <Route path='/privacy-policies' element={<PrivacyPolicies />} />
           <Route path='/pricing' element={<Pricing />} />

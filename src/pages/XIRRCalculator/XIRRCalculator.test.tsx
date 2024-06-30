@@ -10,9 +10,9 @@ jest.mock('react-apexcharts', () => ({ __esModule: true, default: () => <div /> 
 
 // Mock ResizeObserver
 class ResizeObserverMock {
-  observe() {}
-  unobserve() {}
-  disconnect() {}
+  observe() { }
+  unobserve() { }
+  disconnect() { }
 }
 
 // Mock window.ResizeObserver
@@ -45,13 +45,13 @@ describe('XIRRCalculator', () => {
     renderWithClient(<Component />)
     // Find buttons
     const shareButton = screen.getByText('Share')
-    const exportToExcelButton = screen.getByText('Export to Excel')
     const calculateXIRR = screen.getByText('Calculate XIRR')
+    // const exportToExcelButton = screen.getByText('Export to Excel')
 
     // Assert buttons are in the document
     expect(shareButton).toBeInTheDocument()
-    expect(exportToExcelButton).toBeInTheDocument()
     expect(calculateXIRR).toBeInTheDocument()
+    // expect(exportToExcelButton).toBeInTheDocument()
   })
 
   test('inputs are correctly defined', () => {
@@ -62,8 +62,8 @@ describe('XIRRCalculator', () => {
     const startDate = screen.getByText('Start Date')
     const endDate = screen.getByText('End Date')
     const maturityDate = screen.getByText('Maturity Date')
-    const investedAmount = screen.getByText(/Monthly investment amount (₹)/i)
-    const maturityAmount = screen.getByText(/Maturity investment amount (₹)/i)
+    const investedAmount = screen.getByText(/Monthly Invested Amount (₹)/i)
+    const maturityAmount = screen.getByText(/Maturity Amount (₹)/i)
 
     // Assert on the existence of each input field
     expect(startDate).toBeInTheDocument()

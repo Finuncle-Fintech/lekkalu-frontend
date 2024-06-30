@@ -66,21 +66,21 @@ export default function XIRRCalculator() {
   const inputs: Array<InputField> = [
     {
       id: 'startDate',
-      label: 'Start date',
+      label: 'Start Date',
       type: 'date',
       defaultDate: !isEmpty(parsedObject) ? dayjs(parsedObject.startDate).toDate() : new Date(),
       helpText: XIRRHelpTexts.startDate,
     },
     {
       id: 'endDate',
-      label: 'End date',
+      label: 'End Date',
       type: 'date',
       defaultDate: !isEmpty(parsedObject) ? dayjs(parsedObject.endDate).toDate() : new Date(),
       helpText: XIRRHelpTexts.endDate,
     },
     {
       id: 'investedAmount',
-      label: `Monthly Invested Amount  ${preferences.currencyUnit}`,
+      label: `Monthly Invested Amount ${preferences.currencyUnit}`,
       type: 'number',
       hasRange: true,
       range: {
@@ -92,7 +92,7 @@ export default function XIRRCalculator() {
     },
     {
       id: 'maturityAmount',
-      label: `Maturity Amount  ${preferences.currencyUnit}`,
+      label: `Maturity Amount ${preferences.currencyUnit}`,
       type: 'number',
       hasRange: true,
       range: {
@@ -276,10 +276,7 @@ export default function XIRRCalculator() {
           <Form {...form}>
             <form
               className='grid md:grid-cols-2 gap-4'
-              onSubmit={(e) => {
-                e.preventDefault()
-                handleXIRRCalculation()
-              }}
+              onSubmit={form.handleSubmit(handleXIRRCalculation)}
             >
               <InputFieldsRenderer control={form.control} inputs={inputs} />
               <div className=' pt-6'>

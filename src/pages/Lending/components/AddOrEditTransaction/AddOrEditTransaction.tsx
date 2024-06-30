@@ -35,7 +35,11 @@ export default function AddOrEditTransaction({ transaction, trigger }: Props) {
     resolver: zodResolver(addTransactionSchema),
     defaultValues: {
       lending_account: transaction?.lending_account?.toString() || undefined,
-      amount: Number(transaction?.amount),
+      amount: Math.abs(
+        typeof transaction?.amount === 'number'
+          ? transaction.amount
+          : parseFloat(transaction?.amount as string) || 0
+      ),
       time: transaction?.time ? new Date(transaction.time) : new Date(),
       payment_method: transaction?.payment_method,
       reference_no: transaction?.reference_no,
@@ -180,10 +184,12 @@ export default function AddOrEditTransaction({ transaction, trigger }: Props) {
       })
       return
     }
+    const amount = typeof values.amount === 'number' ? values.amount : parseFloat(values.amount as string) || 0
+
     const newTransaction = {
       ...values,
       id: transaction?.id,
-      amount: type ? calculateTransactionAmount(type, values.amount as number) : values.amount,
+      amount: type ? calculateTransactionAmount(type, amount) : amount,
     }
 
     /** Handling case of transaction updation */

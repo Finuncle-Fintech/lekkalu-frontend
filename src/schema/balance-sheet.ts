@@ -81,6 +81,13 @@ export const addAccountSchema = z.object({
   // rate_return: z.number({ required_error: 'Rate return is required!' }),
 })
 
+// ** Account Transaction
+export const addAccountTransactionSchema = z.object({
+  amount: z.number({ required_error: 'Amount is required!' }),
+  account: z.string().min(1, 'Account name is required!').trim(),
+  time: z.string({ required_error: 'Date is required!' }),
+})
+
 // ** Mutual Fund
 export const addMutualFundSchema = z.object({
   invested_amount: z.number({

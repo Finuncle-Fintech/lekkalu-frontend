@@ -6,21 +6,21 @@ import { Button } from '@/components/ui/button'
 import { BALANCE_SHEET } from '@/utils/query-keys'
 import { useToast } from '@/components/ui/use-toast'
 import { getErrorMessage } from '@/utils/utils'
-import { deleteAccountAsset } from '@/queries/balance-sheet'
+import { deleteAccountTransactionAsset } from '@/queries/balance-sheet'
 
 type Props = {
   id: number
 }
 
-export default function DeleteAccountDialog({ id }: Props) {
+export default function DeleteAccountTransactionDialog({ id }: Props) {
   const qc = useQueryClient()
   const { toast } = useToast()
 
   const deleteAccountMutation = useMutation({
-    mutationFn: deleteAccountAsset,
+    mutationFn: deleteAccountTransactionAsset,
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: [BALANCE_SHEET.ACCOUNT] })
-      toast({ title: 'Account deleted successfully!' })
+      qc.invalidateQueries({ queryKey: [BALANCE_SHEET.ACCOUNT_TRANSACTIONS] })
+      toast({ title: 'Transaction deleted successfully!' })
     },
     onError: (err: any) => toast(getErrorMessage(err)),
   })
@@ -32,8 +32,8 @@ export default function DeleteAccountDialog({ id }: Props) {
           <TrashIcon className='w-4 h-4 text-red-500' />
         </Button>
       }
-      title='Delete Account'
-      description='Are you sure you want to delete this account?'
+      title='Delete Transaction'
+      description='Are you sure you want to delete this transaction?'
       okText='Yes, Delete'
       okButtonProps={{ disabled: deleteAccountMutation.isPending, className: 'bg-red-500 hover:bg-red-400' }}
       cancelText='No'

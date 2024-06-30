@@ -1,22 +1,22 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import React, { cloneElement, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useToast } from '@/components/ui/use-toast'
-import { addAccountSchema } from '@/schema/balance-sheet'
+import { addAccountTransactionSchema } from '@/schema/balance-sheet'
 import InputFieldsRenderer, { InputField } from '@/components/InputFieldsRenderer/InputFieldsRenderer'
-import { addAccountAsset, editAccountAsset } from '@/queries/balance-sheet'
+import { addAccountTransactionAsset, editAccountTransactionAsset, fetchAccountAssets } from '@/queries/balance-sheet'
 import { BALANCE_SHEET } from '@/utils/query-keys'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Form } from '@/components/ui/form'
-import { AddAccountSchema, AccountSchema } from '@/types/balance-sheet'
+import { AccountTransactionSchema, AddAccountTransactionSchema } from '@/types/balance-sheet'
 import { getErrorMessage } from '@/utils/utils'
 import { useStepper } from '@/components/ui/stepper'
 
 type Props = {
   trigger: React.ReactElement
-  asset?: AccountSchema
+  asset?: AccountTransactionSchema
   closeModal?: () => void
   isSteeper?: boolean
 }
@@ -27,51 +27,78 @@ export default function AddOrEditAssetsAccountTransaction({ trigger, asset, clos
   const qc = useQueryClient()
   const { prevStep } = useStepper()
   const isEdit = Boolean(asset)
-  const form = useForm<AddAccountSchema>({
-    resolver: zodResolver(addAccountSchema),
+  const { data: accounts } = useQuery({
+    queryKey: [BALANCE_SHEET.ACCOUNT],
+    queryFn: fetchAccountAssets,
+    enabled: isDialogOpen || isSteeper,
+  })
+  const form = useForm<AddAccountTransactionSchema>({
+    resolver: zodResolver(addAccountTransactionSchema),
     defaultValues: {
-      amount: Number(asset?.balance) ?? undefined,
-      name: asset?.name ?? '',
-      // rate_return: undefined,
+      amount: Number(asset?.amount) ?? undefined,
+      account: asset ? asset.account.toString() : undefined,
+      time: asset ? asset?.time : new Date(),
     },
   })
-
-  const addAccountAssetMutation = useMutation({
-    mutationFn: addAccountAsset,
+  const addAccountTransactionMutation = useMutation({
+    mutationFn: addAccountTransactionAsset,
     onSuccess: () => {
+      qc.invalidateQueries({ queryKey: [BALANCE_SHEET.ACCOUNT_TRANSACTIONS] })
       qc.invalidateQueries({ queryKey: [BALANCE_SHEET.ACCOUNT] })
-      toast({ title: 'Asset created successfully!' })
+      toast({ title: 'Transaction created successfully!' })
       setIsDialogOpen(false)
       closeModal?.()
+      form.reset()
     },
     onError: (err) => toast(getErrorMessage(err)),
   })
 
   const editAccountAssetMutation = useMutation({
-    mutationFn: (dto: AccountSchema) => editAccountAsset(asset?.id!, dto),
+    mutationFn: (dto: AddAccountTransactionSchema) => editAccountTransactionAsset(asset?.id!, dto),
     onSuccess: () => {
+      qc.invalidateQueries({ queryKey: [BALANCE_SHEET.ACCOUNT_TRANSACTIONS] })
       qc.invalidateQueries({ queryKey: [BALANCE_SHEET.ACCOUNT] })
-      toast({ title: 'Asset updated successfully!' })
+      toast({ title: 'Transaction updated successfully!' })
       setIsDialogOpen(false)
       closeModal?.()
     },
     onError: (err) => toast(getErrorMessage(err)),
   })
 
-  const handleAddOrEditAccountAsset = (values: AddAccountSchema) => {
-    addAccountAssetMutation.mutate(values)
-    // closeModal?.()
+  const handleAddOrEditAccountAsset = (values: AddAccountTransactionSchema) => {
+    const newData = {
+      ...values,
+      account: Number(values.account),
+      type: 1,
+    }
+    if (isEdit) {
+      editAccountAssetMutation.mutate(newData)
+      return
+    }
+    addAccountTransactionMutation.mutate(newData)
+    closeModal?.()
   }
 
+  const accountOptions = useMemo(() => {
+    return (
+      accounts?.map((acc) => ({
+        id: acc.id?.toString(),
+        label: acc.name,
+        value: acc.name,
+      })) ?? []
+    )
+  }, [accounts])
   const assetsInputOptionsCash = useMemo(
     () =>
       [
         {
-          id: 'name',
+          id: 'account',
           label: 'Account Name',
-          type: 'text',
-          helpText:
-            'Enter the name of the account. This could be a savings account, checking account, or any other type of financial account.',
+          type: 'select',
+          options: accountOptions,
+          maxSelection: 1,
+          helpText: 'A account is where your transactions will be recorded.',
+          closeOnSelect: true,
         },
         {
           id: 'amount',
@@ -79,15 +106,15 @@ export default function AddOrEditAssetsAccountTransaction({ trigger, asset, clos
           type: 'number',
           helpText: 'Enter the total amount of money currently held in the account.',
         },
-        // {
-        //   id: 'rate_return',
-        //   label: 'Rate Return',
-        //   type: 'number',
-        //   helpText:
-        //     'Enter the annual rate of return for the account. This is the percentage of interest or growth expected per year.',
-        // },
+        {
+          id: 'time',
+          label: 'Date',
+          type: 'date',
+          helpText: 'Enter the date on which the transaction created.',
+          defaultDate: new Date(),
+        },
       ] as InputField[],
-    [],
+    [accountOptions],
   )
 
   const FormContent = (
@@ -101,7 +128,7 @@ export default function AddOrEditAssetsAccountTransaction({ trigger, asset, clos
 
         <DialogFooter className='gap-2 md:col-span-2'>
           <Button
-            loading={addAccountAssetMutation.isPending || editAccountAssetMutation.isPending}
+            loading={addAccountTransactionMutation.isPending || editAccountAssetMutation.isPending}
             type='button'
             variant='outline'
             onClick={() => {
@@ -110,7 +137,7 @@ export default function AddOrEditAssetsAccountTransaction({ trigger, asset, clos
           >
             {isSteeper ? 'Prev' : 'Cancel'}
           </Button>
-          <Button type='submit' loading={addAccountAssetMutation.isPending || editAccountAssetMutation.isPending}>
+          <Button type='submit' loading={addAccountTransactionMutation.isPending || editAccountAssetMutation.isPending}>
             {isEdit ? 'Edit' : 'Add'}
           </Button>
         </DialogFooter>

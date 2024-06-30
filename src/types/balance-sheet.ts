@@ -71,6 +71,21 @@ export type AccountSchema = {
   id: string
 }
 
+// ** Account Transaction
+export type AddAccountTransactionSchema = {
+  account: string | number
+  time: string | Date
+  amount: number
+  type?: number
+}
+export type AccountTransactionSchema = {
+  account: string
+  time: string
+  amount: number
+  id: string
+  type: number
+}
+
 // ** Security Transaction
 export type SecurityTransactionSchema = {
   id?: number

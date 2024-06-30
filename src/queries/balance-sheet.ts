@@ -13,6 +13,8 @@ import {
   AddAssetsPropertiesType,
   AccountSchema,
   AddAccountSchema,
+  AddAccountTransactionSchema,
+  AccountTransactionSchema,
 } from '@/types/balance-sheet'
 import { v1ApiClient, v2ApiClient } from '@/utils/client'
 
@@ -91,6 +93,27 @@ export async function deleteAccountAsset(id: number) {
 
 export async function editAccountAsset(id: string, dto: AddAccountSchema) {
   const { data } = await v1ApiClient.put(`accounts/${id}`, dto)
+  return data
+}
+
+// ** Account Transactions Assets
+export async function fetchAccountTransactionAssets() {
+  const { data } = await v1ApiClient.get<AccountTransactionSchema[]>('account_transactions/')
+  return data
+}
+
+export async function addAccountTransactionAsset(dto: AddAccountTransactionSchema) {
+  const { data } = await v1ApiClient.post<AccountTransactionSchema[]>('account_transactions/', dto)
+  return data
+}
+
+export async function deleteAccountTransactionAsset(id: number) {
+  const { data } = await v1ApiClient.delete<{ message: string }>(`/account_transactions/${id}`)
+  return data
+}
+
+export async function editAccountTransactionAsset(id: string, dto: AddAccountTransactionSchema) {
+  const { data } = await v1ApiClient.put(`account_transactions/${id}`, dto)
   return data
 }
 

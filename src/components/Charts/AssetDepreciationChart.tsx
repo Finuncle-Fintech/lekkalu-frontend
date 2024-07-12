@@ -8,7 +8,10 @@ import { calculateDeprecationData } from '@/utils/balance-sheet'
 import { formatIndianMoneyNotation } from '@/utils/format-money'
 
 export default function AssetDepreciationChart() {
-  const { data, isLoading } = useQuery([BALANCE_SHEET.ASSETS], fetchPhysicalAssets)
+  const { data, isLoading } = useQuery({
+    queryKey: [BALANCE_SHEET.ASSETS],
+    queryFn: fetchPhysicalAssets,
+  })
   const { preferences } = useUserPreferences()
 
   const depreciationData = useMemo(() => {

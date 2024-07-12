@@ -41,8 +41,16 @@ export default function AddOrEditExpenseDialog({ expense, trigger }: Props) {
   const { toast } = useToast()
   const queryClient = useQueryClient()
 
-  const { data: tags, refetch: refetchTags } = useQuery([TAGS.TAGS], fetchTags, { enabled: !!isDialogOpen })
-  const { data: expenses } = useQuery([EXPENSES.EXPENSES], () => fetchExpenses(), { enabled: !!isDialogOpen })
+  const { data: tags, refetch: refetchTags } = useQuery({
+    queryKey: [TAGS.TAGS],
+    queryFn: fetchTags,
+    enabled: !!isDialogOpen,
+  })
+  const { data: expenses } = useQuery({
+    queryKey: [EXPENSES.EXPENSES],
+    queryFn: () => fetchExpenses(),
+    enabled: !!isDialogOpen,
+  })
   const form = useForm<AddExpenseSchema>({
     resolver: zodResolver(addExpenseSchema),
     defaultValues: {
@@ -59,9 +67,10 @@ export default function AddOrEditExpenseDialog({ expense, trigger }: Props) {
     },
   })
 
-  const addExpenseMutation = useMutation(addExpense, {
+  const addExpenseMutation = useMutation({
+    mutationFn: addExpense,
     onSuccess: () => {
-      queryClient.invalidateQueries([EXPENSES.EXPENSES])
+      queryClient.invalidateQueries({ queryKey: [EXPENSES.EXPENSES] })
       refetchTags()
       form.reset()
       toast({ title: 'Expense created successfully!' })
@@ -70,18 +79,16 @@ export default function AddOrEditExpenseDialog({ expense, trigger }: Props) {
     onError: (err: any) => toast(getErrorMessage(err)),
   })
 
-  const updateExpenseMutation = useMutation(
-    (dto: Omit<AddExpenseSchema, 'tags'> & { tags: number[] }) => updateExpense(expense?.id!, dto),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries([EXPENSES.EXPENSES])
-        refetchTags()
-        toast({ title: 'Expense updated successfully!' })
-        setIsDialogOpen(false)
-      },
-      onError: (err: any) => toast(getErrorMessage(err)),
+  const updateExpenseMutation = useMutation({
+    mutationFn: (dto: Omit<AddExpenseSchema, 'tags'> & { tags: number[] }) => updateExpense(expense?.id!, dto),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [EXPENSES.EXPENSES] })
+      refetchTags()
+      toast({ title: 'Expense updated successfully!' })
+      setIsDialogOpen(false)
     },
-  )
+    onError: (err: any) => toast(getErrorMessage(err)),
+  })
 
   const inputs = useMemo(() => {
     return [
@@ -218,7 +225,7 @@ export default function AddOrEditExpenseDialog({ expense, trigger }: Props) {
                 type='file'
                 accept='.xls,.xlsx'
                 onChange={handleFileUpload}
-                disabled={addExpenseMutation.isLoading || updateExpenseMutation.isLoading}
+                disabled={addExpenseMutation.isPending || updateExpenseMutation.isPending}
               />
               <Button
                 type='button'
@@ -229,7 +236,7 @@ export default function AddOrEditExpenseDialog({ expense, trigger }: Props) {
               >
                 Cancel
               </Button>
-              <Button type='submit' loading={addExpenseMutation.isLoading || updateExpenseMutation.isLoading}>
+              <Button type='submit' loading={addExpenseMutation.isPending || updateExpenseMutation.isPending}>
                 {expense ? 'Update' : 'Add'}
               </Button>
             </DialogFooter>

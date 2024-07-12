@@ -15,9 +15,10 @@ export default function DeleteComparison({ id }: Props) {
   const qc = useQueryClient()
   const { toast } = useToast()
 
-  const deleteComparisonMutation = useMutation(deleteComparisons, {
+  const deleteComparisonMutation = useMutation({
+    mutationFn: deleteComparisons,
     onSuccess: () => {
-      qc.invalidateQueries([COMPARISON.COMPARISON])
+      qc.invalidateQueries({ queryKey: [COMPARISON.COMPARISON] })
       toast({ title: 'Comparison deleted successfully!' })
     },
     onError: (err: any) => toast(getErrorMessage(err)),

@@ -20,10 +20,15 @@ export default function ViewAllBudgetModal() {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const qc = useQueryClient()
 
-  const { data, isFetching } = useQuery([BUDGET_QUERY_KEYS.BUDGETS], fetchBudgets, { enabled: !!open })
-  const deleteBudgetMutation = useMutation(deleteBudget, {
+  const { data, isFetching } = useQuery({
+    queryKey: [BUDGET_QUERY_KEYS.BUDGETS],
+    queryFn: fetchBudgets,
+    enabled: !!open,
+  })
+  const deleteBudgetMutation = useMutation({
+    mutationFn: deleteBudget,
     onSuccess: () => {
-      qc.invalidateQueries([BUDGET_QUERY_KEYS.BUDGETS])
+      qc.invalidateQueries({ queryKey: [BUDGET_QUERY_KEYS.BUDGETS] })
     },
     onError: (err: any) => toast(getErrorMessage(err)),
   })
@@ -64,7 +69,7 @@ export default function ViewAllBudgetModal() {
                 <TableCell>{dayjs(budget.month, 'YYYY-MM-DD').format('MMMM YYYY')}</TableCell>
                 <TableCell>{formatIndianMoneyNotation(budget.limit)}</TableCell>
                 <TableCell className='flex items-center gap-2'>
-                  <Button loading={deleteBudgetMutation.isLoading} variant='ghost' size='sm'>
+                  <Button loading={deleteBudgetMutation.isPending} variant='ghost' size='sm'>
                     <TrashIcon
                       className='w-4 h-4 text-red-500'
                       onClick={() => {

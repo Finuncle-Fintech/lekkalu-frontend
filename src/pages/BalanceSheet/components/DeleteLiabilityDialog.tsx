@@ -16,9 +16,10 @@ export default function DeleteLiabilityDialog({ id }: Props) {
   const qc = useQueryClient()
   const { toast } = useToast()
 
-  const deleteLiabilityMutation = useMutation(deleteLiability, {
+  const deleteLiabilityMutation = useMutation({
+    mutationFn: deleteLiability,
     onSuccess: () => {
-      qc.invalidateQueries([BALANCE_SHEET.LIABILITIES])
+      qc.invalidateQueries({ queryKey: [BALANCE_SHEET.LIABILITIES] })
       toast({ title: 'Liability deleted successfully!' })
     },
     onError: (err: any) => toast(getErrorMessage(err)),
@@ -34,9 +35,9 @@ export default function DeleteLiabilityDialog({ id }: Props) {
       title='Delete Liability'
       description='Are you sure you want to delete this liability ?'
       okText='Yes, Delete'
-      okButtonProps={{ disabled: deleteLiabilityMutation.isLoading, className: 'bg-red-500 hover:bg-red-400' }}
+      okButtonProps={{ disabled: deleteLiabilityMutation.isPending, className: 'bg-red-500 hover:bg-red-400' }}
       cancelText='No'
-      cancelProps={{ disabled: deleteLiabilityMutation.isLoading }}
+      cancelProps={{ disabled: deleteLiabilityMutation.isPending }}
       onOk={() => {
         deleteLiabilityMutation.mutate(id)
       }}

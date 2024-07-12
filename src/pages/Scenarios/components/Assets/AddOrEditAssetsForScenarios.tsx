@@ -30,8 +30,8 @@ type Props = {
 export default function AddOrEditAssetsForScenario({ trigger, asset, addAsset, editAsset }: Props) {
   const { userData } = useAuthContext()
   const [isDialogOpen, setIsDialogOpen] = useState(false)
-  const { data: imag_users } = useQuery<ImaginaryUser>([AUTH.IMAGINARY_CLIENT])
-  const { data: current_imag_user } = useQuery<string>([AUTH.CURRENT_IMAGINARY_USER])
+  const { data: imag_users } = useQuery<ImaginaryUser>({ queryKey: [AUTH.IMAGINARY_CLIENT] })
+  const { data: current_imag_user } = useQuery<string>({ queryKey: [AUTH.CURRENT_IMAGINARY_USER] })
   const user_id = imag_users?.[current_imag_user as string].id
   const { toast } = useToast()
   const qc = useQueryClient()
@@ -52,26 +52,25 @@ export default function AddOrEditAssetsForScenario({ trigger, asset, addAsset, e
     },
   })
 
-  const addPhysicalAssetMutation = useMutation(addAsset, {
+  const addPhysicalAssetMutation = useMutation({
+    mutationFn: addAsset,
     onSuccess: () => {
-      qc.invalidateQueries([`${BALANCE_SHEET.ASSETS}-${current_imag_user}`])
+      qc.invalidateQueries({ queryKey: [`${BALANCE_SHEET.ASSETS}-${current_imag_user}`] })
       toast({ title: 'Asset created successfully!' })
       setIsDialogOpen(false)
     },
     onError: (err) => toast(getErrorMessage(err)),
   })
 
-  const editPhysicalAssetMutation = useMutation(
-    (dto: AddPhysicalAssetSchemaForScenario) => editAsset(asset?.id!, dto),
-    {
-      onSuccess: () => {
-        qc.invalidateQueries([`${BALANCE_SHEET.ASSETS}-${current_imag_user}`])
-        toast({ title: 'Asset updated successfully!' })
-        setIsDialogOpen(false)
-      },
-      onError: (err) => toast(getErrorMessage(err)),
+  const editPhysicalAssetMutation = useMutation({
+    mutationFn: (dto: AddPhysicalAssetSchemaForScenario) => editAsset(asset?.id!, dto),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: [`${BALANCE_SHEET.ASSETS}-${current_imag_user}`] })
+      toast({ title: 'Asset updated successfully!' })
+      setIsDialogOpen(false)
     },
-  )
+    onError: (err) => toast(getErrorMessage(err)),
+  })
 
   const handleAddOrEditPhysicalAsset = (values: AddPhysicalAssetSchemaForScenario) => {
     const valuesToSubmit = {
@@ -129,7 +128,7 @@ export default function AddOrEditAssetsForScenario({ trigger, asset, addAsset, e
               >
                 Cancel
               </Button>
-              <Button type='submit' loading={addPhysicalAssetMutation.isLoading || editPhysicalAssetMutation.isLoading}>
+              <Button type='submit' loading={addPhysicalAssetMutation.isPending || editPhysicalAssetMutation.isPending}>
                 {isEdit ? 'Edit' : 'Add'} Asset
               </Button>
             </DialogFooter>

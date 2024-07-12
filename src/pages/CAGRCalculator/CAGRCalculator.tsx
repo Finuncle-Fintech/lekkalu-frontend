@@ -4,21 +4,9 @@ import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { isEmpty } from 'lodash'
-import { useLocation } from 'react-router'
-import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  Cell,
-  Legend,
-  Pie,
-  PieChart,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from 'recharts'
-import colors from 'tailwindcss/colors'
+import Chart from 'react-apexcharts'
+import { useLocation } from 'react-router-dom'
+import colors, { blue, orange } from 'tailwindcss/colors'
 import { Button } from '@/components/ui/button'
 import { useToast } from '@/components/ui/use-toast'
 import { useUserPreferences } from '@/hooks/use-user-preferences'
@@ -28,9 +16,9 @@ import { parseQueryString } from '@/utils/query-string'
 import { calculateCagr } from '@/utils/calculators'
 import { handleShare } from '@/utils/clipboard'
 import When from '@/components/When/When'
-import { CustomLabelPie } from '@/components/shared/CustomLabelPie/CustomLabelPie'
 import InputFieldsRenderer, { InputField } from '@/components/InputFieldsRenderer/InputFieldsRenderer'
 import Page from '@/components/Page/Page'
+import { formatIndianMoneyNotation } from '@/utils/format-money'
 
 type CagrValues = z.infer<typeof cagrCalculatorSchema>
 
@@ -143,6 +131,77 @@ export default function CAGRCalculator() {
     XLSX.writeFile(wb, 'cagr_calculation.xlsx', { compression: true })
   }
 
+  const chartOptionsCAGR: ApexCharts.ApexOptions = {
+    chart: {
+      width: 350,
+      type: 'pie',
+    },
+    labels: result?.pieChartData?.map((ele) => `${ele.name}`),
+    legend: {
+      position: 'bottom',
+      fontSize: '16px',
+    },
+    colors: [blue[500], orange[500]],
+    fill: {
+      type: 'gradient',
+    },
+    tooltip: {
+      y: {
+        formatter: (value) => `${preferences.currencyUnit} ${formatIndianMoneyNotation(value)}`,
+      },
+    },
+  }
+  const chartSeriesCAGR: ApexAxisChartSeries | ApexNonAxisChartSeries = result?.pieChartData?.map(
+    (ele) => ele.value,
+  ) as any
+
+  const chartOptions: ApexCharts.ApexOptions = {
+    chart: {
+      height: 350,
+      type: 'bar',
+      dropShadow: {
+        enabled: true,
+        color: '#000',
+        top: 18,
+        left: 7,
+        blur: 10,
+        opacity: 0.2,
+      },
+      foreColor: '#000',
+      toolbar: {
+        show: false,
+      },
+    },
+    plotOptions: {
+      bar: {
+        borderRadius: 10,
+        columnWidth: '60%',
+      },
+    },
+    colors: [colors.blue[500]],
+    dataLabels: {
+      enabled: false,
+    },
+    stroke: {
+      curve: 'smooth',
+    },
+    xaxis: {
+      categories: result?.barChartData.map((item) => item.name),
+    },
+    yaxis: {
+      labels: {
+        formatter: (value) => `${preferences.currencyUnit} ${formatIndianMoneyNotation(value, 1)}`,
+      },
+    },
+  }
+  const chartSeries: ApexAxisChartSeries | ApexNonAxisChartSeries = [
+    {
+      name: 'Spent',
+      type: 'bar',
+      data: result?.barChartData.map((item) => item.value),
+    },
+  ] as any
+
   return (
     <Page className='space-y-4'>
       <div className='flex items-center justify-between'>
@@ -175,50 +234,18 @@ export default function CAGRCalculator() {
 
         <When truthy={typeof result !== 'undefined'}>
           <div className='w-full p-4 flex flex-col gap-4 items-center'>
-            <PieChart width={400} height={200}>
-              <Pie dataKey='value' data={result?.pieChartData} outerRadius={80} labelLine={false}>
-                {result?.pieChartData.map((entry, index) => (
-                  <Cell
-                    key={index}
-                    fill={entry.name.includes('Initial Value') ? colors.blue['500'] : colors.orange['500']}
-                  />
-                ))}
-              </Pie>
-              <Tooltip content={<CustomLabelPie />} />
-              <Legend height={36} />
-            </PieChart>
-
-            <ResponsiveContainer width={500} height={300} className='p-4 my-5'>
-              <BarChart
-                data={result?.barChartData}
-                margin={{
-                  right: 30,
-                }}
-              >
-                <CartesianGrid strokeDasharray='3 3' />
-                <XAxis dataKey='name' />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Bar
-                  dataKey='value'
-                  fill={colors.blue['500']}
-                  className='border-1 border-black'
-                  style={{ border: '1px solid green' }}
-                />
-              </BarChart>
-            </ResponsiveContainer>
-
+            <Chart options={chartOptionsCAGR} series={chartSeriesCAGR} type='pie' width={300} />
+            <Chart options={chartOptions} series={chartSeries} type='bar' height={350} width={450} />
             <div className='flex gap-2 border-b'>
               <div>You absolute returns: </div>
               <div className='font-medium'>
-                {result?.summary?.absoluteReturns} {preferences.currencyUnit}
+                {formatIndianMoneyNotation(result?.summary?.absoluteReturns)} {preferences.currencyUnit}
               </div>
             </div>
             <div className='flex gap-2 border-b'>
               <div>You absolute CAGR: </div>
               <div className='font-medium'>
-                {result?.summary?.absoluteCAGR} {preferences.currencyUnit}
+                {formatIndianMoneyNotation(result?.summary?.absoluteCAGR)} {preferences.currencyUnit}
               </div>
             </div>
             <div className='flex gap-2 border-b'>

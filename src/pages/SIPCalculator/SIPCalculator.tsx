@@ -1,23 +1,23 @@
 import React, { useMemo, useState } from 'react'
-import { useLocation } from 'react-router'
+import { useLocation } from 'react-router-dom'
 import * as XLSX from 'xlsx'
 import { isEmpty } from 'lodash'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Pie, PieChart, Cell, Tooltip, Legend } from 'recharts'
+import Chart from 'react-apexcharts'
 import { z } from 'zod'
 import { Button } from '@/components/ui/button'
 import { parseQueryString } from '@/utils/query-string'
 import { sipCalculatorSchema } from '@/schema/calculators'
 import { Form } from '@/components/ui/form'
 import { calculateSip } from '@/utils/calculators'
-import { CustomLabelPie } from '@/components/shared/CustomLabelPie/CustomLabelPie'
 import When from '@/components/When/When'
 import { useToast } from '@/components/ui/use-toast'
 import { handleShare } from '@/utils/clipboard'
 import { useUserPreferences } from '@/hooks/use-user-preferences'
 import InputFieldsRenderer, { InputField } from '@/components/InputFieldsRenderer/InputFieldsRenderer'
 import Page from '@/components/Page/Page'
+import { formatIndianMoneyNotation } from '@/utils/format-money'
 
 const DEFAULT_DATA = {
   monthlyAmount: 500,
@@ -111,6 +111,26 @@ export default function SIPCalculator() {
     XLSX.utils.book_append_sheet(wb, sipCalculationWorksheet, 'SIP Calculation')
     XLSX.writeFile(wb, 'sip_calculation.xlsx', { compression: true })
   }
+  const chartOptionsSIP: ApexCharts.ApexOptions = {
+    chart: {
+      width: 350,
+      type: 'pie',
+    },
+    labels: result?.pieData?.map((ele) => `${ele.name}`),
+    legend: {
+      position: 'bottom',
+      fontSize: '16px',
+    },
+    fill: {
+      type: 'gradient',
+    },
+    tooltip: {
+      y: {
+        formatter: (value) => `${preferences.currencyUnit} ${formatIndianMoneyNotation(value)}`,
+      },
+    },
+  }
+  const chartSeriesSIP: ApexAxisChartSeries | ApexNonAxisChartSeries = result?.pieData?.map((ele) => ele.value) as any
 
   return (
     <Page className='space-y-4'>
@@ -150,31 +170,22 @@ export default function SIPCalculator() {
                 <div className='flex gap-2 border-b'>
                   <div>Total invested: </div>
                   <div className='font-medium'>
-                    {result?.summary?.totalInvested} {preferences.currencyUnit}
+                    {formatIndianMoneyNotation(result?.summary?.totalInvested)} {preferences.currencyUnit}
                   </div>
                 </div>
                 <div className='flex gap-2 border-b'>
                   <div>Final value: </div>
                   <div className='font-medium'>
-                    {result?.summary?.finalValue} {preferences.currencyUnit}
+                    {formatIndianMoneyNotation(result?.summary?.finalValue)} {preferences.currencyUnit}
                   </div>
                 </div>
                 <div className='flex gap-2 border-b'>
                   <div>Wealth gained: </div>
                   <div className='font-medium'>
-                    {result?.summary?.wealthGained} {preferences.currencyUnit}
+                    {formatIndianMoneyNotation(result?.summary?.wealthGained)} {preferences.currencyUnit}
                   </div>
                 </div>
-
-                <PieChart width={200} height={220}>
-                  <Pie dataKey='value' data={result?.pieData} outerRadius={80} labelLine={false}>
-                    {result?.pieData.map((item, index) => (
-                      <Cell key={index} fill={item.name.includes('Total Invested') ? '#099fea' : '#09ea49'} />
-                    ))}
-                  </Pie>
-                  <Legend />
-                  <Tooltip content={<CustomLabelPie />} />
-                </PieChart>
+                <Chart options={chartOptionsSIP} series={chartSeriesSIP} type='pie' width={300} />
                 <div>
                   <Button onClick={handleExportToExcel}>Export to Excel</Button>
                 </div>

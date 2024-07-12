@@ -20,6 +20,8 @@ import Pagination from '@/components/Pagination/Pagination'
 import { WeeklyChart } from '@/components/Charts/WeeklyChart'
 import { SpentBalanceChart } from '@/components/Charts/SpentBalanceChart'
 import { CumSumChart } from '@/components/Charts/CumSumChart'
+import { MonthlySurplusDeficitChart } from '@/components/Charts/MonthlySurplusDeficitChart'
+import Page from '@/components/Page/Page'
 
 dayjs.extend(customParseFormat)
 export type totalExpensesMetadataType =
@@ -44,7 +46,7 @@ export default function Expenses() {
 
   const page = searchParams.get('page') ? Number(searchParams.get('page')) : 0
 
-  const { data: budgets } = useQuery([BUDGET_QUERY_KEYS.BUDGETS], fetchBudgets)
+  const { data: budgets } = useQuery({ queryKey: [BUDGET_QUERY_KEYS.BUDGETS], queryFn: fetchBudgets })
 
   const filtersForm = useForm<ExpenseFiltersSchema>({
     resolver: zodResolver(expenseFiltersSchema),
@@ -66,11 +68,12 @@ export default function Expenses() {
   const maxPage = Math.ceil((totalExpensesMetadata?.total_count || 0) / 10) - 1
 
   return (
-    <div className='max-w-screen-xl mx-auto align-self-start min-h-[80vh] p-4 space-y-4'>
+    <Page className='space-y-4 min-h-screen'>
       <div className='grid md:grid-cols-2 gap-4'>
         <WeeklyChart />
-        <SpentBalanceChart />
         <CumSumChart />
+        <SpentBalanceChart />
+        <MonthlySurplusDeficitChart />
       </div>
 
       <div className='border rounded-2 shadow-sm w-100 p-4 flex flex-col gap-2 max-w-md'>
@@ -180,6 +183,6 @@ export default function Expenses() {
           to: dayjs(filters.to).format('YYYY-MM-DD'),
         }}
       />
-    </div>
+    </Page>
   )
 }

@@ -47,18 +47,20 @@ export default function AddOrEditAssetDialog({ trigger, asset }: Props) {
     },
   })
 
-  const addPhysicalAssetMutation = useMutation(addPhysicalAsset, {
+  const addPhysicalAssetMutation = useMutation({
+    mutationFn: addPhysicalAsset,
     onSuccess: () => {
-      qc.invalidateQueries([BALANCE_SHEET.ASSETS])
+      qc.invalidateQueries({ queryKey: [BALANCE_SHEET.ASSETS] })
       toast({ title: 'Asset created successfully!' })
       setIsDialogOpen(false)
     },
     onError: (err) => toast(getErrorMessage(err)),
   })
 
-  const editPhysicalAssetMutation = useMutation((dto: AddPhysicalAssetSchema) => editPhysicalAsset(asset?.id!, dto), {
+  const editPhysicalAssetMutation = useMutation({
+    mutationFn: (dto: AddPhysicalAssetSchema) => editPhysicalAsset(asset?.id!, dto),
     onSuccess: () => {
-      qc.invalidateQueries([BALANCE_SHEET.ASSETS])
+      qc.invalidateQueries({ queryKey: [BALANCE_SHEET.ASSETS] })
       toast({ title: 'Asset updated successfully!' })
       setIsDialogOpen(false)
     },
@@ -91,7 +93,7 @@ export default function AddOrEditAssetDialog({ trigger, asset }: Props) {
       >
         {cloneElement(trigger)}
       </DialogTrigger>
-      <DialogContent className='max-h-[800px] overflow-auto'>
+      <DialogContent>
         <DialogHeader>
           <DialogTitle>{isEdit ? 'Edit' : 'Add'} Asset</DialogTitle>
         </DialogHeader>
@@ -156,7 +158,7 @@ export default function AddOrEditAssetDialog({ trigger, asset }: Props) {
 
             <DialogFooter className='gap-2 md:col-span-2'>
               <Button
-                loading={addPhysicalAssetMutation.isLoading || editPhysicalAssetMutation.isLoading}
+                loading={addPhysicalAssetMutation.isPending || editPhysicalAssetMutation.isPending}
                 type='button'
                 variant='outline'
                 onClick={() => {
@@ -165,7 +167,7 @@ export default function AddOrEditAssetDialog({ trigger, asset }: Props) {
               >
                 Cancel
               </Button>
-              <Button type='submit' loading={addPhysicalAssetMutation.isLoading || editPhysicalAssetMutation.isLoading}>
+              <Button type='submit' loading={addPhysicalAssetMutation.isPending || editPhysicalAssetMutation.isPending}>
                 {isEdit ? 'Edit' : 'Add'} Asset
               </Button>
             </DialogFooter>

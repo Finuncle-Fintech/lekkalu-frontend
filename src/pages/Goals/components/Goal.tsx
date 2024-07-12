@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
-import { PolarAngleAxis, RadialBar, RadialBarChart } from 'recharts'
+import Chart from 'react-apexcharts'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -28,7 +28,7 @@ type Props = {
   reachable_by_days: number
 }
 
-const circleSize = 150
+const circleSize = 160
 
 export default function Goal({
   className,
@@ -40,17 +40,19 @@ export default function Goal({
   color,
   reachable_by_days,
 }: Props) {
-  const { data: progressQuery } = useQuery([`${GOALS.PROGRESS}_${id}`], () => getGoalProgress(id))
+  const { data: progressQuery } = useQuery({
+    queryKey: [`${GOALS.PROGRESS}_${id}`],
+    queryFn: () => getGoalProgress(id),
+  })
   const qc = useQueryClient()
   const [allowRename, setAllowRename] = useState(false)
   const [goalName, setGoalName] = useState(goalTitle)
 
-  const data = [{ name: goalTitle, progressPercentage: round(progressQuery?.progress_percent ?? 0, 2), color }]
-
-  const goalMutation = useMutation((dto: Partial<GoalType>) => editGoal(id, dto), {
+  const goalMutation = useMutation({
+    mutationFn: (dto: Partial<GoalType>) => editGoal(id, dto),
     onSuccess: () => {
       setAllowRename(false)
-      qc.invalidateQueries([GOALS.GOALS])
+      qc.invalidateQueries({ queryKey: [GOALS.GOALS] })
     },
   })
 
@@ -84,6 +86,47 @@ export default function Goal({
 
   const remainingDays = useMemo(() => goalReachedString(convertDays(reachable_by_days)), [reachable_by_days])
 
+  const chartOptions: ApexCharts.ApexOptions = {
+    chart: {
+      height: 200,
+      type: 'radialBar',
+    },
+    plotOptions: {
+      radialBar: {
+        hollow: {
+          size: '60%',
+        },
+        dataLabels: {
+          name: {
+            show: false,
+          },
+          value: {
+            formatter: function (val) {
+              return val.toString() + '%'
+            },
+            color: '#111',
+            fontSize: '14px',
+            show: true,
+            fontFamily: 'Poppins, sans-serif',
+            fontWeight: 700,
+            offsetY: 4,
+          },
+        },
+      },
+    },
+    fill: {
+      type: 'solid',
+      colors: [colors.violet['500']],
+    },
+    tooltip: {
+      enabled: false,
+    },
+    stroke: {
+      lineCap: 'round',
+    },
+  }
+  const chartSeries: ApexAxisChartSeries | ApexNonAxisChartSeries = [round(progressQuery?.progress_percent ?? 0, 2)]
+
   return (
     <div
       className={cn('flex flex-col border-t-4 rounded-lg p-4 shadow-md hover:cursor-pointer', className)}
@@ -95,31 +138,7 @@ export default function Goal({
         to={!allowRename ? `/goals/${id}` : ''}
         className='flex items-center justify-center gap-4 flex-col h-full'
       >
-        <RadialBarChart
-          width={circleSize}
-          height={circleSize}
-          innerRadius={40}
-          outerRadius={50}
-          data={data}
-          style={{ cursor: 'pointer' }}
-        >
-          <PolarAngleAxis type='number' domain={[0, 100]} angleAxisId={0} tick={false} />
-          <RadialBar
-            background
-            dataKey='progressPercentage'
-            cornerRadius={circleSize / 2}
-            fill={colors.violet['500']}
-          />
-          <text
-            x={circleSize / 2}
-            y={circleSize / 2}
-            textAnchor='middle'
-            dominantBaseline='middle'
-            className='text-sm font-bold'
-          >
-            {`${round(progressQuery?.progress_percent ?? 0, 2)} %`}
-          </text>
-        </RadialBarChart>
+        <Chart options={chartOptions} series={chartSeries} type='radialBar' height={circleSize} />
 
         {allowRename ? (
           <>
@@ -131,7 +150,7 @@ export default function Goal({
               type='textarea'
             />
             <div className='flex gap-2'>
-              <Button onClick={handleRename} loading={goalMutation.isLoading}>
+              <Button onClick={handleRename} loading={goalMutation.isPending}>
                 Rename
               </Button>
               <Button onClick={handleRenameCancel} variant={'secondary'}>

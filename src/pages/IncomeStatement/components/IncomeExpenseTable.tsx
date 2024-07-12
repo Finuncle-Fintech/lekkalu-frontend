@@ -10,6 +10,7 @@ import AddOrEditIncomeExpense from './AddOrEditIncomeExpense'
 import { Button } from '@/components/ui/button'
 import { AddIncomeStatementSchema } from '@/schema/income-statement'
 import DeleteIncomeStatement from './DeleteIncomeStatement'
+import { formatIndianMoneyNotation } from '@/utils/format-money'
 
 type TableType = 'EXPENSE' | 'INCOME'
 
@@ -28,10 +29,10 @@ export default function IncomeExpenseTable({
   updateMutationFn,
   deleteMutationFn,
 }: Props) {
-  const { data, isFetching } = useQuery(
-    [type === 'INCOME' ? INCOME_STATEMENT.SOURCES : INCOME_STATEMENT.IS_EXPENSES],
+  const { data, isFetching } = useQuery({
+    queryKey: [type === 'INCOME' ? INCOME_STATEMENT.SOURCES : INCOME_STATEMENT.IS_EXPENSES],
     queryFn,
-  )
+  })
 
   return (
     <div className='space-y-4'>
@@ -64,7 +65,7 @@ export default function IncomeExpenseTable({
             <TableRow key={incomeStatement.id}>
               <TableCell>{incomeStatement.name}</TableCell>
               <TableCell>{incomeStatement.type}</TableCell>
-              <TableCell>{incomeStatement.amount}</TableCell>
+              <TableCell>{formatIndianMoneyNotation(incomeStatement.amount)}</TableCell>
               <TableCell className='space-x-2'>
                 <AddOrEditIncomeExpense
                   trigger={

@@ -8,9 +8,10 @@ import AddOrEditAssetDialog from './AddOrEditAssetDialog'
 import { Button } from '@/components/ui/button'
 import When from '@/components/When/When'
 import DeleteAssetDialog from './DeleteAssetDialog'
+import { formatIndianMoneyNotation } from '@/utils/format-money'
 
 export default function AssetsTable() {
-  const { data, isFetching } = useQuery([BALANCE_SHEET.ASSETS], fetchPhysicalAssets)
+  const { data, isFetching } = useQuery({ queryKey: [BALANCE_SHEET.ASSETS], queryFn: fetchPhysicalAssets })
 
   return (
     <div className='space-y-2'>
@@ -46,9 +47,9 @@ export default function AssetsTable() {
           {data?.map((asset) => (
             <TableRow key={asset.id}>
               <TableCell>{asset.name}</TableCell>
-              <TableCell>{asset.market_value}</TableCell>
-              <TableCell>{asset.purchase_value}</TableCell>
-              <TableCell>{asset.sell_value ?? 0}</TableCell>
+              <TableCell>{formatIndianMoneyNotation(asset.market_value)}</TableCell>
+              <TableCell>{formatIndianMoneyNotation(asset.purchase_value)}</TableCell>
+              <TableCell>{formatIndianMoneyNotation(asset.sell_value ?? 0)}</TableCell>
               <TableCell className='space-x-2'>
                 <AddOrEditAssetDialog
                   trigger={

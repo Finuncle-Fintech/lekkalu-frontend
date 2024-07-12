@@ -14,9 +14,22 @@ import {
   SheetIcon,
   TargetIcon,
   Wallet,
+  Scale,
+  BookCopy,
+  BarChart2,
 } from 'lucide-react'
 
-type Route = { path: string; label: string; icon: React.ReactElement<{ className?: string }> }
+type SubRoute = {
+  path: string
+  label: string
+}
+
+type Route = {
+  path: string
+  label: string
+  icon: React.ReactElement<{ className?: string }>
+  subMenu?: Array<SubRoute>
+}
 
 export const ROUTES: Array<Route> = [
   {
@@ -53,6 +66,18 @@ export const ROUTES: Array<Route> = [
     path: '/settings',
     label: 'Settings',
     icon: <Settings2Icon />,
+  },
+  {
+    path: '/scenarios',
+    label: 'Scenarios',
+    icon: <BookCopy />,
+    subMenu: [],
+  },
+  {
+    path: '/comparisons',
+    label: 'Comparisons',
+    icon: <Scale />,
+    subMenu: [],
   },
 ]
 export const UN_AUTHENTICATED_ROUTES: Array<Route> = [
@@ -115,5 +140,12 @@ export const FEATURES_ROUTES: { title: string; href: string; description: string
     href: '/feature/calculators',
     description: 'Empower yourself with financial calculators for smart planning and decision-making.',
     icon: <Calculator size={30} />,
+  },
+  {
+    title: 'Scenario',
+    href: '/feature/scenario',
+    description:
+      'Collections of assets, liabilities, and expenses that represent potential financial situations, which users can simulate',
+    icon: <BarChart2 size={30} />,
   },
 ]

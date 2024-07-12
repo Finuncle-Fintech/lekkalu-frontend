@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Link, Navigate, useSearchParams } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -12,12 +12,13 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Button } from '@/components/ui/button'
 import { useAuthContext } from '@/hooks/use-auth'
 import Page from '@/components/Page/Page'
+import GoogleAuth from '@/components/SocialAuth/GoogleAuth'
 
 export const Signin = () => {
-  const { tokenData, loginMutation } = useAuthContext()
+  const { tokenData, loginMutation, googleSignupMutation } = useAuthContext()
   const [searchParams] = useSearchParams()
   const redirectTo = searchParams.get('redirectTo') ?? '/dashboard'
-
+  const authCode = searchParams.get('code')
   const isUnderDevelopment = true
 
   const form = useForm<LoginSchema>({
@@ -32,6 +33,13 @@ export const Signin = () => {
   const handleSignin = (values: LoginSchema) => {
     loginMutation.mutate(values)
   }
+
+  useEffect(() => {
+    if (authCode) {
+      googleSignupMutation.mutate({ code: authCode })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authCode])
 
   if (tokenData) {
     return <Navigate to={{ pathname: redirectTo }} replace />
@@ -61,7 +69,7 @@ export const Signin = () => {
                     <FormItem>
                       <FormLabel>Username</FormLabel>
                       <FormControl>
-                        <Input disabled={loginMutation.isLoading} placeholder='Enter your username' {...field} />
+                        <Input disabled={loginMutation.isPending} placeholder='Enter your username' {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -75,7 +83,7 @@ export const Signin = () => {
                     <FormItem>
                       <FormLabel>Password</FormLabel>
                       <FormControl>
-                        <Password disabled={loginMutation.isLoading} placeholder='Enter your password' {...field} />
+                        <Password disabled={loginMutation.isPending} placeholder='Enter your password' {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -90,7 +98,7 @@ export const Signin = () => {
                       <FormControl>
                         <div className='flex items-center space-x-2'>
                           <Checkbox
-                            disabled={loginMutation.isLoading}
+                            disabled={loginMutation.isPending}
                             id='rememberMe'
                             checked={field.value}
                             onCheckedChange={field.onChange}
@@ -108,7 +116,7 @@ export const Signin = () => {
                   )}
                 />
 
-                <Button type='submit' loading={loginMutation.isLoading}>
+                <Button type='submit' loading={loginMutation.isPending}>
                   Continue
                 </Button>
               </form>
@@ -117,7 +125,16 @@ export const Signin = () => {
             <Link to='/signup' className='block text-sm text-muted-foreground my-2'>
               Don&apos;t have an account? Sign Up
             </Link>
-
+            <div className='space-y-4'>
+              <div className='flex items-center gap-2'>
+                <div className='h-[1px] bg-muted w-full' />
+                <p>OR</p>
+                <div className='h-[1px] bg-muted w-full' />
+              </div>
+              <div className='flex justify-center items-center mx-0'>
+                <GoogleAuth buttonText='Login with Google' />
+              </div>
+            </div>
             <When truthy={!isUnderDevelopment}>
               <div className='space-y-4'>
                 <div className='flex items-center gap-2'>

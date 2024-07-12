@@ -4,8 +4,10 @@ import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { isEmpty } from 'lodash'
-import { useLocation } from 'react-router'
+import { useLocation } from 'react-router-dom'
 import dayjs from 'dayjs'
+import Chart from 'react-apexcharts'
+import { blue, purple } from 'tailwindcss/colors'
 import { Button } from '@/components/ui/button'
 import { useToast } from '@/components/ui/use-toast'
 import { emiCalculatorSchema } from '@/schema/calculators'
@@ -15,9 +17,9 @@ import InputFieldsRenderer, { InputField } from '@/components/InputFieldsRendere
 import { handleShare } from '@/utils/clipboard'
 import { calculateAssetsForEmi, calculateEmi, calculateTenureByUnit } from '@/utils/calculators'
 import When from '@/components/When/When'
-// @ts-expect-error
-import { AssetsLiabilitiesChart } from '../../components/Charts/AssetsLiabilitiesChart'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { useUserPreferences } from '@/hooks/use-user-preferences'
+import { formatIndianMoneyNotation } from '@/utils/format-money'
 
 type EmiValues = z.infer<typeof emiCalculatorSchema>
 
@@ -47,6 +49,7 @@ const EmiCalculator = () => {
   const location = useLocation()
   const parsedObject = parseQueryString(location.search)
   const [isCopied, setIsCopied] = useState(false)
+  const { preferences } = useUserPreferences()
 
   const { toast } = useToast()
 
@@ -110,7 +113,7 @@ const EmiCalculator = () => {
       id: 'disbursementDate',
       label: 'Disbursement Date',
       type: 'date',
-      defaultDate: !isEmpty(parsedObject) ? dayjs.unix(parsedObject.disbursementDate as number).toDate() : new Date(),
+      defaultDate: !isEmpty(parsedObject) ? dayjs(parsedObject.disbursementDate).toDate() : new Date(),
       helpText: EmiHelpTexts.disbursementDate,
     },
     {
@@ -123,7 +126,7 @@ const EmiCalculator = () => {
 
   const handleCopy = () => {
     setIsCopied(true)
-    handleShare({ ...values, disbursementDate: dayjs(values.disbursementDate).unix() })
+    handleShare({ ...values, disbursementDate: dayjs(values.disbursementDate).valueOf() })
     setTimeout(() => setIsCopied(false), 3000)
   }
 
@@ -131,9 +134,9 @@ const EmiCalculator = () => {
     const data = {
       loanEmi: result?.summary?.loan_emi,
       totalInterestPayable: result?.summary?.total_interest_payable,
-      totalPayment: result?.summary?.total_payment
+      totalPayment: result?.summary?.total_payment,
     }
-    return [{ ...values, ...data }]
+    return [{ ...values, disbursementDate: dayjs(values.disbursementDate).format('MMM DD, YYYY'), ...data }]
   }, [values, result])
 
   const handleExportToExcel = () => {
@@ -147,6 +150,30 @@ const EmiCalculator = () => {
     XLSX.utils.book_append_sheet(wb, finalWorksheet, 'EMI Calculation')
     XLSX.writeFile(wb, 'emi_calculation.xlsx', { compression: true })
   }
+
+  const chartOptionsEMI: ApexCharts.ApexOptions = {
+    chart: {
+      width: 400,
+      type: 'pie',
+    },
+    labels: result?.assets.finalAssets?.map((ele) => `${ele.name}`),
+    legend: {
+      position: 'bottom',
+      fontSize: '16px',
+    },
+    colors: [blue[500], purple[500]],
+    fill: {
+      type: 'gradient',
+    },
+    tooltip: {
+      y: {
+        formatter: (value) => `${preferences.currencyUnit} ${formatIndianMoneyNotation(value)}`,
+      },
+    },
+  }
+  const chartSeriesEMI: ApexAxisChartSeries | ApexNonAxisChartSeries = result?.assets.finalAssets?.map(
+    (ele) => ele.value,
+  ) as any
 
   return (
     <div className='max-w-screen-xl mx-auto p-4 space-y-4'>
@@ -178,22 +205,23 @@ const EmiCalculator = () => {
           <div className='flex items-center justify-center flex-col gap-4 text-center'>
             <div>
               <div>Loan EMI</div>
-              <div className='text-2xl font-medium'>{result?.summary?.loan_emi}</div>
+              <div className='text-2xl font-medium'>{formatIndianMoneyNotation(result?.summary?.loan_emi)}</div>
             </div>
             <div>
               <div>Total Interest Payable</div>
-              <div className='text-2xl font-medium'>{result?.summary?.total_interest_payable}</div>
+              <div className='text-2xl font-medium'>
+                {formatIndianMoneyNotation(result?.summary?.total_interest_payable)}
+              </div>
             </div>
             <div>
               <div>Total Payment</div>
-              <div className='text-2xl font-medium'>{result?.summary?.total_payment}</div>
+              <div className='text-2xl font-medium'>{formatIndianMoneyNotation(result?.summary?.total_payment)}</div>
             </div>
             <div>
               <Button onClick={handleExportToExcel}>Export to Excel</Button>
             </div>
           </div>
-
-          <AssetsLiabilitiesChart data={result?.assets} type='assets' />
+          <Chart options={chartOptionsEMI} series={chartSeriesEMI} type='pie' width={400} />
         </div>
       </When>
 
@@ -211,10 +239,10 @@ const EmiCalculator = () => {
           {result?.summary?.repayment_table.map((record) => (
             <TableRow key={record.month}>
               <TableCell>{Math.abs(record.month)}</TableCell>
-              <TableCell>{Math.abs(record.principal)}</TableCell>
-              <TableCell>{Math.abs(record.interest)}</TableCell>
-              <TableCell>{Math.abs(record.total_payment)}</TableCell>
-              <TableCell>{Math.abs(record.outstandingPrincipal)}</TableCell>
+              <TableCell>{formatIndianMoneyNotation(Math.abs(record.principal))}</TableCell>
+              <TableCell>{formatIndianMoneyNotation(Math.abs(record.interest))}</TableCell>
+              <TableCell>{formatIndianMoneyNotation(Math.abs(record.total_payment))}</TableCell>
+              <TableCell>{formatIndianMoneyNotation(Math.abs(record.outstandingPrincipal))}</TableCell>
             </TableRow>
           ))}
         </TableBody>

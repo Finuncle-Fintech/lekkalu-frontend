@@ -3,8 +3,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ArrowLeftIcon } from 'lucide-react'
 import { useMutation } from '@tanstack/react-query'
-import { useNavigate } from 'react-router'
-import { Link } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import dayjs from 'dayjs'
 import Page from '@/components/Page/Page'
 import { AddGoalSchema, addGoalSchema } from '@/schema/goals'
@@ -22,7 +21,8 @@ export default function CreateGoal() {
     },
   })
 
-  const createGoalMutation = useMutation(addGoal, {
+  const createGoalMutation = useMutation({
+    mutationFn: addGoal,
     onSuccess: () => {
       toast({ title: 'Goal created successfully!' })
       navigate('/goals')
@@ -47,7 +47,7 @@ export default function CreateGoal() {
         <ArrowLeftIcon className='w-4 h-4' />
         Back to Goals
       </Link>
-      <Form form={form} onSubmit={handleGoalCreate} isLoading={createGoalMutation.isLoading} />
+      <Form form={form} onSubmit={handleGoalCreate} isLoading={createGoalMutation.isPending} />
     </Page>
   )
 }

@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react'
 import { BadgeCheckIcon, GaugeIcon, SplitIcon, TargetIcon } from 'lucide-react'
-import { useParams } from 'react-router'
+import { useParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import Page from '@/components/Page/Page'
 import { BALANCE_SHEET, GOALS } from '@/utils/query-keys'
@@ -9,13 +9,16 @@ import GoalTimeline from './components/GoalTimeline'
 import BackButton from './components/BackButton'
 import { fetchIncomeExpenses } from '@/queries/income-statement'
 import { convertDays, goalReachedString } from './utils/dateTime'
+import { formatIndianMoneyNotation } from '@/utils/format-money'
 
 export default function GoalDetails() {
   const { id } = useParams() as { id: string }
 
-  const { data: incomeExpenses } = useQuery([BALANCE_SHEET.INCOME_EXPENSES], fetchIncomeExpenses)
+  const { data: incomeExpenses } = useQuery({ queryKey: [BALANCE_SHEET.INCOME_EXPENSES], queryFn: fetchIncomeExpenses })
 
-  const { isLoading, data } = useQuery([GOALS.DETAILS, Number(id)], () => fetchGoalDetails(Number(id)), {
+  const { isLoading, data } = useQuery({
+    queryKey: [GOALS.DETAILS, Number(id)],
+    queryFn: () => fetchGoalDetails(Number(id)),
     select: (data) => {
       return {
         ...data,
@@ -59,7 +62,7 @@ export default function GoalDetails() {
             <TargetIcon className='w-4 h-4' />
             <div>Target</div>
           </div>
-          <div className='flex-1 font-medium'>{data.target_value}</div>
+          <div className='flex-1 font-medium'>{formatIndianMoneyNotation(data.target_value)}</div>
         </div>
 
         <div className='flex'>

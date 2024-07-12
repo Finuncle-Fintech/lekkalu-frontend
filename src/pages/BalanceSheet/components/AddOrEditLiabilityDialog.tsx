@@ -37,19 +37,21 @@ export default function AddOrEditLiabilityDialog({ trigger, liability }: Props) 
     },
   })
 
-  const addLiabilityMutation = useMutation(addLiability, {
+  const addLiabilityMutation = useMutation({
+    mutationFn: addLiability,
     onSuccess: () => {
       form.reset()
-      qc.invalidateQueries([BALANCE_SHEET.LIABILITIES])
+      qc.invalidateQueries({ queryKey: [BALANCE_SHEET.LIABILITIES] })
       toast({ title: 'Liability created successfully!' })
       setIsDialogOpen(false)
     },
     onError: (err: any) => toast(getErrorMessage(err)),
   })
 
-  const editLiabilityMutation = useMutation((dto: AddLiabilitySchema) => editLiability(liability?.id!, dto), {
+  const editLiabilityMutation = useMutation({
+    mutationFn: (dto: AddLiabilitySchema) => editLiability(liability?.id!, dto),
     onSuccess: () => {
-      qc.invalidateQueries([BALANCE_SHEET.LIABILITIES])
+      qc.invalidateQueries({ queryKey: [BALANCE_SHEET.LIABILITIES] })
       toast({ title: 'Liability edited successfully!' })
       setIsDialogOpen(false)
     },
@@ -78,7 +80,7 @@ export default function AddOrEditLiabilityDialog({ trigger, liability }: Props) 
       >
         {cloneElement(trigger)}
       </DialogTrigger>
-      <DialogContent className='max-h-[800px] overflow-auto'>
+      <DialogContent>
         <DialogHeader>
           <DialogTitle>{isEdit ? 'Edit' : 'Add'} Liability</DialogTitle>
         </DialogHeader>
@@ -89,7 +91,7 @@ export default function AddOrEditLiabilityDialog({ trigger, liability }: Props) 
 
             <DialogFooter className='gap-2 md:col-span-2'>
               <Button
-                loading={addLiabilityMutation.isLoading || editLiabilityMutation.isLoading}
+                loading={addLiabilityMutation.isPending || editLiabilityMutation.isPending}
                 type='button'
                 variant='outline'
                 onClick={() => {
@@ -98,7 +100,7 @@ export default function AddOrEditLiabilityDialog({ trigger, liability }: Props) 
               >
                 Cancel
               </Button>
-              <Button type='submit' loading={addLiabilityMutation.isLoading || editLiabilityMutation.isLoading}>
+              <Button type='submit' loading={addLiabilityMutation.isPending || editLiabilityMutation.isPending}>
                 {isEdit ? 'Edit' : 'Add'} Liability
               </Button>
             </DialogFooter>

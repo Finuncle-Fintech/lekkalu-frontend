@@ -33,9 +33,10 @@ export default function AddOrEditLending({ accounts, trigger }: Props) {
       started: accounts?.started ? new Date(accounts.started) : undefined,
     },
   })
-  const addAccountMutation = useMutation(addLendingAccount, {
+  const addAccountMutation = useMutation({
+    mutationFn: addLendingAccount,
     onSuccess: () => {
-      queryClient.invalidateQueries([LENDING.ACCOUNTS])
+      queryClient.invalidateQueries({ queryKey: [LENDING.ACCOUNTS] })
       form.reset()
       toast({ title: 'Account created successfully!' })
       setIsDialogOpen(false)
@@ -43,9 +44,10 @@ export default function AddOrEditLending({ accounts, trigger }: Props) {
     onError: (err: any) => toast(getErrorMessage(err)),
   })
 
-  const updateAccountMutation = useMutation((dto: AddAccountSchema) => updateLendingAccount(accounts?.id!, dto), {
+  const updateAccountMutation = useMutation({
+    mutationFn: (dto: AddAccountSchema) => updateLendingAccount(accounts?.id!, dto),
     onSuccess: () => {
-      queryClient.invalidateQueries([LENDING.ACCOUNTS])
+      queryClient.invalidateQueries({ queryKey: [LENDING.ACCOUNTS] })
       toast({ title: 'Account updated successfully!' })
       setIsDialogOpen(false)
     },
@@ -127,7 +129,7 @@ export default function AddOrEditLending({ accounts, trigger }: Props) {
               >
                 Cancel
               </Button>
-              <Button type='submit' loading={addAccountMutation.isLoading || updateAccountMutation.isLoading}>
+              <Button type='submit' loading={addAccountMutation.isPending || updateAccountMutation.isPending}>
                 {accounts ? 'Update' : 'Add'}
               </Button>
             </DialogFooter>

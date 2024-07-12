@@ -32,6 +32,14 @@ export const userClient = axios.create({
 })
 
 /**
+ * This is for google auth specific requests
+ */
+export const googleClient = axios.create({
+  baseURL: process.env.REACT_APP_BACKEND_URL,
+  headers: BASIC_HEADER,
+})
+
+/**
  * This is for token specific requests
  */
 export const tokenClient = axios.create({
@@ -72,6 +80,20 @@ export const v2ApiClient = axios.create({
   headers: BASIC_HEADER,
 })
 v2ApiClient?.interceptors.request.use((config) => {
+  if (!config.headers.Authorization) {
+    config.headers.Authorization = `Bearer ${getCookie('access')}`
+  }
+
+  return config
+})
+
+/** For resend-email-verification request */
+
+export const registrationClient = axios.create({
+  baseURL: process.env.REACT_APP_BACKEND_URL,
+  headers: BASIC_HEADER,
+})
+registrationClient?.interceptors.request.use((config) => {
   if (!config.headers.Authorization) {
     config.headers.Authorization = `Bearer ${getCookie('access')}`
   }

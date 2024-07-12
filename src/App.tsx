@@ -21,6 +21,14 @@ const Lending = lazy(() => import('@/pages/Lending/Lending'))
 const BalanceSheet = lazy(() => import('@/pages/BalanceSheet/BalanceSheet'))
 const Settings = lazy(() => import('@/pages/Settings/Settings'))
 const Profile = lazy(() => import('@/pages/Profile/Profile'))
+const Comparison = lazy(() => import('@/pages/Comparison'))
+const AddComparison = lazy(() => import('@/pages/Comparison/AddComparison'))
+const EditComparison = lazy(() => import('@/pages/Comparison/EditComparison'))
+const ComparisonDetails = lazy(() => import('@/pages/Comparison/ComparisonDetail'))
+const Scenarios = lazy(() => import('@/pages/Scenarios'))
+const AddScenario = lazy(() => import('@/pages/Scenarios/AddScenario'))
+const EditScenario = lazy(() => import('@/pages/Scenarios/EditScenario'))
+const ScenarioDetail = lazy(() => import('@/pages/Scenarios/ScenarioDetail'))
 
 /** Non-Authenticated Routes */
 const Home = lazy(() => import('@/pages/Home/Home'))
@@ -35,6 +43,7 @@ const Pricing = lazy(() => import('@/pages/Pricing/Pricing'))
 const NotFound = lazy(() => import('@/pages/NotFound/NotFound'))
 const Support = lazy(() => import('./pages/Support/Support'))
 const FeaturesDetails = lazy(() => import('./pages/Features/FeaturesDetails'))
+const EmailVerificationProcess = lazy(() => import('./pages/EmailVerification/EmailVerificationProcess'))
 
 function App() {
   useEffect(() => {
@@ -71,6 +80,14 @@ function App() {
           <Route path='/balance-sheet' element={<BalanceSheet />} />
           <Route path='/settings' element={<Settings />} />
           <Route path='/profile' element={<Profile />} />
+          <Route path='/comparisons' element={<Comparison />} />
+          <Route path='/comparisons/new' element={<AddComparison />} />
+          <Route path='/comparisons/edit/:id' element={<EditComparison />} />
+          <Route path='/comparisons/:id' element={<ComparisonDetails />} />
+          <Route path='/scenarios' element={<Scenarios />} />
+          <Route path='/scenarios/new' element={<AddScenario />} />
+          <Route path='/scenarios/edit/:id' element={<EditScenario />} />
+          <Route path='/scenarios/:id' element={<ScenarioDetail />} />
         </Route>
 
         <Route
@@ -95,7 +112,10 @@ function App() {
           <Route path='/privacy-policies' element={<PrivacyPolicies />} />
           <Route path='/pricing' element={<Pricing />} />
           <Route path='/support' element={<Support />} />
+          <Route path='/feature/comparisons/:id' element={<ComparisonDetails />} />
+          <Route path='/feature/scenarios/:id' element={<ScenarioDetail />} />
           <Route path='/feature/:toolName' element={<FeaturesDetails />} />
+          <Route path='/email-verification/:code' element={<EmailVerificationProcess />} />
         </Route>
         <Route path='*' element={<NotFound />} />
       </Routes>

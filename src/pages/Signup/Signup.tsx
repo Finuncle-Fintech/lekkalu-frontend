@@ -3,32 +3,38 @@ import React from 'react'
 import { useForm } from 'react-hook-form'
 import { Link, Navigate, useSearchParams } from 'react-router-dom'
 import { Input } from '@/components/ui/input'
-import { SignupSchema, signupSchema } from '@/schema/auth'
+import { SignupSchemaNew, signupSchemaNew } from '@/schema/auth'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import Password from '@/components/ui/password'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Button } from '@/components/ui/button'
 import { useAuthContext } from '@/hooks/use-auth'
 import Page from '@/components/Page/Page'
+import GoogleAuth from '@/components/SocialAuth/GoogleAuth'
 
 export default function Signup() {
   const { tokenData, signupMutation } = useAuthContext()
   const [searchParams] = useSearchParams()
   const redirectTo = searchParams.get('redirectTo') ?? '/dashboard'
 
-  const form = useForm<SignupSchema>({
-    resolver: zodResolver(signupSchema),
+  const signupFormNew = useForm<SignupSchemaNew>({
+    resolver: zodResolver(signupSchemaNew),
     defaultValues: {
       username: '',
       email: '',
-      password: '',
+      password1: '',
+      password2: '',
       privacyPolicy: false,
       termsAndConditions: false,
     },
   })
-
-  const handleSignup = (values: SignupSchema) => {
-    signupMutation.mutate({ username: values.username, email: values.email, password: values.password })
+  const handleSignup = (values: SignupSchemaNew) => {
+    signupMutation.mutate({
+      username: values.username,
+      email: values.email,
+      password1: values.password1,
+      password2: values.password2,
+    })
   }
 
   if (tokenData) {
@@ -49,29 +55,29 @@ export default function Signup() {
           <div className='bg-white p-4 m-4 rounded-lg'>
             <h1 className='text-2xl font-bold mb-4'>Sign Up</h1>
 
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(handleSignup)} className='space-y-4 w-full'>
+            <Form {...signupFormNew}>
+              <form onSubmit={signupFormNew.handleSubmit(handleSignup)} className='space-y-4 w-full'>
                 <FormField
-                  control={form.control}
+                  control={signupFormNew.control}
                   name='username'
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Username</FormLabel>
                       <FormControl>
-                        <Input disabled={signupMutation.isLoading} placeholder='Enter your username' {...field} />
+                        <Input disabled={signupMutation.isPending} placeholder='Enter your username' {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
                 <FormField
-                  control={form.control}
+                  control={signupFormNew.control}
                   name='email'
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Email</FormLabel>
                       <FormControl>
-                        <Input disabled={signupMutation.isLoading} placeholder='Enter your email' {...field} />
+                        <Input disabled={signupMutation.isPending} placeholder='Enter your email' {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -79,13 +85,26 @@ export default function Signup() {
                 />
 
                 <FormField
-                  control={form.control}
-                  name='password'
+                  control={signupFormNew.control}
+                  name='password1'
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Password</FormLabel>
                       <FormControl>
-                        <Password disabled={signupMutation.isLoading} placeholder='Enter your password' {...field} />
+                        <Password disabled={signupMutation.isPending} placeholder='Enter your password' {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={signupFormNew.control}
+                  name='password2'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Confirm Password</FormLabel>
+                      <FormControl>
+                        <Password disabled={signupMutation.isPending} placeholder='Enter your password' {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -93,14 +112,14 @@ export default function Signup() {
                 />
 
                 <FormField
-                  control={form.control}
+                  control={signupFormNew.control}
                   name='termsAndConditions'
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
                         <div className='flex items-center space-x-2'>
                           <Checkbox
-                            disabled={signupMutation.isLoading}
+                            disabled={signupMutation.isPending}
                             id='termsAndConditions'
                             checked={field.value}
                             onCheckedChange={field.onChange}
@@ -122,15 +141,15 @@ export default function Signup() {
                 />
 
                 <FormField
-                  disabled={signupMutation.isLoading}
-                  control={form.control}
+                  disabled={signupMutation.isPending}
+                  control={signupFormNew.control}
                   name='privacyPolicy'
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
                         <div className='flex items-center space-x-2'>
                           <Checkbox
-                            disabled={signupMutation.isLoading}
+                            disabled={signupMutation.isPending}
                             id='privacyPolicy'
                             checked={field.value}
                             onCheckedChange={field.onChange}
@@ -151,7 +170,7 @@ export default function Signup() {
                   )}
                 />
 
-                <Button type='submit' loading={signupMutation.isLoading}>
+                <Button type='submit' loading={signupMutation.isPending}>
                   Continue
                 </Button>
 
@@ -160,6 +179,16 @@ export default function Signup() {
                 </Link>
               </form>
             </Form>
+            <div className='space-y-4'>
+              <div className='flex items-center gap-2'>
+                <div className='h-[1px] bg-muted w-full' />
+                <p>OR</p>
+                <div className='h-[1px] bg-muted w-full' />
+              </div>
+              <div className='flex justify-center items-center mx-0'>
+                <GoogleAuth buttonText='Signup with Google' />
+              </div>
+            </div>
           </div>
         </div>
       </Page>

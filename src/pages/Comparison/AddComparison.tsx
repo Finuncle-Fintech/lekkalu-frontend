@@ -16,7 +16,8 @@ const AddComparison = () => {
     resolver: zodResolver(addComparisonSchema),
   })
 
-  const { mutate, isLoading } = useMutation(createComparisons, {
+  const { mutate, isPending } = useMutation({
+    mutationFn: createComparisons,
     onSuccess: () => {
       toast({ title: 'Comparison created successfully' })
       navigate('/comparisons')
@@ -34,7 +35,7 @@ const AddComparison = () => {
   return (
     <Page className='space-y-8'>
       <PageTitle title='Create a comparison' backUrl='/comparisons' backUrlTitle='Back to Comparisons' />
-      <ComparisonForm form={form} onSubmit={handleSubmit} isLoading={isLoading} />
+      <ComparisonForm form={form} onSubmit={handleSubmit} isLoading={isPending} />
     </Page>
   )
 }

@@ -13,7 +13,10 @@ import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible'
 import { formatIndianMoneyNotation } from '@/utils/format-money'
 
 export default function TransactionListTable({ acc, isOpen }: { acc: { name: string; id: number }; isOpen: boolean }) {
-  const { data: transactions, isLoading } = useQuery([LENDING.TRANSACTIONS], fetchLendingTransaction)
+  const { data: transactions, isLoading } = useQuery({
+    queryKey: [LENDING.TRANSACTIONS],
+    queryFn: fetchLendingTransaction,
+  })
   const transactionList = useMemo(() => {
     if (!transactions) return []
     return transactions.filter((t) => t.lending_account?.toString() === acc.id?.toString())

@@ -16,9 +16,10 @@ export default function DeleteLendingTransaction({ id }: Props) {
   const queryClient = useQueryClient()
   const { toast } = useToast()
 
-  const deleteLendingTransactionMutation = useMutation(deleteLendingTransaction, {
+  const deleteLendingTransactionMutation = useMutation({
+    mutationFn: deleteLendingTransaction,
     onSuccess: () => {
-      queryClient.invalidateQueries([LENDING.ACCOUNTS])
+      queryClient.invalidateQueries({ queryKey: [LENDING.ACCOUNTS] })
 
       toast({ title: 'Transaction deleted successfully!' })
     },
@@ -35,9 +36,9 @@ export default function DeleteLendingTransaction({ id }: Props) {
       title='Delete Transaction'
       description='Are you sure you want to delete this transaction?'
       okText='Yes, Delete'
-      okButtonProps={{ disabled: deleteLendingTransactionMutation.isLoading, className: 'bg-red-500 hover:bg-red-400' }}
+      okButtonProps={{ disabled: deleteLendingTransactionMutation.isPending, className: 'bg-red-500 hover:bg-red-400' }}
       cancelText='No'
-      cancelProps={{ disabled: deleteLendingTransactionMutation.isLoading }}
+      cancelProps={{ disabled: deleteLendingTransactionMutation.isPending }}
       onOk={() => {
         deleteLendingTransactionMutation.mutate(id)
       }}

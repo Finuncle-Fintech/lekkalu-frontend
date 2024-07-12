@@ -14,9 +14,11 @@ import { formatIndianMoneyNotation } from '@/utils/format-money'
 export default function GoalDetails() {
   const { id } = useParams() as { id: string }
 
-  const { data: incomeExpenses } = useQuery([BALANCE_SHEET.INCOME_EXPENSES], fetchIncomeExpenses)
+  const { data: incomeExpenses } = useQuery({ queryKey: [BALANCE_SHEET.INCOME_EXPENSES], queryFn: fetchIncomeExpenses })
 
-  const { isLoading, data } = useQuery([GOALS.DETAILS, Number(id)], () => fetchGoalDetails(Number(id)), {
+  const { isLoading, data } = useQuery({
+    queryKey: [GOALS.DETAILS, Number(id)],
+    queryFn: () => fetchGoalDetails(Number(id)),
     select: (data) => {
       return {
         ...data,

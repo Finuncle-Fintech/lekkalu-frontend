@@ -19,8 +19,8 @@ import { INCOME_STATEMENT } from '@/utils/query-keys'
 import { normalizeNumber } from '@/utils/number'
 
 export default function IncomeStatement() {
-  const { data: incomeSources } = useQuery([INCOME_STATEMENT.SOURCES], fetchIncomeSources)
-  const { data: incomeExpenses } = useQuery([INCOME_STATEMENT.IS_EXPENSES], fetchIncomeExpenses)
+  const { data: incomeSources } = useQuery({ queryKey: [INCOME_STATEMENT.SOURCES], queryFn: fetchIncomeSources })
+  const { data: incomeExpenses } = useQuery({ queryKey: [INCOME_STATEMENT.IS_EXPENSES], queryFn: fetchIncomeExpenses })
 
   const stats = useMemo(() => {
     if (!incomeSources || !incomeExpenses) {

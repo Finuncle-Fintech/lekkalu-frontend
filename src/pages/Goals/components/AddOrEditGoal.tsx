@@ -38,18 +38,20 @@ export default function AddOrEditGoal({ trigger, goal }: Props) {
     },
   })
 
-  const addGoalMutation = useMutation(addGoal, {
+  const addGoalMutation = useMutation({
+    mutationFn: addGoal,
     onSuccess: () => {
-      qc.invalidateQueries([GOALS.GOALS])
+      qc.invalidateQueries({ queryKey: [GOALS.GOALS] })
       toast({ title: 'Goal added successfully!' })
       setIsDialogOpen(false)
     },
     onError: (err: any) => toast(getErrorMessage(err)),
   })
 
-  const editGoalMutation = useMutation((dto: AddGoalSchema) => editGoal(goal?.id!, dto), {
+  const editGoalMutation = useMutation({
+    mutationFn: (dto: AddGoalSchema) => editGoal(goal?.id!, dto),
     onSuccess: () => {
-      qc.invalidateQueries([GOALS.GOALS])
+      qc.invalidateQueries({ queryKey: [GOALS.GOALS] })
       toast({ title: 'Goal updated successfully!' })
       setIsDialogOpen(false)
     },
@@ -95,7 +97,7 @@ export default function AddOrEditGoal({ trigger, goal }: Props) {
 
             <DialogFooter className='gap-2 md:col-span-2'>
               <Button
-                loading={addGoalMutation.isLoading || editGoalMutation.isLoading}
+                loading={addGoalMutation.isPending || editGoalMutation.isPending}
                 type='button'
                 variant='outline'
                 onClick={() => {
@@ -104,7 +106,7 @@ export default function AddOrEditGoal({ trigger, goal }: Props) {
               >
                 Cancel
               </Button>
-              <Button type='submit' loading={addGoalMutation.isLoading || editGoalMutation.isLoading}>
+              <Button type='submit' loading={addGoalMutation.isPending || editGoalMutation.isPending}>
                 {isEdit ? 'Edit' : 'Add'} Goal
               </Button>
             </DialogFooter>

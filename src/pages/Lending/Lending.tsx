@@ -4,10 +4,11 @@ import { Button } from '@/components/ui/button'
 import LedingAccountTable from './components/LedingAccountTable'
 import AddOrEditTransaction from './components/AddOrEditTransaction/AddOrEditTransaction'
 import LentAndBorrowedChart from './components/LentAndBorrowedChart'
+import Page from '@/components/Page/Page'
 
 export default function Lending() {
   return (
-    <div className='max-w-screen-xl mx-auto align-self-start min-h-[80vh] p-4 space-y-4'>
+    <Page className='space-y-4 min-h-screen'>
       <div className='text-2xl font-bold flex justify-between items-center'>
         <div>Lending and Borrowing</div>
       </div>
@@ -28,6 +29,6 @@ export default function Lending() {
       </div>
       <LentAndBorrowedChart />
       <LedingAccountTable />
-    </div>
+    </Page>
   )
 }

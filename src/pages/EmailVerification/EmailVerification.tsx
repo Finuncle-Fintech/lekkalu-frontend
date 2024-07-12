@@ -28,7 +28,8 @@ export const EmailVerification = ({ isEmailVerifiedDialogOpen, setIsEmailVerifie
     }
   }, [isEmailVerifiedDialogOpen, userData])
 
-  const resendEmailMutation = useMutation(resendEmail, {
+  const resendEmailMutation = useMutation({
+    mutationFn: resendEmail,
     onSuccess: () => {
       toast({
         title: 'Email send successfully!',
@@ -89,7 +90,7 @@ export const EmailVerification = ({ isEmailVerifiedDialogOpen, setIsEmailVerifie
           <Button
             className='w-full'
             variant={'outline'}
-            loading={resendEmailMutation.isLoading}
+            loading={resendEmailMutation.isPending}
             onClick={() => {
               handleRemindMeLater()
             }}
@@ -99,7 +100,7 @@ export const EmailVerification = ({ isEmailVerifiedDialogOpen, setIsEmailVerifie
 
           <Button
             className='w-full'
-            loading={resendEmailMutation.isLoading}
+            loading={resendEmailMutation.isPending}
             onClick={() => {
               handleResendEmail()
             }}

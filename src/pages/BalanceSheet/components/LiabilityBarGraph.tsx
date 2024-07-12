@@ -7,7 +7,7 @@ import { formatIndianMoneyNotation } from '@/utils/format-money'
 import { useUserPreferences } from '@/hooks/use-user-preferences'
 
 export default function LiabilityBarGraph() {
-  const { data, isLoading } = useQuery([BALANCE_SHEET.LIABILITIES], fetchLiabilities)
+  const { data, isLoading } = useQuery({ queryKey: [BALANCE_SHEET.LIABILITIES], queryFn: fetchLiabilities })
   const { preferences } = useUserPreferences()
   const liabilitiesData = useMemo(() => {
     if (!data) {

@@ -24,7 +24,7 @@ const ComparisonForm = ({ form, onSubmit, isLoading, isEdit }: ComparisonFormTyp
   const [addedSenarios, setAddedScenarios] = useState<Array<Scenario>>([])
   const [remaningScenarios, setRemainingScenarios] = useState<Array<Scenario>>([])
 
-  const { data: scenarios } = useQuery([SCENARIOS.SCENARIOS], fetchScenarios)
+  const { data: scenarios } = useQuery({ queryKey: [SCENARIOS.SCENARIOS], queryFn: fetchScenarios })
 
   useEffect(() => {
     if (isEdit && form.getValues('scenarios')?.length) {

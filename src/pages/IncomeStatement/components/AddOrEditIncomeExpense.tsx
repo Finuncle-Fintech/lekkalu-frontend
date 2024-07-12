@@ -33,11 +33,11 @@ export default function AddOrEditIncomeExpense({
   const isEdit = Boolean(incomeStatement)
   const qc = useQueryClient()
   const { toast } = useToast()
-  const { data: incomeTypes } = useQuery(
-    [INCOME_STATEMENT.INCOME_TYPE],
-    type === 'INCOME' ? fetchIncomeSourceTypes : fetchIncomeExpensesTypes,
-    { enabled: !!isDialogOpen },
-  )
+  const { data: incomeTypes } = useQuery({
+    queryKey: [INCOME_STATEMENT.INCOME_TYPE],
+    queryFn: type === 'INCOME' ? fetchIncomeSourceTypes : fetchIncomeExpensesTypes,
+    enabled: !!isDialogOpen,
+  })
 
   const form = useForm<AddIncomeStatementSchema>({
     resolver: zodResolver(addIncomeStatementSchema),
@@ -48,10 +48,11 @@ export default function AddOrEditIncomeExpense({
     },
   })
 
-  const createMutation = useMutation(createMutationFn, {
+  const createMutation = useMutation({
+    mutationFn: createMutationFn,
     onSuccess: () => {
       form.reset()
-      qc.invalidateQueries([type === 'INCOME' ? INCOME_STATEMENT.SOURCES : INCOME_STATEMENT.IS_EXPENSES])
+      qc.invalidateQueries({ queryKey: [type === 'INCOME' ? INCOME_STATEMENT.SOURCES : INCOME_STATEMENT.IS_EXPENSES] })
       setIsDialogOpen(false)
       toast({ title: `${capitalize(type)} created successfully!` })
     },
@@ -61,9 +62,10 @@ export default function AddOrEditIncomeExpense({
     },
   })
 
-  const updateMutation = useMutation((dto: AddIncomeStatementSchema) => updateMutationFn(incomeStatement?.id!, dto), {
+  const updateMutation = useMutation({
+    mutationFn: (dto: AddIncomeStatementSchema) => updateMutationFn(incomeStatement?.id!, dto),
     onSuccess: () => {
-      qc.invalidateQueries([type === 'INCOME' ? INCOME_STATEMENT.SOURCES : INCOME_STATEMENT.IS_EXPENSES])
+      qc.invalidateQueries({ queryKey: [type === 'INCOME' ? INCOME_STATEMENT.SOURCES : INCOME_STATEMENT.IS_EXPENSES] })
       setIsDialogOpen(false)
       toast({ title: `${capitalize(type)} updated successfully!` })
     },
@@ -135,7 +137,7 @@ export default function AddOrEditIncomeExpense({
               >
                 Cancel
               </Button>
-              <Button type='submit' loading={createMutation.isLoading || updateMutation.isLoading}>
+              <Button type='submit' loading={createMutation.isPending || updateMutation.isPending}>
                 {isEdit ? 'Edit' : 'Add'} {capitalize(type)}
               </Button>
             </DialogFooter>

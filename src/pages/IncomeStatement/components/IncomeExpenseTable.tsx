@@ -29,10 +29,10 @@ export default function IncomeExpenseTable({
   updateMutationFn,
   deleteMutationFn,
 }: Props) {
-  const { data, isFetching } = useQuery(
-    [type === 'INCOME' ? INCOME_STATEMENT.SOURCES : INCOME_STATEMENT.IS_EXPENSES],
+  const { data, isFetching } = useQuery({
+    queryKey: [type === 'INCOME' ? INCOME_STATEMENT.SOURCES : INCOME_STATEMENT.IS_EXPENSES],
     queryFn,
-  )
+  })
 
   return (
     <div className='space-y-4'>

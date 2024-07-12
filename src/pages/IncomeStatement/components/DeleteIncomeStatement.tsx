@@ -18,9 +18,10 @@ export default function DeleteIncomeStatement({ id, type, deleteMutationFn }: Pr
   const qc = useQueryClient()
   const { toast } = useToast()
 
-  const deleteMutation = useMutation(deleteMutationFn, {
+  const deleteMutation = useMutation({
+    mutationFn: deleteMutationFn,
     onSuccess: () => {
-      qc.invalidateQueries([type === 'INCOME' ? INCOME_STATEMENT.SOURCES : INCOME_STATEMENT.IS_EXPENSES])
+      qc.invalidateQueries({ queryKey: [type === 'INCOME' ? INCOME_STATEMENT.SOURCES : INCOME_STATEMENT.IS_EXPENSES] })
       toast({ title: `${capitalize(type)} deleted successfully!` })
     },
     onError: (err: any) => toast(getErrorMessage(err)),
@@ -36,9 +37,9 @@ export default function DeleteIncomeStatement({ id, type, deleteMutationFn }: Pr
       title={`Delete ${capitalize(type)}`}
       description={`Are you sure you want to delete this ${type.toLowerCase()} ?`}
       okText='Yes, Delete'
-      okButtonProps={{ disabled: deleteMutation.isLoading, className: 'bg-red-500 hover:bg-red-400' }}
+      okButtonProps={{ disabled: deleteMutation.isPending, className: 'bg-red-500 hover:bg-red-400' }}
       cancelText='No'
-      cancelProps={{ disabled: deleteMutation.isLoading }}
+      cancelProps={{ disabled: deleteMutation.isPending }}
       onOk={() => {
         deleteMutation.mutate(id)
       }}

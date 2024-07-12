@@ -16,6 +16,7 @@ import {
   Wallet,
   Scale,
   BookCopy,
+  BarChart2,
 } from 'lucide-react'
 
 type SubRoute = {
@@ -139,5 +140,12 @@ export const FEATURES_ROUTES: { title: string; href: string; description: string
     href: '/feature/calculators',
     description: 'Empower yourself with financial calculators for smart planning and decision-making.',
     icon: <Calculator size={30} />,
+  },
+  {
+    title: 'Scenario',
+    href: '/feature/scenario',
+    description:
+      'Collections of assets, liabilities, and expenses that represent potential financial situations, which users can simulate',
+    icon: <BarChart2 size={30} />,
   },
 ]

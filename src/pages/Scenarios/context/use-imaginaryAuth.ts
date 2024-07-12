@@ -12,9 +12,10 @@ export type ImaginaryUser = {
 export function useImaginaryAuth() {
   const qc = useQueryClient()
   const [imaginaryUsers, setImaginaryUsers] = useState<ImaginaryUser>({})
-  const { data: imag_users } = useQuery<ImaginaryUser>([AUTH.IMAGINARY_CLIENT])
+  const { data: imag_users } = useQuery<ImaginaryUser>({ queryKey: [AUTH.IMAGINARY_CLIENT] })
 
-  const loginImaginaryUserMutation = useMutation(loginImaginaryUser, {
+  const loginImaginaryUserMutation = useMutation({
+    mutationFn: loginImaginaryUser,
     onSuccess: (data) => {
       qc.setQueryData([AUTH.IMAGINARY_CLIENT], {
         ...(imag_users as unknown as object),

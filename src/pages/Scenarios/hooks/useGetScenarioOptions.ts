@@ -7,15 +7,18 @@ import { fetchIncomeSources } from '@/queries/income-statement'
 const useGetScenarioOptions = () => {
   const [isFetchingOptions, setIsFetchingOptions] = useState(true)
 
-  const { data: assests, isFetched: hasAssetsOptionFetched } = useQuery([BALANCE_SHEET.ASSETS], fetchPhysicalAssets)
-  const { data: liabilities, isFetched: hasLiabilitiesOptionFetched } = useQuery(
-    [BALANCE_SHEET.LIABILITIES],
-    fetchLiabilities,
-  )
-  const { data: income, isFetched: hasIncomeOptionFetched } = useQuery(
-    [INCOME_STATEMENT.INCOME_STATEMENT],
-    fetchIncomeSources,
-  )
+  const { data: assests, isFetched: hasAssetsOptionFetched } = useQuery({
+    queryKey: [BALANCE_SHEET.ASSETS],
+    queryFn: fetchPhysicalAssets,
+  })
+  const { data: liabilities, isFetched: hasLiabilitiesOptionFetched } = useQuery({
+    queryKey: [BALANCE_SHEET.LIABILITIES],
+    queryFn: fetchLiabilities,
+  })
+  const { data: income, isFetched: hasIncomeOptionFetched } = useQuery({
+    queryKey: [INCOME_STATEMENT.INCOME_STATEMENT],
+    queryFn: fetchIncomeSources,
+  })
 
   useEffect(() => {
     if (hasAssetsOptionFetched && hasLiabilitiesOptionFetched && hasIncomeOptionFetched) {

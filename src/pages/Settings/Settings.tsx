@@ -11,6 +11,7 @@ import { queryClient } from '@/utils/client'
 import { deleteUserAccount } from '@/queries/auth'
 import { useAuthContext } from '@/hooks/use-auth'
 import DownloadAllData from '@/components/DownloadAllData/DownloadAllData'
+import Page from '@/components/Page/Page'
 
 export default function Settings() {
   const { toast } = useToast()
@@ -21,7 +22,8 @@ export default function Settings() {
     setPreferences((prev) => ({ ...prev, currencyUnit: symbol }))
   }
 
-  const deleteUserAccountMutation = useMutation(deleteUserAccount, {
+  const deleteUserAccountMutation = useMutation({
+    mutationFn: deleteUserAccount,
     onSuccess: () => {
       queryClient.invalidateQueries()
       logout()
@@ -31,7 +33,7 @@ export default function Settings() {
   })
 
   return (
-    <div className='max-w-screen-xl mx-auto align-self-start min-h-[80vh] p-4'>
+    <Page className='space-y-4 min-h-screen'>
       <div className='text-lg font-bold'>Manage your preferences</div>
       <div className='w-full h-[1px] bg-gray-500/20 my-4' />
 
@@ -79,12 +81,12 @@ export default function Settings() {
         description='Do you really want to delete your account? This process cannot be undone.'
         okText='Yes, Delete'
         cancelText='No'
-        cancelProps={{ disabled: deleteUserAccountMutation.isLoading }}
-        okButtonProps={{ disabled: deleteUserAccountMutation.isLoading, className: 'bg-red-500 hover:bg-red-400' }}
+        cancelProps={{ disabled: deleteUserAccountMutation.isPending }}
+        okButtonProps={{ disabled: deleteUserAccountMutation.isPending, className: 'bg-red-500 hover:bg-red-400' }}
         onOk={() => {
           deleteUserAccountMutation.mutate()
         }}
       />
-    </div>
+    </Page>
   )
 }

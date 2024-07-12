@@ -21,13 +21,15 @@ const EditComparison = () => {
     resolver: zodResolver(addComparisonSchema),
   })
 
-  const { data: comparison, isLoading: isFetchingComparison } = useQuery([`${COMPARISON.COMPARISON}-${id}`], () =>
-    fetchComparisonsById(Number(id)),
-  )
+  const { data: comparison, isLoading: isFetchingComparison } = useQuery({
+    queryKey: [`${COMPARISON.COMPARISON}-${id}`],
+    queryFn: () => fetchComparisonsById(Number(id)),
+  })
 
-  const { mutate } = useMutation((dto: Partial<Comparison>) => editComparisons(Number(id), dto), {
+  const { mutate } = useMutation({
+    mutationFn: (dto: Partial<Comparison>) => editComparisons(Number(id), dto),
     onSuccess: () => {
-      queryClient.invalidateQueries([`${COMPARISON.COMPARISON}-${id}`])
+      queryClient.invalidateQueries({ queryKey: [`${COMPARISON.COMPARISON}-${id}`] })
       toast({ title: 'Comparison edited successfully!' })
       navigate('/comparisons')
     },

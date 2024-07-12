@@ -15,11 +15,12 @@ type Props = {
 export default function DeleteAssetForScenario({ id, deleteAsset }: Props) {
   const qc = useQueryClient()
   const { toast } = useToast()
-  const { data: username } = useQuery<string>([AUTH.CURRENT_IMAGINARY_USER])
+  const { data: username } = useQuery<string>({ queryKey: [AUTH.CURRENT_IMAGINARY_USER] })
 
-  const deleteMutation = useMutation(deleteAsset, {
+  const deleteMutation = useMutation({
+    mutationFn: deleteAsset,
     onSuccess: () => {
-      qc.invalidateQueries([`${BALANCE_SHEET.ASSETS}-${username}`])
+      qc.invalidateQueries({ queryKey: [`${BALANCE_SHEET.ASSETS}-${username}`] })
       toast({ title: 'Asset deleted successfully!' })
     },
     onError: (err: any) => toast(getErrorMessage(err)),
@@ -35,9 +36,9 @@ export default function DeleteAssetForScenario({ id, deleteAsset }: Props) {
       title='Delete Asset'
       description='Are you sure you want to delete this Asset?'
       okText='Yes, Delete'
-      okButtonProps={{ disabled: deleteMutation.isLoading, className: 'bg-red-500 hover:bg-red-400' }}
+      okButtonProps={{ disabled: deleteMutation.isPending, className: 'bg-red-500 hover:bg-red-400' }}
       cancelText='No'
-      cancelProps={{ disabled: deleteMutation.isLoading }}
+      cancelProps={{ disabled: deleteMutation.isPending }}
       onOk={() => {
         deleteMutation.mutate(id)
       }}

@@ -11,7 +11,7 @@ import DeleteLiabilityDialog from './DeleteLiabilityDialog'
 import { formatIndianMoneyNotation } from '@/utils/format-money'
 
 export default function LiabilitiesTable() {
-  const { data, isFetching } = useQuery([BALANCE_SHEET.LIABILITIES], fetchLiabilities)
+  const { data, isFetching } = useQuery({ queryKey: [BALANCE_SHEET.LIABILITIES], queryFn: fetchLiabilities })
 
   return (
     <div className='space-y-2'>

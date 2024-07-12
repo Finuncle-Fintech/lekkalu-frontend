@@ -30,7 +30,9 @@ const dropdownOptions = [
 ]
 
 export default function BudgetChart() {
-  const { data: budgetData } = useQuery([BUDGET_QUERY_KEYS.BUDGETS], fetchBudgets, {
+  const { data: budgetData } = useQuery({
+    queryKey: [BUDGET_QUERY_KEYS.BUDGETS],
+    queryFn: fetchBudgets,
     select: (budgets) => {
       return budgets.map((budget) => ({
         ...budget,
@@ -41,7 +43,7 @@ export default function BudgetChart() {
     },
   })
 
-  const { data, isLoading } = useQuery([EXPENSES.MONTHLY_EXPENSES], fetchMonthlyExpenses)
+  const { data, isLoading } = useQuery({ queryKey: [EXPENSES.MONTHLY_EXPENSES], queryFn: fetchMonthlyExpenses })
   const [timeRange, setTimeRange] = useState('3')
   const monthlyData = useMemo(() => {
     if (!data || !budgetData) {

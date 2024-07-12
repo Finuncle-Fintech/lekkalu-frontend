@@ -8,7 +8,7 @@ type Props = {
 
 export default function Page({ className, style, children }: React.PropsWithChildren<Props>) {
   return (
-    <div className={cn('max-w-screen-xl mx-auto min-h-[80vh] p-4', className)} style={style}>
+    <div className={cn('max-w-full mx-auto min-h-[80vh] p-4', className)} style={style}>
       {children}
     </div>
   )

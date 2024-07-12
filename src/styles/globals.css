@@ -84,3 +84,7 @@ html {
     @apply hidden;
   }
 }
+
+#layout::-webkit-scrollbar {
+  display: none;
+}

@@ -2,7 +2,7 @@
 import { Handle, Node, Position } from '@xyflow/react'
 import React from 'react'
 
-const BaseKPINode = ({ data }: { data: { label: string } }) => {
+const CashNode = ({ data }: { data: { label: string } }) => {
   return (
     <div className="react-flow__node-default">
       <Handle type="source" position={Position.Right} />
@@ -11,16 +11,16 @@ const BaseKPINode = ({ data }: { data: { label: string } }) => {
   )
 }
 // Define the function to add a new BaseKPI node to the flow
-export const addBaseKPINode = (
+export const addCashNode = (
   nodes: Node[],
   setNodes: React.Dispatch<React.SetStateAction<Node[]>>,
 ) => {
   const newNode: Node = {
-    id: `basekpi_${nodes.length + 1}`,
+    id: `cash_${nodes.length + 1}`,
     position: { x: 0, y: 0 },
-    data: { label: 'BaseKPI' },
+    data: { label: 'Cash' },
     type: 'baseKpiNode',
   }
   setNodes((nds: Node[]) => nds.concat(newNode))
 }
-export default BaseKPINode
+export default CashNode

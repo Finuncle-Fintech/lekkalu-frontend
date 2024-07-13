@@ -1,5 +1,5 @@
 // Define the custom BaseKPI node component with default node styling
-import { Handle, Position } from '@xyflow/react'
+import { Handle, Node, Position } from '@xyflow/react'
 import React from 'react'
 
 const MultiplyNode = ({ data }: { data: { label: string } }) => {
@@ -21,5 +21,18 @@ const MultiplyNode = ({ data }: { data: { label: string } }) => {
       <div>{data.label}</div>
     </div>
   )
+}
+// Add a new Multiply node to the flow
+export const addMultiplyNode = (
+  nodes: Node[],
+  setNodes: React.Dispatch<React.SetStateAction<Node[]>>,
+) => {
+  const newNode: Node = {
+    id: `multiply_${nodes.length + 1}`,
+    position: { x: Math.random() * 400, y: Math.random() * 400 },
+    data: { label: 'Multiply' },
+    type: 'multiplyNode',
+  }
+  setNodes((nds: Node[]) => nds.concat(newNode))
 }
 export default MultiplyNode

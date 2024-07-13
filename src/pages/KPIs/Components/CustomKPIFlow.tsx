@@ -102,28 +102,26 @@ export default function CustomKPIFlow() {
       <button onClick={() => addMultiplyNode(nodes, setNodes)}>Add Multiply Node</button>
       <button onClick={() => generateLatexEquation(edges)}>Generate LaTeX Equation</button>
       <div style={{ minWidth: '200px', minHeight: '400px', width: 'inherit', height: '500px' }}>
-        <div style={{ width: '80vw', height: '80vh' }}>
-          <ReactFlow
-            nodes={nodes}
-            edges={edges}
-            onNodesChange={onNodesChange}
-            onEdgesChange={onEdgesChange}
-            onConnect={onConnect}
-            isValidConnection={isValidConnection}
-            fitView
-            nodeTypes={{
-              kpiNode: KPINode,
-              baseKpiNode: BaseKPINode,
-              multiplyNode: MultiplyNode,
-            }} // Register the custom node types
-          >
-            <MiniMap />
-            <Controls />
-          </ReactFlow>
-        </div>
-        <h3>LaTeX Equation:</h3>
-        <p>{latexEquation}</p>
+        <ReactFlow
+          nodes={nodes}
+          edges={edges}
+          onNodesChange={onNodesChange}
+          onEdgesChange={onEdgesChange}
+          onConnect={onConnect}
+          isValidConnection={isValidConnection}
+          fitView
+          nodeTypes={{
+            kpiNode: KPINode,
+            baseKpiNode: BaseKPINode,
+            multiplyNode: MultiplyNode,
+          }} // Register the custom node types
+        >
+          <MiniMap />
+          <Controls />
+        </ReactFlow>
       </div>
+      <h3>LaTeX Equation:</h3>
+      <p>{latexEquation}</p>
     </div>
   )
 }

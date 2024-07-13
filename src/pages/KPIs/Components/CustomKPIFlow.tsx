@@ -1,9 +1,10 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import {
   addEdge,
   Connection,
   Controls,
-  Edge, MiniMap,
+  Edge,
+  MiniMap,
   Node,
   OnConnect,
   ReactFlow,
@@ -33,9 +34,20 @@ export default function CustomKPIFlow() {
   const [latexEquation, setLatexEquation] = useState('')
 
   const onConnect: OnConnect = useCallback(
-    (params) => setEdges((eds) => addEdge(params, eds)),
+    (params) => {
+      setEdges((eds) => {
+        const newEdges = addEdge(params, eds)
+        generateLatexEquation(newEdges)
+        return newEdges
+      })
+    },
     [setEdges],
   )
+
+  // Watch for edge changes to generate LaTeX equation
+  useEffect(() => {
+    generateLatexEquation(edges)
+  }, [edges])
 
   // Add a new BaseKPI node to the flow
   const addBaseKPINode = () => {
@@ -74,7 +86,7 @@ export default function CustomKPIFlow() {
   }
 
   // Function to generate LaTeX equation from the flowchart
-  const generateLatexEquation = () => {
+  const generateLatexEquation = (currentEdges: Edge[]) => {
     const startNode = nodes.find((node) => node.type === 'kpiNode')
     if (!startNode) {
       setLatexEquation('')
@@ -87,7 +99,7 @@ export default function CustomKPIFlow() {
       }
       visited.add(nodeId)
 
-      const incomingEdges = edges.filter((edge) => edge.target === nodeId)
+      const incomingEdges = currentEdges.filter((edge) => edge.target === nodeId)
       return incomingEdges.flatMap((edge) => {
         const sourceNode = nodes.find((node) => node.id === edge.source)
         if (!sourceNode) return []
@@ -106,11 +118,12 @@ export default function CustomKPIFlow() {
     const latex = `${lhs} = ${kpiLabel}`
     setLatexEquation(latex)
   }
+
   return (
     <div>
       <button onClick={addBaseKPINode}>Add Base KPI Node</button>
       <button onClick={addMultiplyNode}>Add Multiply Node</button>
-      <button onClick={generateLatexEquation}>Generate LaTeX Equation</button>
+      <button onClick={() => generateLatexEquation(edges)}>Generate LaTeX Equation</button>
       <div style={{ minWidth: '200px', minHeight: '400px', width: 'inherit', height: '500px' }}>
         <div style={{ width: '80vw', height: '80vh' }}>
           <ReactFlow

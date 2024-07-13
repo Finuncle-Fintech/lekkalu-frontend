@@ -13,7 +13,7 @@ import {
 } from '@xyflow/react'
 import KPINode from '@/components/ReactFlow/KPINode'
 import BaseKPINode, { addBaseKPINode } from '@/components/ReactFlow/BaseKPINode'
-import MultiplyNode from '@/components/ReactFlow/MultiplyNode'
+import MultiplyNode, { addMultiplyNode } from '@/components/ReactFlow/MultiplyNode'
 import '@xyflow/react/dist/style.css'
 
 // Define the initial nodes and edges
@@ -82,17 +82,6 @@ export default function CustomKPIFlow() {
     generateLatexEquation(edges)
   }, [edges, generateLatexEquation])
 
-  // Add a new Multiply node to the flow
-  const addMultiplyNode = () => {
-    const newNode: Node = {
-      id: `multiply_${nodes.length + 1}`,
-      position: { x: Math.random() * 400, y: Math.random() * 400 },
-      data: { label: 'Multiply' },
-      type: 'multiplyNode',
-    }
-    setNodes((nds) => nds.concat(newNode))
-  }
-
   // Custom validation function to restrict KPI node to one connection
   const isValidConnection = (connection: Connection | Edge): boolean => {
     if ('target' in connection) {
@@ -110,7 +99,7 @@ export default function CustomKPIFlow() {
   return (
     <div>
       <button onClick={() => addBaseKPINode(nodes, setNodes)}>Add Base KPI Node</button>
-      <button onClick={addMultiplyNode}>Add Multiply Node</button>
+      <button onClick={() => addMultiplyNode(nodes, setNodes)}>Add Multiply Node</button>
       <button onClick={() => generateLatexEquation(edges)}>Generate LaTeX Equation</button>
       <div style={{ minWidth: '200px', minHeight: '400px', width: 'inherit', height: '500px' }}>
         <div style={{ width: '80vw', height: '80vh' }}>

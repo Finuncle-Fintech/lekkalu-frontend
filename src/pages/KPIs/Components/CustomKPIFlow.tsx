@@ -1,5 +1,15 @@
 import React, { useCallback, useState } from 'react'
-import { addEdge, Connection, Edge, Node, OnConnect, ReactFlow, useEdgesState, useNodesState } from '@xyflow/react'
+import {
+  addEdge,
+  Connection,
+  Controls,
+  Edge, MiniMap,
+  Node,
+  OnConnect,
+  ReactFlow,
+  useEdgesState,
+  useNodesState,
+} from '@xyflow/react'
 import KPINode from '@/components/ReactFlow/KPINode'
 import BaseKPINode from '@/components/ReactFlow/BaseKPINode'
 import MultiplyNode from '@/components/ReactFlow/MultiplyNode'
@@ -31,7 +41,7 @@ export default function CustomKPIFlow() {
   const addBaseKPINode = () => {
     const newNode: Node = {
       id: `basekpi_${nodes.length + 1}`,
-      position: { x: Math.random() * 400, y: Math.random() * 400 },
+      position: { x: 0, y: 0 },
       data: { label: 'BaseKPI' },
       type: 'baseKpiNode',
     }
@@ -101,23 +111,26 @@ export default function CustomKPIFlow() {
       <button onClick={addBaseKPINode}>Add Base KPI Node</button>
       <button onClick={addMultiplyNode}>Add Multiply Node</button>
       <button onClick={generateLatexEquation}>Generate LaTeX Equation</button>
-      {/* <div style={{ width: '80vw', height: '80vh' }}> */}
-      <div style={{ minWidth: '200px', minHeight: '200px' }}>
-        <ReactFlow
-          nodes={nodes}
-          edges={edges}
-          onNodesChange={onNodesChange}
-          onEdgesChange={onEdgesChange}
-          onConnect={onConnect}
-          isValidConnection={isValidConnection}
-          nodeTypes={{
-            kpiNode: KPINode,
-            baseKpiNode: BaseKPINode,
-            multiplyNode: MultiplyNode,
-          }} // Register the custom node types
-        />
-      </div>
-      <div>
+      <div style={{ minWidth: '200px', minHeight: '400px', width: 'inherit', height: '500px' }}>
+        <div style={{ width: '80vw', height: '80vh' }}>
+          <ReactFlow
+            nodes={nodes}
+            edges={edges}
+            onNodesChange={onNodesChange}
+            onEdgesChange={onEdgesChange}
+            onConnect={onConnect}
+            isValidConnection={isValidConnection}
+            fitView
+            nodeTypes={{
+              kpiNode: KPINode,
+              baseKpiNode: BaseKPINode,
+              multiplyNode: MultiplyNode,
+            }} // Register the custom node types
+          >
+            <MiniMap />
+            <Controls />
+          </ReactFlow>
+        </div>
         <h3>LaTeX Equation:</h3>
         <p>{latexEquation}</p>
       </div>

@@ -48,6 +48,9 @@ export const GOALS = {
   GOAL_PROPORTIONALITY_TYPES: 'GOAL_PROPORTIONALITY_TYPES',
   KPI_TYPES: 'KPI_TYPES',
 } as const
+export const KPIS = {
+  KPIS: 'KPIS',
+} as const
 
 export const NOTIFICATION = {
   NOTIFICATION: 'NOTIFICATION',

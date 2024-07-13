@@ -12,6 +12,12 @@ export type Goal = {
   target_date: string
   met: boolean
 }
+export type UserCustomKPI = {
+  id: number
+  name: string
+  description: string
+  latex: string
+}
 
 export type Timeline = {
   kpi_value: number

@@ -33,6 +33,39 @@ export default function CustomKPIFlow() {
   const [kpiLabel] = useState<string>('KPI')
   const [latexEquation, setLatexEquation] = useState('')
 
+  // Function to generate LaTeX equation from the flowchart
+  const generateLatexEquation = (currentEdges: Edge[]) => {
+    const startNode = nodes.find((node) => node.type === 'kpiNode')
+    if (!startNode) {
+      setLatexEquation('')
+      return
+    }
+
+    const getLabelsRecursively = (nodeId: string, visited = new Set<string>()): string[] => {
+      if (visited.has(nodeId)) {
+        return []
+      }
+      visited.add(nodeId)
+
+      const incomingEdges = currentEdges.filter((edge) => edge.target === nodeId)
+      return incomingEdges.flatMap((edge) => {
+        const sourceNode = nodes.find((node) => node.id === edge.source)
+        if (!sourceNode) return []
+        const subLabels = getLabelsRecursively(sourceNode.id, visited)
+
+        if (sourceNode.type === 'multiplyNode') {
+          return subLabels.length > 0 ? [`(${subLabels.join(' \\cdot ')})`] : []
+        }
+        const sourceLabel = `\\mathit{${sourceNode.data.label}}`
+        return subLabels.length > 0 ? subLabels.concat(sourceLabel) : [sourceLabel]
+      })
+    }
+
+    const lhsArray = getLabelsRecursively(startNode.id)
+    const lhs = lhsArray.join(' \\cdot ')
+    const latex = `${lhs} = ${kpiLabel}`
+    setLatexEquation(latex)
+  }
   const onConnect: OnConnect = useCallback(
     (params) => {
       setEdges((eds) => {
@@ -41,7 +74,7 @@ export default function CustomKPIFlow() {
         return newEdges
       })
     },
-    [setEdges],
+    [generateLatexEquation, setEdges],
   )
 
   // Watch for edge changes to generate LaTeX equation
@@ -83,40 +116,6 @@ export default function CustomKPIFlow() {
       }
     }
     return true
-  }
-
-  // Function to generate LaTeX equation from the flowchart
-  const generateLatexEquation = (currentEdges: Edge[]) => {
-    const startNode = nodes.find((node) => node.type === 'kpiNode')
-    if (!startNode) {
-      setLatexEquation('')
-      return
-    }
-
-    const getLabelsRecursively = (nodeId: string, visited = new Set<string>()): string[] => {
-      if (visited.has(nodeId)) {
-        return []
-      }
-      visited.add(nodeId)
-
-      const incomingEdges = currentEdges.filter((edge) => edge.target === nodeId)
-      return incomingEdges.flatMap((edge) => {
-        const sourceNode = nodes.find((node) => node.id === edge.source)
-        if (!sourceNode) return []
-        const subLabels = getLabelsRecursively(sourceNode.id, visited)
-
-        if (sourceNode.type === 'multiplyNode') {
-          return subLabels.length > 0 ? [`(${subLabels.join(' \\cdot ')})`] : []
-        }
-        const sourceLabel = `\\mathit{${sourceNode.data.label}}`
-        return subLabels.length > 0 ? subLabels.concat(sourceLabel) : [sourceLabel]
-      })
-    }
-
-    const lhsArray = getLabelsRecursively(startNode.id)
-    const lhs = lhsArray.join(' \\cdot ')
-    const latex = `${lhs} = ${kpiLabel}`
-    setLatexEquation(latex)
   }
 
   return (

@@ -101,7 +101,8 @@ export default function CustomKPIFlow() {
       <button onClick={addBaseKPINode}>Add Base KPI Node</button>
       <button onClick={addMultiplyNode}>Add Multiply Node</button>
       <button onClick={generateLatexEquation}>Generate LaTeX Equation</button>
-      <div style={{ width: '80vw', height: '80vh' }}>
+      {/* <div style={{ width: '80vw', height: '80vh' }}> */}
+      <div style={{ minWidth: '200px', minHeight: '200px' }}>
         <ReactFlow
           nodes={nodes}
           edges={edges}

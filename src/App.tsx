@@ -14,6 +14,7 @@ const Dashboard = lazy(() => import('@/pages/Dashboard/Dashboard'))
 const Goals = lazy(() => import('@/pages/Goals/Goals'))
 const KPIs = lazy(() => import('@/pages/KPIs/KPIs'))
 const CreateGoal = lazy(() => import('@/pages/Goals/AddEditGoalPages/CreateGoal/CreateGoal'))
+const CreateCustomKPI = lazy(() => import('@/pages/KPIs/CreateCustomKPI'))
 const EditGoal = lazy(() => import('@/pages/Goals/AddEditGoalPages/EditGoal'))
 const GoalDetails = lazy(() => import('@/pages/GoalDetails/GoalDetails'))
 const IncomeStatement = lazy(() => import('@/pages/IncomeStatement/IncomeStatement'))
@@ -74,6 +75,7 @@ function App() {
           <Route path="/goals" element={<Goals />} />
           <Route path="/kpis" element={<KPIs />} />
           <Route path="/goals/new" element={<CreateGoal />} />
+          <Route path="/custom_kpi/new" element={<CreateCustomKPI />} />
           <Route path="/goals/edit/:id" element={<EditGoal />} />
           <Route path="/goals/:id" element={<GoalDetails />} />
           <Route path="/income-statement" element={<IncomeStatement />} />

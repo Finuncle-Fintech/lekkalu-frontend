@@ -1,9 +1,11 @@
 import { Link } from 'react-router-dom'
 import React from 'react'
 import { useQuery } from '@tanstack/react-query'
+import { PlusIcon } from 'lucide-react'
 import { KPIS } from '@/utils/query-keys'
 import { fetchCustomKPIs } from '@/queries/goals'
 import CustomKPICard from '@/pages/KPIs/Components/CustomKPICard'
+import { buttonVariants } from '@/components/ui/button'
 
 export default function Goals() {
   const { data, isLoading, isFetching } = useQuery({ queryKey: [KPIS.KPIS], queryFn: fetchCustomKPIs })
@@ -18,10 +20,12 @@ export default function Goals() {
               later on your financial goals or to analyze outcomes of financial
               decisions.</p>
           </div>
-          <button
-            className="flex mx-auto mt-4 mb-4 text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">Add
-            KPI
-          </button>
+          <div className="flex justify-end mb-4">
+            <Link to="/custom_kpi/new" className={buttonVariants({ variant: 'default' })}>
+              <PlusIcon className="w-4 h-4 mr-2" />
+              <span>Add Custom KPI</span>
+            </Link>
+          </div>
           {isLoading && <p>Loading...</p>}
           {isFetching && <p>Fetching...</p>}
           <div className="flex flex-wrap -m-4">

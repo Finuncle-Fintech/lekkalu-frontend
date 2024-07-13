@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { ArrowLeftIcon } from 'lucide-react'
 import { useForm } from 'react-hook-form'
@@ -13,6 +13,8 @@ import { addCustomKPI } from '@/queries/goals'
 
 export default function CreateCustomKPI() {
   const navigate = useNavigate()
+  const [latexEquation, setLatexEquation] = useState<string>('')
+
   const createCustomKPIMutation = useMutation({
     mutationFn: addCustomKPI,
     onSuccess: () => {
@@ -27,19 +29,26 @@ export default function CreateCustomKPI() {
 
   const form = useForm<AddCustomKPISchema>({
     resolver: zodResolver(addCustomKPISchema),
-    defaultValues: {},
+    defaultValues: {
+      latex: '',
+    },
   })
 
   const handleCustomKPICreate = (values: AddCustomKPISchema) => {
     createCustomKPIMutation.mutate(values)
   }
+
+  React.useEffect(() => {
+    form.setValue('latex', latexEquation)
+  }, [latexEquation, form])
+
   return (
     <Page>
       <Link className="flex items-center ml-10 mt-4 gap-2 text-muted-foreground" to="/kpis">
         <ArrowLeftIcon className="w-4 h-4" />
         Back to KPIs
       </Link>
-      <CustomKPIFlow />
+      <CustomKPIFlow setLatexEquation={setLatexEquation} />
       <Form form={form} onSubmit={handleCustomKPICreate} isLoading={createCustomKPIMutation.isPending} />
     </Page>
   )

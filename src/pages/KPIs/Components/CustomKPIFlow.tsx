@@ -12,26 +12,28 @@ import {
   useNodesState,
 } from '@xyflow/react'
 import KPINode from '@/components/ReactFlow/KPINode'
-import BaseKPINode, { addBaseKPINode } from '@/components/ReactFlow/BaseKPINode'
+import CashNode, { addCashNode } from '@/components/ReactFlow/CashNode'
 import MultiplyNode, { addMultiplyNode } from '@/components/ReactFlow/MultiplyNode'
 import '@xyflow/react/dist/style.css'
 
-// Define the initial nodes and edges
 const initialNodes: Node[] = [
   {
     id: 'kpi',
     position: { x: 0, y: 0 },
     data: { label: 'KPI' },
-    type: 'kpiNode', // Specify the custom node type
+    type: 'kpiNode',
   },
 ]
 const initialEdges: Edge[] = []
 
-export default function CustomKPIFlow() {
+interface CustomKPIFlowProps {
+  setLatexEquation: (equation: string) => void;
+}
+
+export default function CustomKPIFlow({ setLatexEquation }: CustomKPIFlowProps) {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes)
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges)
   const [kpiLabel] = useState<string>('KPI')
-  const [latexEquation, setLatexEquation] = useState('')
 
   const generateLatexEquation = useCallback((currentEdges: Edge[]) => {
     const startNode = nodes.find((node) => node.type === 'kpiNode')
@@ -64,7 +66,7 @@ export default function CustomKPIFlow() {
     const lhs = lhsArray.join(' \\cdot ')
     const latex = `${lhs} = ${kpiLabel}`
     setLatexEquation(latex)
-  }, [nodes, kpiLabel])
+  }, [nodes, kpiLabel, setLatexEquation])
 
   const onConnect: OnConnect = useCallback(
     (params) => {
@@ -77,12 +79,10 @@ export default function CustomKPIFlow() {
     [setEdges, generateLatexEquation],
   )
 
-  // Watch for edge changes to generate LaTeX equation
   useEffect(() => {
     generateLatexEquation(edges)
   }, [edges, generateLatexEquation])
 
-  // Custom validation function to restrict KPI node to one connection
   const isValidConnection = (connection: Connection | Edge): boolean => {
     if ('target' in connection) {
       const targetNode = nodes.find((node) => node.id === connection.target)
@@ -98,7 +98,7 @@ export default function CustomKPIFlow() {
 
   return (
     <div>
-      <button onClick={() => addBaseKPINode(nodes, setNodes)}>Add Base KPI Node</button>
+      <button onClick={() => addCashNode(nodes, setNodes)}>Cash</button>
       <button onClick={() => addMultiplyNode(nodes, setNodes)}>Add Multiply Node</button>
       <button onClick={() => generateLatexEquation(edges)}>Generate LaTeX Equation</button>
       <div style={{ minWidth: '200px', minHeight: '400px', width: 'inherit', height: '500px' }}>
@@ -112,16 +112,15 @@ export default function CustomKPIFlow() {
           fitView
           nodeTypes={{
             kpiNode: KPINode,
-            baseKpiNode: BaseKPINode,
+            baseKpiNode: CashNode,
             multiplyNode: MultiplyNode,
-          }} // Register the custom node types
+          }}
         >
           <MiniMap />
           <Controls />
         </ReactFlow>
       </div>
       <h3>LaTeX Equation:</h3>
-      <p>{latexEquation}</p>
     </div>
   )
 }

@@ -80,7 +80,7 @@ export default function CustomKPIFlow() {
   // Watch for edge changes to generate LaTeX equation
   useEffect(() => {
     generateLatexEquation(edges)
-  }, [edges])
+  }, [generateLatexEquation, edges])
 
   // Add a new BaseKPI node to the flow
   const addBaseKPINode = () => {

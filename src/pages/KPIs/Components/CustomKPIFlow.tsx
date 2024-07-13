@@ -1,5 +1,5 @@
-import React, { ChangeEvent, useCallback, useState } from 'react'
-import { addEdge, Connection, Edge, OnConnect, ReactFlow, useEdgesState, useNodesState, Node } from '@xyflow/react'
+import React, { useCallback, useState } from 'react'
+import { addEdge, Connection, Edge, Node, OnConnect, ReactFlow, useEdgesState, useNodesState } from '@xyflow/react'
 import KPINode from '@/components/ReactFlow/KPINode'
 import BaseKPINode from '@/components/ReactFlow/BaseKPINode'
 import MultiplyNode from '@/components/ReactFlow/MultiplyNode'
@@ -19,34 +19,13 @@ const initialEdges: Edge[] = []
 export default function CustomKPIFlow() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes)
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges)
-  const [kpiLabel, setKpiLabel] = useState('KPI')
+  const [kpiLabel] = useState<string>('KPI')
   const [latexEquation, setLatexEquation] = useState('')
 
   const onConnect: OnConnect = useCallback(
     (params) => setEdges((eds) => addEdge(params, eds)),
     [setEdges],
   )
-
-  // Update KPI node label when kpiLabel state changes
-  const updateKpiLabel = (event: ChangeEvent<HTMLInputElement>) => {
-    const newLabel = event.target.value
-    setKpiLabel(newLabel)
-
-    setNodes((nds) =>
-      nds.map((node) => {
-        if (node.id === 'kpi') {
-          return {
-            ...node,
-            data: {
-              ...node.data,
-              label: newLabel,
-            },
-          }
-        }
-        return node
-      }),
-    )
-  }
 
   // Add a new BaseKPI node to the flow
   const addBaseKPINode = () => {
@@ -99,7 +78,7 @@ export default function CustomKPIFlow() {
       visited.add(nodeId)
 
       const incomingEdges = edges.filter((edge) => edge.target === nodeId)
-      const labels: string[] = incomingEdges.flatMap((edge) => {
+      return incomingEdges.flatMap((edge) => {
         const sourceNode = nodes.find((node) => node.id === edge.source)
         if (!sourceNode) return []
         const subLabels = getLabelsRecursively(sourceNode.id, visited)
@@ -110,24 +89,15 @@ export default function CustomKPIFlow() {
         const sourceLabel = `\\mathit{${sourceNode.data.label}}`
         return subLabels.length > 0 ? subLabels.concat(sourceLabel) : [sourceLabel]
       })
-
-      return labels
     }
 
     const lhsArray = getLabelsRecursively(startNode.id)
     const lhs = lhsArray.join(' \\cdot ')
-    const rhs = kpiLabel
-    const latex = `${lhs} = ${rhs}`
+    const latex = `${lhs} = ${kpiLabel}`
     setLatexEquation(latex)
   }
   return (
     <div>
-      <input
-        type="text"
-        value={kpiLabel}
-        onChange={updateKpiLabel}
-        placeholder="Enter KPI label"
-      />
       <button onClick={addBaseKPINode}>Add Base KPI Node</button>
       <button onClick={addMultiplyNode}>Add Multiply Node</button>
       <button onClick={generateLatexEquation}>Generate LaTeX Equation</button>

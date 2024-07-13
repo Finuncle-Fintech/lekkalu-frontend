@@ -12,7 +12,7 @@ import {
   useNodesState,
 } from '@xyflow/react'
 import KPINode from '@/components/ReactFlow/KPINode'
-import BaseKPINode from '@/components/ReactFlow/BaseKPINode'
+import BaseKPINode, { addBaseKPINode } from '@/components/ReactFlow/BaseKPINode'
 import MultiplyNode from '@/components/ReactFlow/MultiplyNode'
 import '@xyflow/react/dist/style.css'
 
@@ -33,8 +33,7 @@ export default function CustomKPIFlow() {
   const [kpiLabel] = useState<string>('KPI')
   const [latexEquation, setLatexEquation] = useState('')
 
-  // Function to generate LaTeX equation from the flowchart
-  const generateLatexEquation = (currentEdges: Edge[]) => {
+  const generateLatexEquation = useCallback((currentEdges: Edge[]) => {
     const startNode = nodes.find((node) => node.type === 'kpiNode')
     if (!startNode) {
       setLatexEquation('')
@@ -65,7 +64,8 @@ export default function CustomKPIFlow() {
     const lhs = lhsArray.join(' \\cdot ')
     const latex = `${lhs} = ${kpiLabel}`
     setLatexEquation(latex)
-  }
+  }, [nodes, kpiLabel])
+
   const onConnect: OnConnect = useCallback(
     (params) => {
       setEdges((eds) => {
@@ -74,24 +74,13 @@ export default function CustomKPIFlow() {
         return newEdges
       })
     },
-    [generateLatexEquation, setEdges],
+    [setEdges, generateLatexEquation],
   )
 
   // Watch for edge changes to generate LaTeX equation
   useEffect(() => {
     generateLatexEquation(edges)
-  }, [generateLatexEquation, edges])
-
-  // Add a new BaseKPI node to the flow
-  const addBaseKPINode = () => {
-    const newNode: Node = {
-      id: `basekpi_${nodes.length + 1}`,
-      position: { x: 0, y: 0 },
-      data: { label: 'BaseKPI' },
-      type: 'baseKpiNode',
-    }
-    setNodes((nds) => nds.concat(newNode))
-  }
+  }, [edges, generateLatexEquation])
 
   // Add a new Multiply node to the flow
   const addMultiplyNode = () => {
@@ -120,7 +109,7 @@ export default function CustomKPIFlow() {
 
   return (
     <div>
-      <button onClick={addBaseKPINode}>Add Base KPI Node</button>
+      <button onClick={() => addBaseKPINode(nodes, setNodes)}>Add Base KPI Node</button>
       <button onClick={addMultiplyNode}>Add Multiply Node</button>
       <button onClick={() => generateLatexEquation(edges)}>Generate LaTeX Equation</button>
       <div style={{ minWidth: '200px', minHeight: '400px', width: 'inherit', height: '500px' }}>

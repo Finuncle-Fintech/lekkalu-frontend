@@ -26,6 +26,11 @@ const config = {
     },
   },
   rules: {
+    'spaced-comment': ['error', 'always', {
+      'block': {
+        'balanced': true,
+      },
+    }],
     'no-undef': 'off',
     '@typescript-eslint/no-unused-vars': 'error',
     '@typescript-eslint/no-use-before-define': 'off',

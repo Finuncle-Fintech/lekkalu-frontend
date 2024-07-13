@@ -1,6 +1,7 @@
 import { AddGoalSchema } from '@/schema/goals'
 import { Goal, GoalProportionalityType, KpiType, Timeline, UserCustomKPI } from '@/types/goals'
 import { v1ApiClient, v2ApiClient } from '@/utils/client'
+import { AddCustomKPISchema } from '@/schema/custom_kpi'
 
 export async function fetchGoals() {
   const { data } = await v2ApiClient.get<Goal[]>('financial_goal/')
@@ -9,6 +10,11 @@ export async function fetchGoals() {
 
 export async function fetchCustomKPIs() {
   const { data } = await v1ApiClient.get<UserCustomKPI[]>('user_custom_kpi/')
+  return data
+}
+
+export async function addCustomKPI(dto: AddCustomKPISchema) {
+  const { data } = await v1ApiClient.post('user_custom_kpi/', dto)
   return data
 }
 

@@ -4,7 +4,7 @@ import Alert from '@/components/Alert/Alert'
 import { Button } from '@/components/ui/button'
 import { useToast } from '@/components/ui/use-toast'
 import { deleteCustomKPI } from '@/queries/goals'
-import { KPIS } from '@/utils/query-keys'
+import { USER_CUSTOM_KPIS } from '@/utils/query-keys'
 import { getErrorMessage } from '@/utils/utils'
 
 type Props = {
@@ -18,7 +18,7 @@ export default function DeleteKpi({ id }: Props) {
   const deleteKpiMutation = useMutation({
     mutationFn: deleteCustomKPI,
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: [KPIS.KPIS] })
+      qc.invalidateQueries({ queryKey: [USER_CUSTOM_KPIS.KPIS] })
       toast({ title: 'KPI deleted successfully!' })
     },
     onError: (err: any) => toast(getErrorMessage(err)),

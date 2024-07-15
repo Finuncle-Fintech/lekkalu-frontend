@@ -11,6 +11,7 @@ export type Goal = {
   target_contribution_source: number
   target_date: string
   met: boolean
+  custom_kpi: number
 }
 export type CustomKPI = {
   id: number

@@ -2,13 +2,13 @@ import { Link } from 'react-router-dom'
 import React from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { PlusIcon } from 'lucide-react'
-import { KPIS } from '@/utils/query-keys'
-import { fetchCustomKPIs } from '@/queries/goals'
+import { USER_CUSTOM_KPIS } from '@/utils/query-keys'
+import { fetchUserCustomKPIs } from '@/queries/goals'
 import CustomKPICard from '@/pages/KPIs/Components/CustomKPICard'
 import { buttonVariants } from '@/components/ui/button'
 
 export default function Goals() {
-  const { data, isLoading, isFetching } = useQuery({ queryKey: [KPIS.KPIS], queryFn: fetchCustomKPIs })
+  const { data, isLoading, isFetching } = useQuery({ queryKey: [USER_CUSTOM_KPIS.KPIS], queryFn: fetchUserCustomKPIs })
   return (
     <div>
       <section className="text-gray-600 body-font">

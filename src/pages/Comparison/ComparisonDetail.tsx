@@ -27,7 +27,7 @@ const ComparisonDetail = () => {
   const IS_FOR_FEATURE_PAGE = useLocation().pathname.includes('feature')
   const { getAPIClientForImaginaryUser } = useImaginaryAuth()
   const { userData } = useAuth()
-  const IS_AUTHENTICATED_USER = Boolean(userData?.email)
+  const IS_AUTHENTICATED_USER = Boolean(userData?.username)
 
   const [selectedScenarios, setSelectedScenarios] = useState<Array<number>>([])
   const [timelineData, setTimelineData] = useState<any>()
@@ -83,8 +83,7 @@ const ComparisonDetail = () => {
     isPending,
   } = useMutation({
     mutationFn: async ({ password, username, scenarioName }: any) => {
-      const results = await timelineDataAPICall({ password, username, scenarioName })
-      return results
+      return await timelineDataAPICall({ password, username, scenarioName })
     },
     onSuccess: (data) => {
       setTimelineData((prevData: any) => {
@@ -147,12 +146,12 @@ const ComparisonDetail = () => {
   }
 
   return (
-    <Page className='space-y-8'>
-      <div className='flex justify-between'>
+    <Page className="space-y-8">
+      <div className="flex justify-between">
         {IS_AUTHENTICATED_USER ? (
           <PageTitle
             backUrl={IS_AUTHENTICATED_USER ? '/comparisons' : '/feature/comparisons'}
-            backUrlTitle='Back to comparisons'
+            backUrlTitle="Back to comparisons"
             title={comparison?.name || ''}
             key={comparisonId}
           />
@@ -170,7 +169,7 @@ const ComparisonDetail = () => {
           </Button>
         </div>
       </div>
-      <h2 className='font-bold'>
+      <h2 className="font-bold">
         {comparison?.scenarios_objects?.length ? (
           'List of Scenarios in this comparison.'
         ) : (
@@ -179,7 +178,7 @@ const ComparisonDetail = () => {
           </div>
         )}
       </h2>
-      <div className='grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 gap-y-10'>
+      <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 gap-y-10">
         {scenariosForThisComparison?.map(({ id, name, imag_username }) => (
           <Scenario
             key={id}
@@ -198,7 +197,8 @@ const ComparisonDetail = () => {
                 name={name}
                 username={imag_username}
                 comparisonId={Number(comparisonId)}
-                handleRemoveScenario={() => {}}
+                handleRemoveScenario={() => {
+                }}
               />
             </Link>
           ))
@@ -221,24 +221,24 @@ const ComparisonDetail = () => {
       {timelineData ? (
         <div>
           <Card className={cn('h-[600px] sm:h-96 pb-20 sm:pb-0 shadow-sm')}>
-            <CardHeader className='flex flex-start flex-col sm:flex-row'>
+            <CardHeader className="flex flex-start flex-col sm:flex-row">
               <CardTitle>Graph</CardTitle>
             </CardHeader>
             {
-              <CardContent className='w-full h-full'>
+              <CardContent className="w-full h-full">
                 {isPending ? (
                   <p>Loading...</p>
                 ) : (
-                  <ResponsiveContainer width='100%' height='75%'>
+                  <ResponsiveContainer width="100%" height="75%">
                     <LineChart
                       data={calculatedTimelineDate}
                       width={730}
                       height={250}
                       margin={{ top: 5, right: 0, left: 10, bottom: 5 }}
                     >
-                      <CartesianGrid strokeDasharray='3 1' />
+                      <CartesianGrid strokeDasharray="3 1" />
                       <XAxis
-                        dataKey='time'
+                        dataKey="time"
                         tickFormatter={(date) => dayjs(date).format('MMM YYYY')}
                         allowDataOverflow
                       />
@@ -249,7 +249,7 @@ const ComparisonDetail = () => {
                         Object.keys(timelineData).map((each, index) => (
                           <Line
                             key={each}
-                            type='monotone'
+                            type="monotone"
                             dataKey={each}
                             name={each}
                             stroke={generateRandomColor(index)}

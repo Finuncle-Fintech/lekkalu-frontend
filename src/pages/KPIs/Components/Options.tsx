@@ -2,7 +2,6 @@ import React from 'react'
 import { MoreVertical } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover'
-import { Button } from '@/components/ui/button'
 import DeleteKpi from '@/pages/KPIs/Components/DeleteKpi'
 
 type CustomKPIOptionsType = {
@@ -28,11 +27,6 @@ const CustomKPIOptions = ({ id }: CustomKPIOptionsType) => {
               Edit
             </Link>
             <DeleteKpi id={id} />
-            <Button
-              className="w-full bg-transparent hover:bg-accent flex justify-center p-2 rounded-lg text-sm font-medium text-black"
-            >
-              Rename
-            </Button>
           </div>
         </PopoverContent>
       </Popover>

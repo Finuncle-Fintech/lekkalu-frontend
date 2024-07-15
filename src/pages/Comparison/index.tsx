@@ -16,7 +16,7 @@ export default function Scenarios() {
   const { userData } = useAuth()
   return (
     <Page className='space-y-4'>
-      {userData?.email && (
+      {userData?.username && (
         <div className='flex justify-end'>
           <Link to='/comparisons/new' className={buttonVariants({ variant: 'default' })}>
             <PlusIcon className='w-4 h-4 mr-2' />

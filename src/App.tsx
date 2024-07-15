@@ -12,12 +12,13 @@ import CookieConsent from './components/CookieConsent/CookieConsent'
 /** Authenticated Routes */
 const Dashboard = lazy(() => import('@/pages/Dashboard/Dashboard'))
 const Goals = lazy(() => import('@/pages/Goals/Goals'))
-const KPIs = lazy(() => import('@/pages/KPIs/KPIs'))
+const KPIs = lazy(() => import('@/pages/KPIs/CustomKPIList'))
 const CreateGoal = lazy(() => import('@/pages/Goals/AddEditGoalPages/CreateGoal/CreateGoal'))
-const CreateCustomKPI = lazy(() => import('@/pages/KPIs/CreateCustomKPI'))
+const CreateCustomKPI = lazy(() => import('@/pages/KPIs/CustomKPICreate'))
 const EditGoal = lazy(() => import('@/pages/Goals/AddEditGoalPages/EditGoal'))
-const EditKpi = lazy(() => import('@/pages/KPIs/EditKpi'))
+const EditKpi = lazy(() => import('@/pages/KPIs/CustomKpiEdit'))
 const GoalDetails = lazy(() => import('@/pages/GoalDetails/GoalDetails'))
+const CustomKPIDetails = lazy(() => import('@/pages/KPIs/CustomKPIDetails'))
 const IncomeStatement = lazy(() => import('@/pages/IncomeStatement/IncomeStatement'))
 const Expenses = lazy(() => import('@/pages/Expenses/Expenses'))
 const Lending = lazy(() => import('@/pages/Lending/Lending'))
@@ -80,6 +81,7 @@ function App() {
           <Route path="/goals/edit/:id" element={<EditGoal />} />
           <Route path="/kpis/edit/:id" element={<EditKpi />} />
           <Route path="/goals/:id" element={<GoalDetails />} />
+          <Route path="/kpis/:id" element={<CustomKPIDetails />} />
           <Route path="/income-statement" element={<IncomeStatement />} />
           <Route path="/expenses" element={<Expenses />} />
           <Route path="/lending" element={<Lending />} />

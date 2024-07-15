@@ -12,7 +12,7 @@ export type Goal = {
   target_date: string
   met: boolean
 }
-export type UserCustomKPI = {
+export type CustomKPI = {
   id: number
   name: string
   description: string

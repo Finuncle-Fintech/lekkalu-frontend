@@ -50,6 +50,7 @@ export const GOALS = {
 } as const
 export const KPIS = {
   KPIS: 'KPIS',
+  DETAILS: 'KPIS_DETAILS',
 } as const
 
 export const NOTIFICATION = {

@@ -94,8 +94,8 @@ export default function MobileMenu({ isUnAuthenticatedHeader }: { isUnAuthentica
                     <Button variant='outline'>@{userData?.username}</Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent>
-                    <When truthy={Boolean(userData?.email)}>
-                      <DropdownMenuLabel>{userData?.email}</DropdownMenuLabel>
+                    <When truthy={Boolean(userData?.username)}>
+                      <DropdownMenuLabel>{userData?.username}</DropdownMenuLabel>
                     </When>
 
                     <DropdownMenuItem className='cursor-pointer' asChild>

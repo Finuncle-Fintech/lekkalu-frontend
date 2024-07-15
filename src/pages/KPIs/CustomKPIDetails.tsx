@@ -4,13 +4,13 @@ import { useQuery } from '@tanstack/react-query'
 import React from 'react'
 import Page from '@/components/Page/Page'
 import { fetchCustomKPIDetails } from '@/queries/goals'
-import { KPIS } from '@/utils/query-keys'
+import { USER_CUSTOM_KPIS } from '@/utils/query-keys'
 
 export default function CustomKpiDetails() {
   const { id } = useParams() as { id: string }
 
   const { isLoading, data } = useQuery({
-    queryKey: [KPIS.DETAILS, Number(id)],
+    queryKey: [USER_CUSTOM_KPIS.DETAILS, Number(id)],
     queryFn: () => fetchCustomKPIDetails(Number(id)),
   })
 

@@ -8,8 +8,13 @@ export async function fetchGoals() {
   return data
 }
 
-export async function fetchCustomKPIs() {
+export async function fetchUserCustomKPIs() {
   const { data } = await v1ApiClient.get<CustomKPI[]>('user_custom_kpi/')
+  return data
+}
+
+export async function fetchCustomKPIs() {
+  const { data } = await v1ApiClient.get<CustomKPI[]>('custom_kpi/')
   return data
 }
 
@@ -29,6 +34,11 @@ export async function editCustomKPI(id: number, dto: Partial<AddGoalSchema>) {
 }
 
 export async function fetchCustomKPIDetails(id: number) {
+  const { data } = await v1ApiClient.get<CustomKPI>(`custom_kpi/${id}`)
+  return data
+}
+
+export async function fetchUserCustomKPIDetails(id: number) {
   const { data } = await v1ApiClient.get<CustomKPI>(`user_custom_kpi/${id}`)
   return data
 }

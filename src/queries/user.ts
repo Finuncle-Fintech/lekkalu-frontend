@@ -17,6 +17,6 @@ export async function updateUserDetails(dto: UserProfileSchema) {
     'Content-Type': 'application/json',
   }
 
-  const { data } = await userClient.put<any>('/users/detail', dto, { headers })
+  const { data } = await userClient.put<any>('/detail', dto, { headers })
   return data
 }

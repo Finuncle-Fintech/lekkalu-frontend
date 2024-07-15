@@ -21,7 +21,7 @@ const CreateButton = ({ username }: { username: string }) => {
   const { data: imaginaryUser } = useQuery<any>({ queryKey: [AUTH.IMAGINARY_CLIENT] })
   const { getAPIClientForImaginaryUser } = useImaginaryAuth()
   const { userData } = useAuth()
-  const IS_AUTHENTICATED_USER = Boolean(userData?.email)
+  const IS_AUTHENTICATED_USER = Boolean(userData?.username)
   const apiClient = getAPIClientForImaginaryUser(imaginaryUser[username]?.access)
 
   async function createIncomeExpense(dto: AddIncomeStatementSchema) {

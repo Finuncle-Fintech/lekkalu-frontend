@@ -11,7 +11,7 @@ import Form from '@/pages/KPIs/Components/Form'
 import { AddCustomKPISchema, addCustomKPISchema } from '@/schema/custom_kpi'
 import { addCustomKPI } from '@/queries/goals'
 
-export default function CreateCustomKPI() {
+export default function CustomKPICreate() {
   const navigate = useNavigate()
   const [latexEquation, setLatexEquation] = useState<string>('')
 

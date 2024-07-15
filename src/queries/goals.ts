@@ -13,6 +13,11 @@ export async function fetchCustomKPIs() {
   return data
 }
 
+export async function deleteCustomKPI(id: number) {
+  const { data } = await v1ApiClient.delete(`user_custom_kpi/${id}`)
+  return data
+}
+
 export async function addCustomKPI(dto: AddCustomKPISchema) {
   const { data } = await v1ApiClient.post('user_custom_kpi/', dto)
   return data

@@ -40,8 +40,8 @@ export default function Goals() {
               ))
             ) : (
               <div>
-                <p>You Have no financial goals.</p>
-                <Link to="/goals/new" className="block underline mt-2">
+                <p>You Have no Custom KPIs.</p>
+                <Link to="/custom_kpi/new" className="block underline mt-2">
                   Click here to add.
                 </Link>{' '}
               </div>

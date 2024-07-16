@@ -103,6 +103,7 @@
     "@typescript-eslint/typescript-estree": "^6.18.1",
     "commitizen": "^4.3.0",
     "craco-alias": "^3.0.1",
+    "daisyui": "^4.12.10",
     "eslint": "^8.57.0",
     "eslint-config-standard": "^17.1.0",
     "eslint-plugin-import": "^2.29.1",

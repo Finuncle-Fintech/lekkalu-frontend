@@ -10,5 +10,4 @@ const KPINode = ({ data }: { data: { label: string } }) => {
     </div>
   )
 }
-
 export default KPINode

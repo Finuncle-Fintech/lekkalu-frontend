@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ArrowLeftIcon } from 'lucide-react'
@@ -61,6 +61,7 @@ export default function EditGoal() {
   const handleCustomKpiEdit = (values: AddCustomKPISchema) => {
     editCustomKpiMutation.mutate(values)
   }
+  const [isCustomKPIFlowVisible, setIsCustomKPIFlowVisible] = useState(true)
 
   return (
     <Page className="space-y-8">
@@ -83,7 +84,8 @@ export default function EditGoal() {
           <Skeleton className="w-20 h-[50px]" />
         </div>
       ) : (
-        <Form form={form} onSubmit={handleCustomKpiEdit} isLoading={editCustomKpiMutation.isPending} isEdit />
+        <Form isCustomKPIFlowVisible={isCustomKPIFlowVisible} setIsCustomKPIFlowVisible={setIsCustomKPIFlowVisible}
+              form={form} onSubmit={handleCustomKpiEdit} isLoading={editCustomKpiMutation.isPending} isEdit />
       )}
     </Page>
   )

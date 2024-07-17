@@ -12,9 +12,10 @@ import {
   useNodesState,
 } from '@xyflow/react'
 import KPINode from '@/components/ReactFlow/KPINode'
-import CashNode, { addCashNode } from '@/components/ReactFlow/CashNode'
 import MultiplyNode, { addMultiplyNode } from '@/components/ReactFlow/MultiplyNode'
 import '@xyflow/react/dist/style.css'
+import BaseKpiAddButton from '@/pages/KPIs/Components/BaseKpiAddButton'
+import BaseKpiNode, { addBaseKpiNode } from '@/components/ReactFlow/BaseKpiNode'
 
 const initialNodes: Node[] = [
   {
@@ -97,73 +98,74 @@ export default function CustomKPIFlow({ setLatexEquation }: CustomKPIFlowProps) 
   }
 
   return (
-    <div>
-      <button onClick={() => addCashNode(nodes, setNodes)}>Cash</button>
-      <button onClick={() => addMultiplyNode(nodes, setNodes)}>Add Multiply Node</button>
-      <button onClick={() => generateLatexEquation(edges)}>Generate LaTeX Equation</button>
-      <div>
+    <div className="mt-5">
+      <div className="flex shadow-lg">
+        <div className="shadow-inner p-4 bg-white rounded-l-xl"
+             style={{
+               minWidth: '400px',
+               minHeight: '400px',
+               width: '500px',
+               height: '500px',
+               backgroundColor: '#f0f0f0',
+             }}>
+          <ReactFlow
+            nodes={nodes}
+            edges={edges}
+            onNodesChange={onNodesChange}
+            onEdgesChange={onEdgesChange}
+            onConnect={onConnect}
+            isValidConnection={isValidConnection}
+            fitView
+            nodeTypes={{
+              kpiNode: KPINode,
+              baseKpiNode: BaseKpiNode,
+              multiplyNode: MultiplyNode,
+            }}
+          >
+            <Background
+              variant={BackgroundVariant.Dots} // you can use "lines" for a line grid
+              gap={16} // size of the grid
+              size={1} // size of the dots
+              color="#888" // color of the grid
+            />
+            <MiniMap />
+            <Controls />
+          </ReactFlow>
+        </div>
+        <div className=" bg-blue-50 mr-1 ">
+          <div className="mx-5">
+            <div className="collapse collapse-arrow bg-gray-100 shadow-lg rounded-md my-2">
+              <input type="radio" name="my-accordion-2" defaultChecked />
+              <div className="collapse-title text-sm  text-gray-900">Basic KPIs
+              </div>
+              <div className="collapse-content text-sm text-gray-700">
+                <BaseKpiAddButton onButtonClick={() => addBaseKpiNode('TotalCash', nodes, setNodes)}
+                                  name={'Total Cash'} />
+                <BaseKpiAddButton onButtonClick={() => addBaseKpiNode('TotalIncomeExpense', nodes, setNodes)}
+                                  name={'Total Monthly Expense'} />
+              </div>
+            </div>
+            <div className="collapse collapse-arrow bg-gray-100 shadow-lg rounded-md my-2">
+              <input type="radio" name="my-accordion-2" />
+              <div className="collapse-title text-sm  text-gray-900">Basic Math Operations
+              </div>
+              <div className="collapse-content text-gray-700">
+                <BaseKpiAddButton onButtonClick={() => addMultiplyNode(nodes, setNodes)} name={'Multiply'} />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="bg-blue-50 p-4 rounded-r-xl">
 
-        <h3 className="text-3xl font-bold dark:text-white">Build your own KPI</h3>
+          <p className="text-center text-gray-500 dark:text-gray-400">Use the popular KPIs along with math operations to
+            build your own custom KPI</p>
+          <p className="text-center text-gray-500 dark:text-gray-400">Click on any Helper component to add it to your
+            KPI equation, and also can be seen on KPI&apos;s Canvas on the left</p>
+          <p className="text-center text-gray-500 dark:text-gray-400">Click backspace on a selected wire to delete
+            it</p>
 
-        <p className="text-center text-gray-500 dark:text-gray-400">Use the popular KPIs along with math operations to
-          build your own custom KPI</p>
-
-        <ul className="menu lg:menu-horizontal bg-white text-black rounded-box lg:mb-64 shadow-lg space-x-4">
-          <li><a className="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded-md">Item 1</a></li>
-          <li>
-            <details open>
-              <summary className="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded-md">Parent item</summary>
-              <ul className="bg-white text-black mt-2 shadow-md rounded-md">
-                <li><a className="bg-gray-100 hover:bg-gray-200 px-4 py-2 block rounded-md">Submenu 1</a></li>
-                <li><a className="bg-gray-100 hover:bg-gray-200 px-4 py-2 block rounded-md">Submenu 2</a></li>
-                <li>
-                  <details open>
-                    <summary className="bg-gray-100 hover:bg-gray-200 px-4 py-2 block rounded-md">Parent</summary>
-                    <ul className="bg-white text-black mt-2 shadow-md rounded-md">
-                      <li><a className="bg-gray-50 hover:bg-gray-100 px-4 py-2 block rounded-md">item 1</a></li>
-                      <li><a className="bg-gray-50 hover:bg-gray-100 px-4 py-2 block rounded-md">item 2</a></li>
-                    </ul>
-                  </details>
-                </li>
-              </ul>
-            </details>
-          </li>
-          <li><a className="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded-md">Item 3</a></li>
-        </ul>
+        </div>
       </div>
-      <div className="shadow-inner p-4 bg-white rounded-xl "
-           style={{
-             minWidth: '200px',
-             minHeight: '400px',
-             width: '500px',
-             height: '500px',
-             backgroundColor: '#f0f0f0',
-           }}>
-        <ReactFlow
-          nodes={nodes}
-          edges={edges}
-          onNodesChange={onNodesChange}
-          onEdgesChange={onEdgesChange}
-          onConnect={onConnect}
-          isValidConnection={isValidConnection}
-          fitView
-          nodeTypes={{
-            kpiNode: KPINode,
-            baseKpiNode: CashNode,
-            multiplyNode: MultiplyNode,
-          }}
-        >
-          <Background
-            variant={BackgroundVariant.Dots} // you can use "lines" for a line grid
-            gap={16} // size of the grid
-            size={1} // size of the dots
-            color="#888" // color of the grid
-          />
-          <MiniMap />
-          <Controls />
-        </ReactFlow>
-      </div>
-      <h3>LaTeX Equation:</h3>
     </div>
   )
 }

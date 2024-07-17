@@ -29,7 +29,7 @@ export const addMultiplyNode = (
 ) => {
   const newNode: Node = {
     id: `multiply_${nodes.length + 1}`,
-    position: { x: Math.random() * 400, y: Math.random() * 400 },
+    position: { x: 0, y: 0 },
     data: { label: 'Multiply' },
     type: 'multiplyNode',
   }

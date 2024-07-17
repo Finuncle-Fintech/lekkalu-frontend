@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { ArrowLeftIcon } from 'lucide-react'
-import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
+import { useForm } from 'react-hook-form'
 import CustomKPIFlow from '@/pages/KPIs/Components/CustomKPIFlow'
 import Page from '@/components/Page/Page'
 import { toast } from '@/components/ui/use-toast'
@@ -14,6 +14,7 @@ import { addCustomKPI } from '@/queries/goals'
 export default function CustomKPICreate() {
   const navigate = useNavigate()
   const [latexEquation, setLatexEquation] = useState<string>('')
+  const [isCustomKPIFlowVisible, setIsCustomKPIFlowVisible] = useState(true)
 
   const createCustomKPIMutation = useMutation({
     mutationFn: addCustomKPI,
@@ -48,8 +49,10 @@ export default function CustomKPICreate() {
         <ArrowLeftIcon className="w-4 h-4" />
         Back to KPIs
       </Link>
-      <CustomKPIFlow setLatexEquation={setLatexEquation} />
-      <Form form={form} onSubmit={handleCustomKPICreate} isLoading={createCustomKPIMutation.isPending} />
+      <Form isCustomKPIFlowVisible={isCustomKPIFlowVisible} setIsCustomKPIFlowVisible={setIsCustomKPIFlowVisible}
+            form={form} onSubmit={handleCustomKPICreate}
+            isLoading={createCustomKPIMutation.isPending} />
+      {isCustomKPIFlowVisible && <CustomKPIFlow setLatexEquation={setLatexEquation} />}
     </Page>
   )
 }

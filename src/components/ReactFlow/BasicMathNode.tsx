@@ -2,7 +2,7 @@
 import { Handle, Node, Position } from '@xyflow/react'
 import React from 'react'
 
-const MultiplyNode = ({ data }: { data: { label: string } }) => {
+const BasicMathNode = ({ data }: { data: { label: string } }) => {
   return (
     <div className="react-flow__node-default">
       <Handle
@@ -22,17 +22,25 @@ const MultiplyNode = ({ data }: { data: { label: string } }) => {
     </div>
   )
 }
-// Add a new Multiply node to the flow
-export const addMultiplyNode = (
+
+export const addMathNode = (
+  type: string,
   nodes: Node[],
   setNodes: React.Dispatch<React.SetStateAction<Node[]>>,
 ) => {
-  const newNode: Node = {
-    id: `multiply_${nodes.length + 1}`,
-    position: { x: 0, y: 0 },
-    data: { label: 'Multiply' },
-    type: 'multiplyNode',
+  const labelMap: { [key: string]: string } = {
+    multiplyNode: 'x',
+    divideNode: '÷',
+    // Add more mappings here as needed
   }
+
+  const newNode: Node = {
+    id: `${type + nodes.length + 1}`,
+    position: { x: 0, y: 0 },
+    data: { label: labelMap[type] || 'Label' },
+    type,
+  }
+
   setNodes((nds: Node[]) => nds.concat(newNode))
 }
-export default MultiplyNode
+export default BasicMathNode

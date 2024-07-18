@@ -1,0 +1,12 @@
+[
+    {
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "com.lekkalu.finuncle",
+        "sha256_cert_fingerprints": [
+          "CA:7F:2A:09:CB:9C:B0:41:3D:C0:A5:EB:7C:80:66:2B:37:76:F3:3C:9A:2D:AC:8D:93:05:5B:F5:15:B5:5E:86"
+        ]
+      }
+    }
+  ]

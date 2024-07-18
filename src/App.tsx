@@ -8,6 +8,7 @@ import AppShell from './components/AppShell/AppShell'
 import UnAuthenticatedHeader from './components/UnAuthenticatedHeader/UnAuthenticatedHeader'
 import Footer from './components/Footer/Footer'
 import CookieConsent from './components/CookieConsent/CookieConsent'
+import MobileApp from './components/MobileApp'
 
 /** Authenticated Routes */
 const Dashboard = lazy(() => import('@/pages/Dashboard/Dashboard'))
@@ -53,6 +54,28 @@ function App() {
   useEffect(() => {
     AOS.init()
   }, [])
+
+  // useEffect(() => {
+  //   // window.location = 'com.lekkalu-app.lekkalu-app://(authenticated)/comparisons/36'
+  //   // const link =
+  //   //   'intent://com.finuncle.com/#Intent;scheme=com.lekkalu-app.lekkalu-app;package=com.lekkalu-app.lekkalu-app;end'
+  //   try {
+  //     // const iframe = document.createElement('iframe')
+  //     // iframe.src = 'com.lekkalu-app.lekkalu-app://(authenticated)/comparisons/36'
+  //     // document.body.append(iframe)
+  //     // android_scheme = com.lekkalu.finuncle
+  //     // android_host = com.lekkalu-app.lekkalu-app
+  //     // android_package = com.lekkalu.finuncle
+  //     const link =
+  //       'intent://com.lekkalu-app.lekkalu-app/Intent;scheme=com.lekkalu.finuncle;package=com.lekkalu.finuncle;end'
+  //     // window.open('com.lekkalu-app.lekkalu-app://(authenticated)/comparisons/36')
+  //     window.open
+  //   } catch (e) {
+  //     console.log('error', e)
+  //   }
+  //   // window.location.replace(link)
+  // }, [])
+
   return (
     <Suspense
       fallback={
@@ -69,6 +92,7 @@ function App() {
             <AuthProtection>
               <AppShell>
                 <Outlet />
+                <MobileApp />
               </AppShell>
             </AuthProtection>
           }
@@ -107,6 +131,7 @@ function App() {
                 <Outlet />
               </div>
               <Footer />
+              <MobileApp />
             </>
           }
         >

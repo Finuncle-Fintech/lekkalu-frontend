@@ -51,27 +51,6 @@ function App() {
     AOS.init()
   }, [])
 
-  // useEffect(() => {
-  //   // window.location = 'com.lekkalu-app.lekkalu-app://(authenticated)/comparisons/36'
-  //   // const link =
-  //   //   'intent://com.finuncle.com/#Intent;scheme=com.lekkalu-app.lekkalu-app;package=com.lekkalu-app.lekkalu-app;end'
-  //   try {
-  //     // const iframe = document.createElement('iframe')
-  //     // iframe.src = 'com.lekkalu-app.lekkalu-app://(authenticated)/comparisons/36'
-  //     // document.body.append(iframe)
-  //     // android_scheme = com.lekkalu.finuncle
-  //     // android_host = com.lekkalu-app.lekkalu-app
-  //     // android_package = com.lekkalu.finuncle
-  //     const link =
-  //       'intent://com.lekkalu-app.lekkalu-app/Intent;scheme=com.lekkalu.finuncle;package=com.lekkalu.finuncle;end'
-  //     // window.open('com.lekkalu-app.lekkalu-app://(authenticated)/comparisons/36')
-  //     window.open
-  //   } catch (e) {
-  //     console.log('error', e)
-  //   }
-  //   // window.location.replace(link)
-  // }, [])
-
   return (
     <Suspense
       fallback={

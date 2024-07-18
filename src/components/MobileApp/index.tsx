@@ -1,34 +1,29 @@
 /* eslint-disable no-constant-condition */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useEffect, useState } from 'react'
-import { XCircleIcon } from 'lucide-react'
+import React from 'react'
 import { useLocation, useParams } from 'react-router-dom'
 import { Button } from '../ui/button'
 import { mobileRoutes } from '@/utils/mobile-routes'
 
 const MobileApp = () => {
-  const [showDialog, setShowDialog] = useState(false)
+  // const [showDialog, setShowDialog] = useState(false)
   const location = useLocation()
   const params = useParams()
+  const IS_MOBILE = navigator.userAgent.includes('Android') || navigator.userAgent.includes('iPhone')
 
-  useEffect(() => {
-    const SHOW_DIALOG = localStorage.getItem('show-mobile-dialog')
-    if (SHOW_DIALOG === 'false') {
-      setShowDialog(false)
-    } else if (SHOW_DIALOG === null) {
-      setShowDialog(true)
-    }
-  }, [])
+  // useEffect(() => {
+  //   const SHOW_DIALOG = localStorage.getItem('show-mobile-dialog')
+  //   if (SHOW_DIALOG === 'false') {
+  //     setShowDialog(false)
+  //   } else if (SHOW_DIALOG === null) {
+  //     setShowDialog(true)
+  //   }
+  // }, [])
 
-  window.onerror = (message) => {
-    console.log(message)
-    return true
-  }
-
-  function handleCloseClick() {
-    localStorage.setItem('show-mobile-dialog', 'false')
-    setShowDialog(false)
-  }
+  // function handleCloseClick() {
+  //   localStorage.setItem('show-mobile-dialog', 'false')
+  //   setShowDialog(false)
+  // }
 
   function getMobileRoute(params?: string) {
     const routeIndex = mobileRoutes.findIndex((each) => location.pathname.includes(each?.id))
@@ -52,9 +47,7 @@ const MobileApp = () => {
     }
   }
 
-  // navigator.userAgent.includes('Android') || navigator.userAgent.includes('iPhone')
-
-  if (true) {
+  if (IS_MOBILE) {
     return (
       <div className='flex bg-primary justify-between md:hidden sticky bottom-0 w-full p-5 gap-10'>
         {/* <XCircleIcon

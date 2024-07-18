@@ -12,10 +12,10 @@ import {
   useNodesState,
 } from '@xyflow/react'
 import KPINode from '@/components/ReactFlow/KPINode'
-import MultiplyNode, { addMultiplyNode } from '@/components/ReactFlow/MultiplyNode'
+import BasicMathNode, { addMathNode } from '@/components/ReactFlow/BasicMathNode'
 import '@xyflow/react/dist/style.css'
 import BaseKpiAddButton from '@/pages/KPIs/Components/BaseKpiAddButton'
-import BaseKpiNode, { addBaseKpiNode } from '@/components/ReactFlow/BaseKpiNode'
+import BaseKpiNode, { addBaseKpiNode, addConstNumNode, ConstNumNode } from '@/components/ReactFlow/BaseKpiNode'
 
 const initialNodes: Node[] = [
   {
@@ -34,7 +34,7 @@ interface CustomKPIFlowProps {
 export default function CustomKPIFlow({ setLatexEquation }: CustomKPIFlowProps) {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes)
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges)
-  const [kpiLabel] = useState<string>('KPI')
+  const [kpiLabel] = useState<string>('\\mathit{kpi}')
 
   const generateLatexEquation = useCallback((currentEdges: Edge[]) => {
     const startNode = nodes.find((node) => node.type === 'kpiNode')
@@ -55,10 +55,11 @@ export default function CustomKPIFlow({ setLatexEquation }: CustomKPIFlowProps) 
         if (!sourceNode) return []
         const subLabels = getLabelsRecursively(sourceNode.id, visited)
 
-        if (sourceNode.type === 'multiplyNode') {
-          return subLabels.length > 0 ? [`(${subLabels.join(' \\cdot ')})`] : []
+        if (sourceNode.type === 'multiplyNode' || sourceNode.type === 'divideNode') {
+          const operator = sourceNode.type === 'multiplyNode' ? ' \\cdot ' : ' \\div '
+          return subLabels.length > 0 ? [`(${subLabels.join(operator)})`] : []
         }
-        const sourceLabel = `\\mathit{${sourceNode.data.label}}`
+        const sourceLabel = sourceNode.type === 'constNumNode' ? `${sourceNode.data.label}` : `\\mathit{${sourceNode.data.label}}`
         return subLabels.length > 0 ? subLabels.concat(sourceLabel) : [sourceLabel]
       })
     }
@@ -119,7 +120,9 @@ export default function CustomKPIFlow({ setLatexEquation }: CustomKPIFlowProps) 
             nodeTypes={{
               kpiNode: KPINode,
               baseKpiNode: BaseKpiNode,
-              multiplyNode: MultiplyNode,
+              multiplyNode: BasicMathNode,
+              divideNode: BasicMathNode,
+              constNumNode: ConstNumNode,
             }}
           >
             <Background
@@ -150,7 +153,12 @@ export default function CustomKPIFlow({ setLatexEquation }: CustomKPIFlowProps) 
               <div className="collapse-title text-sm  text-gray-900">Basic Math Operations
               </div>
               <div className="collapse-content text-gray-700">
-                <BaseKpiAddButton onButtonClick={() => addMultiplyNode(nodes, setNodes)} name={'Multiply'} />
+                <BaseKpiAddButton onButtonClick={() => addMathNode('multiplyNode', nodes, setNodes)}
+                                  name={'Multiply'} />
+                <BaseKpiAddButton onButtonClick={() => addMathNode('divideNode', nodes, setNodes)}
+                                  name={'Divide'} />
+                <BaseKpiAddButton onButtonClick={() => addConstNumNode('100', nodes, setNodes)}
+                                  name={'Constant'} />
               </div>
             </div>
           </div>

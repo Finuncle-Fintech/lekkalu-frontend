@@ -43,6 +43,7 @@ const MobileApp = () => {
     try {
       window.location.replace(deeplink)
     } catch (e) {
+      // eslint-disable-next-line no-console
       console.log('we have an error')
     }
   }

@@ -29,15 +29,8 @@ export function useAuth() {
   const {
     isLoading: isAuthenticationInProgress,
     data: tokenData,
-    remove: removeTokenData,
     isSuccess: isAuthenticationSuccess,
-  } = useQuery([AUTH.LOGGED_IN], refreshToken, {
-    onSuccess: (data) => {
-      // setCookie(REFRESH_TOKEN_KEY, data?.refresh || '', 30)
-      setCookie(ACCESS_TOKEN_KEY, data?.access || '', 30)
-      fetchUserData()
-    },
-  })
+  } = useQuery({ queryKey: [AUTH.LOGGED_IN], queryFn: refreshToken })
 
   useEffect(() => {
     if (isAuthenticationSuccess && tokenData) {
@@ -92,7 +85,7 @@ export function useAuth() {
 
   const logout = useCallback(async () => {
     await logoutAPI()
-    qc.invalidateQueries([AUTH.LOGGED_IN])
+    qc.invalidateQueries({ queryKey: [AUTH.LOGGED_IN] })
     qc.removeQueries()
     deleteCookie(REFRESH_TOKEN_KEY)
     deleteCookie(ACCESS_TOKEN_KEY)
@@ -100,7 +93,7 @@ export function useAuth() {
     clearData()
     navigate('/')
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [removeTokenData, navigate])
+  }, [navigate])
 
   useEffect(() => {
     if (getCookie(ACCESS_TOKEN_KEY)) {

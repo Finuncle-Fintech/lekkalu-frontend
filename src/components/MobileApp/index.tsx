@@ -1,6 +1,6 @@
 /* eslint-disable no-constant-condition */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useLocation, useParams } from 'react-router-dom'
 import { Button } from '../ui/button'
 import { mobileRoutes } from '@/utils/mobile-routes'
@@ -9,7 +9,15 @@ const MobileApp = () => {
   // const [showDialog, setShowDialog] = useState(false)
   const location = useLocation()
   const params = useParams()
-  const IS_MOBILE = navigator.userAgent.includes('Android') || navigator.userAgent.includes('iPhone')
+  // const IS_MOBILE = navigator.userAgent.includes('Android') || navigator.userAgent.includes('iPhone')
+  const IS_MOBILE = navigator.userAgent.includes('Android')
+
+  useEffect(() => {
+    document
+      .querySelector('meta[name="apple-itunes-app"]')
+      ?.setAttribute('content', `app-id=6475839395, app-argument=${getMobileRoute(params.id)}`)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location, params])
 
   // useEffect(() => {
   //   const SHOW_DIALOG = localStorage.getItem('show-mobile-dialog')
@@ -39,7 +47,8 @@ const MobileApp = () => {
 
   function handleUseAppClick() {
     const link = getMobileRoute(params.id)
-    const deeplink = `com.lekkalu-app.lekkalu-app://${link}`
+    // const deeplink = `com.lekkalu-app.lekkalu-app://${link}`
+    const deeplink = `intent://${link}/#Intent;scheme=com.lekkalu-app.lekkalu-app;package=com.lekkalu.finuncle;end`
     try {
       window.location.replace(deeplink)
     } catch (e) {

@@ -13,9 +13,13 @@ import MobileApp from './components/MobileApp'
 /** Authenticated Routes */
 const Dashboard = lazy(() => import('@/pages/Dashboard/Dashboard'))
 const Goals = lazy(() => import('@/pages/Goals/Goals'))
+const KPIs = lazy(() => import('@/pages/KPIs/CustomKPIList'))
 const CreateGoal = lazy(() => import('@/pages/Goals/AddEditGoalPages/CreateGoal/CreateGoal'))
+const CreateCustomKPI = lazy(() => import('@/pages/KPIs/CustomKPICreate'))
 const EditGoal = lazy(() => import('@/pages/Goals/AddEditGoalPages/EditGoal'))
+const EditKpi = lazy(() => import('@/pages/KPIs/CustomKpiEdit'))
 const GoalDetails = lazy(() => import('@/pages/GoalDetails/GoalDetails'))
+const CustomKPIDetails = lazy(() => import('@/pages/KPIs/CustomKPIDetails'))
 const IncomeStatement = lazy(() => import('@/pages/IncomeStatement/IncomeStatement'))
 const Expenses = lazy(() => import('@/pages/Expenses/Expenses'))
 const Lending = lazy(() => import('@/pages/Lending/Lending'))
@@ -54,8 +58,8 @@ function App() {
   return (
     <Suspense
       fallback={
-        <div className='flex h-screen w-full items-center justify-center gap-2'>
-          <LoaderIcon className='w-4 h-4 animate-spin' />
+        <div className="flex h-screen w-full items-center justify-center gap-2">
+          <LoaderIcon className="w-4 h-4 animate-spin" />
           <div>Loading please wait...</div>
         </div>
       }
@@ -72,25 +76,29 @@ function App() {
             </AuthProtection>
           }
         >
-          <Route path='/dashboard' element={<Dashboard />} />
-          <Route path='/goals' element={<Goals />} />
-          <Route path='/goals/new' element={<CreateGoal />} />
-          <Route path='/goals/edit/:id' element={<EditGoal />} />
-          <Route path='/goals/:id' element={<GoalDetails />} />
-          <Route path='/income-statement' element={<IncomeStatement />} />
-          <Route path='/expenses' element={<Expenses />} />
-          <Route path='/lending' element={<Lending />} />
-          <Route path='/balance-sheet' element={<BalanceSheet />} />
-          <Route path='/settings' element={<Settings />} />
-          <Route path='/profile' element={<Profile />} />
-          <Route path='/comparisons' element={<Comparison />} />
-          <Route path='/comparisons/new' element={<AddComparison />} />
-          <Route path='/comparisons/edit/:id' element={<EditComparison />} />
-          <Route path='/comparisons/:id' element={<ComparisonDetails />} />
-          <Route path='/scenarios' element={<Scenarios />} />
-          <Route path='/scenarios/new' element={<AddScenario />} />
-          <Route path='/scenarios/edit/:id' element={<EditScenario />} />
-          <Route path='/scenarios/:id' element={<ScenarioDetail />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/goals" element={<Goals />} />
+          <Route path="/kpis" element={<KPIs />} />
+          <Route path="/goals/new" element={<CreateGoal />} />
+          <Route path="/custom_kpi/new" element={<CreateCustomKPI />} />
+          <Route path="/goals/edit/:id" element={<EditGoal />} />
+          <Route path="/kpis/edit/:id" element={<EditKpi />} />
+          <Route path="/goals/:id" element={<GoalDetails />} />
+          <Route path="/kpis/:id" element={<CustomKPIDetails />} />
+          <Route path="/income-statement" element={<IncomeStatement />} />
+          <Route path="/expenses" element={<Expenses />} />
+          <Route path="/lending" element={<Lending />} />
+          <Route path="/balance-sheet" element={<BalanceSheet />} />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/comparisons" element={<Comparison />} />
+          <Route path="/comparisons/new" element={<AddComparison />} />
+          <Route path="/comparisons/edit/:id" element={<EditComparison />} />
+          <Route path="/comparisons/:id" element={<ComparisonDetails />} />
+          <Route path="/scenarios" element={<Scenarios />} />
+          <Route path="/scenarios/new" element={<AddScenario />} />
+          <Route path="/scenarios/edit/:id" element={<EditScenario />} />
+          <Route path="/scenarios/:id" element={<ScenarioDetail />} />
         </Route>
 
         <Route
@@ -98,7 +106,7 @@ function App() {
             <>
               <CookieConsent />
               <UnAuthenticatedHeader />
-              <div className='min-h-screen mt-16 lg:mt-16'>
+              <div className="min-h-screen mt-16 lg:mt-16">
                 <Outlet />
               </div>
               <Footer />
@@ -106,22 +114,22 @@ function App() {
             </>
           }
         >
-          <Route path='/' element={<Home />} />
-          <Route path='/signin' element={<Signin />} />
-          <Route path='/signup' element={<Signup />} />
-          <Route path='/sip-calculator' element={<SipCalculator />} />
-          <Route path='/cagr-calculator' element={<CagrCalculator />} />
-          <Route path='/emi-calculator' element={<EmiCalculator />} />
-          <Route path='/terms-and-conditions' element={<TermsAndConditions />} />
-          <Route path='/privacy-policies' element={<PrivacyPolicies />} />
-          <Route path='/pricing' element={<Pricing />} />
-          <Route path='/support' element={<Support />} />
-          <Route path='/feature/comparisons/:id' element={<ComparisonDetails />} />
-          <Route path='/feature/scenarios/:id' element={<ScenarioDetail />} />
-          <Route path='/feature/:toolName' element={<FeaturesDetails />} />
-          <Route path='/email-verification/:code' element={<EmailVerificationProcess />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/signin" element={<Signin />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/sip-calculator" element={<SipCalculator />} />
+          <Route path="/cagr-calculator" element={<CagrCalculator />} />
+          <Route path="/emi-calculator" element={<EmiCalculator />} />
+          <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
+          <Route path="/privacy-policies" element={<PrivacyPolicies />} />
+          <Route path="/pricing" element={<Pricing />} />
+          <Route path="/support" element={<Support />} />
+          <Route path="/feature/comparisons/:id" element={<ComparisonDetails />} />
+          <Route path="/feature/scenarios/:id" element={<ScenarioDetail />} />
+          <Route path="/feature/:toolName" element={<FeaturesDetails />} />
+          <Route path="/email-verification/:code" element={<EmailVerificationProcess />} />
         </Route>
-        <Route path='*' element={<NotFound />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Suspense>
   )

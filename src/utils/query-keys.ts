@@ -49,6 +49,16 @@ export const GOALS = {
   KPI_TYPES: 'KPI_TYPES',
 } as const
 
+export const CUSTOM_KPIS = {
+  KPIS: 'CUSTOM_KPIS',
+  DETAILS: 'CUSTOM_KPIS_DETAILS',
+} as const
+
+export const USER_CUSTOM_KPIS = {
+  KPIS: 'USER_CUSTOM_KPIS',
+  DETAILS: 'USER_CUSTOM_KPIS_DETAILS',
+} as const
+
 export const NOTIFICATION = {
   NOTIFICATION: 'NOTIFICATION',
 } as const

@@ -13,6 +13,7 @@ import {
   Settings2Icon,
   SheetIcon,
   TargetIcon,
+  Gauge,
   Wallet,
   Scale,
   BookCopy,
@@ -41,6 +42,11 @@ export const ROUTES: Array<Route> = [
     path: '/goals',
     label: 'Goals',
     icon: <TargetIcon />,
+  },
+  {
+    path: '/kpis',
+    label: 'KPIs',
+    icon: <Gauge />,
   },
   {
     path: '/income-statement',

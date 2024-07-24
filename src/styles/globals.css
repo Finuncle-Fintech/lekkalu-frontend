@@ -103,7 +103,6 @@ html {
   animation-timing-function: ease-out;
   will-change: transform, opacity;
   animation-delay: 0;
-  z-index: -1;
 }
 
 @keyframes ripple{

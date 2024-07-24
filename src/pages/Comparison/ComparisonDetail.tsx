@@ -110,6 +110,9 @@ const ComparisonDetail = () => {
     if (_scenarios?.length) {
       const _selectedScenarios = [..._scenarios, ...selectedScenarios]
       scenarioMutationInComparison({ scenarios: _selectedScenarios })
+    } else {
+      const _selectedScenarios = [...selectedScenarios]
+      scenarioMutationInComparison({ scenarios: _selectedScenarios })
     }
   }
 
@@ -211,12 +214,13 @@ const ComparisonDetail = () => {
         <Button
           variant={'default'}
           onClick={handleSimulate}
+          className='z-10'
           loading={isPending}
           disabled={!comparison?.scenarios_objects.length}
         >
           Simulate
         </Button>
-        <div className={isPending ? '' : 'ripple'} />
+        <div className={isPending || !comparison?.scenarios.length ? '' : 'ripple'} />
       </div>
 
       {timelineData ? (

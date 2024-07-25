@@ -8,12 +8,17 @@ import AppShell from './components/AppShell/AppShell'
 import UnAuthenticatedHeader from './components/UnAuthenticatedHeader/UnAuthenticatedHeader'
 import Footer from './components/Footer/Footer'
 import CookieConsent from './components/CookieConsent/CookieConsent'
+import MobileApp from './components/MobileApp'
 
 /** Authenticated Routes */
 const Dashboard = lazy(() => import('@/pages/Dashboard/Dashboard'))
 const Goals = lazy(() => import('@/pages/Goals/Goals'))
+const KPIs = lazy(() => import('@/pages/KPIs/CustomKPIList'))
+const CreateCustomKPI = lazy(() => import('@/pages/KPIs/CustomKPICreate'))
 const EditGoal = lazy(() => import('@/pages/Goals/AddEditGoalPages/EditGoal'))
+const EditKpi = lazy(() => import('@/pages/KPIs/CustomKpiEdit'))
 const GoalDetails = lazy(() => import('@/pages/GoalDetails/GoalDetails'))
+const CustomKPIDetails = lazy(() => import('@/pages/KPIs/CustomKPIDetails'))
 const IncomeStatement = lazy(() => import('@/pages/IncomeStatement/IncomeStatement'))
 const Expenses = lazy(() => import('@/pages/Expenses/Expenses'))
 const Lending = lazy(() => import('@/pages/Lending/Lending'))
@@ -48,6 +53,7 @@ function App() {
   useEffect(() => {
     AOS.init()
   }, [])
+
   return (
     <Suspense
       fallback={
@@ -64,12 +70,17 @@ function App() {
             <AuthProtection>
               <AppShell>
                 <Outlet />
+                <MobileApp />
               </AppShell>
             </AuthProtection>
           }
         >
           <Route path='/dashboard' element={<Dashboard />} />
           <Route path='/goals' element={<Goals />} />
+          <Route path='/kpis' element={<KPIs />} />
+          <Route path='/custom_kpi/new' element={<CreateCustomKPI />} />
+          <Route path='/kpis/edit/:id' element={<EditKpi />} />
+          <Route path='/kpis/:id' element={<CustomKPIDetails />} />
           <Route path='/goals/edit/:id' element={<EditGoal />} />
           <Route path='/goals/:id' element={<GoalDetails />} />
           <Route path='/income-statement' element={<IncomeStatement />} />
@@ -97,6 +108,7 @@ function App() {
                 <Outlet />
               </div>
               <Footer />
+              <MobileApp />
             </>
           }
         >

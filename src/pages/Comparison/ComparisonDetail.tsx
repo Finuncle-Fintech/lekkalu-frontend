@@ -27,7 +27,7 @@ const ComparisonDetail = () => {
   const IS_FOR_FEATURE_PAGE = useLocation().pathname.includes('feature')
   const { getAPIClientForImaginaryUser } = useImaginaryAuth()
   const { userData } = useAuth()
-  const IS_AUTHENTICATED_USER = Boolean(userData?.email)
+  const IS_AUTHENTICATED_USER = Boolean(userData?.username)
 
   const [selectedScenarios, setSelectedScenarios] = useState<Array<number>>([])
   const [timelineData, setTimelineData] = useState<any>()
@@ -83,8 +83,7 @@ const ComparisonDetail = () => {
     isPending,
   } = useMutation({
     mutationFn: async ({ password, username, scenarioName }: any) => {
-      const results = await timelineDataAPICall({ password, username, scenarioName })
-      return results
+      return await timelineDataAPICall({ password, username, scenarioName })
     },
     onSuccess: (data) => {
       setTimelineData((prevData: any) => {
@@ -110,6 +109,9 @@ const ComparisonDetail = () => {
     const _scenarios = comparison?.scenarios as Array<number>
     if (_scenarios?.length) {
       const _selectedScenarios = [..._scenarios, ...selectedScenarios]
+      scenarioMutationInComparison({ scenarios: _selectedScenarios })
+    } else {
+      const _selectedScenarios = [...selectedScenarios]
       scenarioMutationInComparison({ scenarios: _selectedScenarios })
     }
   }
@@ -148,7 +150,7 @@ const ComparisonDetail = () => {
 
   return (
     <Page className='space-y-8'>
-      <div className='flex justify-between'>
+      <div className='relative flex justify-between'>
         {IS_AUTHENTICATED_USER ? (
           <PageTitle
             backUrl={IS_AUTHENTICATED_USER ? '/comparisons' : '/feature/comparisons'}
@@ -159,16 +161,6 @@ const ComparisonDetail = () => {
         ) : (
           <div />
         )}
-        <div>
-          <Button
-            variant={'default'}
-            onClick={handleSimulate}
-            loading={isPending}
-            disabled={!comparison?.scenarios_objects.length}
-          >
-            Simulate
-          </Button>
-        </div>
       </div>
       <h2 className='font-bold'>
         {comparison?.scenarios_objects?.length ? (
@@ -216,6 +208,19 @@ const ComparisonDetail = () => {
         ) : (
           <></>
         )}
+      </div>
+
+      <div className='flex justify-end'>
+        <Button
+          variant={'default'}
+          onClick={handleSimulate}
+          className='z-10'
+          loading={isPending}
+          disabled={!comparison?.scenarios_objects.length}
+        >
+          Simulate
+        </Button>
+        <div className={isPending || !comparison?.scenarios.length ? '' : 'ripple'} />
       </div>
 
       {timelineData ? (

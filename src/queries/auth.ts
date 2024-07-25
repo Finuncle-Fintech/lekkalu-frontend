@@ -6,10 +6,12 @@ import { getCookie } from '@/utils/cookie'
 import { User } from '@/types/user'
 
 export async function signup(dto: Omit<SignupSchemaNew, 'termsAndConditions' | 'privacyPolicy'>) {
-  const { data } = await axios.create({
-    baseURL: process.env.REACT_APP_ACCOUNTS_BASE_URL,
-    headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
-  }).post<{ email: string; username: string }>('/dj-rest-auth/registration/', dto)
+  const { data } = await axios
+    .create({
+      baseURL: process.env.REACT_APP_ACCOUNTS_BASE_URL,
+      headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+    })
+    .post<{ email: string; username: string }>('/dj-rest-auth/registration/', dto)
   return data
 }
 

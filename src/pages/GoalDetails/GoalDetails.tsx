@@ -1,11 +1,10 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useMemo, useState } from 'react'
 import { BadgeCheckIcon, GaugeIcon, SplitIcon, TargetIcon } from 'lucide-react'
 import { useParams } from 'react-router-dom'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import Page from '@/components/Page/Page'
-import { BALANCE_SHEET, GOALS } from '@/utils/query-keys'
-import { editGoal, fetchGoalDetails, fetchKPITypes } from '@/queries/goals'
+import { BALANCE_SHEET, GOALS, USER_CUSTOM_KPIS } from '@/utils/query-keys'
+import { editGoal, fetchGoalDetails, fetchKPITypes, fetchUserCustomKPIs } from '@/queries/goals'
 import GoalTimeline from './components/GoalTimeline'
 import BackButton from './components/BackButton'
 import { fetchIncomeExpenses } from '@/queries/income-statement'
@@ -30,6 +29,7 @@ export default function GoalDetails() {
   const [allowEditTarget, setAllowEditTarget] = useState(false)
 
   const { data: incomeExpenses } = useQuery({ queryKey: [BALANCE_SHEET.INCOME_EXPENSES], queryFn: fetchIncomeExpenses })
+  const { data: custom_kpis } = useQuery({ queryKey: [USER_CUSTOM_KPIS.KPIS], queryFn: fetchUserCustomKPIs })
 
   const { data: getTargetKpi } = useQuery({ queryKey: [GOALS.KPI_TYPES], queryFn: fetchKPITypes })
 
@@ -45,6 +45,7 @@ export default function GoalDetails() {
         ...data,
         target_contribution_source:
           incomeExpenses?.find((each) => each?.id === data?.target_contribution_source)?.name || 'N/A',
+        custom_kpi: custom_kpis?.find((each) => each?.id === data?.custom_kpi)?.name,
       }
     },
   })

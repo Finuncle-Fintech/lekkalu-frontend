@@ -1,0 +1,17 @@
+{
+    "applinks": {
+      "apps": [],
+      "details": [
+        {
+          "appID": "8XRCQ5TVHW.com.lekkalu.finuncle",
+          "paths": ["/(authenticated)/scenario/*", "/(authenticated)/comparison/*"]
+        }
+      ]
+    },
+    "activitycontinuation": {
+      "apps": ["8XRCQ5TVHW.com.lekkalu.finuncle"]
+    },
+    "webcredentials": {
+      "apps": ["8XRCQ5TVHW.com.lekkalu.finuncle"]
+    }
+  }

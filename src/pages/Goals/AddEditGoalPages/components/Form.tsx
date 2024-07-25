@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import dayjs from 'dayjs'
 import { UseFormReturn } from 'react-hook-form'
 import { Link } from 'react-router-dom'
-import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Step, StepItem, Stepper } from '@/components/ui/stepper'
 import DatePicker from '@/components/DatePicker/DatePicker'
@@ -12,6 +12,7 @@ import { AddGoalSchema } from '@/schema/goals'
 import { StepFooter } from './StepperFooter'
 import { FormLabelForGoalForm } from '../../components/FormLabel'
 import { Button } from '@/components/ui/button'
+import { CustomKPI } from '@/types/goals'
 
 type GoalFormType = {
   form: UseFormReturn<AddGoalSchema>
@@ -24,8 +25,15 @@ type GoalFormType = {
 const steps = [{ id: '1' }, { id: '2' }] satisfies StepItem[]
 
 export default function GoalForm({ form, onSubmit, isLoading, isError, isEdit = false }: GoalFormType) {
-  const { incomeExpenses, goalProportionality, getTargetKpi, isFetchingOptions, totalExpenses } =
-    useGetSelectOptionsForGoal()
+  const {
+    incomeExpenses,
+    goalProportionality,
+    getTargetKpi,
+    isFetchingOptions,
+    totalExpenses,
+    custom_kpis,
+    user_custom_kpis,
+  } = useGetSelectOptionsForGoal()
 
   const kpi_value = form.watch('track_kpi')
 
@@ -44,6 +52,11 @@ export default function GoalForm({ form, onSubmit, isLoading, isError, isEdit = 
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [multiplyTargetBy])
+
+  const mergedKpis: CustomKPI[] = [
+    ...(custom_kpis ?? []).map((item) => ({ ...item })),
+    ...(user_custom_kpis ?? []).map((item) => ({ ...item })),
+  ]
 
   if (isFetchingOptions) {
     return (
@@ -199,6 +212,43 @@ export default function GoalForm({ form, onSubmit, isLoading, isError, isEdit = 
                         <p className='mt-5'>Step 2: Set target for this goal.</p>
                       </div>
                       <div className='grid sm:grid-cols-1 gap-4 p-5'>
+                        <FormField
+                          control={form.control}
+                          name='custom_kpi'
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Custom KPI</FormLabel>
+                              <FormControl>
+                                <Select
+                                  value={field.value?.toString()}
+                                  onValueChange={field.onChange}
+                                  disabled={Boolean(!mergedKpis.length)}
+                                >
+                                  <SelectTrigger>
+                                    <SelectValue placeholder='Select a KPI' />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    {mergedKpis.map((item: { id: number; name: string }) => (
+                                      <SelectItem key={item.id} value={item.id.toString()}>
+                                        {item.name}
+                                      </SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
+                              </FormControl>
+                              <div>
+                                {!mergedKpis.length ? (
+                                  <Link to='/income-statement' className='text-gray-500 text-xs hover:underline'>
+                                    No KPIs found. Click here to add.
+                                  </Link>
+                                ) : (
+                                  <></>
+                                )}
+                              </div>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
                         <FormField
                           control={form.control}
                           name='target_value'

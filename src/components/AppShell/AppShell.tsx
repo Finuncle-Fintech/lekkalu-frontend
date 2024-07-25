@@ -56,8 +56,8 @@ export default function AppShell({ children }: Props) {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              <When truthy={Boolean(userData?.email)}>
-                <DropdownMenuLabel>{userData?.email}</DropdownMenuLabel>
+              <When truthy={Boolean(userData?.username)}>
+                <DropdownMenuLabel>{userData?.username}</DropdownMenuLabel>
               </When>
 
               {location.pathname !== '/profile' && (

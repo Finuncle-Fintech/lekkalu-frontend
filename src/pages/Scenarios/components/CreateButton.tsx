@@ -18,6 +18,7 @@ import AddOrEditAssetsForScenario from './Assets/AddOrEditAssetsForScenarios'
 import EachAsset from './Assets/EachAsset'
 import { useAuth } from '@/hooks/use-auth'
 import { fetchScenarios } from '@/queries/scenarios'
+import { LoadingSkeleton } from '../ScenarioDetail'
 
 const CreateButton = ({ username }: { username: string }) => {
   const { data: imaginaryUser } = useQuery<any>({ queryKey: [AUTH.IMAGINARY_CLIENT] })
@@ -112,11 +113,7 @@ const CreateButton = ({ username }: { username: string }) => {
   })
 
   if (isLoadingAssets || isLoadingExpenses || isLoadingLiabilities) {
-    return (
-      <div>
-        <p>Loading entites...</p>
-      </div>
-    )
+    return <LoadingSkeleton />
   }
 
   return (
@@ -130,7 +127,7 @@ const CreateButton = ({ username }: { username: string }) => {
           <></>
         )}
       </div>
-      <div className='grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 gap-y-10'>
+      <div className='flex flex-wrap gap-5'>
         {expenses?.map((each: IncomeStatement) => (
           <EachIncomeExpenseForScenario
             incomeExpense={each}

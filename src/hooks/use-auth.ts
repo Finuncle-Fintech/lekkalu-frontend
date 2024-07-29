@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import constate from 'constate'
 import { useNavigate } from 'react-router-dom'
-import { fetchUser, googleSignup, login, refreshToken, signup } from '@/queries/auth'
+import { fetchUser, googleSignup, login, refreshToken, signup, logout as logoutAPI } from '@/queries/auth'
 import { deleteCookie, getCookie, setCookie } from '@/utils/cookie'
 import { ACCESS_TOKEN_KEY, COOKIE_CONSENT, REFRESH_TOKEN_KEY } from '@/utils/constants'
 import { AUTH } from '@/utils/query-keys'
@@ -30,10 +30,7 @@ export function useAuth() {
     isLoading: isAuthenticationInProgress,
     data: tokenData,
     isSuccess: isAuthenticationSuccess,
-  } = useQuery({
-    queryKey: [AUTH.LOGGED_IN],
-    queryFn: refreshToken,
-  })
+  } = useQuery({ queryKey: [AUTH.LOGGED_IN], queryFn: refreshToken })
 
   useEffect(() => {
     if (isAuthenticationSuccess && tokenData) {
@@ -86,13 +83,16 @@ export function useAuth() {
     onError: (err: any) => toast(getErrorMessage(err)),
   })
 
-  const logout = useCallback(() => {
+  const logout = useCallback(async () => {
+    await logoutAPI()
+    qc.invalidateQueries({ queryKey: [AUTH.LOGGED_IN] })
+    qc.removeQueries()
     deleteCookie(REFRESH_TOKEN_KEY)
     deleteCookie(ACCESS_TOKEN_KEY)
     qc.removeQueries({ queryKey: [AUTH.LOGGED_IN] })
     clearData()
     navigate('/')
-    //  eslint-disable-next-line
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigate])
 
   useEffect(() => {

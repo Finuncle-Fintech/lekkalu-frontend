@@ -33,7 +33,7 @@ const EditScenario = () => {
     toast({ title: 'Something went wrong' })
   }
 
-  const { mutate } = useMutation({
+  const { mutate, isPending: isSubmittingForm } = useMutation({
     mutationFn: (dto: Partial<Scenario>) => editScenario(scenarioId, dto),
     onSuccess() {
       queryClient.invalidateQueries({ queryKey: [queryName] })
@@ -60,7 +60,13 @@ const EditScenario = () => {
   return (
     <Page className='space-y-8'>
       <PageTitle title='Edit this scenario' backUrlTitle='Back to Scenarios' />
-      <ScenarioForm form={form} isEdit isLoading={false} onSubmit={handleFormSubmit} />
+      {!isFetchingScenario ? (
+        <ScenarioForm form={form} isEdit isLoading={isSubmittingForm} onSubmit={handleFormSubmit} />
+      ) : (
+        <div>
+          <p>Loading...</p>
+        </div>
+      )}
     </Page>
   )
 }

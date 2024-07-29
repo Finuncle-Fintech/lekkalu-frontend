@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useLocation, useParams } from 'react-router-dom'
@@ -10,16 +11,13 @@ import { useImaginaryAuth } from './context/use-imaginaryAuth'
 import CreateButton from './components/CreateButton'
 import { queryClient } from '@/utils/client'
 
-const LoadingSkeleton = () => {
+export const LoadingSkeleton = () => {
   return (
-    <div>
-      <div className='flex justify-between'>
-        <Skeleton className='w-52 h-10' />
-        <Skeleton className='w-40 h-10' />
-      </div>
-      <div className='mt-10'>
-        <Skeleton className='w-full h-10' />
-      </div>
+    <div className='flex gap-5'>
+      <Skeleton className='w-40 h-10  min-h-[150px] min-w-[190px]' />
+      <Skeleton className='w-40 h-10  min-h-[150px] min-w-[190px]' />
+      <Skeleton className='w-40 h-10  min-h-[150px] min-w-[190px]' />
+      <Skeleton className='w-40 h-10  min-h-[150px] min-w-[190px]' />
     </div>
   )
 }

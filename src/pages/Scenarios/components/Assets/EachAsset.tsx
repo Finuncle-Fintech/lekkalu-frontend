@@ -24,7 +24,7 @@ const EachIncomeExpenseForScenario = ({
   IS_AUTHENTICATED_USER,
 }: EachIncomeForScenarioType) => {
   return (
-    <div className={'border flex flex-col rounded-lg bg-green-500 min-h-[150px] min-w-[150px]'}>
+    <div className={'border flex flex-col rounded-lg bg-green-500 min-h-[150px] min-w-[190px]'}>
       <div className='flex justify-between'>
         <p className='p-2 text-white text-xs'>Asset</p>
         {IS_AUTHENTICATED_USER && (

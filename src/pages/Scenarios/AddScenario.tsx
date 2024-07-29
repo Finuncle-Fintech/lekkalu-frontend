@@ -30,8 +30,8 @@ const AddScenario = () => {
     return data
   }
 
-  const { mutate: login } = useMutation({ mutationFn: loginImaginaryUser })
-  const { mutate: createGoalForImaginaryUser } = useMutation({
+  const { mutate: login, isPending: isLoginImaginaryUser } = useMutation({ mutationFn: loginImaginaryUser })
+  const { mutate: createGoalForImaginaryUser, isPending: isCreatingGoalForImaginaryUser } = useMutation({
     mutationFn: (apiClient: AxiosInstance) =>
       addGoal(
         {
@@ -45,7 +45,7 @@ const AddScenario = () => {
       ),
   })
 
-  const { mutate: addScenario, isPending } = useMutation({
+  const { mutate: addScenario, isPending: isAddingScenario } = useMutation({
     mutationFn: createScenarios,
     onSuccess: (data) => {
       toast({ title: 'Scenario created successfully!' })
@@ -76,7 +76,11 @@ const AddScenario = () => {
   return (
     <Page className='space-y-8'>
       <PageTitle title='Create a scenario' backUrlTitle='Back to Scenarios' />
-      <ScenarioForm form={form} isLoading={isPending} onSubmit={handleFormSubmit} />
+      <ScenarioForm
+        form={form}
+        isLoading={isAddingScenario || isLoginImaginaryUser || isCreatingGoalForImaginaryUser}
+        onSubmit={handleFormSubmit}
+      />
     </Page>
   )
 }

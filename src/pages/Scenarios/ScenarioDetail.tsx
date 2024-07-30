@@ -13,7 +13,7 @@ import { queryClient } from '@/utils/client'
 
 export const LoadingSkeleton = () => {
   return (
-    <div className='flex gap-5'>
+    <div className='flex flex-col sm:flex-row items-center sm:justify-start gap-5'>
       <Skeleton className='w-40 h-10  min-h-[150px] min-w-[190px]' />
       <Skeleton className='w-40 h-10  min-h-[150px] min-w-[190px]' />
       <Skeleton className='w-40 h-10  min-h-[150px] min-w-[190px]' />

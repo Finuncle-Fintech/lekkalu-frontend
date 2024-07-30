@@ -127,7 +127,7 @@ const CreateButton = ({ username }: { username: string }) => {
           <></>
         )}
       </div>
-      <div className='flex flex-wrap gap-5'>
+      <div className='flex flex-wrap gap-5 justify-center sm:justify-start'>
         {expenses?.map((each: IncomeStatement) => (
           <EachIncomeExpenseForScenario
             incomeExpense={each}

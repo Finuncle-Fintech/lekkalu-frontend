@@ -32,18 +32,21 @@ const EachIncomeExpenseForScenario = ({
 
   return (
     <>
-      <div className={'border flex flex-col rounded-lg bg-blue-500 min-h-[150px] min-w-[190px] cursor-pointer'}>
+      <div
+        className={'border flex flex-col rounded-lg bg-blue-500 min-h-[150px] min-w-[190px] cursor-pointer'}
+        onClick={handleViewDetail}
+      >
         <div className='flex justify-between'>
           <p className='p-2 text-white text-xs'>Expense</p>
           {IS_AUTHENTICATED_USER && (
             <div>
               <DropdownMenu>
-                <DropdownMenuTrigger asChild>
+                <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
                   <Button variant={'ghost'} className='hover:bg-blue-600'>
                     <MoreVerticalIcon className='text-white' size={18} />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className='flex flex-col'>
+                <DropdownMenuContent className='flex flex-col' onClick={(e) => e.stopPropagation()}>
                   <DropdownMenuItem asChild>
                     <AddOrEditIncomeExpenseForScenario
                       trigger={<Button variant={'ghost'}>Edit</Button>}
@@ -61,7 +64,7 @@ const EachIncomeExpenseForScenario = ({
             </div>
           )}
         </div>
-        <div className='flex flex-col items-center text-white' onClick={handleViewDetail}>
+        <div className='flex flex-col items-center text-white'>
           <p>{formatIndianMoneyNotation(incomeExpense.amount)}</p>
           <p className='mt-5'>{incomeExpense.name}</p>
         </div>

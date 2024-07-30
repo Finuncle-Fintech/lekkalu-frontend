@@ -16,7 +16,8 @@ type GoalOptionsType = {
 const GoalOptions = ({ id, handleAllowRename, access, handleAccessChange }: GoalOptionsType) => {
   const [isCopied, setIsCopied] = useState(false)
 
-  const handleCopy = () => {
+  const handleCopy = (e: any) => {
+    e.stopPropagation()
     setIsCopied(true)
     copyToClipboard(window.location.href + `/${id}`)
     setTimeout(() => setIsCopied(false), 3000)
@@ -31,12 +32,12 @@ const GoalOptions = ({ id, handleAllowRename, access, handleAccessChange }: Goal
         {isCopied ? <Check size={15} /> : <Share2 size={15} />}
       </div>
       <Popover>
-        <PopoverTrigger>
+        <PopoverTrigger onClick={(e) => e.stopPropagation()}>
           <div className='border p-3 rounded hover:bg-accent ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'>
             <MoreVertical size={16} />
           </div>
         </PopoverTrigger>
-        <PopoverContent className='w-[200px]'>
+        <PopoverContent className='w-[200px]' onClick={(e) => e.stopPropagation()}>
           <div className='flex flex-col'>
             <Link
               to={`/comparisons/edit/${id}`}

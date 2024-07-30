@@ -160,12 +160,12 @@ const CreateButton = ({ username }: { username: string }) => {
         ))}
         {IS_AUTHENTICATED_USER && IS_MY_SCENARIO && (
           <DropdownMenu>
-            <DropdownMenuTrigger asChild>
+            <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
               <Button variant={'ghost'} className='border border-dashed rounded-lg p-20'>
                 <PlusIcon />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className='flex flex-col'>
+            <DropdownMenuContent className='flex flex-col' onClick={(e) => e.stopPropagation()}>
               <DropdownMenuItem className='cursor-pointer' asChild>
                 <AddOrEditAssetsForScenario
                   trigger={<Button variant={'ghost'}>Asset</Button>}

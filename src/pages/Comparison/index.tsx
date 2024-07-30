@@ -39,7 +39,6 @@ export default function Scenarios() {
                 id={each?.id}
                 name={each?.name}
                 access={each?.access}
-                // created_at={each?.created_at}
                 scenarios={each?.scenarios.length}
               />
             ))}

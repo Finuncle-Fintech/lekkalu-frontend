@@ -24,7 +24,7 @@ const ViewScenarioEntity = ({ data, isOpen, setIsOpen, entityType }: ViewScenari
             (each) =>
               each !== 'id' && (
                 <div key={each} className='flex gap-5 py-2'>
-                  <p className='capitalize min-w-[50%]'>{propertyName(each)}:</p>
+                  <p className='capitalize min-w-[50%] max-w-[50%]'>{propertyName(each)}:</p>
                   <p>{data[each]?.length ? data[each] : 'N/A'}</p>
                 </div>
               ),

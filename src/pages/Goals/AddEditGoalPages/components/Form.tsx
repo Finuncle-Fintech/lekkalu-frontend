@@ -257,8 +257,8 @@ export default function GoalForm({ form, onSubmit, isLoading, isError, isEdit = 
                               <FormLabelForGoalForm
                                 required
                                 label='Target'
-                                info='Pinpoint which part of your spending is going to help knock down that liability. Think of it as identifying the tools in your toolkit that are really doing the work.'
-                                example='Interest Expense Reductions'
+                                info='Set a clear mark to hit. It’s like putting a flag on the top of the hill you want to climb.'
+                                example='Aim to cut your liability percentage by 15%'
                               />
                               <FormControl>
                                 <Input
@@ -276,9 +276,9 @@ export default function GoalForm({ form, onSubmit, isLoading, isError, isEdit = 
                         <FormItem>
                           <FormLabelForGoalForm
                             required={false}
-                            info='Set a clear mark to hit. It’s like putting a flag on the top of the hill you want to climb.'
                             label='Source'
-                            example='Aim to cut your liability percentage by 15%'
+                            info='Pinpoint which part of your spending is going to help knock down that liability. Think of it as identifying the tools in your toolkit that are really doing the work.'
+                            example='Interest Expense Reductions'
                             tooltipSide='top'
                           />
                           <FormControl>

@@ -41,6 +41,10 @@ const ViewAsOptions = [
 
 type ChartView = 'day' | 'week' | 'month' | 'year'
 
+type PlottedDataType = {
+  [key in ChartView]: Timeline[]
+}
+
 const roundBorder = (index: number) => {
   if (index === 0) {
     return 'rounded-l-lg border-l'
@@ -54,6 +58,12 @@ const roundBorder = (index: number) => {
 export default function GoalTimeline({ className, style, goalId, target }: GoalTimelineProps) {
   const [viewAs, setViewAs] = useState<ChartView>('day')
   const { preferences } = useUserPreferences()
+  const [plottedData, setPlottedData] = useState<PlottedDataType>({
+    day: [],
+    week: [],
+    month: [],
+    year: [],
+  })
   const timelineQuery = useQuery({
     queryKey: [GOALS.TIMELINE, goalId],
     queryFn: () => fetchGoalTimeline(goalId),
@@ -64,14 +74,21 @@ export default function GoalTimeline({ className, style, goalId, target }: GoalT
 
   const aggregatedDates = useCallback(
     (dates: Timeline[]) => {
+      if (plottedData[viewAs].length) {
+        return plottedData[viewAs]
+      }
       switch (viewAs) {
         case 'day':
+          setPlottedData({ ...plottedData, day: dates })
           return dates
         case 'month':
+          setPlottedData({ ...plottedData, month: getDataByMonth(dates, target) })
           return getDataByMonth(dates, target)
         case 'week':
+          setPlottedData({ ...plottedData, week: getDataByWeek(dates, target) })
           return getDataByWeek(dates, target)
         case 'year':
+          setPlottedData({ ...plottedData, year: getDataByYear(dates, target) })
           return getDataByYear(dates, target)
         default:
           return dates
@@ -90,72 +107,84 @@ export default function GoalTimeline({ className, style, goalId, target }: GoalT
     return aggregatedDates(validDates)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timelineQuery.data, viewAs])
-  const chartOptions: ApexCharts.ApexOptions = {
-    chart: {
-      height: 400,
-      type: 'line',
-      toolbar: {
-        show: false,
+
+  const chartOptions: ApexCharts.ApexOptions = useMemo(
+    () => ({
+      chart: {
+        height: 400,
+        width: '100%',
+        type: 'line',
+        animations: {
+          enabled: false,
+        },
+        toolbar: {
+          show: false,
+        },
+        zoom: {
+          autoScaleYaxis: true,
+        },
+        foreColor: '#000',
+        dropShadow: {
+          enabled: false,
+        },
       },
-      zoom: {
-        autoScaleYaxis: true,
+      stroke: {
+        curve: 'straight',
+        width: 3,
       },
-      foreColor: '#000',
-      dropShadow: {
+      colors: [colors.blue['500'], colors.orange['500']],
+      dataLabels: {
         enabled: false,
       },
-    },
-    stroke: {
-      curve: 'straight',
-      width: 3,
-    },
-    colors: [colors.blue['500'], colors.orange['500']],
-    dataLabels: {
-      enabled: false,
-    },
-    xaxis: {
-      type: 'category',
-      // min: dataToRender[0].time, // Set min to quarter of the data
-      // max: dataToRender[dataToRender.length - 1].time,
-      categories: dataToRender.map((item) => item.time),
-      labels: {
-        datetimeFormatter: {
-          year: 'yyyy',
-          month: "MMM 'yy",
-          day: 'dd MMM',
-          hour: 'HH:mm',
-        },
-        formatter(value) {
-          return dayjs(value).format('MMM YYYY')
-        },
-        hideOverlappingLabels: true,
-        rotate: 0,
-      },
-    },
-    tooltip: {
-      x: {
-        format: 'dd MMM yyyy',
-      },
-    },
-    yaxis: {
-      labels: {
-        formatter(val) {
-          return `${preferences.currencyUnit} ${formatIndianMoneyNotation(val, 1)}`
+      xaxis: {
+        type: 'datetime',
+        // min: dataToRender[0].time, // Set min to quarter of the data
+        // max: dataToRender[dataToRender.length - 1].time,
+        categories: dataToRender.map((item) => item.time),
+        labels: {
+          datetimeFormatter: {
+            year: 'YYYY',
+            month: "MMM 'yy",
+            day: 'dd MMM',
+            hour: 'HH:mm',
+          },
+          formatter(value) {
+            return dayjs(value).format('DD-MM-YYYY')
+          },
+          hideOverlappingLabels: true,
+          rotate: 0,
         },
       },
-    },
-  }
+      tooltip: {
+        x: {
+          format: 'd MMM YYYY',
+        },
+      },
+      yaxis: {
+        labels: {
+          formatter(val) {
+            return `${preferences.currencyUnit} ${formatIndianMoneyNotation(val, 1)}`
+          },
+        },
+      },
+    }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [dataToRender],
+  )
 
-  const chartSeries: ApexAxisChartSeries | ApexNonAxisChartSeries = [
-    {
-      name: 'KPI Value',
-      data: dataToRender.map((item) => item.kpi_value),
-    },
-    {
-      name: 'Target',
-      data: dataToRender.map((item: any) => item.target),
-    },
-  ]
+  const chartSeries: ApexAxisChartSeries | ApexNonAxisChartSeries = useMemo(
+    () => [
+      {
+        name: 'KPI Value',
+        data: dataToRender.map((item) => item?.kpi_value),
+      },
+      {
+        name: 'Target',
+        data: dataToRender.map((item: any) => item.target),
+      },
+    ],
+    [dataToRender],
+  )
 
   return (
     <Card className={cn('h-[480px] sm:h-full pb-20 sm:pb-0 shadow-sm', className)} style={style}>
@@ -179,18 +208,6 @@ export default function GoalTimeline({ className, style, goalId, target }: GoalT
       <CardContent className='w-full h-full'>
         <Chart options={chartOptions} series={chartSeries} type='line' height={320} />
       </CardContent>
-      {/* <CardContent className='w-full h-full'>
-        <ResponsiveContainer width='100%' height='75%'>
-          <LineChart data={dataToRender} width={730} height={250} margin={{ top: 5, right: 0, left: 10, bottom: 5 }}>
-            <CartesianGrid strokeDasharray='3 1' />
-            <XAxis dataKey='time' tickFormatter={(date) => dayjs(date).format('MMM YYYY')} />
-            <YAxis dataKey={'kpi_value'} />
-            <Tooltip labelFormatter={(date) => dayjs(date).format('DD MMM YYYY')} />
-            <Line type='monotone' dataKey={'kpi_value'} name='Kpi Value' strokeWidth={1} dot={false} />
-            <Line type='monotone' dataKey={'target'} name='Target' stroke='red' strokeWidth={1} dot={false} />
-          </LineChart>
-        </ResponsiveContainer>
-      </CardContent> */}
     </Card>
   )
 }

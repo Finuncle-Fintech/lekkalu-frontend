@@ -170,8 +170,11 @@ export default function GoalForm({ form, onSubmit, isLoading, isError, isEdit = 
                     <Step>
                       <div>
                         <p className='mt-5'>Step 2: Select KPI.</p>
+                        <small className='text-gray-500'>
+                          Please select <span className='font-semibold'>either</span> Existing KPI or Custom KPI.
+                        </small>
                       </div>
-                      <div className='grid sm:grid-cols-1 gap-4 p-5'>
+                      <div className='grid sm:grid-cols-1 gap-4 px-2 my-5'>
                         <FormField
                           control={form.control}
                           name='track_kpi'

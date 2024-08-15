@@ -12,13 +12,21 @@ type StepperFooterType = {
 }
 
 const StepFooter = ({ isEdit, values, handleCreate, isLoading, isError }: StepperFooterType) => {
-  const { nextStep, prevStep, isLastStep, isDisabledStep, hasCompletedAllSteps } = useStepper()
+  const { nextStep, prevStep, isLastStep, isDisabledStep, hasCompletedAllSteps, currentStep } = useStepper()
 
   const FinishLabel = isEdit ? 'Edit' : 'Create'
 
   const disableNext = () => {
-    if (values.name && values.goal_proportionality && values.track_kpi && values.target_date) {
-      return false
+    if (currentStep?.id === '1') {
+      if (values.name && values.goal_proportionality && values.target_date) {
+        return false
+      }
+      return true
+    } else if (currentStep?.id === '2') {
+      if (values.custom_kpi || values.track_kpi) {
+        return false
+      }
+      return true
     }
     return true
   }

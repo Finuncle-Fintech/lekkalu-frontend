@@ -6,7 +6,6 @@ import { addGoalSchema, AddGoalSchema } from '@/schema/goals'
 import { GOALS } from '@/utils/query-keys'
 import { editGoal } from '@/queries/goals'
 import { useToast } from '@/components/ui/use-toast'
-import { Goal } from '@/types/goals'
 import Form from '@/pages/Goals/AddEditGoalPages/components/Form'
 
 export default function EditGoal({ goal, goalId, setIsDialogOpen }: any) {
@@ -14,7 +13,7 @@ export default function EditGoal({ goal, goalId, setIsDialogOpen }: any) {
   const queryClient = useQueryClient()
   const QUERY_NAME = `${GOALS.GOALS}`
 
-  const editGoalMutation = useMutation({ mutationFn: (dto: Partial<Goal>) => editGoal(goalId, dto) })
+  const editGoalMutation = useMutation({ mutationFn: (dto: Partial<AddGoalSchema>) => editGoal(goalId, dto) })
 
   useEffect(() => {
     if (editGoalMutation.isSuccess) {
@@ -45,6 +44,7 @@ export default function EditGoal({ goal, goalId, setIsDialogOpen }: any) {
     editGoalMutation.mutate({
       ...values,
       target_contribution_source: values.target_contribution_source ? values.target_contribution_source : null,
+      track_kpi: values.track_kpi ?? null,
     })
   }
 

@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react'
+import React, { useCallback, useEffect, useMemo } from 'react'
 import { useQueries } from '@tanstack/react-query'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
@@ -61,20 +61,19 @@ export default function ExpensesTable({ dateRangeEnabled, filters, setTotalExpen
     ],
   })
 
+  useEffect(() => {
+    if (!dateRangeEnabled) {
+      setTotalExpensesMetadata(search.length > 2 ? searchQuery.data?._metadata : expenseQuery.data?._metadata)
+    }
+  }, [dateRangeEnabled, search.length, searchQuery.data, expenseQuery.data, setTotalExpensesMetadata])
+
   const expenses = useMemo(() => {
     if (dateRangeEnabled) {
       return expensesByDateQuery.data ?? []
     }
-    setTotalExpensesMetadata(search.length > 2 ? searchQuery.data?._metadata : expenseQuery.data?._metadata)
     return search.length > 2 ? searchQuery?.data?.records ?? [] : expenseQuery.data?.records ?? []
-  }, [
-    dateRangeEnabled,
-    expenseQuery.data,
-    searchQuery.data,
-    expensesByDateQuery.data,
-    search.length,
-    setTotalExpensesMetadata,
-  ])
+  }, [dateRangeEnabled, expenseQuery.data, searchQuery.data, expensesByDateQuery.data, search.length])
+
   const getTagNames = useCallback(
     (tagIds: number[]) => {
       if (!tagsQuery.data) {

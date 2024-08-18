@@ -11,6 +11,7 @@ import { fetchGoals } from '@/queries/goals'
 import { Skeleton } from '@/components/ui/skeleton'
 import { GoalStatus } from '@/types/goals'
 import { AddGoalDialog } from './components/AddGoalDialog'
+import { EditGoalDialog } from './components/EditGoalDialog'
 
 const TODAY = new Date()
 
@@ -120,6 +121,7 @@ export default function Goals() {
           )}
         </div>
       )}
+      {location.search.includes('edit_goal=true') ? <EditGoalDialog /> : <></>}
     </Page>
   )
 }

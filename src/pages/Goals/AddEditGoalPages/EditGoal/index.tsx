@@ -7,6 +7,7 @@ import { GOALS } from '@/utils/query-keys'
 import { editGoal } from '@/queries/goals'
 import { useToast } from '@/components/ui/use-toast'
 import Form from '@/pages/Goals/AddEditGoalPages/components/Form'
+import { getCorrectType } from '@/utils/utils'
 
 export default function EditGoal({ goal, goalId, setIsDialogOpen }: any) {
   const { toast } = useToast()
@@ -30,12 +31,12 @@ export default function EditGoal({ goal, goalId, setIsDialogOpen }: any) {
 
   useEffect(() => {
     if (goal) {
-      form.setValue('name', goal?.name)
-      form.setValue('target_date', goal?.target_date)
-      form.setValue('target_value', goal?.target_value)
-      form.setValue('goal_proportionality', goal?.goal_proportionality)
-      form.setValue('track_kpi', goal?.track_kpi)
-      form.setValue('target_contribution_source', goal?.target_contribution_source)
+      form.setValue('name', getCorrectType(goal?.name))
+      form.setValue('target_date', getCorrectType(goal?.target_date))
+      form.setValue('target_value', getCorrectType(goal?.target_value))
+      form.setValue('goal_proportionality', getCorrectType(goal?.goal_proportionality))
+      form.setValue('track_kpi', getCorrectType(goal?.track_kpi))
+      form.setValue('target_contribution_source', getCorrectType(goal?.target_contribution_source))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [goal])
@@ -44,7 +45,7 @@ export default function EditGoal({ goal, goalId, setIsDialogOpen }: any) {
     editGoalMutation.mutate({
       ...values,
       target_contribution_source: values.target_contribution_source ? values.target_contribution_source : null,
-      track_kpi: values.track_kpi ?? null,
+      track_kpi: values.track_kpi ?? 'LiabilityPercent',
     })
   }
 
@@ -55,6 +56,7 @@ export default function EditGoal({ goal, goalId, setIsDialogOpen }: any) {
       isLoading={editGoalMutation.isPending}
       isEdit
       isError={editGoalMutation.isError}
+      goalId={goalId}
     />
   )
 }

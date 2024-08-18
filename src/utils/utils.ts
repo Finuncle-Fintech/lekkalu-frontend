@@ -76,3 +76,23 @@ export const getErrorMessage = (
 export function getPlural(number: number, unit: string) {
   return number > 1 ? `${unit}s` : unit
 }
+
+export const getSearchParamFromLocationSearch = (search: string) => {
+  return search.length
+    ? search
+        .substring(1)
+        .split('&')
+        .reduce((acc, current) => {
+          return { ...acc, [current.split('=')[0]]: current.split('=')[1] }
+        }, {})
+    : {}
+}
+
+export const getCorrectType = (value: any) => {
+  if (value === 'null') return null
+  if (value === 'undefined') return undefined
+  if (value === 'true') return true
+  if (value === 'false') return false
+  if (!isNaN(value)) return Number(value)
+  return value && decodeURIComponent(value)
+}

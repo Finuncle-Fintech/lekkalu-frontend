@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import dayjs from 'dayjs'
 import { UseFormReturn } from 'react-hook-form'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Step, StepItem, Stepper } from '@/components/ui/stepper'
@@ -14,6 +14,8 @@ import { StepFooter } from './StepperFooter'
 import { FormLabelForGoalForm } from '../../components/FormLabel'
 import { Button } from '@/components/ui/button'
 import { CustomKPI } from '@/types/goals'
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import { getSearchParamFromLocationSearch } from '@/utils/utils'
 
 type GoalFormType = {
   form: UseFormReturn<AddGoalSchema>
@@ -21,11 +23,12 @@ type GoalFormType = {
   isLoading: boolean
   isEdit?: boolean
   isError: boolean
+  goalId?: number
 }
 
 const steps = [{ id: '1' }, { id: '2' }, { id: '3' }] satisfies StepItem[]
 
-export default function GoalForm({ form, onSubmit, isLoading, isError, isEdit = false }: GoalFormType) {
+export default function GoalForm({ form, onSubmit, isLoading, isError, isEdit = false, goalId }: GoalFormType) {
   const {
     incomeExpenses,
     goalProportionality,
@@ -36,7 +39,34 @@ export default function GoalForm({ form, onSubmit, isLoading, isError, isEdit = 
     user_custom_kpis,
   } = useGetSelectOptionsForGoal()
 
+  const location = useLocation()
+
   const kpi_value = form.watch('track_kpi')
+
+  const [kpiType, setKpiType] = useState<'track_kpi' | 'custom_kpi' | undefined>(undefined)
+
+  useEffect(() => {
+    const values: any = getSearchParamFromLocationSearch(location.search)
+    if (Object.keys(values).length) {
+      if (values?.custom_kpi !== 'null') {
+        setKpiType('custom_kpi')
+        return
+      }
+      setKpiType('track_kpi')
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.search])
+
+  useEffect(() => {
+    if (isEdit) {
+      if (form.watch().custom_kpi) {
+        setKpiType('custom_kpi')
+      } else if (form.watch().track_kpi) {
+        setKpiType('track_kpi')
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isEdit, form.watch()])
 
   const [multiplyTargetBy, setMultiplyTargetBy] = useState(6)
 
@@ -58,6 +88,13 @@ export default function GoalForm({ form, onSubmit, isLoading, isError, isEdit = 
     ...(custom_kpis ?? []).map((item) => ({ ...item })),
     ...(user_custom_kpis ?? []).map((item) => ({ ...item })),
   ]
+
+  function getFormValue() {
+    const query = `${isEdit ? `edit_goal=true&goal_id=${goalId}` : 'new_goal=true'}&${Object.entries(form.watch())
+      .map(([key, value]) => `${key}=${value}`)
+      .join('&')}`
+    return query
+  }
 
   if (isFetchingOptions) {
     return (
@@ -132,6 +169,7 @@ export default function GoalForm({ form, onSubmit, isLoading, isError, isEdit = 
                                 label='Goal Proportionality'
                                 info="Decide if you’re trying to increase or decrease something. It's like choosing which way you want the scales to tip."
                                 example='Lower the Better — let’s cut down that liability percentage!'
+                                tooltipSide='top'
                               />
                               <FormControl>
                                 <Select
@@ -175,115 +213,147 @@ export default function GoalForm({ form, onSubmit, isLoading, isError, isEdit = 
                         </small>
                       </div>
                       <div className='grid sm:grid-cols-1 gap-4 px-2 my-5'>
-                        <FormField
-                          control={form.control}
-                          name='track_kpi'
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabelForGoalForm
-                                required
-                                label='KPI'
-                                info='Choose a way to measure your progress. Think of it as your scoreboard showing how close you are to your goal.'
-                                example='Liability Percentage'
-                                tooltipSide='top'
-                              />
-                              <div className='flex gap-4'>
-                                <FormControl>
-                                  <Select
-                                    value={String(form.watch().track_kpi) || undefined}
-                                    onValueChange={(value) => {
-                                      form.setValue('track_kpi', value || null)
-                                    }}
-                                    disabled={!!form.watch().custom_kpi}
-                                  >
-                                    <SelectTrigger placeholder='KPI'>
-                                      <SelectValue placeholder='KPI' />
-                                    </SelectTrigger>
-                                    <SelectContent placeholder='KPI'>
-                                      {getTargetKpi?.map((item) => (
-                                        <SelectItem key={item.id} value={item.value}>
-                                          {item.label}
-                                        </SelectItem>
-                                      ))}
-                                    </SelectContent>
-                                  </Select>
-                                </FormControl>
-                                <Button
-                                  type='button'
-                                  disabled={!form.watch().track_kpi}
-                                  onClick={() => {
-                                    form.setValue('track_kpi', null)
-                                  }}
-                                >
-                                  Clear
-                                </Button>
-                              </div>
-                              <div>
-                                {!getTargetKpi?.length ? (
-                                  <p className='text-red-500 text-xs'>No Target KPI found.</p>
-                                ) : (
-                                  <></>
-                                )}
-                              </div>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <FormField
-                          control={form.control}
-                          name='custom_kpi'
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabelForGoalForm
-                                label='Custom KPI'
-                                info='Select a KPI that you created which helps you measure your progress in accordance with your criteria.'
-                                example={mergedKpis.length ? String(mergedKpis[0].description) : 'Cash'}
-                                tooltipSide='top'
-                              />
-                              <div className='flex gap-4'>
-                                <FormControl>
-                                  <Select
-                                    disabled={!!form.watch().track_kpi}
-                                    value={String(form.watch().custom_kpi) || undefined}
-                                    onValueChange={(value) => {
-                                      form.setValue('custom_kpi', value ? Number(value) : null)
+                        <RadioGroup
+                          className='flex gap-5'
+                          value={kpiType}
+                          onValueChange={(value: 'custom_kpi' | 'track_kpi') => {
+                            setKpiType(value)
+                            form.setValue('custom_kpi', null)
+                            form.setValue('track_kpi', null)
+                          }}
+                        >
+                          <RadioGroupItem value='custom_kpi' id='custom_kpi'>
+                            <label htmlFor='custom_kpi'>Custom KPI</label>
+                          </RadioGroupItem>
+                          <RadioGroupItem value='track_kpi' id='track_kpi'>
+                            <label htmlFor='track_kpi'>Existing KPI</label>
+                          </RadioGroupItem>
+                        </RadioGroup>
+                        {kpiType === 'track_kpi' ? (
+                          <FormField
+                            control={form.control}
+                            name='track_kpi'
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabelForGoalForm
+                                  required
+                                  label='KPI'
+                                  info='Choose a way to measure your progress. Think of it as your scoreboard showing how close you are to your goal.'
+                                  example='Liability Percentage'
+                                  tooltipSide='top'
+                                />
+                                <div className='flex gap-4'>
+                                  <FormControl>
+                                    <Select
+                                      value={String(form.watch().track_kpi) || undefined}
+                                      onValueChange={(value) => {
+                                        form.setValue('track_kpi', value || null)
+                                      }}
+                                      disabled={!!form.watch().custom_kpi}
+                                    >
+                                      <SelectTrigger placeholder='KPI'>
+                                        <SelectValue placeholder='KPI' />
+                                      </SelectTrigger>
+                                      <SelectContent placeholder='KPI'>
+                                        {getTargetKpi?.map((item) => (
+                                          <SelectItem key={item.id} value={item.value}>
+                                            {item.label}
+                                          </SelectItem>
+                                        ))}
+                                      </SelectContent>
+                                    </Select>
+                                  </FormControl>
+                                  <Button
+                                    type='button'
+                                    disabled={!form.watch().track_kpi}
+                                    onClick={() => {
+                                      form.setValue('track_kpi', null)
                                     }}
                                   >
-                                    <SelectTrigger>
-                                      <SelectValue placeholder='Select a KPI' />
-                                    </SelectTrigger>
-                                    <SelectContent placeholder='Select a KPI'>
-                                      {mergedKpis.map((item: { id: number; name: string }) => (
-                                        <SelectItem key={item.id} value={item.id.toString()}>
-                                          {item.name}
-                                        </SelectItem>
-                                      ))}
-                                    </SelectContent>
-                                  </Select>
-                                </FormControl>
-                                <Button
-                                  type='button'
-                                  disabled={!form.watch().custom_kpi}
-                                  onClick={() => {
-                                    form.setValue('custom_kpi', null)
-                                  }}
-                                >
-                                  Clear
-                                </Button>
-                              </div>
-                              <div>
-                                {!mergedKpis.length ? (
-                                  <Link to='/income-statement' className='text-gray-500 text-xs hover:underline'>
-                                    No KPIs found. Click here to add.
+                                    Clear
+                                  </Button>
+                                </div>
+                                <div>
+                                  {!getTargetKpi?.length ? (
+                                    <p className='text-red-500 text-xs'>No Target KPI found.</p>
+                                  ) : (
+                                    <></>
+                                  )}
+                                </div>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                        ) : (
+                          <></>
+                        )}
+                        {kpiType === 'custom_kpi' ? (
+                          <FormField
+                            control={form.control}
+                            name='custom_kpi'
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabelForGoalForm
+                                  label='Custom KPI'
+                                  info='Select a KPI that you created which helps you measure your progress in accordance with your criteria.'
+                                  example={mergedKpis.length ? String(mergedKpis[0].description) : 'Cash'}
+                                  tooltipSide='top'
+                                />
+                                <div className='flex gap-4'>
+                                  <FormControl>
+                                    <Select
+                                      disabled={!!form.watch().track_kpi}
+                                      value={String(form.watch().custom_kpi) || undefined}
+                                      onValueChange={(value) => {
+                                        form.setValue('custom_kpi', value ? Number(value) : null)
+                                      }}
+                                    >
+                                      <SelectTrigger>
+                                        <SelectValue placeholder='Select a KPI' />
+                                      </SelectTrigger>
+                                      <SelectContent placeholder='Select a KPI'>
+                                        {mergedKpis.map((item: { id: number; name: string }) => (
+                                          <SelectItem key={item.id} value={item.id.toString()}>
+                                            {item.name}
+                                          </SelectItem>
+                                        ))}
+                                      </SelectContent>
+                                    </Select>
+                                  </FormControl>
+                                  <Button
+                                    type='button'
+                                    disabled={!form.watch().custom_kpi}
+                                    onClick={() => {
+                                      form.setValue('custom_kpi', null)
+                                    }}
+                                  >
+                                    Clear
+                                  </Button>
+                                </div>
+                                <div>
+                                  {!mergedKpis.length ? (
+                                    <Link to='/income-statement' className='text-gray-500 text-xs hover:underline'>
+                                      No KPIs found. Click here to add.
+                                    </Link>
+                                  ) : (
+                                    <></>
+                                  )}
+                                </div>
+                                <div>
+                                  <Link
+                                    to={`/custom_kpi/new?${getFormValue()}`}
+                                    className='text-sm underline text-primary'
+                                  >
+                                    Create a new KPI
                                   </Link>
-                                ) : (
-                                  <></>
-                                )}
-                              </div>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
+                                </div>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                        ) : (
+                          <></>
+                        )}
                       </div>
                     </Step>
                   )

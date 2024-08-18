@@ -1,13 +1,26 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { PlusIcon } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTrigger } from '@/components/ui/dialog'
 import CreateGoal from '../AddEditGoalPages/CreateGoal/CreateGoal'
 import { TooltipForGoals } from './Tooltip'
+import { getSearchParamFromLocationSearch } from '@/utils/utils'
 
 const AddGoalDialog = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
+
+  const location = useLocation()
+
+  useEffect(() => {
+    const values: any = getSearchParamFromLocationSearch(location.search)
+    if (Object.keys(values).length) {
+      if (values.new_goal === 'true') {
+        setIsDialogOpen(true)
+      }
+    }
+  }, [location.search])
+
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger

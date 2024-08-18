@@ -39,7 +39,7 @@ export default function DatePicker({ className, style, onChange, placeholder, va
           mode='single'
           captionLayout='dropdown-buttons'
           selected={date}
-          onDayClick={(selectedDate) => {
+          onDayClick={(selectedDate: Date) => {
             setDate(selectedDate)
             onChange?.(selectedDate)
             setIsCalendarOpen(false)

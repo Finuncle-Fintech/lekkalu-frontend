@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import dayjs from 'dayjs'
 import { AddGoalSchema, addGoalSchema } from '@/schema/goals'
 import { addGoal } from '@/queries/goals'
@@ -19,6 +19,7 @@ export default function CreateGoal({ setIsDialogOpen }: CreateGoalType) {
   const { toast } = useToast()
   const queryClient = useQueryClient()
   const location = useLocation()
+  const navigate = useNavigate()
   const form = useForm<AddGoalSchema>({
     resolver: zodResolver(addGoalSchema),
     defaultValues: {
@@ -43,6 +44,8 @@ export default function CreateGoal({ setIsDialogOpen }: CreateGoalType) {
       queryClient.invalidateQueries({ queryKey: [GOALS.GOALS] })
       toast({ title: 'Goal created successfully!' })
       setIsDialogOpen(false)
+      // navigate({ pathname: '/goals', search: '' })
+      navigate('/goals', { replace: true })
     },
     onError: (response: any) => {
       const message = response?.response?.data?.message
@@ -51,7 +54,16 @@ export default function CreateGoal({ setIsDialogOpen }: CreateGoalType) {
   })
 
   const handleGoalCreate = (values: AddGoalSchema) => {
-    createGoalMutation.mutate({ ...values, track_kpi: values.track_kpi ?? 'LiabilityPercent' })
+    const _values: any = {
+      ...values,
+    }
+    if (values.custom_kpi) {
+      _values.custom_kpi_object_id = values.custom_kpi
+      _values.custom_kpi_content_type = 'UserCustomKpi'
+    }
+    delete _values.custom_kpi
+    // createGoalMutation.mutate({ ...values, track_kpi: values.track_kpi ?? 'LiabilityPercent' })
+    createGoalMutation.mutate({ ..._values, track_kpi: values.track_kpi ?? 'LiabilityPercent' })
   }
 
   return (

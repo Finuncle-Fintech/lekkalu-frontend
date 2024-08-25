@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTrigger } from '@/components/ui/dialog'
 import EditGoal from '../AddEditGoalPages/EditGoal'
 import { getSearchParamFromLocationSearch } from '@/utils/utils'
 
-const EditGoalDialog = ({ goalId, goal }: any) => {
+const EditGoalDialog = ({ goalId, goal, triggerLess = false }: any) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [goalValues, setGoal] = useState(goal)
   const [goalIdValue, setGoalId] = useState(goalId)
   const location = useLocation()
+  const navigate = useNavigate()
 
   useEffect(() => {
     if (location.search) {
@@ -22,16 +23,25 @@ const EditGoalDialog = ({ goalId, goal }: any) => {
     }
   }, [location.search])
 
+  function handleOpenChange(value: any) {
+    setIsDialogOpen(value)
+    if (value === false) {
+      navigate('/goals', { replace: true })
+    }
+  }
+
   return (
-    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-      <DialogTrigger
-        asChild
-        onClick={() => {
-          setIsDialogOpen(true)
-        }}
-      >
-        <Button variant={'ghost'}>Edit Goal</Button>
-      </DialogTrigger>
+    <Dialog open={isDialogOpen} onOpenChange={handleOpenChange}>
+      {!triggerLess && (
+        <DialogTrigger
+          asChild
+          onClick={() => {
+            setIsDialogOpen(true)
+          }}
+        >
+          <Button variant={'ghost'}>Edit Goal</Button>
+        </DialogTrigger>
+      )}
       <DialogContent className='min-w-auto'>
         <DialogHeader>
           <div className='flex gap-4'>

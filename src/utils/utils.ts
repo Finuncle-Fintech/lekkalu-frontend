@@ -94,5 +94,9 @@ export const getCorrectType = (value: any) => {
   if (value === 'true') return true
   if (value === 'false') return false
   if (!isNaN(value)) return Number(value)
-  return value && decodeURIComponent(value)
+  try {
+    return decodeURIComponent(value)
+  } catch (e) {
+    return value
+  }
 }

@@ -121,7 +121,7 @@ export default function Goals() {
           )}
         </div>
       )}
-      {location.search.includes('edit_goal=true') ? <EditGoalDialog /> : <></>}
+      {location.search.includes('edit_goal=true') ? <EditGoalDialog triggerLess /> : <></>}
     </Page>
   )
 }

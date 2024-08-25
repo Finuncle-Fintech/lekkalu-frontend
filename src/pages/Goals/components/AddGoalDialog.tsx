@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useState } from 'react'
 import { PlusIcon } from 'lucide-react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTrigger } from '@/components/ui/dialog'
 import CreateGoal from '../AddEditGoalPages/CreateGoal/CreateGoal'
@@ -11,6 +12,7 @@ const AddGoalDialog = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
 
   const location = useLocation()
+  const navigate = useNavigate()
 
   useEffect(() => {
     const values: any = getSearchParamFromLocationSearch(location.search)
@@ -21,8 +23,15 @@ const AddGoalDialog = () => {
     }
   }, [location.search])
 
+  function handleOpenChange(value: any) {
+    setIsDialogOpen(value)
+    if (value === false) {
+      navigate('/goals', { replace: true })
+    }
+  }
+
   return (
-    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+    <Dialog open={isDialogOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger
         asChild
         onClick={() => {

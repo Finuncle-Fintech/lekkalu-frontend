@@ -172,7 +172,7 @@ const ComparisonDetail = () => {
           </div>
         )}
       </h2>
-      <div className='grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 gap-y-10'>
+      <div className='grid sm:grid-cols-2 xl:grid-cols-4 gap-4 gap-y-10'>
         {scenariosForThisComparison?.map(({ id, name, imag_username }) => (
           <Scenario
             key={id}

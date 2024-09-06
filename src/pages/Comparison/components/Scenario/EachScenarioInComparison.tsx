@@ -25,7 +25,7 @@ const Scenario = ({ name, id, handleRemoveScenario }: ScenarioType) => {
         <></>
       )}
       <Link
-        to={IS_AUTHENTICATED_USER ? `/scenarios/${id}` : ''}
+        to={IS_AUTHENTICATED_USER ? `/scenarios/${id}` : `/feature/scenarios/${id}`}
         className='flex h-full justify-center items-center pt-5'
       >
         <div className='text-center'>

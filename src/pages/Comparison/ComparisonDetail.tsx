@@ -21,6 +21,7 @@ import { Goal, Timeline } from '@/types/goals'
 import { useImaginaryAuth } from '../Scenarios/context/use-imaginaryAuth'
 import { generateRandomColor, mergeArraysByDate } from './utils/dateTime'
 import { useAuth } from '@/hooks/use-auth'
+import { formatIndianMoneyNotation } from '@/utils/format-money'
 
 const ComparisonDetail = () => {
   const comparisonId = useParams().id
@@ -247,9 +248,11 @@ const ComparisonDetail = () => {
                         tickFormatter={(date) => dayjs(date).format('MMM YYYY')}
                         allowDataOverflow
                       />
-                      <YAxis />
+                      <YAxis
+                        tickFormatter={(value) => formatIndianMoneyNotation(value)}
+                        padding={{ top: 20, bottom: 20 }}
+                      />
                       <Tooltip labelFormatter={(date) => dayjs(date).format('DD MMM YYYY')} />
-
                       {isSuccess ? (
                         Object.keys(timelineData).map((each, index) => (
                           <Line
@@ -258,7 +261,7 @@ const ComparisonDetail = () => {
                             dataKey={each}
                             name={each}
                             stroke={generateRandomColor(index)}
-                            strokeWidth={1}
+                            strokeWidth={2}
                             dot={false}
                           />
                         ))

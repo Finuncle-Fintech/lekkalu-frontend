@@ -2,7 +2,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import ScenarioOption from './EachScenarioOptions'
-import { useAuth } from '@/hooks/use-auth'
 
 type ScenarioType = {
   name: string
@@ -10,11 +9,11 @@ type ScenarioType = {
   id: number
   comparisonId: number
   handleRemoveScenario: (id: number) => void
+  isAuthenticated: boolean
 }
 
-const Scenario = ({ name, id, handleRemoveScenario }: ScenarioType) => {
-  const { userData } = useAuth()
-  const IS_AUTHENTICATED_USER = Boolean(userData?.username)
+const Scenario = ({ name, id, handleRemoveScenario, isAuthenticated }: ScenarioType) => {
+  const IS_AUTHENTICATED_USER = isAuthenticated
   return (
     <div className='relative border shadow hover:shadow-md min-h-[130px] min-w-[230px] bg-white'>
       {IS_AUTHENTICATED_USER ? (

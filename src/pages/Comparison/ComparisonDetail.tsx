@@ -183,6 +183,7 @@ const ComparisonDetail = () => {
             username={imag_username}
             comparisonId={Number(comparisonId)}
             handleRemoveScenario={handleRemoveScenarioFromComparison}
+            isAuthenticated={IS_AUTHENTICATED_USER}
           />
         ))}
         {!IS_AUTHENTICATED_USER && !scenariosForThisComparison ? (
@@ -194,6 +195,7 @@ const ComparisonDetail = () => {
               username={imag_username}
               comparisonId={Number(comparisonId)}
               handleRemoveScenario={() => {}}
+              isAuthenticated={IS_AUTHENTICATED_USER}
             />
           ))
         ) : (

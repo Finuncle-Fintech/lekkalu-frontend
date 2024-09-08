@@ -22,6 +22,7 @@ import { useImaginaryAuth } from '../Scenarios/context/use-imaginaryAuth'
 import { generateRandomColor, mergeArraysByDate } from './utils/dateTime'
 import { useAuth } from '@/hooks/use-auth'
 import { formatIndianMoneyNotation } from '@/utils/format-money'
+import { useScrollToSection } from '@/hooks/use-scroll-to-section'
 
 const ComparisonDetail = () => {
   const comparisonId = useParams().id
@@ -29,6 +30,7 @@ const ComparisonDetail = () => {
   const { getAPIClientForImaginaryUser } = useImaginaryAuth()
   const { userData } = useAuth()
   const IS_AUTHENTICATED_USER = Boolean(userData?.username)
+  const { scrollToView } = useScrollToSection()
 
   const [selectedScenarios, setSelectedScenarios] = useState<Array<number>>([])
   const [timelineData, setTimelineData] = useState<any>()
@@ -95,6 +97,7 @@ const ComparisonDetail = () => {
 
   const handleSimulate = () => {
     setTimelineData({})
+    scrollToView('comparison-simulation-chart', { behavior: 'smooth', block: 'start' })
     if (IS_AUTHENTICATED_USER) {
       scenariosForThisComparison?.forEach((each) => {
         login({ password: each?.imag_password, username: each?.imag_username, scenarioName: each?.name })
@@ -228,7 +231,7 @@ const ComparisonDetail = () => {
       </div>
 
       {timelineData ? (
-        <div>
+        <div id='comparison-simulation-chart'>
           <Card className={cn('h-[600px] sm:h-96 pb-20 sm:pb-0 shadow-sm')}>
             <CardHeader className='flex flex-start flex-col sm:flex-row'>
               <CardTitle>Graph</CardTitle>

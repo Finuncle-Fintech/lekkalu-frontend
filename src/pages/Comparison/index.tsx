@@ -22,13 +22,13 @@ export default function Scenarios() {
       </div>
       <div>
         {isLoading ? (
-          <div className='grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full'>
+          <div className='grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 w-full'>
             {range(4).map((i) => (
               <Skeleton key={i} className='h-64 w-full' />
             ))}
           </div>
         ) : (
-          <div className='grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 gap-y-10'>
+          <div className='grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 gap-y-10'>
             {data?.map((each) => (
               <Comparison
                 key={each?.name}

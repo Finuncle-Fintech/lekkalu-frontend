@@ -23,6 +23,7 @@ import { generateRandomColor, mergeArraysByDate } from './utils/dateTime'
 import { useAuth } from '@/hooks/use-auth'
 import { formatIndianMoneyNotation } from '@/utils/format-money'
 import { useScrollToSection } from '@/hooks/use-scroll-to-section'
+import { toast } from '@/components/ui/use-toast'
 
 const ComparisonDetail = () => {
   const comparisonId = useParams().id
@@ -66,6 +67,7 @@ const ComparisonDetail = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [`${COMPARISON.COMPARISON}-${comparisonId}`] })
       setSelectedScenarios([])
+      timelineData && toast({ title: 'Please simulate to view new changes.' })
     },
   })
 

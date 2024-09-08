@@ -153,7 +153,7 @@ const ComparisonDetail = () => {
   }
 
   return (
-    <Page className='space-y-8'>
+    <Page className='space-y-8 mb-7'>
       <div className='relative flex justify-between'>
         {IS_AUTHENTICATED_USER ? (
           <PageTitle

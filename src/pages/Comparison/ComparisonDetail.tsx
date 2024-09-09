@@ -36,6 +36,7 @@ const ComparisonDetail = () => {
   const [selectedScenarios, setSelectedScenarios] = useState<Array<number>>([])
   const [timelineData, setTimelineData] = useState<any>()
   const [calculatedTimelineDate, setCalculatedTimelineData] = useState<any>()
+  const [displayGraph, setDisplayGraph] = useState(false)
 
   const handleScenarioSelect = (id: number) => {
     const _selectedScenarios = [...selectedScenarios]
@@ -83,7 +84,7 @@ const ComparisonDetail = () => {
   }
 
   const {
-    mutate: login,
+    mutateAsync: login,
     isSuccess,
     isPending,
   } = useMutation({
@@ -97,17 +98,38 @@ const ComparisonDetail = () => {
     },
   })
 
-  const handleSimulate = () => {
+  const handleSimulate = async () => {
     setTimelineData({})
+    setDisplayGraph(false)
     scrollToView('comparison-simulation-chart', { behavior: 'smooth', block: 'start' })
-    if (IS_AUTHENTICATED_USER) {
-      scenariosForThisComparison?.forEach((each) => {
-        login({ password: each?.imag_password, username: each?.imag_username, scenarioName: each?.name })
-      })
-    } else {
-      comparison?.scenarios_objects?.forEach((each) => {
-        login({ password: each?.imag_password, username: each?.imag_username, scenarioName: each?.name })
-      })
+    // if (IS_AUTHENTICATED_USER) {
+    //   const ALL_APIS = scenariosForThisComparison?.map((each) => {
+    //     return login({ password: each?.imag_password, username: each?.imag_username, scenarioName: each?.name })
+    //   })
+    //   try {
+    //     await Promise.all<any>(ALL_APIS)
+    //     setDisplayGraph(true)
+    //   } catch (e) {
+    //     console.log('something went wrong', e)
+    //     toast({ title: 'Something went wrong, please try again' })
+    //   }
+    // } else {
+    //   comparison?.scenarios_objects?.forEach((each) => {
+    //     login({ password: each?.imag_password, username: each?.imag_username, scenarioName: each?.name })
+    //   })
+    // }
+    const _scenarios: ScenarioType[] = IS_AUTHENTICATED_USER
+      ? scenariosForThisComparison || []
+      : comparison?.scenarios_objects || []
+    const ALL_APIS = _scenarios?.map(({ name, imag_password, imag_username }) =>
+      login({ password: imag_password, username: imag_username, scenarioName: name }),
+    )
+    try {
+      await Promise.all(ALL_APIS)
+      setDisplayGraph(true)
+    } catch (e) {
+      toast({ title: 'Something went wrong, please try again' })
+      setDisplayGraph(false)
     }
   }
 
@@ -224,12 +246,12 @@ const ComparisonDetail = () => {
           variant={'default'}
           onClick={handleSimulate}
           className='z-10'
-          loading={isPending}
-          disabled={!comparison?.scenarios_objects.length}
+          loading={timelineData && !displayGraph}
+          disabled={(timelineData && !displayGraph) || !comparison?.scenarios?.length}
         >
           Simulate
         </Button>
-        <div className={isPending || !comparison?.scenarios.length ? '' : 'ripple'} />
+        {comparison?.scenarios.length ? <div className={timelineData && !displayGraph ? '' : 'ripple'} /> : <></>}
       </div>
 
       {timelineData ? (
@@ -240,7 +262,7 @@ const ComparisonDetail = () => {
             </CardHeader>
             {
               <CardContent className='w-full h-full'>
-                {isPending ? (
+                {!displayGraph ? (
                   <p>Loading...</p>
                 ) : (
                   <ResponsiveContainer width='100%' height='75%'>

@@ -25,6 +25,8 @@ import { formatIndianMoneyNotation } from '@/utils/format-money'
 import { useScrollToSection } from '@/hooks/use-scroll-to-section'
 import { toast } from '@/components/ui/use-toast'
 
+type DisplayGraphState = 'idle' | 'pending' | 'success' | 'error'
+
 const ComparisonDetail = () => {
   const comparisonId = useParams().id
   const IS_FOR_FEATURE_PAGE = useLocation().pathname.includes('feature')
@@ -36,7 +38,7 @@ const ComparisonDetail = () => {
   const [selectedScenarios, setSelectedScenarios] = useState<Array<number>>([])
   const [timelineData, setTimelineData] = useState<any>()
   const [calculatedTimelineDate, setCalculatedTimelineData] = useState<any>()
-  const [displayGraph, setDisplayGraph] = useState(false)
+  const [displayGraph, setDisplayGraph] = useState<DisplayGraphState>('idle')
 
   const handleScenarioSelect = (id: number) => {
     const _selectedScenarios = [...selectedScenarios]
@@ -100,24 +102,8 @@ const ComparisonDetail = () => {
 
   const handleSimulate = async () => {
     setTimelineData({})
-    setDisplayGraph(false)
-    scrollToView('comparison-simulation-chart', { behavior: 'smooth', block: 'start' })
-    // if (IS_AUTHENTICATED_USER) {
-    //   const ALL_APIS = scenariosForThisComparison?.map((each) => {
-    //     return login({ password: each?.imag_password, username: each?.imag_username, scenarioName: each?.name })
-    //   })
-    //   try {
-    //     await Promise.all<any>(ALL_APIS)
-    //     setDisplayGraph(true)
-    //   } catch (e) {
-    //     console.log('something went wrong', e)
-    //     toast({ title: 'Something went wrong, please try again' })
-    //   }
-    // } else {
-    //   comparison?.scenarios_objects?.forEach((each) => {
-    //     login({ password: each?.imag_password, username: each?.imag_username, scenarioName: each?.name })
-    //   })
-    // }
+    setDisplayGraph('pending')
+    scrollToView('comparison-simulation-chart', { behavior: 'smooth', block: 'start', inline: 'nearest' })
     const _scenarios: ScenarioType[] = IS_AUTHENTICATED_USER
       ? scenariosForThisComparison || []
       : comparison?.scenarios_objects || []
@@ -126,10 +112,10 @@ const ComparisonDetail = () => {
     )
     try {
       await Promise.all(ALL_APIS)
-      setDisplayGraph(true)
+      setDisplayGraph('success')
     } catch (e) {
       toast({ title: 'Something went wrong, please try again' })
-      setDisplayGraph(false)
+      setDisplayGraph('error')
     }
   }
 
@@ -246,25 +232,25 @@ const ComparisonDetail = () => {
           variant={'default'}
           onClick={handleSimulate}
           className='z-10'
-          loading={timelineData && !displayGraph}
-          disabled={(timelineData && !displayGraph) || !comparison?.scenarios?.length}
+          loading={displayGraph === 'pending'}
+          disabled={displayGraph === 'pending' || !comparison?.scenarios?.length}
         >
           Simulate
         </Button>
-        {comparison?.scenarios.length ? <div className={timelineData && !displayGraph ? '' : 'ripple'} /> : <></>}
+        {comparison?.scenarios.length ? <div className={displayGraph !== 'pending' ? 'ripple' : ''} /> : <></>}
       </div>
 
       {timelineData ? (
-        <div id='comparison-simulation-chart'>
+        <div id='comparison-simulation-chart' className='scroll-mt-40'>
           <Card className={cn('h-[600px] sm:h-96 pb-20 sm:pb-0 shadow-sm')}>
             <CardHeader className='flex flex-start flex-col sm:flex-row'>
               <CardTitle>Graph</CardTitle>
             </CardHeader>
             {
               <CardContent className='w-full h-full'>
-                {!displayGraph ? (
-                  <p>Loading...</p>
-                ) : (
+                {displayGraph === 'idle' && <></>}
+                {displayGraph === 'pending' && <p>Loading...</p>}
+                {displayGraph === 'success' && (
                   <ResponsiveContainer width='100%' height='75%'>
                     <LineChart
                       data={calculatedTimelineDate}
@@ -300,6 +286,11 @@ const ComparisonDetail = () => {
                       )}
                     </LineChart>
                   </ResponsiveContainer>
+                )}
+                {displayGraph === 'error' && (
+                  <div>
+                    <p className='text-red-400'>Something went wrong.</p>
+                  </div>
                 )}
               </CardContent>
             }

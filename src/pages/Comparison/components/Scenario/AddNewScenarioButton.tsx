@@ -20,6 +20,7 @@ type AddNewScenarioButtonType = {
   isSelected: (id: number) => boolean
   comparisonName: string
   handleScenarioSelect: (id: number) => void
+  noOfSelectedScenario: number
 }
 
 const AddNewScenarioButton = ({
@@ -28,6 +29,7 @@ const AddNewScenarioButton = ({
   isSelected,
   comparisonName,
   handleScenarioSelect,
+  noOfSelectedScenario,
 }: AddNewScenarioButtonType) => {
   return (
     <Dialog>
@@ -98,7 +100,7 @@ const AddNewScenarioButton = ({
           </div>
           <div className='flex mt-auto justify-end'>
             <DialogClose asChild>
-              <Button disabled={!scenarios.length} onClick={handleAddScenariosToComparison}>
+              <Button disabled={!noOfSelectedScenario} onClick={handleAddScenariosToComparison}>
                 Add
               </Button>
             </DialogClose>

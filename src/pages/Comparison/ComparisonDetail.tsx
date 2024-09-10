@@ -221,6 +221,7 @@ const ComparisonDetail = () => {
             isSelected={isSecenarioAlreadySelected}
             comparisonName={comparison?.name || ''}
             handleScenarioSelect={handleScenarioSelect}
+            noOfSelectedScenario={selectedScenarios.length}
           />
         ) : (
           <></>

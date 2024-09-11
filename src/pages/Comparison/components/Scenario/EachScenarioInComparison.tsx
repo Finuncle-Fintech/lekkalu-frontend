@@ -2,23 +2,30 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import ScenarioOption from './EachScenarioOptions'
-
-type ScenarioType = {
+import { UserRole } from '@/hooks/useRole'
+interface ScenarioTypeForOthers {
   name: string
-  username: string
   id: number
-  comparisonId: number
-  handleRemoveScenario: (id: number) => void
-  isAuthenticated: boolean
+  role: Exclude<UserRole, 'owner'>
 }
 
-const Scenario = ({ name, id, handleRemoveScenario, isAuthenticated }: ScenarioType) => {
-  const IS_AUTHENTICATED_USER = isAuthenticated
+interface ScenarioTypeForOwner {
+  name: string
+  id: number
+  role: 'owner'
+  handleRemoveScenario: (id: number) => void
+}
+
+type ScenarioType = ScenarioTypeForOthers | ScenarioTypeForOwner
+
+const Scenario = (props: ScenarioType) => {
+  const { role, name, id } = props
+  const IS_AUTHENTICATED_USER = role !== 'guest'
   return (
     <div className='relative border shadow hover:shadow-md min-h-[130px] min-w-[230px] bg-white'>
-      {IS_AUTHENTICATED_USER ? (
+      {role === 'owner' ? (
         <div className='absolute right-2 ml-auto top-2'>
-          <ScenarioOption id={id} handleRemoveScenario={handleRemoveScenario} />
+          <ScenarioOption id={id} handleRemoveScenario={props.handleRemoveScenario} />
         </div>
       ) : (
         <></>

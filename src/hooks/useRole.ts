@@ -10,7 +10,7 @@ import { COMPARISON, SCENARIOS } from '@/utils/query-keys'
  * guest -> Unauthenticated user.
  */
 
-export type UserRole = 'owner' | 'neighbour' | 'guest'
+export type UserRole = 'owner' | 'neighbour' | 'guest' | undefined
 export type RoleFor = 'comparison' | 'scenario'
 
 type RolePropsType = {

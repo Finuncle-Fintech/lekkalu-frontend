@@ -24,6 +24,8 @@ import { useAuth } from '@/hooks/use-auth'
 import { formatIndianMoneyNotation } from '@/utils/format-money'
 import { useScrollToSection } from '@/hooks/use-scroll-to-section'
 import { toast } from '@/components/ui/use-toast'
+import DottedAnimatedText from '@/components/DottedAnimatedText'
+import useRole from '@/hooks/useRole'
 
 type DisplayGraphState = 'idle' | 'pending' | 'success' | 'error'
 
@@ -32,7 +34,8 @@ const ComparisonDetail = () => {
   const IS_FOR_FEATURE_PAGE = useLocation().pathname.includes('feature')
   const { getAPIClientForImaginaryUser } = useImaginaryAuth()
   const { userData } = useAuth()
-  const IS_AUTHENTICATED_USER = Boolean(userData?.username)
+  const { role } = useRole({ userId: userData?.id || null, id: Number(comparisonId), roleFor: 'comparison' })
+  const IS_AUTHENTICATED_USER = role !== 'guest'
   const { scrollToView } = useScrollToSection()
 
   const [selectedScenarios, setSelectedScenarios] = useState<Array<number>>([])
@@ -104,9 +107,8 @@ const ComparisonDetail = () => {
     setTimelineData({})
     setDisplayGraph('pending')
     scrollToView('comparison-simulation-chart', { behavior: 'smooth', block: 'start', inline: 'nearest' })
-    const _scenarios: ScenarioType[] = IS_AUTHENTICATED_USER
-      ? scenariosForThisComparison || []
-      : comparison?.scenarios_objects || []
+    const _scenarios: ScenarioType[] =
+      role === 'owner' ? scenariosForThisComparison || [] : comparison?.scenarios_objects || []
     const ALL_APIS = _scenarios?.map(({ name, imag_password, imag_username }) =>
       login({ password: imag_password, username: imag_username, scenarioName: name }),
     )
@@ -149,7 +151,9 @@ const ComparisonDetail = () => {
   if (isFetchingComparison) {
     return (
       <Page>
-        <div>Loading...</div>
+        <DottedAnimatedText>
+          <p>Loading</p>
+        </DottedAnimatedText>
       </Page>
     )
   }
@@ -188,33 +192,18 @@ const ComparisonDetail = () => {
         )}
       </h2>
       <div className='grid sm:grid-cols-2 xl:grid-cols-4 gap-4 gap-y-10'>
-        {scenariosForThisComparison?.map(({ id, name, imag_username }) => (
-          <Scenario
-            key={id}
-            id={id}
-            name={name}
-            username={imag_username}
-            comparisonId={Number(comparisonId)}
-            handleRemoveScenario={handleRemoveScenarioFromComparison}
-            isAuthenticated={IS_AUTHENTICATED_USER}
-          />
-        ))}
-        {!IS_AUTHENTICATED_USER && !scenariosForThisComparison ? (
-          comparison?.scenarios_objects?.map(({ id, name, imag_username }) => (
-            <Scenario
-              key={id}
-              id={id}
-              name={name}
-              username={imag_username}
-              comparisonId={Number(comparisonId)}
-              handleRemoveScenario={() => {}}
-              isAuthenticated={IS_AUTHENTICATED_USER}
-            />
-          ))
-        ) : (
-          <></>
-        )}
-        {IS_AUTHENTICATED_USER ? (
+        {role === 'owner'
+          ? scenariosForThisComparison?.map(({ id, name }) => (
+              <Scenario
+                key={id}
+                id={id}
+                name={name}
+                handleRemoveScenario={handleRemoveScenarioFromComparison}
+                role={role}
+              />
+            ))
+          : comparison?.scenarios_objects?.map(({ id, name }) => <Scenario key={id} id={id} name={name} role={role} />)}
+        {role === 'owner' ? (
           <AddNewScenarioButton
             handleAddScenariosToComparison={handleAddScenariosToComparison}
             scenarios={remaningScenarios || []}
@@ -250,7 +239,11 @@ const ComparisonDetail = () => {
             {
               <CardContent className='w-full h-full'>
                 {displayGraph === 'idle' && <></>}
-                {displayGraph === 'pending' && <p>Loading...</p>}
+                {displayGraph === 'pending' && (
+                  <DottedAnimatedText>
+                    <p>Loading</p>
+                  </DottedAnimatedText>
+                )}
                 {displayGraph === 'success' && (
                   <ResponsiveContainer width='100%' height='75%'>
                     <LineChart

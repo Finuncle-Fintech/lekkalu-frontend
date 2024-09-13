@@ -14,7 +14,7 @@ type EachLiabilityForScenarioType = {
   addLiability: (dto: AddLiabilitySchema) => Promise<any>
   editLiability: (id: number, dto: Partial<AddLiabilitySchema>) => Promise<any>
   deleteLiability: (id: number) => Promise<any>
-  IS_AUTHENTICATED_USER?: boolean
+  isOwner: boolean
 }
 
 const EachLiabilityForScenario = ({
@@ -22,7 +22,7 @@ const EachLiabilityForScenario = ({
   addLiability,
   editLiability,
   deleteLiability,
-  IS_AUTHENTICATED_USER,
+  isOwner,
 }: EachLiabilityForScenarioType) => {
   const [viewDetail, setViewDetail] = useState(false)
   const handleViewDetail = () => {
@@ -36,7 +36,7 @@ const EachLiabilityForScenario = ({
       >
         <div className='flex justify-between'>
           <p className='p-2 text-white text-xs'>Liability</p>
-          {IS_AUTHENTICATED_USER && (
+          {isOwner && (
             <div>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>

@@ -43,7 +43,8 @@ const calculateIRR = (transactions: Transaction[], guess = 0.1): number | null =
   return null // Return null if IRR not found within max iterations
 }
 
-type Action = { type: 'ADD_TRANSACTION'; payload: Transaction } | { type: 'REMOVE_TRANSACTION'; payload: number } // payload is the index of the transaction to remove
+// payload is the index of the transaction to remove
+type Action = { type: 'ADD_TRANSACTION'; payload: Transaction } | { type: 'REMOVE_TRANSACTION'; payload: number }
 
 // Reducer function
 const transactionReducer = (state: Transaction[], action: Action): Transaction[] => {
@@ -77,8 +78,8 @@ export default function IrrCalculator() {
       const locale_date = new Date(date.split('GMT')[0]).toLocaleDateString('en-CA')
       const newTransaction = { date: locale_date, amount: parseFloat(amount) }
       dispatchTxns({ type: 'ADD_TRANSACTION', payload: newTransaction })
-      setDate('')
-      setAmount('')
+      setDate(locale_date)
+      setAmount(amount)
       setIrr_calculated(calculateIRR([...transactions, { date, amount: parseFloat(amount) }]))
     }
   }
@@ -96,11 +97,13 @@ export default function IrrCalculator() {
   return (
     <div>
       <h2>Add New Transaction</h2>
-      {/*<input type='date' className={''} value={date} onChange={(e) => setDate(e.target.value)} />*/}
       <DatePicker value={dayjs(date).toDate()} onChange={(value) => setDate(value?.toString() || '')} />
       <input
         className={
-          'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50'
+          'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background ' +
+          'file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground ' +
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ' +
+          'disabled:cursor-not-allowed disabled:opacity-50'
         }
         type='number'
         value={amount}

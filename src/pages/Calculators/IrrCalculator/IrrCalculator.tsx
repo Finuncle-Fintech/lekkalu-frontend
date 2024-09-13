@@ -1,247 +1,151 @@
-import React, { useMemo, useState } from 'react'
-import { useLocation } from 'react-router-dom'
-import * as XLSX from 'xlsx'
-import { isEmpty } from 'lodash'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import Chart from 'react-apexcharts'
-import { z } from 'zod'
-import { Button } from '@/components/ui/button'
-import { parseQueryString } from '@/utils/query-string'
-import { sipCalculatorSchema } from '@/schema/calculators'
-import { Form } from '@/components/ui/form'
-import { calculateSip } from '@/utils/calculators'
-import When from '@/components/When/When'
-import { useToast } from '@/components/ui/use-toast'
-import { handleShare } from '@/utils/clipboard'
-import { useUserPreferences } from '@/hooks/use-user-preferences'
-import InputFieldsRenderer, { InputField } from '@/components/InputFieldsRenderer/InputFieldsRenderer'
-import Page from '@/components/Page/Page'
-import { formatIndianMoneyNotation } from '@/utils/format-money'
+import React, { useEffect, useReducer, useState } from 'react'
+import dayjs from 'dayjs'
+import { buttonVariants } from '@/components/ui/button'
+import DatePicker from '@/components/DatePicker/DatePicker'
 
-const DEFAULT_DATA = {
-  monthlyAmount: 500,
-  durationInvestment: 1,
-  rateReturn: 1,
+// Define a type for transactions
+interface Transaction {
+  date: string
+  amount: number
 }
 
-const SIPHelpTexts: { [key: string]: string } = {
-  monthlyAmount: 'This is the amount you plan to invest each month.',
-  durationInvestment: 'Specify how long you intend to continue your SIP investments.',
-  rateReturn: 'Estimate the average annual return you expect from your investments.',
-}
-
-type SipValues = z.infer<typeof sipCalculatorSchema>
-
-export default function IrrCalculator() {
-  const location = useLocation()
-  const parsedObject = parseQueryString(location.search)
-  const [isCopied, setIsCopied] = useState(false)
-  const { toast } = useToast()
-  const { preferences } = useUserPreferences()
-
-  const form = useForm<SipValues>({
-    resolver: zodResolver(sipCalculatorSchema),
-    defaultValues: !isEmpty(parsedObject) ? parsedObject : DEFAULT_DATA,
+// Helper function to calculate NPV (Net Present Value)
+const calculateNPV = (transactions: Transaction[], rate: number) => {
+  if (transactions.length === 0) {
+    return 0 // Return 0 if there are no transactions
+  }
+  let npv = 0
+  const startDate = new Date(transactions[0].date).getTime() // Start date for time-based discounting
+  transactions.forEach((tx) => {
+    const time = (new Date(tx.date).getTime() - startDate) / (1000 * 60 * 60 * 24 * 365) // time in years
+    npv += tx.amount / Math.pow(1 + rate, time)
   })
-  const values = form.watch()
+  return npv
+}
 
-  const inputs: Array<InputField> = [
-    {
-      id: 'monthlyAmount',
-      label: `Monthly investment amount ${preferences.currencyUnit}`,
-      type: 'number',
-      hasRange: true,
-      range: {
-        min: 500,
-        max: 100_000,
-        step: 500,
-      },
-      helpText: SIPHelpTexts.monthlyAmount,
-    },
-    {
-      id: 'durationInvestment',
-      label: 'Duration of the investment (Yr)',
-      type: 'number',
-      hasRange: true,
-      range: {
-        min: 1,
-        max: 40,
-        step: 1,
-      },
-      helpText: SIPHelpTexts.durationInvestment,
-    },
-    {
-      id: 'rateReturn',
-      label: 'Expected annual return (%)',
-      type: 'number',
-      hasRange: true,
-      range: {
-        min: 1,
-        max: 30,
-        step: 0.1,
-      },
-      helpText: SIPHelpTexts.rateReturn,
-    },
-  ]
+// Custom IRR Calculation using the Newton-Raphson method
+const calculateIRR = (transactions: Transaction[], guess = 0.1): number | null => {
+  const tolerance = 1e-6 // tolerance for accuracy
+  const maxIterations = 1000 // limit iterations to avoid infinite loops
+  let rate = guess // initial guess for IRR
 
-  const result = useMemo(() => {
-    if (!values.durationInvestment || !values.monthlyAmount || !values.rateReturn) {
-      return undefined
+  for (let i = 0; i < maxIterations; i++) {
+    const npv = calculateNPV(transactions, rate)
+    const npvDerivative = (calculateNPV(transactions, rate + tolerance) - npv) / tolerance
+
+    const newRate = rate - npv / npvDerivative
+
+    if (Math.abs(newRate - rate) < tolerance) {
+      return newRate // Converged to a solution
     }
+    rate = newRate
+  }
+  return null // Return null if IRR not found within max iterations
+}
 
-    const summary = calculateSip(values.monthlyAmount, values.durationInvestment, values.rateReturn)
-    const pieData = [
-      { name: 'Total Invested', value: summary.totalInvested },
-      { name: 'Wealth Gained', value: summary.wealthGained },
-    ]
+type Action = { type: 'ADD_TRANSACTION'; payload: Transaction } | { type: 'REMOVE_TRANSACTION'; payload: number } // payload is the index of the transaction to remove
 
-    return { summary, pieData }
-  }, [values.durationInvestment, values.monthlyAmount, values.rateReturn])
+// Reducer function
+const transactionReducer = (state: Transaction[], action: Action): Transaction[] => {
+  switch (action.type) {
+    case 'ADD_TRANSACTION':
+      return [...state, action.payload]
+    case 'REMOVE_TRANSACTION':
+      return state.filter((_, index) => index !== action.payload)
+    default:
+      return state
+  }
+}
 
-  const handleCopy = () => {
-    setIsCopied(true)
-    handleShare(values)
-    setTimeout(() => setIsCopied(false), 3000)
+// Component for XIRR calculation
+export default function IrrCalculator() {
+  // Initialize transactions with reducer with some default values
+  const [transactions, dispatchTxns] = useReducer(transactionReducer, [
+    { date: '2021-01-01', amount: -1000 },
+    { date: '2021-02-01', amount: 200 },
+    { date: '2021-03-01', amount: 300 },
+    { date: '2021-04-01', amount: 400 },
+    { date: '2021-05-01', amount: 500 },
+  ])
+
+  const [date, setDate] = useState(Date())
+  const [amount, setAmount] = useState('')
+  const [irr_calculated, setIrr_calculated] = useState<number | null>(0)
+
+  const addTransaction = () => {
+    if (date && amount) {
+      const locale_date = new Date(date.split('GMT')[0]).toLocaleDateString('en-CA')
+      const newTransaction = { date: locale_date, amount: parseFloat(amount) }
+      dispatchTxns({ type: 'ADD_TRANSACTION', payload: newTransaction })
+      setDate('')
+      setAmount('')
+      setIrr_calculated(calculateIRR([...transactions, { date, amount: parseFloat(amount) }]))
+    }
   }
 
-  const handleExportToExcel = () => {
-    const wb = XLSX.utils.book_new()
-    const sipCalculationWorksheet = XLSX.utils.json_to_sheet([{ ...values, ...result?.summary }]) ?? []
-    XLSX.utils.book_append_sheet(wb, sipCalculationWorksheet, 'SIP Calculation')
-    XLSX.writeFile(wb, 'sip_calculation.xlsx', { compression: true })
+  const removeTxn = (index: number) => {
+    dispatchTxns({ type: 'REMOVE_TRANSACTION', payload: index })
+    setIrr_calculated(calculateIRR(transactions.filter((_, i) => i !== index)))
   }
-  const chartOptionsSIP: ApexCharts.ApexOptions = {
-    chart: {
-      width: 350,
-      type: 'pie',
-    },
-    labels: result?.pieData?.map((ele) => `${ele.name}`),
-    legend: {
-      position: 'bottom',
-      fontSize: '16px',
-    },
-    fill: {
-      type: 'gradient',
-    },
-    tooltip: {
-      y: {
-        formatter: (value) => `${preferences.currencyUnit} ${formatIndianMoneyNotation(value)}`,
-      },
-    },
-  }
-  const chartSeriesSIP: ApexAxisChartSeries | ApexNonAxisChartSeries = result?.pieData?.map((ele) => ele.value) as any
+
+  // run the IRR calculation when the component is rendered initially
+  useEffect(() => {
+    setIrr_calculated(calculateIRR(transactions))
+  }, [transactions])
 
   return (
-    <Page className='space-y-4'>
-      <div className='flex items-center justify-between'>
-        <Button
-          onClick={() => {
-            toast({
-              title: 'Feature under development!',
-              description: 'The feature you are trying to use is under development!',
-            })
-          }}
-        >
-          Save
-        </Button>
-        <Button onClick={handleCopy}>{isCopied ? 'Copied!' : 'Share'}</Button>
-      </div>
+    <div>
+      <h2>Add New Transaction</h2>
+      {/*<input type='date' className={''} value={date} onChange={(e) => setDate(e.target.value)} />*/}
+      <DatePicker value={dayjs(date).toDate()} onChange={(value) => setDate(value?.toString() || '')} />
+      <input
+        className={
+          'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50'
+        }
+        type='number'
+        value={amount}
+        onChange={(e) => setAmount(e.target.value)}
+      />
+      <button className={buttonVariants({ variant: 'default' })} onClick={addTransaction}>
+        Add Transaction
+      </button>
 
-      <div className='text-center'>
-        <h2 className='text-2xl font-bold'>SIP Calculator</h2>
-        <p>Calculate returns on your SIP investments.</p>
-      </div>
-      <div className='grid md:grid-cols-2 gap-1 pt-2'>
-        <div className='flex flex-col md:flex-row gap-2 justify-center w-full'>
-          <div className='space-y-4 pt-10'>
-            <Form {...form}>
-              <form className='grid gap-4'>
-                <InputFieldsRenderer control={form.control} inputs={inputs} />
-              </form>
-            </Form>
-          </div>
-
-          <When truthy={typeof result !== 'undefined'}>
-            <div>
-              <div className='text-xl text-center'>Summary</div>
-
-              <div className='w-full p-4 flex flex-col gap-4 items-center'>
-                <div className='flex gap-2 border-b'>
-                  <div>Total invested: </div>
-                  <div className='font-medium'>
-                    {formatIndianMoneyNotation(result?.summary?.totalInvested)} {preferences.currencyUnit}
-                  </div>
-                </div>
-                <div className='flex gap-2 border-b'>
-                  <div>Final value: </div>
-                  <div className='font-medium'>
-                    {formatIndianMoneyNotation(result?.summary?.finalValue)} {preferences.currencyUnit}
-                  </div>
-                </div>
-                <div className='flex gap-2 border-b'>
-                  <div>Wealth gained: </div>
-                  <div className='font-medium'>
-                    {formatIndianMoneyNotation(result?.summary?.wealthGained)} {preferences.currencyUnit}
-                  </div>
-                </div>
-                <Chart options={chartOptionsSIP} series={chartSeriesSIP} type='pie' width={300} />
-                <div>
-                  <Button onClick={handleExportToExcel}>Export to Excel</Button>
-                </div>
-              </div>
-            </div>
-          </When>
-        </div>
-        <div className='grid gap-3'>
-          <h1 className='text-2md font-bold'>About SIP Calculator</h1>
-          <p>
-            To estimate your potential returns with a Systematic Investment Plan (SIP), you need to provide three key
-            pieces of information:
-          </p>
-          <ul className='list-disc pl-8'>
-            <li>
-              <span className='font-bold'>Monthly Investment Amount:</span> This is the amount you plan to invest each
-              month.
-            </li>
-            <li>
-              <span className='font-bold'>Duration of the Investment:</span> Specify how long you intend to continue
-              your SIP investments.
-            </li>
-            <li>
-              <span className='font-bold'>Expected Annual Return (%):</span> Estimate the average annual return you
-              expect from your investments.
-            </li>
-          </ul>
-          <p>
-            After entering these details, the SIP Calculator will provide you with an estimate of your potential wealth
-            creation and returns.
-          </p>
-          <h1 className='font-bold'>SIP Calculator Formula</h1>
-          <p>The formula to calculate the future value of your SIP investment is:</p>
-          <p>
-            <strong>Future Value of SIP Investment (FV) = P * ([(1 + r)^n - 1]/r)(1 + r)</strong>
-          </p>
-          <p>Where:</p>
-          <ul className='list-disc pl-8'>
-            <li>
-              <span className='font-bold'>FV</span> is the Future Value of your investment at the end of the SIP
-              duration.
-            </li>
-            <li>
-              <span className='font-bold'>P</span> is the Monthly Investment Amount you contribute.
-            </li>
-            <li>
-              <span className='font-bold'>r</span> is the monthly interest rate, calculated from the Expected Annual
-              Return. The formula for monthly interest rate is: <strong>r = [(Annual rate/100)/12]</strong>
-            </li>
-            <li>
-              <span className='font-bold'>n</span> is the total number of contributions, calculated as the product of
-              the Duration of Investment (in years) and 12 (for monthly contributions).
-            </li>
-          </ul>
+      <div className='card glass w-96'>
+        <div className='card-body'>
+          <h2 className='card-title'>Summary</h2>
+          <p>Total Investment: 5000</p>
+          <p>Profit: 5000</p>
+          <p>Internal Rate of Return: 5000</p>
+          <p>Calculated IRR: {irr_calculated !== null ? (irr_calculated! * 100).toFixed(2) + '%' : 'N/A'}</p>
         </div>
       </div>
-    </Page>
+      <div className='overflow-x-auto max-w-2xl mx-auto'>
+        <h2 className='text-2xl font-bold text-left my-4'>Transaction Table</h2>
+        <table className='table w-full'>
+          <thead className='text-lg text-base-content'>
+            <tr>
+              <th className='px-4 py-2'>#</th>
+              <th className='px-4 py-2'>Date</th>
+              <th className='px-4 py-2'>Transaction</th>
+              <th className='px-4 py-2'>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {transactions.map((tx, index) => (
+              <tr key={index} className=''>
+                <td className='px-4 py-2 '>{index + 1}</td>
+                <td className='px-4 py-2 '>{tx.date}</td>
+                <td className='px-4 py-2 '>{tx.amount}</td>
+                <td className='px-4 py-2 '>
+                  <button className={buttonVariants({ variant: 'destructive' })} onClick={() => removeTxn(index)}>
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
   )
 }

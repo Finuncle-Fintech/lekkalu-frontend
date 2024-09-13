@@ -25,13 +25,13 @@ const useRole = ({ userId, roleFor, id }: RolePropsType) => {
   const { data: allScenarios, isSuccess: scenarioFetchSuccess } = useQuery({
     queryKey: [SCENARIOS.SCENARIOS],
     queryFn: fetchScenarios,
-    enabled: roleFor === 'scenario',
+    enabled: !!userId && roleFor === 'scenario',
   })
 
   const { data: allComparisons, isSuccess: comparisonFetchSuccess } = useQuery({
     queryKey: [COMPARISON.COMPARISON],
     queryFn: fetchComparisons,
-    enabled: roleFor === 'comparison',
+    enabled: !!userId && roleFor === 'comparison',
   })
 
   useEffect(() => {

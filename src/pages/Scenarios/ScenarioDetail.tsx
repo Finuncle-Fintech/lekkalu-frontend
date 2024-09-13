@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { useLocation, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import Page from '@/components/Page/Page'
 import DetailPageHeading from '@/components/DetailPageHeading'
 import { AUTH, SCENARIOS } from '@/utils/query-keys'
@@ -10,6 +9,9 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { useImaginaryAuth } from './context/use-imaginaryAuth'
 import CreateButton from './components/CreateButton'
 import { queryClient } from '@/utils/client'
+import useRole from '@/hooks/useRole'
+import { useAuth } from '@/hooks/use-auth'
+import DottedAnimatedText from '@/components/DottedAnimatedText'
 
 export const LoadingSkeleton = () => {
   return (
@@ -24,43 +26,31 @@ export const LoadingSkeleton = () => {
 
 export default function ScenarioDefault() {
   const { id } = useParams() as { id: string }
-  const IS_FOR_FEATURE_PAGE = useLocation().pathname.includes('feature')
+  const { userData } = useAuth()
+  const { role } = useRole({ userId: userData?.id || null, id: Number(id), roleFor: 'scenario' })
 
   const scenarioId = Number(id)
   const { loginImaginaryUser } = useImaginaryAuth()
 
-  const {
-    data,
-    isLoading,
-    isError: errorForAuthorizedUser,
-    isSuccess: isSuccessScenario,
-  } = useQuery({ queryKey: [`${SCENARIOS.SCENARIOS}-${scenarioId}`], queryFn: () => fetchScenarioById(scenarioId) })
-
-  useEffect(() => {
-    if (isSuccessScenario) {
-      loginImaginaryUser.mutate({ username: data.imag_username, password: data.imag_password, id: data.id })
-    }
-    // eslint-disable-next-line
-  }, [isSuccessScenario, data])
-
-  const {
-    data: publicScenarioData,
-    isLoading: isPublicScenarioLoading,
-    isSuccess: isSuccessPublicScenario,
-    isError,
-  } = useQuery({
-    queryKey: [`${SCENARIOS.SCENARIOS}-public-${scenarioId}`],
-    queryFn: () => fetchScenarioById(scenarioId, IS_FOR_FEATURE_PAGE),
+  const { data, isLoading, isError, isSuccess, refetch } = useQuery({
+    queryKey: [`${SCENARIOS.SCENARIOS}-${scenarioId}`],
+    queryFn: role === 'guest' ? () => fetchScenarioById(scenarioId, true) : () => fetchScenarioById(scenarioId),
+    enabled: false,
   })
 
   useEffect(() => {
-    if (isSuccessPublicScenario && data) {
+    if (role) {
+      refetch()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [role])
+
+  useEffect(() => {
+    if (isSuccess && data.id) {
       loginImaginaryUser.mutate({ username: data.imag_username, password: data.imag_password, id: data.id })
     }
-    // eslint-disable-next-line
-  }, [isSuccessPublicScenario, data])
-
-  const { data: currentImaginaryUser } = useQuery<string>({ queryKey: [AUTH.CURRENT_IMAGINARY_USER] })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSuccess, data])
 
   useEffect(() => {
     return () => {
@@ -68,11 +58,11 @@ export default function ScenarioDefault() {
     }
   }, [])
 
+  const { data: currentImaginaryUser } = useQuery<string>({ queryKey: [AUTH.CURRENT_IMAGINARY_USER] })
   const { data: imaginaryUsers } = useQuery<any>({ queryKey: [AUTH.IMAGINARY_CLIENT] })
-
   const isLoggedIn = Boolean(currentImaginaryUser && imaginaryUsers[currentImaginaryUser].access)
 
-  if (IS_FOR_FEATURE_PAGE && isError) {
+  if (isError) {
     return (
       <Page>
         <h3>This scenario is set to private</h3>
@@ -80,10 +70,14 @@ export default function ScenarioDefault() {
     )
   }
 
-  if (errorForAuthorizedUser) {
+  if (isLoading) {
+    return <LoadingSkeleton />
+  }
+
+  if (isSuccess && !data?.id) {
     return (
       <Page>
-        <h3>This scenario is set to private</h3>
+        <h2>No Scenario Found.</h2>
       </Page>
     )
   }
@@ -92,16 +86,20 @@ export default function ScenarioDefault() {
     <Page className='space-y-8'>
       <DetailPageHeading backUrlTitle='Back to scenarios' title={isLoading ? 'Loading...' : data?.name || ''} />
 
-      {isLoading || isPublicScenarioLoading || !isLoggedIn ? (
-        <LoadingSkeleton />
-      ) : (
+      {loginImaginaryUser.isPending && (
+        <DottedAnimatedText>
+          <p className='text-slate-600'>Preparing data</p>
+        </DottedAnimatedText>
+      )}
+
+      {isLoggedIn ? (
         <div>
           <div className='flex justify-between'>
-            <CreateButton
-              username={IS_FOR_FEATURE_PAGE ? publicScenarioData?.imag_username || '' : data?.imag_username || ''}
-            />
+            <CreateButton username={data?.imag_username || ''} role={role} />
           </div>
         </div>
+      ) : (
+        <></>
       )}
     </Page>
   )

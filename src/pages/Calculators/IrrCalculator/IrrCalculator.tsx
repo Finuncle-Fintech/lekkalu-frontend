@@ -70,7 +70,7 @@ export default function IrrCalculator() {
   ])
 
   const [date, setDate] = useState(Date())
-  const [amount, setAmount] = useState('')
+  const [amount, setAmount] = useState('1000')
   const [irr_calculated, setIrr_calculated] = useState<number | null>(0)
 
   const addTransaction = () => {
@@ -95,45 +95,53 @@ export default function IrrCalculator() {
   }, [transactions])
 
   return (
-    <div>
-      <h2>Add New Transaction</h2>
-      <DatePicker value={dayjs(date).toDate()} onChange={(value) => setDate(value?.toString() || '')} />
-      <input
-        className={
-          'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background ' +
-          'file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground ' +
-          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ' +
-          'disabled:cursor-not-allowed disabled:opacity-50'
-        }
-        type='number'
-        value={amount}
-        onChange={(e) => setAmount(e.target.value)}
-      />
-      <button className={buttonVariants({ variant: 'default' })} onClick={addTransaction}>
-        Add Transaction
-      </button>
-
-      <div className='card glass w-96'>
-        <div className='card-body'>
-          <h2 className='card-title'>Summary</h2>
-          <p>Total Investment: 5000</p>
-          <p>Profit: 5000</p>
-          <p>Internal Rate of Return: 5000</p>
-          <p>Calculated IRR: {irr_calculated !== null ? (irr_calculated! * 100).toFixed(2) + '%' : 'N/A'}</p>
+    <>
+      <div>
+        <div className='h-10' />
+        <div className='flex justify-center space-x-10 '>
+          <div className='flex flex-col justify-between '>
+            <h2>Add New Transaction</h2>
+            <p>Date</p>
+            <DatePicker value={dayjs(date).toDate()} onChange={(value) => setDate(value?.toString() || '')} />
+            <p>Transaction Amount</p>
+            <input
+              className={
+                'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background ' +
+                'file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground ' +
+                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ' +
+                'disabled:cursor-not-allowed disabled:opacity-50'
+              }
+              type='number'
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+            />
+            <button className={buttonVariants({ variant: 'default' })} onClick={addTransaction}>
+              Add Transaction
+            </button>
+          </div>
+          <div className='card glass w-96'>
+            <div className='card-body'>
+              <h2 className='card-title'>Summary</h2>
+              <p>Total Investment: 5000</p>
+              <p>Profit: 5000</p>
+              <p>Internal Rate of Return: 5000</p>
+              <p>Calculated IRR: {irr_calculated !== null ? (irr_calculated! * 100).toFixed(2) + '%' : 'N/A'}</p>
+            </div>
+          </div>
         </div>
-      </div>
-      <div className='overflow-x-auto max-w-2xl mx-auto'>
-        <h2 className='text-2xl font-bold text-left my-4'>Transaction Table</h2>
-        <table className='table w-full'>
-          <thead className='text-lg text-base-content'>
+        <div className='h-10' />
+        <div className='overflow-x-auto max-w-2xl mx-auto'>
+          <h2 className='text-2xl font-bold text-left my-4'>Transaction Table</h2>
+          <table className='table w-full'>
+            <thead className='text-lg text-base-content'>
             <tr>
               <th className='px-4 py-2'>#</th>
               <th className='px-4 py-2'>Date</th>
               <th className='px-4 py-2'>Transaction</th>
               <th className='px-4 py-2'>Actions</th>
             </tr>
-          </thead>
-          <tbody>
+            </thead>
+            <tbody>
             {transactions.map((tx, index) => (
               <tr key={index} className=''>
                 <td className='px-4 py-2 '>{index + 1}</td>
@@ -146,9 +154,10 @@ export default function IrrCalculator() {
                 </td>
               </tr>
             ))}
-          </tbody>
-        </table>
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
+    </>
   )
 }

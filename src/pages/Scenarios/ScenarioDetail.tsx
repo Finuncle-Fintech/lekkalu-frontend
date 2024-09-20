@@ -27,7 +27,7 @@ export const LoadingSkeleton = () => {
 export default function ScenarioDefault() {
   const { id } = useParams() as { id: string }
   const { userData } = useAuth()
-  const { role } = useRole({ userId: userData?.id || null, id: Number(id), roleFor: 'scenario' })
+  const { role } = useRole({ user: userData?.username || null, id: Number(id), roleFor: 'scenario' })
 
   const scenarioId = Number(id)
   const { loginImaginaryUser } = useImaginaryAuth()

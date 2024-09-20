@@ -14,31 +14,31 @@ export type UserRole = 'owner' | 'neighbour' | 'guest' | undefined
 export type RoleFor = 'comparison' | 'scenario'
 
 type RolePropsType = {
-  userId: number | null
+  user: string | null
   roleFor: RoleFor
   id: number
 }
 
-const useRole = ({ userId, roleFor, id }: RolePropsType) => {
+const useRole = ({ user, roleFor, id }: RolePropsType) => {
   const [role, setRole] = useState<UserRole>()
 
   const { data: allScenarios, isSuccess: scenarioFetchSuccess } = useQuery({
     queryKey: [SCENARIOS.SCENARIOS],
     queryFn: fetchScenarios,
-    enabled: !!userId && roleFor === 'scenario',
+    enabled: !!user && roleFor === 'scenario',
   })
 
   const { data: allComparisons, isSuccess: comparisonFetchSuccess } = useQuery({
     queryKey: [COMPARISON.COMPARISON],
     queryFn: fetchComparisons,
-    enabled: !!userId && roleFor === 'comparison',
+    enabled: !!user && roleFor === 'comparison',
   })
 
   useEffect(() => {
-    if (userId === null) {
+    if (user === null) {
       setRole('guest')
     }
-  }, [userId])
+  }, [user])
 
   useEffect(() => {
     if (roleFor === 'comparison' && comparisonFetchSuccess) {

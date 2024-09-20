@@ -34,7 +34,7 @@ const ComparisonDetail = () => {
   const IS_FOR_FEATURE_PAGE = useLocation().pathname.includes('feature')
   const { getAPIClientForImaginaryUser } = useImaginaryAuth()
   const { userData } = useAuth()
-  const { role } = useRole({ userId: userData?.id || null, id: Number(comparisonId), roleFor: 'comparison' })
+  const { role } = useRole({ user: userData?.username || null, id: Number(comparisonId), roleFor: 'comparison' })
   const IS_AUTHENTICATED_USER = role !== 'guest'
   const { scrollToView } = useScrollToSection()
 

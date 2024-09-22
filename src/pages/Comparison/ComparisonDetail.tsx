@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useLocation, useParams } from 'react-router-dom'
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { useMutation, useQuery } from '@tanstack/react-query'
@@ -24,6 +24,7 @@ import { useAuth } from '@/hooks/use-auth'
 import { formatIndianMoneyNotation } from '@/utils/format-money'
 import { useScrollToSection } from '@/hooks/use-scroll-to-section'
 import { toast } from '@/components/ui/use-toast'
+import { UserContext } from '@/context/UserContext'
 import DottedAnimatedText from '@/components/DottedAnimatedText'
 import useRole from '@/hooks/useRole'
 
@@ -33,7 +34,7 @@ const ComparisonDetail = () => {
   const comparisonId = useParams().id
   const IS_FOR_FEATURE_PAGE = useLocation().pathname.includes('feature')
   const { getAPIClientForImaginaryUser } = useImaginaryAuth()
-  const { userData } = useAuth()
+  const { user: userData } = useContext(UserContext)
   const { role } = useRole({ user: userData?.username || null, id: Number(comparisonId), roleFor: 'comparison' })
   const IS_AUTHENTICATED_USER = role !== 'guest'
   const { scrollToView } = useScrollToSection()

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useParams } from 'react-router-dom'
 import Page from '@/components/Page/Page'
@@ -10,8 +10,8 @@ import { useImaginaryAuth } from './context/use-imaginaryAuth'
 import CreateButton from './components/CreateButton'
 import { queryClient } from '@/utils/client'
 import useRole from '@/hooks/useRole'
-import { useAuth } from '@/hooks/use-auth'
 import DottedAnimatedText from '@/components/DottedAnimatedText'
+import { UserContext } from '@/context/UserContext'
 
 export const LoadingSkeleton = () => {
   return (
@@ -26,7 +26,7 @@ export const LoadingSkeleton = () => {
 
 export default function ScenarioDefault() {
   const { id } = useParams() as { id: string }
-  const { userData } = useAuth()
+  const { user: userData } = useContext(UserContext)
   const { role } = useRole({ user: userData?.username || null, id: Number(id), roleFor: 'scenario' })
 
   const scenarioId = Number(id)

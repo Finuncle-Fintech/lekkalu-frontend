@@ -1,4 +1,5 @@
-import React, { useCallback, useMemo, useState } from 'react'
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import dayjs from 'dayjs'
 import { ChevronDown, ChevronUp, EditIcon, LoaderIcon } from 'lucide-react'
 import { useQuery } from '@tanstack/react-query'
@@ -13,6 +14,8 @@ import { LENDING } from '@/utils/query-keys'
 import { fetchLendingAccounts } from '@/queries/lending'
 import { formatIndianMoneyNotation } from '@/utils/format-money'
 import { Badge } from '@/components/ui/badge'
+import { SortIconProps, SortableColumnType, LendingTableSort } from '../types/LendingTypes'
+import useLendingTableSort from '../hooks/useLendingTableSort'
 
 const ClickableTableRow = ({
   account,
@@ -67,9 +70,82 @@ const ClickableTableRow = ({
     </>
   )
 }
+
+const Sort = ({ id, sortBy }: SortIconProps) => {
+  const isUp = id === sortBy.columnName && sortBy.orderBy === 'asc'
+  const isDown = id === sortBy.columnName && sortBy.orderBy === 'desc'
+  return (
+    <div className='flex flex-col gap-0'>
+      <ChevronUp size={15} className={isUp ? 'text-red-500' : ''} />
+      <ChevronDown size={15} className={isDown ? 'text-red-500' : ''} />
+    </div>
+  )
+}
+
+const SortableTableHead = (props: SortableColumnType) => {
+  const { isSortable, children } = props
+  function assignOrderBy(currentOrder: string) {
+    switch (currentOrder) {
+      case 'asc':
+        return 'desc'
+      case 'desc':
+        return 'none'
+      case 'none':
+        return 'asc'
+      default:
+        return 'none'
+    }
+  }
+  if (!isSortable) {
+    return (
+      <TableHead className={'font-medium'}>
+        <div className='flex justify-between items-center'>{children}</div>
+      </TableHead>
+    )
+  }
+  return (
+    <TableHead
+      className={`font-medium ${isSortable ? 'hover:bg-slate-200 hover:cursor-pointer' : ''}`}
+      onClick={() => {
+        props.setSortBy((value) => {
+          return {
+            orderBy: assignOrderBy(value.orderBy),
+            columnName: props.id,
+          }
+        })
+      }}
+    >
+      <div className='flex justify-between items-center'>
+        {children} {isSortable ? <Sort id={props.id} sortBy={props.sortBy} /> : <></>}
+      </div>
+    </TableHead>
+  )
+}
+
 export default function LedingAccountTable() {
   const [activeTab, setActiveTab] = React.useState<number[]>([])
-  const { data, isFetching } = useQuery({ queryKey: [LENDING.ACCOUNTS], queryFn: fetchLendingAccounts })
+  // const [sortBy, setSortBy] = useState<LendingTableSort>({ columnName: 'balance', orderBy: 'none' })
+
+  // const [accountData, setAccountData] = useState<Accounts[]>([])
+
+  const { data, isFetching, isSuccess } = useQuery({
+    queryKey: [LENDING.ACCOUNTS],
+    queryFn: fetchLendingAccounts,
+  })
+
+  const {
+    handleSort,
+    setSortBy,
+    sortBy,
+    sortedData: accountData,
+    setSortedData: setAccountData,
+  } = useLendingTableSort({ data })
+
+  useEffect(() => {
+    if (isSuccess) {
+      setAccountData(data)
+    }
+  }, [data, isSuccess])
 
   const handleSetActiveTab = useCallback((deps: number) => {
     setActiveTab((prevActiveTab) => {
@@ -80,23 +156,35 @@ export default function LedingAccountTable() {
       }
     })
   }, [])
-  const sortedAccounts = useMemo(() => {
-    return data?.sort((a, b) => a.balance - b.balance).reverse() || []
-  }, [data])
+  // const sortedAccounts = useMemo(() => {
+  //   return data?.sort((a, b) => a.balance - b.balance).reverse() || []
+  // }, [data])
+
+  useEffect(() => {
+    const _data = handleSort(data ?? [], sortBy.columnName, sortBy.orderBy)
+    setAccountData(_data)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sortBy])
 
   return (
-    <div className='space-y-4'>
-      <Table>
+    <div className='space-y-4 bg-slate-50 rounded-lg shadow'>
+      <Table className='bg-white'>
         <TableCaption className='text-center'>
-          {sortedAccounts?.length === 0 ? 'No Lending Accounts Found' : 'A list of Lending Accounts'}
+          {accountData?.length === 0 ? 'No Lending Accounts Found' : 'A list of Lending Accounts'}
         </TableCaption>
         <TableHeader className='bg-gray-100/50'>
           <TableRow>
-            <TableHead className='font-medium'>Name</TableHead>
-            <TableHead className='font-medium'>Balance</TableHead>
-            <TableHead className='font-medium'>Remarks</TableHead>
-            <TableHead className='font-medium'>Transaction Date</TableHead>
-            <TableHead className='font-medium'>Actions</TableHead>
+            <SortableTableHead isSortable sortBy={sortBy} setSortBy={setSortBy} id='name'>
+              Name
+            </SortableTableHead>
+            <SortableTableHead isSortable sortBy={sortBy} setSortBy={setSortBy} id='balance'>
+              Balance
+            </SortableTableHead>
+            <SortableTableHead>Remarks</SortableTableHead>
+            <SortableTableHead isSortable sortBy={sortBy} setSortBy={setSortBy} id='started'>
+              Transaction Date
+            </SortableTableHead>
+            <SortableTableHead>Actions</SortableTableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -105,16 +193,18 @@ export default function LedingAccountTable() {
               <LoaderIcon className='animate-spin w-4 h-4' />
             </div>
           </When>
-          {sortedAccounts
-            ? sortedAccounts.map((account: Accounts) => (
-                <ClickableTableRow
-                  key={account.id}
-                  handleSetActiveTab={handleSetActiveTab}
-                  activeTab={activeTab}
-                  account={account}
-                />
-              ))
-            : null}
+          {accountData ? (
+            accountData.map((account: Accounts) => (
+              <ClickableTableRow
+                key={account.id}
+                handleSetActiveTab={handleSetActiveTab}
+                activeTab={activeTab}
+                account={account}
+              />
+            ))
+          ) : (
+            <></>
+          )}
         </TableBody>
       </Table>
     </div>

@@ -118,7 +118,7 @@ export default function GoalTimeline({ className, style, goalId, target }: GoalT
           enabled: false,
         },
         toolbar: {
-          show: false,
+          show: true,
         },
         zoom: {
           autoScaleYaxis: true,

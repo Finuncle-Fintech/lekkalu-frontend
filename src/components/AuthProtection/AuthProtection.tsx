@@ -2,7 +2,8 @@ import React from 'react'
 import { useLocation, Navigate, useNavigate } from 'react-router-dom'
 import { LoaderIcon } from 'lucide-react'
 import { useAuthContext } from '@/hooks/use-auth'
-
+import { UserContextProvider } from '@/context/UserContext'
+import { User } from '@/types/user'
 type Props = {
   children: React.ReactNode
 }
@@ -18,7 +19,7 @@ export default function AuthProtection({ children }: Props) {
     return allowedPages.includes(pagename)
   }
 
-  const { isAuthenticationInProgress, tokenData } = useAuthContext()
+  const { isAuthenticationInProgress, tokenData, userData, isLoadingUserData, toggle, isOpen } = useAuthContext()
 
   if (isAuthenticationInProgress) {
     return (
@@ -30,7 +31,16 @@ export default function AuthProtection({ children }: Props) {
   }
 
   if (tokenData) {
-    return children
+    return (
+      <UserContextProvider
+        user={userData as User}
+        isLoadingUserData={isLoadingUserData}
+        toggleSideBar={toggle}
+        isSideBarOpen={isOpen}
+      >
+        {children}
+      </UserContextProvider>
+    )
   } else if (!tokenData && checkAllowedPages(location.pathname)) {
     navigate(`/feature${location.pathname}`)
   } else {

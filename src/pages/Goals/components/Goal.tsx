@@ -3,7 +3,7 @@ import Chart from 'react-apexcharts'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { round } from 'lodash'
 import colors from 'tailwindcss/colors'
 import { cn } from '@/utils/utils'
@@ -47,6 +47,8 @@ export default function Goal({
   const qc = useQueryClient()
   const [allowRename, setAllowRename] = useState(false)
   const [goalName, setGoalName] = useState(goalTitle)
+
+  const navigate = useNavigate()
 
   const goalMutation = useMutation({
     mutationFn: (dto: Partial<GoalType>) => editGoal(id, dto),
@@ -127,17 +129,18 @@ export default function Goal({
   }
   const chartSeries: ApexAxisChartSeries | ApexNonAxisChartSeries = [round(progressQuery?.progress_percent ?? 0, 2)]
 
+  const handleViewDetail = () => {
+    return !allowRename ? navigate(`/goals/${id}`) : undefined
+  }
+
   return (
     <div
       className={cn('flex flex-col border-t-4 rounded-lg p-4 shadow-md hover:cursor-pointer', className)}
       style={{ ...style, borderColor: color }}
+      onClick={handleViewDetail}
     >
       <GoalOptions id={id} handleAllowRename={handleAllowRename} />
-      <Link
-        title='Click to view detail'
-        to={!allowRename ? `/goals/${id}` : ''}
-        className='flex items-center justify-center gap-4 flex-col h-full'
-      >
+      <div title='Click to view detail' className='flex items-center justify-center gap-4 flex-col h-full'>
         <Chart options={chartOptions} series={chartSeries} type='radialBar' height={circleSize} />
 
         {allowRename ? (
@@ -172,7 +175,7 @@ export default function Goal({
               : `This goal was reached ${remainingDays}`}
           </p>
         </div>
-      </Link>
+      </div>
     </div>
   )
 }

@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { ArrowLeft } from 'lucide-react'
 import { useQuery } from '@tanstack/react-query'
 import { cn } from '@/utils/utils'
@@ -8,13 +8,13 @@ import { CALCULATOR_ROUTES, ROUTES as _routes } from '@/utils/app-shell'
 import { Button } from '@/components/ui/button'
 import { SCENARIOS } from '@/utils/query-keys'
 import { fetchScenarios } from '@/queries/scenarios'
-import { useAuth } from '@/hooks/use-auth'
+import { UserContext } from '@/context/UserContext'
 
 type SidebarProps = React.HTMLAttributes<HTMLDivElement>
 
 export function Sidebar({ className, ...restProps }: SidebarProps) {
   const [subMenus, setSubMenus] = useState<any>({})
-  const { isOpen, toggle } = useAuth()
+  const { isSideBarOpen: isOpen, toggleSideBar: toggle } = useContext(UserContext)
   const [status, setStatus] = useState(false)
 
   const [ROUTES, setRoutes] = useState([..._routes])

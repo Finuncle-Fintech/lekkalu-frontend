@@ -129,6 +129,7 @@ export default function Expenses() {
             }}
           />
 
+          {/* Page Info */}
           <div>
             {page * 10 + 1} - {Math.min((page + 1) * 10, totalExpensesMetadata?.total_count ?? 0)} of{' '}
             {totalExpensesMetadata?.total_count}

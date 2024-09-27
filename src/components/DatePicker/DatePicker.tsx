@@ -26,18 +26,18 @@ export default function DatePicker({ className, style, onChange, placeholder, va
     <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
       <PopoverTrigger asChild>
         <Button
-          variant="outline"
+          variant='outline'
           className={cn('justify-start text-left font-normal w-full', !date && 'text-muted-foreground')}
         >
-          <CalendarIcon className="mr-2 h-4 w-4" />
+          <CalendarIcon className='mr-2 h-4 w-4' />
           {date ? dayjs(date).format('MMM DD, YYYY') : <span>{placeholder ?? 'Pick a date'}</span>}
         </Button>
       </PopoverTrigger>
       <PopoverContent className={cn('w-auto p-0', className)} style={style}>
         <Calendar
           {...props}
-          mode="single"
-          captionLayout="dropdown"
+          mode='single'
+          captionLayout='dropdown'
           selected={date}
           onDayClick={(selectedDate) => {
             setDate(selectedDate)

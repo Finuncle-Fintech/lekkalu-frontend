@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import dayjs from 'dayjs'
 import { ChevronDown, ChevronUp, EditIcon, LoaderIcon } from 'lucide-react'
 import { useQuery } from '@tanstack/react-query'
@@ -22,7 +21,7 @@ import { LENDING } from '@/utils/query-keys'
 import { fetchLendingAccounts } from '@/queries/lending'
 import { formatIndianMoneyNotation } from '@/utils/format-money'
 import { Badge } from '@/components/ui/badge'
-import useLendingTableSort from '../hooks/useLendingTableSort'
+import useTableSort from '@/hooks/useTableSort'
 
 const ClickableTableRow = ({
   account,
@@ -81,25 +80,12 @@ const ClickableTableRow = ({
 export default function LedingAccountTable() {
   const [activeTab, setActiveTab] = React.useState<number[]>([])
 
-  const { data, isFetching, isSuccess } = useQuery({
+  const { data, isFetching } = useQuery({
     queryKey: [LENDING.ACCOUNTS],
     queryFn: fetchLendingAccounts,
   })
 
-  const {
-    handleSort,
-    setSortBy,
-    sortBy,
-    sortedData: accountData,
-    setSortedData: setAccountData,
-  } = useLendingTableSort({ data: data || [] })
-
-  useEffect(() => {
-    if (isSuccess) {
-      setAccountData(data)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data, isSuccess])
+  const { setSortBy, sortBy, sortedData: accountData } = useTableSort({ data: data || [] })
 
   const handleSetActiveTab = useCallback((deps: number) => {
     setActiveTab((prevActiveTab) => {
@@ -110,14 +96,6 @@ export default function LedingAccountTable() {
       }
     })
   }, [])
-
-  useEffect(() => {
-    const _data = handleSort(data ?? [], sortBy.columnName, sortBy.orderBy)
-    setAccountData(() => {
-      return _data
-    })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sortBy.columnName, sortBy.orderBy])
 
   return (
     <div className='space-y-4 bg-slate-50 rounded-lg shadow'>

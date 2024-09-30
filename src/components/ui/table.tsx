@@ -2,7 +2,35 @@ import * as React from 'react'
 
 import { ChevronDown, ChevronUp } from 'lucide-react'
 import { cn } from '@/utils/utils'
-import { AmbigiousObject, SortableColumnType, SortIconProps } from '@/pages/Lending/types/LendingTypes'
+
+export type OrderByType = 'asc' | 'desc' | 'none'
+
+export type AmbigiousObject = { [key: string]: any }
+
+export type SortIconProps<T extends AmbigiousObject> = {
+  id: keyof T
+  sortBy: LendingTableSort<T>
+}
+
+export type LendingTableSort<T extends AmbigiousObject> = {
+  columnName: keyof T | undefined
+  orderBy: OrderByType
+}
+
+type UnSortableTableHeadType = {
+  isSortable?: false
+  children: React.ReactNode
+}
+
+type SortableTableHeadType<T extends AmbigiousObject> = {
+  isSortable: true
+  id: keyof T
+  children: React.ReactNode
+  sortBy: LendingTableSort<T>
+  setSortBy: React.Dispatch<React.SetStateAction<LendingTableSort<T>>>
+}
+
+export type SortableColumnType<T extends AmbigiousObject> = UnSortableTableHeadType | SortableTableHeadType<T>
 
 const Table = React.forwardRef<HTMLTableElement, React.HTMLAttributes<HTMLTableElement>>(
   ({ className, ...props }, ref) => (

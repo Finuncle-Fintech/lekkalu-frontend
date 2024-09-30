@@ -1,12 +1,11 @@
 import { useState } from 'react'
 import { getCorrectType } from '@/utils/utils'
-import { LendingTableSort, OrderByType } from '../types/LendingTypes'
-import { Accounts } from '@/types/lending'
+import { AmbigiousObject, LendingTableSort, OrderByType } from '../types/LendingTypes'
 
-const useLendingTableSort = ({ data }: { data: Accounts[] }) => {
-  const [sortBy, setSortBy] = useState<LendingTableSort>({ columnName: undefined, orderBy: 'none' })
+const useLendingTableSort = <T extends AmbigiousObject>({ data }: { data: T[] }) => {
+  const [sortBy, setSortBy] = useState<LendingTableSort<T>>({ columnName: undefined, orderBy: 'none' })
 
-  const [sortedData, setSortedData] = useState<Accounts[]>(data)
+  const [sortedData, setSortedData] = useState<T[]>(data)
 
   function handleSort<T, K extends keyof T>(data: T[], columnName: K | undefined, orderBy: OrderByType) {
     if (orderBy === 'none' || !columnName) {

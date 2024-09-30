@@ -1,6 +1,8 @@
 import * as React from 'react'
 
+import { ChevronDown, ChevronUp } from 'lucide-react'
 import { cn } from '@/utils/utils'
+import { AmbigiousObject, SortableColumnType, SortIconProps } from '@/pages/Lending/types/LendingTypes'
 
 const Table = React.forwardRef<HTMLTableElement, React.HTMLAttributes<HTMLTableElement>>(
   ({ className, ...props }, ref) => (
@@ -69,4 +71,61 @@ const TableCaption = React.forwardRef<HTMLTableCaptionElement, React.HTMLAttribu
 )
 TableCaption.displayName = 'TableCaption'
 
-export { Table, TableHeader, TableBody, TableFooter, TableHead, TableRow, TableCell, TableCaption }
+const Sort = <T extends AmbigiousObject>({ id, sortBy }: SortIconProps<T>) => {
+  const isUp = id === sortBy.columnName && sortBy.orderBy === 'asc'
+  const isDown = id === sortBy.columnName && sortBy.orderBy === 'desc'
+  return (
+    <div className='flex flex-col gap-0'>
+      <ChevronUp size={15} className={isUp ? 'text-primary' : 'text-slate-400'} />
+      <ChevronDown size={15} className={isDown ? 'text-primary' : 'text-slate-300'} />
+    </div>
+  )
+}
+
+const SortableTableHead = <T extends AmbigiousObject>(props: SortableColumnType<T>) => {
+  const { isSortable, children } = props
+  function assignOrderBy(currentOrder: string) {
+    switch (currentOrder) {
+      case 'asc':
+        return 'desc'
+      case 'desc':
+        return 'none'
+      case 'none':
+        return 'asc'
+      default:
+        return 'none'
+    }
+  }
+  if (!isSortable) {
+    return (
+      <TableHead className={'font-medium'}>
+        <div className='flex justify-between items-center'>{children}</div>
+      </TableHead>
+    )
+  }
+  return (
+    <TableHead
+      className={`font-medium ${isSortable ? 'hover:bg-slate-200 hover:cursor-pointer' : ''}`}
+      onClick={() => {
+        props.setSortBy((value) => {
+          if (props.id !== value.columnName) {
+            return {
+              orderBy: 'asc',
+              columnName: props.id,
+            }
+          }
+          return {
+            orderBy: assignOrderBy(value.orderBy),
+            columnName: props.id,
+          }
+        })
+      }}
+    >
+      <div className='flex justify-between items-center'>
+        {children} {isSortable ? <Sort id={props.id} sortBy={props.sortBy} /> : <></>}
+      </div>
+    </TableHead>
+  )
+}
+
+export { Table, TableHeader, TableBody, TableFooter, TableHead, TableRow, TableCell, TableCaption, SortableTableHead }

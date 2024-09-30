@@ -3,7 +3,15 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import dayjs from 'dayjs'
 import { ChevronDown, ChevronUp, EditIcon, LoaderIcon } from 'lucide-react'
 import { useQuery } from '@tanstack/react-query'
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import {
+  SortableTableHead,
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
 import { Accounts } from '@/types/lending'
 import { Button } from '@/components/ui/button'
 import TransactionListTable from './TransactionListTable'
@@ -14,7 +22,6 @@ import { LENDING } from '@/utils/query-keys'
 import { fetchLendingAccounts } from '@/queries/lending'
 import { formatIndianMoneyNotation } from '@/utils/format-money'
 import { Badge } from '@/components/ui/badge'
-import { SortIconProps, SortableColumnType, LendingTableSort } from '../types/LendingTypes'
 import useLendingTableSort from '../hooks/useLendingTableSort'
 
 const ClickableTableRow = ({
@@ -68,63 +75,6 @@ const ClickableTableRow = ({
       </TableRow>
       <TransactionListTable isOpen={isOpen} acc={{ name: account.name, id: account.id }} />
     </>
-  )
-}
-
-const Sort = ({ id, sortBy }: SortIconProps) => {
-  const isUp = id === sortBy.columnName && sortBy.orderBy === 'asc'
-  const isDown = id === sortBy.columnName && sortBy.orderBy === 'desc'
-  return (
-    <div className='flex flex-col gap-0'>
-      <ChevronUp size={15} className={isUp ? 'text-primary' : 'text-slate-400'} />
-      <ChevronDown size={15} className={isDown ? 'text-primary' : 'text-slate-400'} />
-    </div>
-  )
-}
-
-const SortableTableHead = (props: SortableColumnType) => {
-  const { isSortable, children } = props
-  function assignOrderBy(currentOrder: string) {
-    switch (currentOrder) {
-      case 'asc':
-        return 'desc'
-      case 'desc':
-        return 'none'
-      case 'none':
-        return 'asc'
-      default:
-        return 'none'
-    }
-  }
-  if (!isSortable) {
-    return (
-      <TableHead className={'font-medium'}>
-        <div className='flex justify-between items-center'>{children}</div>
-      </TableHead>
-    )
-  }
-  return (
-    <TableHead
-      className={`font-medium ${isSortable ? 'hover:bg-slate-200 hover:cursor-pointer' : ''}`}
-      onClick={() => {
-        props.setSortBy((value) => {
-          if (props.id !== value.columnName) {
-            return {
-              orderBy: 'asc',
-              columnName: props.id,
-            }
-          }
-          return {
-            orderBy: assignOrderBy(value.orderBy),
-            columnName: props.id,
-          }
-        })
-      }}
-    >
-      <div className='flex justify-between items-center'>
-        {children} {isSortable ? <Sort id={props.id} sortBy={props.sortBy} /> : <></>}
-      </div>
-    </TableHead>
   )
 }
 
@@ -197,7 +147,7 @@ export default function LedingAccountTable() {
             </div>
           </When>
           {accountData ? (
-            accountData.map((account: Accounts) => (
+            accountData.map((account) => (
               <ClickableTableRow
                 key={account.id}
                 handleSetActiveTab={handleSetActiveTab}

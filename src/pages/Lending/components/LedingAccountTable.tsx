@@ -76,8 +76,8 @@ const Sort = ({ id, sortBy }: SortIconProps) => {
   const isDown = id === sortBy.columnName && sortBy.orderBy === 'desc'
   return (
     <div className='flex flex-col gap-0'>
-      <ChevronUp size={15} className={isUp ? 'text-red-500' : ''} />
-      <ChevronDown size={15} className={isDown ? 'text-red-500' : ''} />
+      <ChevronUp size={15} className={isUp ? 'text-primary' : 'text-slate-400'} />
+      <ChevronDown size={15} className={isDown ? 'text-primary' : 'text-slate-400'} />
     </div>
   )
 }
@@ -108,6 +108,12 @@ const SortableTableHead = (props: SortableColumnType) => {
       className={`font-medium ${isSortable ? 'hover:bg-slate-200 hover:cursor-pointer' : ''}`}
       onClick={() => {
         props.setSortBy((value) => {
+          if (props.id !== value.columnName) {
+            return {
+              orderBy: 'asc',
+              columnName: props.id,
+            }
+          }
           return {
             orderBy: assignOrderBy(value.orderBy),
             columnName: props.id,
@@ -124,9 +130,6 @@ const SortableTableHead = (props: SortableColumnType) => {
 
 export default function LedingAccountTable() {
   const [activeTab, setActiveTab] = React.useState<number[]>([])
-  // const [sortBy, setSortBy] = useState<LendingTableSort>({ columnName: 'balance', orderBy: 'none' })
-
-  // const [accountData, setAccountData] = useState<Accounts[]>([])
 
   const { data, isFetching, isSuccess } = useQuery({
     queryKey: [LENDING.ACCOUNTS],
@@ -139,12 +142,13 @@ export default function LedingAccountTable() {
     sortBy,
     sortedData: accountData,
     setSortedData: setAccountData,
-  } = useLendingTableSort({ data })
+  } = useLendingTableSort({ data: data || [] })
 
   useEffect(() => {
     if (isSuccess) {
       setAccountData(data)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, isSuccess])
 
   const handleSetActiveTab = useCallback((deps: number) => {
@@ -156,15 +160,14 @@ export default function LedingAccountTable() {
       }
     })
   }, [])
-  // const sortedAccounts = useMemo(() => {
-  //   return data?.sort((a, b) => a.balance - b.balance).reverse() || []
-  // }, [data])
 
   useEffect(() => {
     const _data = handleSort(data ?? [], sortBy.columnName, sortBy.orderBy)
-    setAccountData(_data)
+    setAccountData(() => {
+      return _data
+    })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sortBy])
+  }, [sortBy.columnName, sortBy.orderBy])
 
   return (
     <div className='space-y-4 bg-slate-50 rounded-lg shadow'>

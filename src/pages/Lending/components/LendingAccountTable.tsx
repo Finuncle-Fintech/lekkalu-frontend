@@ -60,11 +60,11 @@ const ClickableTableRow = ({
         </TableCell>
         <TableCell>{account.user_remark || 'N/A'}</TableCell>
         <TableCell className='min-w-[150px]'>{dayjs(account.started).format('ddd MMM DD, YYYY')}</TableCell>
-        <TableCell className='space-x-2 min-w-[120px]'>
+        <TableCell className='space-x-2 min-w-[120px]' onClick={(e) => e.stopPropagation()}>
           <AddOrEditLending
             accounts={account as any}
             trigger={
-              <Button size='sm' variant='ghost'>
+              <Button size='sm' variant='ghost' onClick={(e) => e.stopPropagation()}>
                 <EditIcon className='w-4 h-4' />
               </Button>
             }
@@ -98,9 +98,9 @@ export default function LedingAccountTable() {
   }, [])
 
   return (
-    <div className='space-y-4 bg-slate-50 rounded-lg shadow'>
+    <div className='bg-slate-50 rounded-lg shadow mt-20'>
       <Table className='bg-white'>
-        <TableCaption className='text-center'>
+        <TableCaption className='text-center mb-4'>
           {accountData?.length === 0 ? 'No Lending Accounts Found' : 'A list of Lending Accounts'}
         </TableCaption>
         <TableHeader className='bg-gray-100/50'>

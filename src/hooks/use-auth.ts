@@ -89,11 +89,10 @@ export function useAuth() {
 
   const logout = useCallback(async () => {
     await logoutAPI()
-    qc.invalidateQueries({ queryKey: [AUTH.LOGGED_IN] })
-    qc.removeQueries()
     deleteCookie(REFRESH_TOKEN_KEY)
     deleteCookie(ACCESS_TOKEN_KEY)
     qc.removeQueries({ queryKey: [AUTH.LOGGED_IN] })
+    qc.clear()
     clearData()
     navigate('/')
     // eslint-disable-next-line react-hooks/exhaustive-deps

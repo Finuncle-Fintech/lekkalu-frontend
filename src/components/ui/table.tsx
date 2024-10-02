@@ -103,7 +103,7 @@ const Sort = <T extends AmbigiousObject>({ id, sortBy }: SortIconProps<T>) => {
   const isUp = id === sortBy.columnName && sortBy.orderBy === 'asc'
   const isDown = id === sortBy.columnName && sortBy.orderBy === 'desc'
   return (
-    <div className='flex flex-col gap-0'>
+    <div className='flex flex-col pl-4 xl:pl-0'>
       <ChevronUp size={15} className={isUp ? 'text-primary' : 'text-slate-400'} />
       <ChevronDown size={15} className={isDown ? 'text-primary' : 'text-slate-300'} />
     </div>

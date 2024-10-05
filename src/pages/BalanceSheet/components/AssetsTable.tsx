@@ -1,4 +1,4 @@
-import React, { HTMLProps, useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { LoaderIcon, PencilIcon, PlusIcon } from 'lucide-react'
@@ -7,29 +7,13 @@ import { fetchPhysicalAssets } from '@/queries/balance-sheet'
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import AddOrEditAssetDialog from './AddOrEditAssetDialog'
 import { Button } from '@/components/ui/button'
+import { IndeterminateCheckbox } from '@/components/ui/indeterminate-checkbox'
 import When from '@/components/When/When'
 import DeleteAssetDialog from './DeleteAssetDialog'
 import { formatIndianMoneyNotation } from '@/utils/format-money'
 import { PhysicalAsset } from '@/types/balance-sheet'
 
 const columnHelper = createColumnHelper<PhysicalAsset>()
-
-function IndeterminateCheckbox({
-  indeterminate,
-  className = '',
-  ...rest
-}: { indeterminate?: boolean } & HTMLProps<HTMLInputElement>) {
-  const ref = React.useRef<HTMLInputElement>(null!)
-
-  React.useEffect(() => {
-    if (typeof indeterminate === 'boolean') {
-      ref.current.indeterminate = !rest.checked && indeterminate
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ref, indeterminate])
-
-  return <input type='checkbox' ref={ref} className={className + ' cursor-pointer'} {...rest} />
-}
 
 export default function AssetsTable() {
   const { data, isFetching } = useQuery({ queryKey: [BALANCE_SHEET.ASSETS], queryFn: fetchPhysicalAssets })

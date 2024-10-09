@@ -107,7 +107,9 @@ const Comparison = ({ id, access, name, style, className, scenarios }: Compariso
             <p className='text-sm text-center'>{name}</p>
           )}
           <div className='mb-0 mt-auto'>
-            <p className='text-sm text-center text-gray-500'>{scenarios} scenario</p>
+            <p className='text-sm text-center text-gray-500'>
+              {scenarios} {scenarios > 1 ? 'scenarios' : 'scenario'}
+            </p>
           </div>
         </div>
       </div>

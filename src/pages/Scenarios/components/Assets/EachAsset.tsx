@@ -14,7 +14,7 @@ type EachIncomeForScenarioType = {
   createAsset: (dto: AddPhysicalAssetSchemaForScenario) => Promise<any>
   updateAsset: (id: number, dto: Partial<AddPhysicalAssetSchemaForScenario>) => Promise<any>
   deleteAsset: (id: number) => Promise<any>
-  IS_AUTHENTICATED_USER?: boolean
+  isOwner: boolean
 }
 
 const EachIncomeExpenseForScenario = ({
@@ -22,7 +22,7 @@ const EachIncomeExpenseForScenario = ({
   createAsset,
   updateAsset,
   deleteAsset,
-  IS_AUTHENTICATED_USER,
+  isOwner,
 }: EachIncomeForScenarioType) => {
   const [viewDetail, setViewDetail] = useState(false)
 
@@ -37,7 +37,7 @@ const EachIncomeExpenseForScenario = ({
       >
         <div className='flex justify-between'>
           <p className='p-2 text-white text-xs'>Asset</p>
-          {IS_AUTHENTICATED_USER && (
+          {isOwner && (
             <div>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>

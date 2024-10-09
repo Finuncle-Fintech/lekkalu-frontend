@@ -14,7 +14,11 @@ export function useAuth() {
   const qc = useQueryClient()
   const { toast } = useToast()
   const navigate = useNavigate()
-  const { data: userData, refetch: fetchUserData } = useQuery({ queryKey: [AUTH.USER], queryFn: fetchUser })
+  const {
+    data: userData,
+    refetch: fetchUserData,
+    isLoading: isLoadingUserData,
+  } = useQuery({ queryKey: [AUTH.USER], queryFn: fetchUser })
 
   const [isOpen, setIsOpen] = useState<boolean>(() => {
     const storedIsOpen = localStorage.getItem('isOpen')
@@ -85,11 +89,10 @@ export function useAuth() {
 
   const logout = useCallback(async () => {
     await logoutAPI()
-    qc.invalidateQueries({ queryKey: [AUTH.LOGGED_IN] })
-    qc.removeQueries()
     deleteCookie(REFRESH_TOKEN_KEY)
     deleteCookie(ACCESS_TOKEN_KEY)
     qc.removeQueries({ queryKey: [AUTH.LOGGED_IN] })
+    qc.clear()
     clearData()
     navigate('/')
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -113,6 +116,7 @@ export function useAuth() {
       googleSignupMutation,
       isOpen,
       toggle,
+      isLoadingUserData,
     }),
     [
       isAuthenticationInProgress,
@@ -125,6 +129,7 @@ export function useAuth() {
       googleSignupMutation,
       isOpen,
       toggle,
+      isLoadingUserData,
     ],
   )
 }

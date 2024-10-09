@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  devtool: 'source-map',
   darkMode: ['class'],
   content: ['./src/**/*.{js,jsx,ts,tsx}'],
   theme: {
@@ -75,13 +76,13 @@ module.exports = {
         'collapsible-down': 'collapsible-down 0.2s ease-out',
         'collapsible-up': 'collapsible-up 0.2s ease-out',
       },
+      fontFamily: {
+        charter: ['Charter Roman', 'serif'], // Add Charter Roman font
+      },
     },
   },
   variants: {
     textColor: ['responsive', 'hover', 'focus', 'group-hover'],
   },
-  plugins: [
-    require('tailwindcss-animate'),
-    require('daisyui'),
-  ],
+  plugins: [require('tailwindcss-animate'), require('daisyui')],
 }

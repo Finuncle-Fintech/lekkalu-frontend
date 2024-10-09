@@ -20,6 +20,7 @@ type AddNewScenarioButtonType = {
   isSelected: (id: number) => boolean
   comparisonName: string
   handleScenarioSelect: (id: number) => void
+  noOfSelectedScenario: number
 }
 
 const AddNewScenarioButton = ({
@@ -28,6 +29,7 @@ const AddNewScenarioButton = ({
   isSelected,
   comparisonName,
   handleScenarioSelect,
+  noOfSelectedScenario,
 }: AddNewScenarioButtonType) => {
   return (
     <Dialog>
@@ -39,7 +41,7 @@ const AddNewScenarioButton = ({
       </DialogTrigger>
       <DialogPortal>
         <DialogOverlay className='DialogOverlay' />
-        <DialogContent className='DialogContent min-w-[80vw] min-h-[80vh]'>
+        <DialogContent className='DialogContent min-w-[80vw]'>
           <DialogTitle className='DialogTitle'>Scenarios</DialogTitle>
           <DialogDescription className='DialogDescription'>
             <div className='flex justify-between'>
@@ -49,7 +51,7 @@ const AddNewScenarioButton = ({
               </Link>
             </div>
           </DialogDescription>
-          <div className='flex flex-col gap-5 h-[550px] overflow-y-auto px-5'>
+          <div className='flex flex-col gap-5 overflow-y-auto px-5 h-[40vh]'>
             {scenarios.length ? (
               scenarios?.map((each: any) => {
                 const selected = isSelected(each?.id)
@@ -57,7 +59,7 @@ const AddNewScenarioButton = ({
                   <div
                     key={each?.id}
                     className={`flex border justify-between rounded p-2 space-x-5 hover:cursor-pointer ${
-                      selected ? 'bg-blue-500 text-white' : ''
+                      selected ? 'bg-blue-500 text-slate-200' : ''
                     }`}
                     onClick={() => {
                       if (each?.access === 'Public') {
@@ -68,15 +70,15 @@ const AddNewScenarioButton = ({
                     <div className='flex'>
                       <div className='my-auto'>
                         {selected ? (
-                          <CheckCircle2 className={`${each?.access === 'Private' ? 'text-gray-400' : 'text-black'}`} />
+                          <CheckCircle2
+                            className={`${each?.access === 'Private' ? 'text-gray-400' : 'text-slate-200'}`}
+                          />
                         ) : (
                           <Circle className={`ml-2 ${each?.access === 'Private' ? 'text-gray-400' : 'text-black'}`} />
                         )}
                       </div>
                       <div>
-                        <p className={`ml-2 ${each?.access === 'Private' ? 'text-gray-400' : 'text-black'}`}>
-                          {each?.name}
-                        </p>
+                        <p className={`ml-2 ${each?.access === 'Private' ? 'text-gray-400' : ''}`}>{each?.name}</p>
                       </div>
                     </div>
                     <div className='pr-4'>{each?.access === 'Private' ? <Lock color='red' /> : <></>}</div>
@@ -84,7 +86,7 @@ const AddNewScenarioButton = ({
                 )
               })
             ) : (
-              <div className='h-full flex flex-col justify-center items-center gap-5'>
+              <div className='h-full flex flex-col justify-center items-center gap-2'>
                 <div>
                   <p>No Scenarios left to add</p>
                 </div>
@@ -96,9 +98,9 @@ const AddNewScenarioButton = ({
               </div>
             )}
           </div>
-          <div style={{ display: 'flex', marginTop: 25, justifyContent: 'flex-end' }}>
+          <div className='flex mt-auto justify-end'>
             <DialogClose asChild>
-              <Button disabled={!scenarios.length} onClick={handleAddScenariosToComparison}>
+              <Button disabled={!noOfSelectedScenario} onClick={handleAddScenariosToComparison}>
                 Add
               </Button>
             </DialogClose>

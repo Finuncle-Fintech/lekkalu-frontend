@@ -115,6 +115,11 @@ export const CALCULATOR_ROUTES: Array<Route> = [
     label: 'EMI Calculator',
     icon: <CalculatorIcon />,
   },
+  {
+    path: '/irr-calculator',
+    label: 'IRR Calculator',
+    icon: <CalculatorIcon />,
+  },
 ]
 export const FEATURES_ROUTES: { title: string; href: string; description: string; icon: React.ReactNode }[] = [
   {

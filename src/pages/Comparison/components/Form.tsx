@@ -118,6 +118,7 @@ const ComparisonForm = ({ form, onSubmit, isLoading, isEdit }: ComparisonFormTyp
               handleAddScenariosToComparison={handleAddScenariosToComparison}
               handleScenarioSelect={handleScenarioSelect}
               isSelected={isSecenarioAlreadySelected}
+              noOfSelectedScenario={selectedScenarios.length}
             />
           </div>
         </div>

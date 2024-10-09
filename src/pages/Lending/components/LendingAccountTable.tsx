@@ -1,8 +1,16 @@
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import dayjs from 'dayjs'
 import { ChevronDown, ChevronUp, EditIcon, LoaderIcon } from 'lucide-react'
 import { useQuery } from '@tanstack/react-query'
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import {
+  SortableTableHead,
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
 import { Accounts } from '@/types/lending'
 import { Button } from '@/components/ui/button'
 import TransactionListTable from './TransactionListTable'
@@ -13,6 +21,7 @@ import { LENDING } from '@/utils/query-keys'
 import { fetchLendingAccounts } from '@/queries/lending'
 import { formatIndianMoneyNotation } from '@/utils/format-money'
 import { Badge } from '@/components/ui/badge'
+import useTableSort from '@/hooks/useTableSort'
 
 const ClickableTableRow = ({
   account,
@@ -51,11 +60,11 @@ const ClickableTableRow = ({
         </TableCell>
         <TableCell>{account.user_remark || 'N/A'}</TableCell>
         <TableCell className='min-w-[150px]'>{dayjs(account.started).format('ddd MMM DD, YYYY')}</TableCell>
-        <TableCell className='space-x-2 min-w-[120px]'>
+        <TableCell className='space-x-2 min-w-[120px]' onClick={(e) => e.stopPropagation()}>
           <AddOrEditLending
             accounts={account as any}
             trigger={
-              <Button size='sm' variant='ghost'>
+              <Button size='sm' variant='ghost' onClick={(e) => e.stopPropagation()}>
                 <EditIcon className='w-4 h-4' />
               </Button>
             }
@@ -67,9 +76,16 @@ const ClickableTableRow = ({
     </>
   )
 }
+
 export default function LedingAccountTable() {
   const [activeTab, setActiveTab] = React.useState<number[]>([])
-  const { data, isFetching } = useQuery({ queryKey: [LENDING.ACCOUNTS], queryFn: fetchLendingAccounts })
+
+  const { data, isFetching } = useQuery({
+    queryKey: [LENDING.ACCOUNTS],
+    queryFn: fetchLendingAccounts,
+  })
+
+  const { setSortBy, sortBy, sortedData: accountData } = useTableSort({ data: data || [] })
 
   const handleSetActiveTab = useCallback((deps: number) => {
     setActiveTab((prevActiveTab) => {
@@ -80,23 +96,26 @@ export default function LedingAccountTable() {
       }
     })
   }, [])
-  const sortedAccounts = useMemo(() => {
-    return data?.sort((a, b) => a.balance - b.balance).reverse() || []
-  }, [data])
 
   return (
-    <div className='space-y-4'>
-      <Table>
-        <TableCaption className='text-center'>
-          {sortedAccounts?.length === 0 ? 'No Lending Accounts Found' : 'A list of Lending Accounts'}
+    <div className='bg-slate-50 rounded-lg shadow mt-20'>
+      <Table className='bg-white'>
+        <TableCaption className='text-center mb-4'>
+          {accountData?.length === 0 ? 'No Lending Accounts Found' : 'A list of Lending Accounts'}
         </TableCaption>
         <TableHeader className='bg-gray-100/50'>
           <TableRow>
-            <TableHead className='font-medium'>Name</TableHead>
-            <TableHead className='font-medium'>Balance</TableHead>
-            <TableHead className='font-medium'>Remarks</TableHead>
-            <TableHead className='font-medium'>Transaction Date</TableHead>
-            <TableHead className='font-medium'>Actions</TableHead>
+            <SortableTableHead isSortable sortBy={sortBy} setSortBy={setSortBy} id='name'>
+              Name
+            </SortableTableHead>
+            <SortableTableHead isSortable sortBy={sortBy} setSortBy={setSortBy} id='balance'>
+              Balance
+            </SortableTableHead>
+            <SortableTableHead>Remarks</SortableTableHead>
+            <SortableTableHead isSortable sortBy={sortBy} setSortBy={setSortBy} id='started'>
+              Transaction Date
+            </SortableTableHead>
+            <SortableTableHead>Actions</SortableTableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -105,16 +124,18 @@ export default function LedingAccountTable() {
               <LoaderIcon className='animate-spin w-4 h-4' />
             </div>
           </When>
-          {sortedAccounts
-            ? sortedAccounts.map((account: Accounts) => (
-                <ClickableTableRow
-                  key={account.id}
-                  handleSetActiveTab={handleSetActiveTab}
-                  activeTab={activeTab}
-                  account={account}
-                />
-              ))
-            : null}
+          {accountData ? (
+            accountData.map((account) => (
+              <ClickableTableRow
+                key={account.id}
+                handleSetActiveTab={handleSetActiveTab}
+                activeTab={activeTab}
+                account={account}
+              />
+            ))
+          ) : (
+            <></>
+          )}
         </TableBody>
       </Table>
     </div>

@@ -4,6 +4,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import { loginImaginaryUser } from '@/queries/auth'
 import { AUTH } from '@/utils/query-keys'
+import { toast } from '@/components/ui/use-toast'
 
 export type ImaginaryUser = {
   [key: string]: { refresh: string; access: string; id: number }
@@ -22,6 +23,9 @@ export function useImaginaryAuth() {
         [data?.username]: { access: data?.access, refresh: data?.refresh, id: data?.id },
       })
       qc.setQueryData([AUTH.CURRENT_IMAGINARY_USER], data.username)
+    },
+    onError: () => {
+      toast({ title: 'Something went wrong. Please try again.' })
     },
   })
 

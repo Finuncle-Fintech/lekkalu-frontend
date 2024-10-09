@@ -24,4 +24,9 @@ export const mobileRoutes = [
     web: '/goals/[id]',
     mobile: '(authenticated)/goal-details',
   },
+  {
+    id: 'lending',
+    web: '/lending',
+    mobile: '(authenticated)/lending',
+  },
 ]

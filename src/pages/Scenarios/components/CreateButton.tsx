@@ -1,13 +1,12 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 import { PlusIcon } from 'lucide-react'
 import { useQuery } from '@tanstack/react-query'
-import { useParams } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import AddOrEditIncomeExpenseForScenario from './IncomeExpenses'
 import { AddIncomeStatementSchema, AddIncomeStateSchemaForScenario } from '@/schema/income-statement'
 import { useImaginaryAuth } from '../context/use-imaginaryAuth'
-import { AUTH, BALANCE_SHEET, INCOME_STATEMENT, SCENARIOS } from '@/utils/query-keys'
+import { AUTH, BALANCE_SHEET, INCOME_STATEMENT } from '@/utils/query-keys'
 import { IncomeStatement } from '@/types/income-statement'
 import EachIncomeExpenseForScenario from './IncomeExpenses/EachExpense'
 import AddOrEditLiabilityDialog from './Liability/AddorEditLiabilityDialog'
@@ -16,28 +15,13 @@ import { Liability, PhysicalAsset } from '@/types/balance-sheet'
 import EachLiabilityForScenario from './Liability/EachLiabilityForScenario'
 import AddOrEditAssetsForScenario from './Assets/AddOrEditAssetsForScenarios'
 import EachAsset from './Assets/EachAsset'
-import { useAuth } from '@/hooks/use-auth'
-import { fetchScenarios } from '@/queries/scenarios'
 import { LoadingSkeleton } from '../ScenarioDetail'
+import { UserRole } from '@/hooks/useRole'
 
-const CreateButton = ({ username }: { username: string }) => {
+const CreateButton = ({ username, role }: { username: string; role: UserRole }) => {
   const { data: imaginaryUser } = useQuery<any>({ queryKey: [AUTH.IMAGINARY_CLIENT] })
   const { getAPIClientForImaginaryUser } = useImaginaryAuth()
-  const { userData } = useAuth()
-  const IS_AUTHENTICATED_USER = Boolean(userData?.username)
   const apiClient = getAPIClientForImaginaryUser(imaginaryUser[username]?.access)
-
-  const { id: currentScenarioID } = useParams()
-
-  const { data: allScenarios } = useQuery({
-    queryKey: [SCENARIOS.SCENARIOS],
-    queryFn: fetchScenarios,
-    enabled: IS_AUTHENTICATED_USER,
-  })
-
-  const IS_MY_SCENARIO = useMemo(() => {
-    return allScenarios?.some((each) => each.id === Number(currentScenarioID))
-  }, [allScenarios, currentScenarioID])
 
   async function createIncomeExpense(dto: AddIncomeStatementSchema) {
     const { data } = await apiClient.post('income_expense/', dto)
@@ -134,7 +118,7 @@ const CreateButton = ({ username }: { username: string }) => {
             createIncomeExpense={createIncomeExpense}
             updateIncomeExpense={updateIncomeExpense}
             deleteIncomeExpense={deleteIncomeExpense}
-            IS_AUTHENTICATED_USER={IS_AUTHENTICATED_USER}
+            isOwner={role === 'owner'}
             key={each?.id}
           />
         ))}
@@ -145,7 +129,7 @@ const CreateButton = ({ username }: { username: string }) => {
             addLiability={addLiability}
             editLiability={editLiability}
             deleteLiability={deleteLiability}
-            IS_AUTHENTICATED_USER={IS_AUTHENTICATED_USER}
+            isOwner={role === 'owner'}
           />
         ))}
         {assets?.map((each: PhysicalAsset) => (
@@ -155,10 +139,10 @@ const CreateButton = ({ username }: { username: string }) => {
             createAsset={addPhysicalAsset}
             updateAsset={editPhysicalAsset}
             deleteAsset={deletePhysicalAsset}
-            IS_AUTHENTICATED_USER={IS_AUTHENTICATED_USER}
+            isOwner={role === 'owner'}
           />
         ))}
-        {IS_AUTHENTICATED_USER && IS_MY_SCENARIO && (
+        {role === 'owner' && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
               <Button variant={'ghost'} className='border border-dashed rounded-lg p-20'>

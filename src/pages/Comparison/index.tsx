@@ -9,30 +9,26 @@ import { Skeleton } from '@/components/ui/skeleton'
 import Comparison from './components/EachComparison'
 import { COMPARISON } from '@/utils/query-keys'
 import { fetchComparisons } from '@/queries/comparisons'
-import { useAuth } from '@/hooks/use-auth'
 
 export default function Scenarios() {
   const { data, isLoading } = useQuery({ queryKey: [COMPARISON.COMPARISON], queryFn: fetchComparisons })
-  const { userData } = useAuth()
   return (
     <Page className='space-y-4'>
-      {userData?.username && (
-        <div className='flex justify-end'>
-          <Link to='/comparisons/new' className={buttonVariants({ variant: 'default' })}>
-            <PlusIcon className='w-4 h-4 mr-2' />
-            <span>Add Comparison</span>
-          </Link>
-        </div>
-      )}
+      <div className='flex justify-end'>
+        <Link to='/comparisons/new' className={buttonVariants({ variant: 'default' })}>
+          <PlusIcon className='w-4 h-4 mr-2' />
+          <span>Add Comparison</span>
+        </Link>
+      </div>
       <div>
         {isLoading ? (
-          <div className='grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full'>
+          <div className='grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 w-full'>
             {range(4).map((i) => (
               <Skeleton key={i} className='h-64 w-full' />
             ))}
           </div>
         ) : (
-          <div className='grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 gap-y-10'>
+          <div className='grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 gap-y-10'>
             {data?.map((each) => (
               <Comparison
                 key={each?.name}

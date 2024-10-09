@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from 'react'
-import { Link, useLocation, useParams } from 'react-router-dom'
+import React, { useContext, useEffect, useState } from 'react'
+import { useLocation, useParams } from 'react-router-dom'
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import dayjs from 'dayjs'
@@ -20,18 +20,28 @@ import { Button } from '@/components/ui/button'
 import { Goal, Timeline } from '@/types/goals'
 import { useImaginaryAuth } from '../Scenarios/context/use-imaginaryAuth'
 import { generateRandomColor, mergeArraysByDate } from './utils/dateTime'
-import { useAuth } from '@/hooks/use-auth'
+import { formatIndianMoneyNotation } from '@/utils/format-money'
+import { useScrollToSection } from '@/hooks/use-scroll-to-section'
+import { toast } from '@/components/ui/use-toast'
+import { UserContext } from '@/context/UserContext'
+import DottedAnimatedText from '@/components/DottedAnimatedText'
+import useRole from '@/hooks/useRole'
+
+type DisplayGraphState = 'idle' | 'pending' | 'success' | 'error'
 
 const ComparisonDetail = () => {
   const comparisonId = useParams().id
   const IS_FOR_FEATURE_PAGE = useLocation().pathname.includes('feature')
   const { getAPIClientForImaginaryUser } = useImaginaryAuth()
-  const { userData } = useAuth()
-  const IS_AUTHENTICATED_USER = Boolean(userData?.username)
+  const { user: userData } = useContext(UserContext)
+  const { role } = useRole({ user: userData?.username || null, id: Number(comparisonId), roleFor: 'comparison' })
+  const IS_AUTHENTICATED_USER = role !== 'guest'
+  const { scrollToView } = useScrollToSection()
 
   const [selectedScenarios, setSelectedScenarios] = useState<Array<number>>([])
   const [timelineData, setTimelineData] = useState<any>()
   const [calculatedTimelineDate, setCalculatedTimelineData] = useState<any>()
+  const [displayGraph, setDisplayGraph] = useState<DisplayGraphState>('idle')
 
   const handleScenarioSelect = (id: number) => {
     const _selectedScenarios = [...selectedScenarios]
@@ -63,6 +73,7 @@ const ComparisonDetail = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [`${COMPARISON.COMPARISON}-${comparisonId}`] })
       setSelectedScenarios([])
+      timelineData && toast({ title: 'Please simulate to view new changes.' })
     },
   })
 
@@ -78,7 +89,7 @@ const ComparisonDetail = () => {
   }
 
   const {
-    mutate: login,
+    mutateAsync: login,
     isSuccess,
     isPending,
   } = useMutation({
@@ -92,16 +103,21 @@ const ComparisonDetail = () => {
     },
   })
 
-  const handleSimulate = () => {
+  const handleSimulate = async () => {
     setTimelineData({})
-    if (IS_AUTHENTICATED_USER) {
-      scenariosForThisComparison?.forEach((each) => {
-        login({ password: each?.imag_password, username: each?.imag_username, scenarioName: each?.name })
-      })
-    } else {
-      comparison?.scenarios_objects?.forEach((each) => {
-        login({ password: each?.imag_password, username: each?.imag_username, scenarioName: each?.name })
-      })
+    setDisplayGraph('pending')
+    scrollToView('comparison-simulation-chart', { behavior: 'smooth', block: 'start', inline: 'nearest' })
+    const _scenarios: ScenarioType[] =
+      role === 'owner' ? scenariosForThisComparison || [] : comparison?.scenarios_objects || []
+    const ALL_APIS = _scenarios?.map(({ name, imag_password, imag_username }) =>
+      login({ password: imag_password, username: imag_username, scenarioName: name }),
+    )
+    try {
+      await Promise.all(ALL_APIS)
+      setDisplayGraph('success')
+    } catch (e) {
+      toast({ title: 'Something went wrong, please try again' })
+      setDisplayGraph('error')
     }
   }
 
@@ -135,7 +151,9 @@ const ComparisonDetail = () => {
   if (isFetchingComparison) {
     return (
       <Page>
-        <div>Loading...</div>
+        <DottedAnimatedText>
+          <p>Loading</p>
+        </DottedAnimatedText>
       </Page>
     )
   }
@@ -149,7 +167,7 @@ const ComparisonDetail = () => {
   }
 
   return (
-    <Page className='space-y-8'>
+    <Page className='space-y-8 mb-7'>
       <div className='relative flex justify-between'>
         {IS_AUTHENTICATED_USER ? (
           <PageTitle
@@ -159,7 +177,9 @@ const ComparisonDetail = () => {
             key={comparisonId}
           />
         ) : (
-          <div />
+          <div>
+            <h1 className='text-2xl font-bold'>{comparison?.name}</h1>
+          </div>
         )}
       </div>
       <h2 className='font-bold'>
@@ -171,39 +191,26 @@ const ComparisonDetail = () => {
           </div>
         )}
       </h2>
-      <div className='grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 gap-y-10'>
-        {scenariosForThisComparison?.map(({ id, name, imag_username }) => (
-          <Scenario
-            key={id}
-            id={id}
-            name={name}
-            username={imag_username}
-            comparisonId={Number(comparisonId)}
-            handleRemoveScenario={handleRemoveScenarioFromComparison}
-          />
-        ))}
-        {!IS_AUTHENTICATED_USER && !scenariosForThisComparison ? (
-          comparison?.scenarios_objects?.map(({ id, name, imag_username }) => (
-            <Link key={id} to={'/feature/scenarios/' + id}>
+      <div className='grid sm:grid-cols-2 xl:grid-cols-4 gap-4 gap-y-10'>
+        {role === 'owner'
+          ? scenariosForThisComparison?.map(({ id, name }) => (
               <Scenario
+                key={id}
                 id={id}
                 name={name}
-                username={imag_username}
-                comparisonId={Number(comparisonId)}
-                handleRemoveScenario={() => {}}
+                handleRemoveScenario={handleRemoveScenarioFromComparison}
+                role={role}
               />
-            </Link>
-          ))
-        ) : (
-          <></>
-        )}
-        {IS_AUTHENTICATED_USER ? (
+            ))
+          : comparison?.scenarios_objects?.map(({ id, name }) => <Scenario key={id} id={id} name={name} role={role} />)}
+        {role === 'owner' ? (
           <AddNewScenarioButton
             handleAddScenariosToComparison={handleAddScenariosToComparison}
             scenarios={remaningScenarios || []}
             isSelected={isSecenarioAlreadySelected}
             comparisonName={comparison?.name || ''}
             handleScenarioSelect={handleScenarioSelect}
+            noOfSelectedScenario={selectedScenarios.length}
           />
         ) : (
           <></>
@@ -215,25 +222,29 @@ const ComparisonDetail = () => {
           variant={'default'}
           onClick={handleSimulate}
           className='z-10'
-          loading={isPending}
-          disabled={!comparison?.scenarios_objects.length}
+          loading={displayGraph === 'pending'}
+          disabled={displayGraph === 'pending' || !comparison?.scenarios?.length}
         >
           Simulate
         </Button>
-        <div className={isPending || !comparison?.scenarios.length ? '' : 'ripple'} />
+        {comparison?.scenarios.length ? <div className={displayGraph !== 'pending' ? 'ripple' : ''} /> : <></>}
       </div>
 
       {timelineData ? (
-        <div>
+        <div id='comparison-simulation-chart' className='scroll-mt-40'>
           <Card className={cn('h-[600px] sm:h-96 pb-20 sm:pb-0 shadow-sm')}>
             <CardHeader className='flex flex-start flex-col sm:flex-row'>
               <CardTitle>Graph</CardTitle>
             </CardHeader>
             {
               <CardContent className='w-full h-full'>
-                {isPending ? (
-                  <p>Loading...</p>
-                ) : (
+                {displayGraph === 'idle' && <></>}
+                {displayGraph === 'pending' && (
+                  <DottedAnimatedText>
+                    <p>Loading</p>
+                  </DottedAnimatedText>
+                )}
+                {displayGraph === 'success' && (
                   <ResponsiveContainer width='100%' height='75%'>
                     <LineChart
                       data={calculatedTimelineDate}
@@ -247,9 +258,11 @@ const ComparisonDetail = () => {
                         tickFormatter={(date) => dayjs(date).format('MMM YYYY')}
                         allowDataOverflow
                       />
-                      <YAxis />
+                      <YAxis
+                        tickFormatter={(value) => formatIndianMoneyNotation(value)}
+                        padding={{ top: 20, bottom: 20 }}
+                      />
                       <Tooltip labelFormatter={(date) => dayjs(date).format('DD MMM YYYY')} />
-
                       {isSuccess ? (
                         Object.keys(timelineData).map((each, index) => (
                           <Line
@@ -258,7 +271,7 @@ const ComparisonDetail = () => {
                             dataKey={each}
                             name={each}
                             stroke={generateRandomColor(index)}
-                            strokeWidth={1}
+                            strokeWidth={2}
                             dot={false}
                           />
                         ))
@@ -267,6 +280,11 @@ const ComparisonDetail = () => {
                       )}
                     </LineChart>
                   </ResponsiveContainer>
+                )}
+                {displayGraph === 'error' && (
+                  <div>
+                    <p className='text-red-400'>Something went wrong.</p>
+                  </div>
                 )}
               </CardContent>
             }

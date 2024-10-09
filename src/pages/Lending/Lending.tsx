@@ -1,7 +1,7 @@
 import React from 'react'
 import { PlusIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import LedingAccountTable from './components/LedingAccountTable'
+import LendingAccountTable from './components/LendingAccountTable'
 import AddOrEditTransaction from './components/AddOrEditTransaction/AddOrEditTransaction'
 import LentAndBorrowedChart from './components/LentAndBorrowedChart'
 import Page from '@/components/Page/Page'
@@ -28,7 +28,9 @@ export default function Lending() {
         />
       </div>
       <LentAndBorrowedChart />
-      <LedingAccountTable />
+      <div>
+        <LendingAccountTable />
+      </div>
     </Page>
   )
 }

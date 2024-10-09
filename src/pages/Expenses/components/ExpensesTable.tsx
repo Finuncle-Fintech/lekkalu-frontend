@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react'
+import React, { useCallback, useEffect, useMemo } from 'react'
 import { useQueries } from '@tanstack/react-query'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
@@ -7,8 +7,8 @@ import { EditIcon, LoaderIcon, Search } from 'lucide-react'
 import { useSearchParams } from 'react-router-dom'
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Form, FormDescription, FormField, FormItem } from '@/components/ui/form'
-import { EXPENSES, EXPENSES_SEARCH, TAGS } from '@/utils/query-keys'
-import { fetchExpenseByDate, fetchExpenseBySearch, fetchExpenses } from '@/queries/expense'
+import { EXPENSES, TAGS } from '@/utils/query-keys'
+import { fetchExpenses } from '@/queries/expense'
 import { fetchTags } from '@/queries/tag'
 import { Button } from '@/components/ui/button'
 import DeleteExpense from './DeleteExpense'
@@ -38,43 +38,36 @@ export default function ExpensesTable({ dateRangeEnabled, filters, setTotalExpen
   })
   const { search } = searchExpenseForm.watch()
 
-  const [expenseQuery, expensesByDateQuery, tagsQuery, searchQuery] = useQueries({
+  const [expenseQuery, tagsQuery] = useQueries({
     queries: [
       {
-        queryKey: [EXPENSES.EXPENSES, page, dateRangeEnabled],
-        queryFn: () => fetchExpenses({ page }),
-      },
-      {
-        queryKey: [EXPENSES.DATE_RANGE, page],
-        queryFn: () => fetchExpenseByDate({ from: filters.from, to: filters.to, page }),
-        enabled: dateRangeEnabled,
+        queryKey: [EXPENSES.EXPENSES, page, dateRangeEnabled, search],
+        queryFn: () =>
+          fetchExpenses({
+            page,
+            search,
+            from: filters.from,
+            to: filters.to,
+            date_range_enabled: dateRangeEnabled,
+          }),
       },
       {
         queryKey: [TAGS.TAGS],
         queryFn: fetchTags,
       },
-      {
-        queryKey: [EXPENSES_SEARCH.EXPENSES_SEARCH, search],
-        queryFn: () => fetchExpenseBySearch({ search }),
-        enabled: search.length > 2,
-      },
     ],
   })
 
-  const expenses = useMemo(() => {
-    if (dateRangeEnabled) {
-      return expensesByDateQuery.data ?? []
+  useEffect(() => {
+    if (!dateRangeEnabled) {
+      setTotalExpensesMetadata(expenseQuery.data?._metadata)
     }
-    setTotalExpensesMetadata(search.length > 2 ? searchQuery.data?._metadata : expenseQuery.data?._metadata)
-    return search.length > 2 ? searchQuery?.data?.records ?? [] : expenseQuery.data?.records ?? []
-  }, [
-    dateRangeEnabled,
-    expenseQuery.data,
-    searchQuery.data,
-    expensesByDateQuery.data,
-    search.length,
-    setTotalExpensesMetadata,
-  ])
+  }, [dateRangeEnabled, expenseQuery.data, setTotalExpensesMetadata])
+
+  const expenses = useMemo(() => {
+    return expenseQuery.data?.records ?? []
+  }, [expenseQuery.data])
+
   const getTagNames = useCallback(
     (tagIds: number[]) => {
       if (!tagsQuery.data) {
@@ -125,7 +118,7 @@ export default function ExpensesTable({ dateRangeEnabled, filters, setTotalExpen
           />
         </form>
       </Form>
-      {searchQuery.isFetching ? (
+      {expenseQuery.isFetching ? (
         <div className='w-full flex items-center justify-center gap-2 h-96'>
           <LoaderIcon className='w-5 h-5 animate-spin' />
           <div>Searching Expenses...</div>

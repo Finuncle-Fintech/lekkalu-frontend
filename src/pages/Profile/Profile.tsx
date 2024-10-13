@@ -162,7 +162,9 @@ export default function Profile() {
             />
           </div>
 
-          <Button type='submit'>Update</Button>
+          <Button type='submit' loading={updateUserDetailMutation.isPending}>
+            Update
+          </Button>
         </form>
       </Form>
 

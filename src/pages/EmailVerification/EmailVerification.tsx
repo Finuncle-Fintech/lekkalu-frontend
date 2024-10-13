@@ -90,7 +90,7 @@ export const EmailVerification = ({ isEmailVerifiedDialogOpen, setIsEmailVerifie
           <Button
             className='w-full'
             variant={'outline'}
-            loading={resendEmailMutation.isPending}
+            disabled={resendEmailMutation.isPending}
             onClick={() => {
               handleRemindMeLater()
             }}

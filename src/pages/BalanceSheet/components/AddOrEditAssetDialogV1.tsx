@@ -1,12 +1,17 @@
 import React, { cloneElement, useEffect, useState } from 'react'
 import { IndianRupee, Percent } from 'lucide-react'
-import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { SubmitHandler, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog-v1'
 import DatePickerV1 from '@/components/DatePicker/DatePickerV1'
 import GenericFormField, { DetailField, Field, FieldContainer } from '@/components/ui/form-v1'
 import logger from '@/logger'
+import { AddPhysicalAssetSchemaV1, addPhysicalAssetSchemaV1 } from '@/schema/balance-sheet'
+import { addPhysicalAssetV1 } from '@/queries/balance-sheet'
+import { BALANCE_SHEET } from '@/utils/query-keys'
+import { getErrorMessage } from '@/utils/utils'
+import { toast } from '@/components/ui/use-toast'
 
 type Props = {
   trigger: React.ReactElement
@@ -34,27 +39,25 @@ const CancelButton: React.FC<CancelButtonProps> = ({ clickHandler }) => (
 export default function AddOrEditAssetDialogV1({ trigger }: Props) {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [theme] = useState('light')
+  const qc = useQueryClient()
 
-  // Define the Zod schema for form validation
-  const formSchema = z.object({
-    asset_name: z.string().min(1, { message: 'Name must have at least one character' }),
-    buy_price: z.number().min(1),
-    expected_returns: z.number(),
+  const form = useForm<AddPhysicalAssetSchemaV1>({
+    resolver: zodResolver(addPhysicalAssetSchemaV1),
   })
-  // Infer the TypeScript types from the Zod schema
-  type FormData = z.infer<typeof formSchema>
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    clearErrors,
-  } = useForm<FormData>({
-    resolver: zodResolver(formSchema),
+  const addPhysicalAssetMutation = useMutation({
+    mutationFn: addPhysicalAssetV1,
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: [BALANCE_SHEET.ASSETS] })
+      toast({ title: 'Asset created successfully!' })
+      setIsDialogOpen(false)
+    },
+    onError: (err) => toast(getErrorMessage(err)),
   })
 
   // This function will be executed when the form is successfully submitted
-  const onSubmit: SubmitHandler<FormData> = (data) => {
+  const handleAddOrEditPhysicalAsset = (data: AddPhysicalAssetSchemaV1) => {
     logger.info(data)
+    addPhysicalAssetMutation.mutate(data)
   }
   const onCancel = () => {
     setIsDialogOpen(false)
@@ -70,8 +73,9 @@ export default function AddOrEditAssetDialogV1({ trigger }: Props) {
     }
   }, [theme])
   useEffect(() => {
-    clearErrors()
-  }, [isDialogOpen])
+    form.clearErrors()
+  }, [form, isDialogOpen])
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined)
 
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -84,7 +88,7 @@ export default function AddOrEditAssetDialogV1({ trigger }: Props) {
         {cloneElement(trigger)}
       </DialogTrigger>
       <DialogContent>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={form.handleSubmit(handleAddOrEditPhysicalAsset)}>
           <div className='h-auto p-[25px] bg-accent rounded-[10px] shadow justify-start items-start gap-[31px] inline-flex'>
             <div className='flex-col justify-center items-start gap-2.5 inline-flex'>
               <div className="text-right text-black text-2xl font-bold font-['Charter'] leading-[33.60px]">About</div>
@@ -101,10 +105,10 @@ export default function AddOrEditAssetDialogV1({ trigger }: Props) {
                   <div className='w-[12.50px] h-[12.50px] relative' />
                 </div>
               </div>
-              <Field error={errors.asset_name}>
+              <Field error={form.formState.errors.name}>
                 <GenericFormField
-                  name={'asset_name'}
-                  register={register}
+                  name={'name'}
+                  register={form.register}
                   placeholder={'Asset Name'}
                   className="w-full bg-inherit self-stretch text-black/25 text-4xl font-normal font-['Charter'] leading-9
               focus:outline-none"
@@ -113,23 +117,40 @@ export default function AddOrEditAssetDialogV1({ trigger }: Props) {
               {/*Container of Essential Fields*/}
               <FieldContainer>
                 {/*Bought Date Field*/}
-                <DetailField label='Bought on'>
+                <DetailField label='Bought on' error={form.formState.errors.purchase_date}>
                   <div className='justify-start items-center gap-[5px]  inline-flex'>
-                    <div className="text-black text-base font-normal font-['Charter'] leading-snug whitespace-nowrap ">
-                      Sun, 14 Jul
-                    </div>
-                    <DatePickerV1 className='mr-2 h-4 w-4' />
+                    <GenericFormField
+                      type='text'
+                      placeholder='Sun, 14 Jul'
+                      register={form.register}
+                      name='purchase_date'
+                      className="bg-inherit text-black text-base font-normal font-['Charter'] leading-snug
+                      whitespace-nowrap"
+                      disabled={true}
+                      textAlign='right'
+                      value={selectedDate ? selectedDate.toISOString().split('T')[0] : undefined}
+                    />
+                    <DatePickerV1
+                      value={selectedDate}
+                      onChange={(date) => {
+                        setSelectedDate(date)
+                        if (date) {
+                          form.setValue('purchase_date', date)
+                        }
+                      }}
+                      className='mr-2 h-4 w-4'
+                    />
                   </div>
                 </DetailField>
                 {/*Bought Price Field*/}
-                <DetailField label='At Price' error={errors.buy_price} field_name='buy_price'>
+                <DetailField label='At Price' error={form.formState.errors.purchase_value} field_name='buy_price'>
                   <div className='justify-start items-center gap-[5px] inline-flex'>
                     <GenericFormField
                       type='number'
                       placeholder='40,00,000'
-                      register={register}
+                      register={form.register}
                       valueAsNumber={true}
-                      name='buy_price'
+                      name='purchase_value'
                       className="bg-inherit text-black font-normal font-['Charter'] leading-snug focus:outline-none
                       text-right min-w-10 max-w-20"
                     />
@@ -138,17 +159,21 @@ export default function AddOrEditAssetDialogV1({ trigger }: Props) {
                 </DetailField>
               </FieldContainer>
               <FieldContainer>
-                <DetailField label='Expected Returns' error={errors.expected_returns} field_name={'expected_returns'}>
+                <DetailField
+                  label='Expected Returns'
+                  error={form.formState.errors.expected_returns}
+                  field_name={'expected_returns'}
+                >
                   <div className='justify-start items-center gap-[5px] inline-flex'>
                     <GenericFormField
                       type='number'
                       name='expected_returns'
-                      register={register}
+                      register={form.register}
                       valueAsNumber={true}
                       placeholder='4'
                       className="bg-inherit text-black font-normal font-[' Charter'] leading-snug focus:outline-none
-                      text-right
                       min-w-10 max-w-20"
+                      textAlign='right'
                     />
                     <Percent className='mr-2 h-4 w-4' />
                   </div>
@@ -160,6 +185,7 @@ export default function AddOrEditAssetDialogV1({ trigger }: Props) {
               </div>
             </div>
           </div>
+          <input type='hidden' {...form.register('type')} value='1' />
         </form>
       </DialogContent>
     </Dialog>

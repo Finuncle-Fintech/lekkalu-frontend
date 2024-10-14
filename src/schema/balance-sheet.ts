@@ -22,6 +22,16 @@ export type AddPhysicalAssetSchema = Omit<z.infer<typeof addPhysicalAssetSchema>
   depreciation_frequency: number
 }
 
+export const addPhysicalAssetSchemaV1 = z.object({
+  name: z.string().min(1, { message: 'Name must have at least one character' }),
+  purchase_value: z.number().min(1),
+  purchase_date: z.date(),
+  expected_returns: z.number(),
+  type: z.string().default('1'),
+})
+
+export type AddPhysicalAssetSchemaV1 = z.infer<typeof addPhysicalAssetSchemaV1>
+
 export const addPhysicalAssetSchemaForScenario = z.object({
   name: z.string().min(1, 'Asset name is required!'),
   purchase_value: z.coerce.number().min(1, 'Purchase value is required!'),

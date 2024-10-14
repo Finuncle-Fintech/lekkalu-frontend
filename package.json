@@ -47,6 +47,7 @@
     "heroicons": "^2.1.5",
     "jwt-decode": "^4.0.0",
     "lodash": "^4.17.21",
+    "loglevel": "^1.9.2",
     "lottie-react": "^2.4.0",
     "lucide-react": "^0.365.0",
     "polished": "^4.3.1",

@@ -1,4 +1,4 @@
-import { AddLiabilitySchema, AddPhysicalAssetSchema } from '@/schema/balance-sheet'
+import { AddLiabilitySchema, AddPhysicalAssetSchema, AddPhysicalAssetSchemaV1 } from '@/schema/balance-sheet'
 import { Liability, LoanTransaction, PhysicalAsset } from '@/types/balance-sheet'
 import { v1ApiClient } from '@/utils/client'
 
@@ -18,6 +18,11 @@ export async function deletePhysicalAsset(id: number) {
 }
 
 export async function addPhysicalAsset(dto: AddPhysicalAssetSchema) {
+  const { data } = await v1ApiClient.post<PhysicalAsset[]>('/physical_assets/', dto)
+  return data
+}
+
+export async function addPhysicalAssetV1(dto: AddPhysicalAssetSchemaV1) {
   const { data } = await v1ApiClient.post<PhysicalAsset[]>('/physical_assets/', dto)
   return data
 }

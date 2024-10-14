@@ -16,6 +16,9 @@ interface GenericFieldProps<T extends FieldValues> {
   className?: string // Accept custom className as a prop
   placeholder?: string
   valueAsNumber?: boolean
+  disabled?: boolean
+  textAlign?: 'left' | 'center' | 'right' // Accept custom textAlight as a prop
+  value?: string | number
 }
 
 // Generic component for rendering a field
@@ -26,13 +29,19 @@ const GenericFormField = <T extends FieldValues>({
   className = '', // default to an empty string for className
   placeholder = '', // default to an empty string for placeholder
   valueAsNumber = false, // default to false for valueAsNumber
+  disabled = false, // default to false for disabled
+  textAlign = 'left', // default to left for textAlight
+  value,
 }: GenericFieldProps<T>) => {
   return (
     <input
       placeholder={placeholder}
-      {...register(name, { valueAsNumber: valueAsNumber })}
+      {...register(name, { valueAsNumber })}
       type={type}
-      className={className} // Apply custom styles
+      className={`${className}`} // Apply custom styles
+      style={{ textAlign }} // Apply custom text alignment
+      disabled={disabled}
+      value={value}
     />
   )
 }

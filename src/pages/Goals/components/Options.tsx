@@ -16,12 +16,12 @@ const GoalOptions = ({ id, handleAllowRename, goal }: GoalOptionsType) => {
   return (
     <div className='flex w-full justify-end gap-x-2'>
       <Popover>
-        <PopoverTrigger>
+        <PopoverTrigger onClick={(e) => e.stopPropagation()}>
           <div className='border p-3 rounded hover:bg-accent ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'>
             <MoreVertical size={16} />
           </div>
         </PopoverTrigger>
-        <PopoverContent className='w-[200px]'>
+        <PopoverContent className='w-[200px]' onClick={(e) => e.stopPropagation()}>
           <div className='flex flex-col'>
             <EditGoalDialog goalId={id} goal={goal} />
             <DeleteGoal id={id} />

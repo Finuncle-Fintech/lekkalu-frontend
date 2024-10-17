@@ -38,9 +38,10 @@ const ScenarioDetail = lazy(() => import('@/pages/Scenarios/ScenarioDetail'))
 const Home = lazy(() => import('@/pages/Home/Home'))
 const Signin = lazy(() => import('@/pages/Signin/Signin'))
 const Signup = lazy(() => import('@/pages/Signup/Signup'))
-const SipCalculator = lazy(() => import('@/pages/SIPCalculator/SIPCalculator'))
-const CagrCalculator = lazy(() => import('@/pages/CAGRCalculator/CAGRCalculator'))
-const EmiCalculator = lazy(() => import('@/pages/EmiCalculator/EmiCalculator'))
+const SipCalculator = lazy(() => import('@/pages/Calculators/SIPCalculator/SIPCalculator'))
+const IrrCalculator = lazy(() => import('@/pages/Calculators/IrrCalculator/IrrCalculator'))
+const CagrCalculator = lazy(() => import('@/pages/Calculators/CAGRCalculator/CAGRCalculator'))
+const EmiCalculator = lazy(() => import('@/pages/Calculators/EmiCalculator/EmiCalculator'))
 const TermsAndConditions = lazy(() => import('@/pages/TermsAndConditions/TermsAndConditions'))
 const PrivacyPolicies = lazy(() => import('@/pages/PrivacyPolicies/PrivacyPolicies'))
 const Pricing = lazy(() => import('@/pages/Pricing/Pricing'))
@@ -116,6 +117,7 @@ function App() {
           <Route path='/signin' element={<Signin />} />
           <Route path='/signup' element={<Signup />} />
           <Route path='/sip-calculator' element={<SipCalculator />} />
+          <Route path='/irr-calculator' element={<IrrCalculator />} />
           <Route path='/cagr-calculator' element={<CagrCalculator />} />
           <Route path='/emi-calculator' element={<EmiCalculator />} />
           <Route path='/terms-and-conditions' element={<TermsAndConditions />} />

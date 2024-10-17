@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { useLocation, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import Page from '@/components/Page/Page'
 import DetailPageHeading from '@/components/DetailPageHeading'
 import { AUTH, SCENARIOS } from '@/utils/query-keys'
@@ -9,61 +9,48 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { useImaginaryAuth } from './context/use-imaginaryAuth'
 import CreateButton from './components/CreateButton'
 import { queryClient } from '@/utils/client'
+import useRole from '@/hooks/useRole'
+import DottedAnimatedText from '@/components/DottedAnimatedText'
+import { UserContext } from '@/context/UserContext'
 
-const LoadingSkeleton = () => {
+export const LoadingSkeleton = () => {
   return (
-    <div>
-      <div className='flex justify-between'>
-        <Skeleton className='w-52 h-10' />
-        <Skeleton className='w-40 h-10' />
-      </div>
-      <div className='mt-10'>
-        <Skeleton className='w-full h-10' />
-      </div>
+    <div className='flex flex-col sm:flex-row items-center sm:justify-start gap-5'>
+      <Skeleton className='w-40 h-10  min-h-[150px] min-w-[190px]' />
+      <Skeleton className='w-40 h-10  min-h-[150px] min-w-[190px]' />
+      <Skeleton className='w-40 h-10  min-h-[150px] min-w-[190px]' />
+      <Skeleton className='w-40 h-10  min-h-[150px] min-w-[190px]' />
     </div>
   )
 }
 
 export default function ScenarioDefault() {
   const { id } = useParams() as { id: string }
-  const IS_FOR_FEATURE_PAGE = useLocation().pathname.includes('feature')
+  const { user: userData } = useContext(UserContext)
+  const { role } = useRole({ user: userData?.username || null, id: Number(id), roleFor: 'scenario' })
 
   const scenarioId = Number(id)
   const { loginImaginaryUser } = useImaginaryAuth()
-  const {
-    data,
-    isLoading,
-    isSuccess: isSuccessScenario,
-  } = useQuery({
+
+  const { data, isLoading, isError, isSuccess, refetch } = useQuery({
     queryKey: [`${SCENARIOS.SCENARIOS}-${scenarioId}`],
-    queryFn: () => fetchScenarioById(scenarioId),
+    queryFn: role === 'guest' ? () => fetchScenarioById(scenarioId, true) : () => fetchScenarioById(scenarioId),
+    enabled: false,
   })
 
   useEffect(() => {
-    if (isSuccessScenario) {
-      loginImaginaryUser.mutate({ username: data.imag_username, password: data.imag_password, id: data.id })
+    if (role) {
+      refetch()
     }
-    // eslint-disable-next-line
-  }, [isSuccessScenario, data])
-
-  const {
-    data: publicScenarioData,
-    isLoading: isPublicScenarioLoading,
-    isSuccess: isSuccessPublicScenario,
-    isError,
-  } = useQuery({
-    queryKey: [`${SCENARIOS.SCENARIOS}-public-${scenarioId}`],
-    queryFn: () => fetchScenarioById(scenarioId, IS_FOR_FEATURE_PAGE),
-  })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [role])
 
   useEffect(() => {
-    if (isSuccessPublicScenario && data) {
+    if (isSuccess && data.id) {
       loginImaginaryUser.mutate({ username: data.imag_username, password: data.imag_password, id: data.id })
     }
-    // eslint-disable-next-line
-  }, [isSuccessPublicScenario, data])
-
-  const { data: currentImaginaryUser } = useQuery<string>({ queryKey: [AUTH.CURRENT_IMAGINARY_USER] })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSuccess, data])
 
   useEffect(() => {
     return () => {
@@ -71,14 +58,26 @@ export default function ScenarioDefault() {
     }
   }, [])
 
+  const { data: currentImaginaryUser } = useQuery<string>({ queryKey: [AUTH.CURRENT_IMAGINARY_USER] })
   const { data: imaginaryUsers } = useQuery<any>({ queryKey: [AUTH.IMAGINARY_CLIENT] })
-
   const isLoggedIn = Boolean(currentImaginaryUser && imaginaryUsers[currentImaginaryUser].access)
 
-  if (IS_FOR_FEATURE_PAGE && isError) {
+  if (isError) {
     return (
       <Page>
         <h3>This scenario is set to private</h3>
+      </Page>
+    )
+  }
+
+  if (isLoading) {
+    return <LoadingSkeleton />
+  }
+
+  if (isSuccess && !data?.id) {
+    return (
+      <Page>
+        <h2>No Scenario Found.</h2>
       </Page>
     )
   }
@@ -87,16 +86,20 @@ export default function ScenarioDefault() {
     <Page className='space-y-8'>
       <DetailPageHeading backUrlTitle='Back to scenarios' title={isLoading ? 'Loading...' : data?.name || ''} />
 
-      {isLoading || isPublicScenarioLoading || !isLoggedIn ? (
-        <LoadingSkeleton />
-      ) : (
+      {loginImaginaryUser.isPending && (
+        <DottedAnimatedText>
+          <p className='text-slate-600'>Preparing data</p>
+        </DottedAnimatedText>
+      )}
+
+      {isLoggedIn ? (
         <div>
           <div className='flex justify-between'>
-            <CreateButton
-              username={IS_FOR_FEATURE_PAGE ? publicScenarioData?.imag_username || '' : data?.imag_username || ''}
-            />
+            <CreateButton username={data?.imag_username || ''} role={role} />
           </div>
         </div>
+      ) : (
+        <></>
       )}
     </Page>
   )

@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query'
 import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import AddOrEditIncomeExpenseForScenario from './IncomeExpenses'
-import { AddIncomeStateSchemaForScenario } from '@/schema/income-statement'
+import { AddIncomeStatementSchema, AddIncomeStateSchemaForScenario } from '@/schema/income-statement'
 import { useImaginaryAuth } from '../context/use-imaginaryAuth'
 import { AUTH, BALANCE_SHEET, INCOME_STATEMENT } from '@/utils/query-keys'
 import { IncomeStatement } from '@/types/income-statement'
@@ -15,16 +15,15 @@ import { Liability, PhysicalAsset } from '@/types/balance-sheet'
 import EachLiabilityForScenario from './Liability/EachLiabilityForScenario'
 import AddOrEditAssetsForScenario from './Assets/AddOrEditAssetsForScenarios'
 import EachAsset from './Assets/EachAsset'
-import { useAuth } from '@/hooks/use-auth'
+import { LoadingSkeleton } from '../ScenarioDetail'
+import { UserRole } from '@/hooks/useRole'
 
-const CreateButton = ({ username }: { username: string }) => {
+const CreateButton = ({ username, role }: { username: string; role: UserRole }) => {
   const { data: imaginaryUser } = useQuery<any>({ queryKey: [AUTH.IMAGINARY_CLIENT] })
   const { getAPIClientForImaginaryUser } = useImaginaryAuth()
-  const { userData } = useAuth()
-  const IS_AUTHENTICATED_USER = Boolean(userData?.username)
   const apiClient = getAPIClientForImaginaryUser(imaginaryUser[username]?.access)
 
-  async function createIncomeExpense(dto: AddIncomeStateSchemaForScenario) {
+  async function createIncomeExpense(dto: AddIncomeStatementSchema) {
     const { data } = await apiClient.post('income_expense/', dto)
     return data
   }
@@ -84,81 +83,99 @@ const CreateButton = ({ username }: { username: string }) => {
     return data
   }
 
-  const { data: expenses } = useQuery({
+  const { data: expenses, isLoading: isLoadingExpenses } = useQuery({
     queryKey: [`${INCOME_STATEMENT.IS_EXPENSES}-${username}`],
     queryFn: fetchIncomeExpenses,
   })
-  const { data: liabilities } = useQuery({
+  const { data: liabilities, isLoading: isLoadingLiabilities } = useQuery({
     queryKey: [`${BALANCE_SHEET.LIABILITIES}-${username}`],
     queryFn: fetchLiabilities,
   })
-  const { data: assets } = useQuery({ queryKey: [`${BALANCE_SHEET.ASSETS}-${username}`], queryFn: fetchPhysicalAssets })
+  const { data: assets, isLoading: isLoadingAssets } = useQuery({
+    queryKey: [`${BALANCE_SHEET.ASSETS}-${username}`],
+    queryFn: fetchPhysicalAssets,
+  })
+
+  if (isLoadingAssets || isLoadingExpenses || isLoadingLiabilities) {
+    return <LoadingSkeleton />
+  }
 
   return (
-    <div className='grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 gap-y-10'>
-      {expenses?.map((each: IncomeStatement) => (
-        <EachIncomeExpenseForScenario
-          incomeExpense={each}
-          createIncomeExpense={createIncomeExpense}
-          updateIncomeExpense={updateIncomeExpense}
-          deleteIncomeExpense={deleteIncomeExpense}
-          IS_AUTHENTICATED_USER={IS_AUTHENTICATED_USER}
-          key={each?.id}
-        />
-      ))}
-      {liabilities?.map((each: Liability) => (
-        <EachLiabilityForScenario
-          liability={each}
-          key={each?.id}
-          addLiability={addLiability}
-          editLiability={editLiability}
-          deleteLiability={deleteLiability}
-          IS_AUTHENTICATED_USER={IS_AUTHENTICATED_USER}
-        />
-      ))}
-      {assets?.map((each: PhysicalAsset) => (
-        <EachAsset
-          key={each?.id}
-          asset={each}
-          createAsset={addPhysicalAsset}
-          updateAsset={editPhysicalAsset}
-          deleteAsset={deletePhysicalAsset}
-          IS_AUTHENTICATED_USER={IS_AUTHENTICATED_USER}
-        />
-      ))}
-      {IS_AUTHENTICATED_USER && (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant={'ghost'} className='border border-dashed rounded-lg p-20'>
-              <PlusIcon />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className='flex flex-col'>
-            <DropdownMenuItem className='cursor-pointer' asChild>
-              <AddOrEditAssetsForScenario
-                trigger={<Button variant={'ghost'}>Asset</Button>}
-                addAsset={addPhysicalAsset}
-                editAsset={editPhysicalAsset}
-              />
-            </DropdownMenuItem>
-            <DropdownMenuItem className='cursor-pointer' asChild>
-              <AddOrEditLiabilityDialog
-                trigger={<Button variant={'ghost'}>Liability</Button>}
-                addLiability={addLiability}
-                editLiability={editLiability}
-              />
-            </DropdownMenuItem>
-            <DropdownMenuItem className='cursor-pointer' asChild>
-              <AddOrEditIncomeExpenseForScenario
-                trigger={<Button variant={'ghost'}>Monthly Expense</Button>}
-                type='EXPENSE'
-                createMutationFn={createIncomeExpense}
-                updateMutationFn={updateIncomeExpense}
-              />
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      )}
+    <div className='flex flex-col'>
+      <div>
+        {!expenses?.length && !liabilities?.length && !assets?.length ? (
+          <div className='mb-5'>
+            <p className='text-gray-500'>There are no expenses, liabilities or assets in this scenario.</p>
+          </div>
+        ) : (
+          <></>
+        )}
+      </div>
+      <div className='flex flex-wrap gap-5 justify-center sm:justify-start'>
+        {expenses?.map((each: IncomeStatement) => (
+          <EachIncomeExpenseForScenario
+            incomeExpense={each}
+            createIncomeExpense={createIncomeExpense}
+            updateIncomeExpense={updateIncomeExpense}
+            deleteIncomeExpense={deleteIncomeExpense}
+            isOwner={role === 'owner'}
+            key={each?.id}
+          />
+        ))}
+        {liabilities?.map((each: Liability) => (
+          <EachLiabilityForScenario
+            liability={each}
+            key={each?.id}
+            addLiability={addLiability}
+            editLiability={editLiability}
+            deleteLiability={deleteLiability}
+            isOwner={role === 'owner'}
+          />
+        ))}
+        {assets?.map((each: PhysicalAsset) => (
+          <EachAsset
+            key={each?.id}
+            asset={each}
+            createAsset={addPhysicalAsset}
+            updateAsset={editPhysicalAsset}
+            deleteAsset={deletePhysicalAsset}
+            isOwner={role === 'owner'}
+          />
+        ))}
+        {role === 'owner' && (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
+              <Button variant={'ghost'} className='border border-dashed rounded-lg p-20'>
+                <PlusIcon />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className='flex flex-col' onClick={(e) => e.stopPropagation()}>
+              <DropdownMenuItem className='cursor-pointer' asChild>
+                <AddOrEditAssetsForScenario
+                  trigger={<Button variant={'ghost'}>Asset</Button>}
+                  addAsset={addPhysicalAsset}
+                  editAsset={editPhysicalAsset}
+                />
+              </DropdownMenuItem>
+              <DropdownMenuItem className='cursor-pointer' asChild>
+                <AddOrEditLiabilityDialog
+                  trigger={<Button variant={'ghost'}>Liability</Button>}
+                  addLiability={addLiability}
+                  editLiability={editLiability}
+                />
+              </DropdownMenuItem>
+              <DropdownMenuItem className='cursor-pointer' asChild>
+                <AddOrEditIncomeExpenseForScenario
+                  trigger={<Button variant={'ghost'}>Monthly Expense</Button>}
+                  type='EXPENSE'
+                  createMutationFn={createIncomeExpense}
+                  updateMutationFn={updateIncomeExpense}
+                />
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
+      </div>
     </div>
   )
 }

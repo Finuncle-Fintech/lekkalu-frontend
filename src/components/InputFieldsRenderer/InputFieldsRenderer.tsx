@@ -190,6 +190,7 @@ export default function InputFieldsRenderer({ inputs, control }: Props) {
             defaultValue={field.value}
             className={input.className}
             data-testid={input.id}
+            value={field.value}
           >
             {input.options.map((option) => (
               <FormItem key={option.id} className='flex items-center space-x-3 space-y-0'>

@@ -1,4 +1,5 @@
 import { clsx, type ClassValue } from 'clsx'
+import dayjs from 'dayjs'
 import React from 'react'
 import { twMerge } from 'tailwind-merge'
 
@@ -94,6 +95,9 @@ export const getCorrectType = (value: any) => {
   if (value === 'true') return true
   if (value === 'false') return false
   if (!isNaN(value)) return Number(value)
+  if (dayjs(value).isValid()) {
+    return dayjs(value).toDate()
+  }
   try {
     return decodeURIComponent(value)
   } catch (e) {

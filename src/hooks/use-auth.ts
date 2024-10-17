@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import constate from 'constate'
 import { useNavigate } from 'react-router-dom'
-import { fetchUser, googleSignup, login, refreshToken, signup } from '@/queries/auth'
+import { fetchUser, googleSignup, login, refreshToken, signup, logout as logoutAPI } from '@/queries/auth'
 import { deleteCookie, getCookie, setCookie } from '@/utils/cookie'
 import { ACCESS_TOKEN_KEY, COOKIE_CONSENT, REFRESH_TOKEN_KEY } from '@/utils/constants'
 import { AUTH } from '@/utils/query-keys'
@@ -14,7 +14,11 @@ export function useAuth() {
   const qc = useQueryClient()
   const { toast } = useToast()
   const navigate = useNavigate()
-  const { data: userData, refetch: fetchUserData } = useQuery({ queryKey: [AUTH.USER], queryFn: fetchUser })
+  const {
+    data: userData,
+    refetch: fetchUserData,
+    isLoading: isLoadingUserData,
+  } = useQuery({ queryKey: [AUTH.USER], queryFn: fetchUser })
 
   const [isOpen, setIsOpen] = useState<boolean>(() => {
     const storedIsOpen = localStorage.getItem('isOpen')
@@ -30,10 +34,7 @@ export function useAuth() {
     isLoading: isAuthenticationInProgress,
     data: tokenData,
     isSuccess: isAuthenticationSuccess,
-  } = useQuery({
-    queryKey: [AUTH.LOGGED_IN],
-    queryFn: refreshToken,
-  })
+  } = useQuery({ queryKey: [AUTH.LOGGED_IN], queryFn: refreshToken })
 
   useEffect(() => {
     if (isAuthenticationSuccess && tokenData) {
@@ -86,13 +87,15 @@ export function useAuth() {
     onError: (err: any) => toast(getErrorMessage(err)),
   })
 
-  const logout = useCallback(() => {
+  const logout = useCallback(async () => {
+    await logoutAPI()
     deleteCookie(REFRESH_TOKEN_KEY)
     deleteCookie(ACCESS_TOKEN_KEY)
     qc.removeQueries({ queryKey: [AUTH.LOGGED_IN] })
+    qc.clear()
     clearData()
     navigate('/')
-    //  eslint-disable-next-line
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigate])
 
   useEffect(() => {
@@ -113,6 +116,7 @@ export function useAuth() {
       googleSignupMutation,
       isOpen,
       toggle,
+      isLoadingUserData,
     }),
     [
       isAuthenticationInProgress,
@@ -125,6 +129,7 @@ export function useAuth() {
       googleSignupMutation,
       isOpen,
       toggle,
+      isLoadingUserData,
     ],
   )
 }

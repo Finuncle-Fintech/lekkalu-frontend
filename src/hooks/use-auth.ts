@@ -94,7 +94,7 @@ export function useAuth() {
     qc.removeQueries({ queryKey: [AUTH.LOGGED_IN] })
     qc.clear()
     clearData()
-    navigate('/')
+    window.location = '/' as unknown as Location
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigate])
 

@@ -15,8 +15,12 @@ import { toast } from '@/components/ui/use-toast'
 type AssetModalProps = {
   isDialogOpen: boolean
   setIsDialogOpen: (value: boolean) => void
+  dispatch: React.Dispatch<{
+    type: 'SET_MODAL'
+    payload: 'Real Estate' | 'Metal' | 'Equity' | 'Bank Account' | 'Mutual Fund'
+  }>
 }
-export default function RealEstateModal({ isDialogOpen, setIsDialogOpen }: AssetModalProps) {
+export default function RealEstateModal({ isDialogOpen, setIsDialogOpen, dispatch }: AssetModalProps) {
   const form = useForm<AddPhysicalAssetSchemaV1>({
     resolver: zodResolver(addPhysicalAssetSchemaV1),
   })
@@ -38,6 +42,12 @@ export default function RealEstateModal({ isDialogOpen, setIsDialogOpen }: Asset
     setIsDialogOpen(false)
   }
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined)
+  const [isOverlayVisible, setIsOverlayVisible] = useState(false)
+
+  const toggleOverlay = () => {
+    setIsOverlayVisible(!isOverlayVisible)
+  }
+
   useEffect(() => {
     form.clearErrors()
   }, [form, isDialogOpen])
@@ -53,10 +63,7 @@ export default function RealEstateModal({ isDialogOpen, setIsDialogOpen }: Asset
         </div>
         <div className='flex-col justify-start items-start gap-[31px] inline-flex'>
           <div
-            onClick={() => {
-              // Your click handler logic here
-              console.log('Element clicked!')
-            }}
+            onClick={toggleOverlay}
             className='px-2.5 py-[5px] bg-[#c6ddff] rounded-[5px] justify-center items-center gap-2.5 inline-flex cursor-pointer'
           >
             <div className='w-[15px] h-[15px] relative'>
@@ -67,6 +74,30 @@ export default function RealEstateModal({ isDialogOpen, setIsDialogOpen }: Asset
               <ChevronDown className='w-[15px] h-[15px]' />
             </div>
           </div>
+          {isOverlayVisible && (
+            <div className='absolute bg-white shadow-md rounded-md mt-2'>
+              <ul>
+                <li
+                  className='p-2 cursor-pointer hover:bg-gray-200'
+                  onClick={() => dispatch({ type: 'SET_MODAL', payload: 'Real Estate' })}
+                >
+                  Option 1
+                </li>
+                <li
+                  className='p-2 cursor-pointer hover:bg-gray-200'
+                  onClick={() => dispatch({ type: 'SET_MODAL', payload: 'Metal' })}
+                >
+                  Option 2
+                </li>
+                <li
+                  className='p-2 cursor-pointer hover:bg-gray-200'
+                  onClick={() => dispatch({ type: 'SET_MODAL', payload: 'Equity' })}
+                >
+                  Option 3
+                </li>
+              </ul>
+            </div>
+          )}
           <Field error={form.formState.errors.name}>
             <GenericFormField
               name={'name'}

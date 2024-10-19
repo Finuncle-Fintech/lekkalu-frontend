@@ -38,7 +38,7 @@ export default function AddOrEditAssetDialogV1({ trigger }: Props) {
   const renderModalContent = () => {
     switch (activeModal) {
       case 'Real Estate':
-        return <RealEstateModal isDialogOpen={isDialogOpen} setIsDialogOpen={setIsDialogOpen} />
+        return <RealEstateModal isDialogOpen={isDialogOpen} setIsDialogOpen={setIsDialogOpen} dispatch={dispatch} />
       case 'Metal':
         return <MetalModal isDialogOpen={isDialogOpen} setIsDialogOpen={setIsDialogOpen} />
       // Add cases for other modals
@@ -56,19 +56,7 @@ export default function AddOrEditAssetDialogV1({ trigger }: Props) {
       >
         {cloneElement(trigger)}
       </DialogTrigger>
-      <DialogContent>
-        <select
-          value={activeModal}
-          onChange={(e) => dispatch({ type: 'SET_MODAL', payload: e.target.value as ModalState })}
-        >
-          <option value='Real Estate'>Real Estate</option>
-          <option value='Metal'>Metal</option>
-          <option value='Equity'>Equity</option>
-          <option value='Bank Account'>Bank Account</option>
-          <option value='Mutual Fund'>Mutual Fund</option>
-        </select>
-        {renderModalContent()}
-      </DialogContent>
+      <DialogContent>{renderModalContent()}</DialogContent>
     </Dialog>
   )
 }

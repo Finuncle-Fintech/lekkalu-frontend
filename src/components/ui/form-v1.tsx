@@ -25,7 +25,6 @@ type DetailFieldProps = {
   label: string
   children: React.ReactNode
   error?: FieldError
-  field_name?: string
 }
 
 // Define the props for the generic field component

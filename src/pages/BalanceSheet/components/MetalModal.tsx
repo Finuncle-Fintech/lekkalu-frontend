@@ -105,7 +105,7 @@ export default function MetalModal({ isDialogOpen, setIsDialogOpen }: AssetModal
               </div>
             </DetailField>
             {/*Bought Price Field*/}
-            <DetailField label='At Price' error={form.formState.errors.purchase_value} field_name='buy_price'>
+            <DetailField label='At Price' error={form.formState.errors.purchase_value}>
               <div className='justify-start items-center gap-[5px] inline-flex'>
                 <GenericFormField
                   type='number'
@@ -121,11 +121,7 @@ export default function MetalModal({ isDialogOpen, setIsDialogOpen }: AssetModal
             </DetailField>
           </FieldContainer>
           <FieldContainer>
-            <DetailField
-              label='Expected Returns'
-              error={form.formState.errors.expected_returns}
-              field_name={'expected_returns'}
-            >
+            <DetailField label='Expected Returns' error={form.formState.errors.expected_returns}>
               <div className='justify-start items-center gap-[5px] inline-flex'>
                 <GenericFormField
                   type='number'

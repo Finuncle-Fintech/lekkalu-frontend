@@ -1,5 +1,5 @@
 import React, { cloneElement, useEffect, useState } from 'react'
-import { IndianRupee, Percent } from 'lucide-react'
+import { ChevronDown, House, IndianRupee, Percent } from 'lucide-react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
@@ -98,11 +98,19 @@ export default function AddOrEditAssetDialogV1({ trigger }: Props) {
               </div>
             </div>
             <div className='flex-col justify-start items-start gap-[31px] inline-flex'>
-              <div className='px-2.5 py-[5px] bg-[#c6ddff] rounded-[5px] justify-center items-center gap-2.5 inline-flex'>
-                <div className='w-[15px] h-[15px] relative' />
+              <div
+                onClick={() => {
+                  // Your click handler logic here
+                  console.log('Element clicked!')
+                }}
+                className='px-2.5 py-[5px] bg-[#c6ddff] rounded-[5px] justify-center items-center gap-2.5 inline-flex cursor-pointer'
+              >
+                <div className='w-[15px] h-[15px] relative'>
+                  <House className='w-[15px] h-[15px]' />
+                </div>
                 <div className="text-black text-base font-normal font-['Charter'] leading-snug">Real Estate</div>
                 <div className='w-[15px] h-[15px] p-[1.25px] justify-center items-center flex'>
-                  <div className='w-[12.50px] h-[12.50px] relative' />
+                  <ChevronDown className='w-[15px] h-[15px]' />
                 </div>
               </div>
               <Field error={form.formState.errors.name}>

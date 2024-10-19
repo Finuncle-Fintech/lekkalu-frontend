@@ -1,6 +1,26 @@
 import React from 'react'
 import { FieldError, FieldValues, Path, UseFormRegister } from 'react-hook-form'
 
+export const SaveButton = () => (
+  <div className='w-[59px] h-[21px] px-[5px] bg-[#154181] rounded-[5px] justify-center items-center gap-2.5 flex'>
+    <button type='submit' className="text-white text-[13px] font-normal font-['Charter']">
+      Save
+    </button>
+  </div>
+)
+
+interface CancelButtonProps {
+  clickHandler: () => void
+}
+
+export const CancelButton: React.FC<CancelButtonProps> = ({ clickHandler }) => (
+  <div className='w-[59px] h-[21px] px-[5px] bg-[#154181]/20 rounded-[5px] justify-center items-center gap-2.5 flex'>
+    <button className="text-black text-[13px] font-normal font-['Charter']" onClick={clickHandler}>
+      Cancel
+    </button>
+  </div>
+)
+
 type DetailFieldProps = {
   label: string
   children: React.ReactNode

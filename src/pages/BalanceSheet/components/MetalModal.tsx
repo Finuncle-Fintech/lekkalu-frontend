@@ -16,7 +16,7 @@ type AssetModalProps = {
   isDialogOpen: boolean
   setIsDialogOpen: (value: boolean) => void
 }
-export default function AssetModal({ isDialogOpen, setIsDialogOpen }: AssetModalProps) {
+export default function MetalModal({ isDialogOpen, setIsDialogOpen }: AssetModalProps) {
   const form = useForm<AddPhysicalAssetSchemaV1>({
     resolver: zodResolver(addPhysicalAssetSchemaV1),
   })
@@ -47,8 +47,8 @@ export default function AssetModal({ isDialogOpen, setIsDialogOpen }: AssetModal
         <div className='flex-col justify-center items-start gap-2.5 inline-flex'>
           <div className="text-right text-black text-2xl font-bold font-['Charter'] leading-[33.60px]">About</div>
           <div className="w-[270px] h-[150px] text-black text-[15px] font-normal font-['Charter'] leading-[21px]">
-            Add any Real Estate properties that you own. Flat in an apartment, Commercial shop. And specify expected
-            returns to gauge your total financial performance over past and future
+            Add any Gold/Silver Jewelleries/Biscuits that you own. And specify expected returns to gauge your total
+            financial performance over past and future
           </div>
         </div>
         <div className='flex-col justify-start items-start gap-[31px] inline-flex'>

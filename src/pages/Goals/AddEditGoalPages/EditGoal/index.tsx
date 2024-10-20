@@ -2,16 +2,17 @@ import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { addGoalSchema, AddGoalSchema } from '@/schema/goals'
 import { GOALS } from '@/utils/query-keys'
 import { editGoal } from '@/queries/goals'
 import { useToast } from '@/components/ui/use-toast'
 import Form from '@/pages/Goals/AddEditGoalPages/components/Form'
-import { getCorrectType } from '@/utils/utils'
+import { getCorrectType, getSearchParamFromLocationSearch } from '@/utils/utils'
 
 export default function EditGoal({ goal, goalId, setIsDialogOpen }: any) {
   const { toast } = useToast()
+  const location = useLocation()
   const queryClient = useQueryClient()
   const navigate = useNavigate()
   const QUERY_NAME = `${GOALS.GOALS}`
@@ -23,8 +24,7 @@ export default function EditGoal({ goal, goalId, setIsDialogOpen }: any) {
       queryClient.invalidateQueries({ queryKey: [QUERY_NAME] })
       toast({ title: 'Goal edited successfully!' })
       setIsDialogOpen(false)
-      location.search = ''
-      navigate({ pathname: '/goals', search: '' })
+      navigate('/goals', { replace: true })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editGoalMutation.isSuccess])
@@ -36,15 +36,30 @@ export default function EditGoal({ goal, goalId, setIsDialogOpen }: any) {
   useEffect(() => {
     if (goal) {
       form.setValue('name', getCorrectType(goal?.name))
-      form.setValue('target_date', getCorrectType(goal?.target_date))
+      form.setValue('target_date', goal?.target_date)
       form.setValue('target_value', getCorrectType(goal?.target_value))
       form.setValue('goal_proportionality', getCorrectType(goal?.goal_proportionality))
-      form.setValue('track_kpi', getCorrectType(goal?.track_kpi))
+      !goal?.custom_kpi_content_type && form.setValue('track_kpi', goal?.track_kpi)
       form.setValue('target_contribution_source', getCorrectType(goal?.target_contribution_source))
-      form.setValue('custom_kpi', getCorrectType(goal?.custom_kpi))
+      form.setValue('custom_kpi', goal?.custom_kpi_object_id)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [goal])
+
+  useEffect(() => {
+    const values: any = getSearchParamFromLocationSearch(location.search)
+    if (Object.keys(values).length) {
+      Object.keys(values).forEach((each: any) => {
+        if (each === 'target_date') {
+          form.setValue(each, values[each])
+        } else {
+          form.setValue(each, getCorrectType(values[each]))
+        }
+      })
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.search])
 
   const handleGoalEdit = (values: AddGoalSchema) => {
     const _values: any = { ...values }
@@ -58,7 +73,6 @@ export default function EditGoal({ goal, goalId, setIsDialogOpen }: any) {
     }
     editGoalMutation.mutate({
       ..._values,
-      track_kpi: values.track_kpi ?? 'LiabilityPercent',
     })
   }
 

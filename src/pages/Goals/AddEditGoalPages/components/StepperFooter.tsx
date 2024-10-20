@@ -49,6 +49,7 @@ const StepFooter = ({ isEdit, values, handleCreate, isLoading, isError }: Steppe
   const handleNext = () => {
     if (isLastStep) {
       handleCreate()
+      return
     }
     nextStep()
   }
@@ -66,7 +67,7 @@ const StepFooter = ({ isEdit, values, handleCreate, isLoading, isError }: Steppe
 
   return (
     <>
-      {hasCompletedAllSteps ? <p className='p-5 text-gray-500'>In Progress...</p> : <></>}
+      {isLoading ? <p className='p-5 text-gray-500'>In Progress...</p> : <></>}
       <div className='w-full flex justify-end gap-5'>
         <Button disabled={isDisabledStep} onClick={prevStep} size='sm' variant='secondary' type='button'>
           Prev

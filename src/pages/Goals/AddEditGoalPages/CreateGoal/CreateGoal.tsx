@@ -44,7 +44,6 @@ export default function CreateGoal({ setIsDialogOpen }: CreateGoalType) {
       queryClient.invalidateQueries({ queryKey: [GOALS.GOALS] })
       toast({ title: 'Goal created successfully!' })
       setIsDialogOpen(false)
-      // navigate({ pathname: '/goals', search: '' })
       navigate('/goals', { replace: true })
     },
     onError: (response: any) => {
@@ -62,8 +61,7 @@ export default function CreateGoal({ setIsDialogOpen }: CreateGoalType) {
       _values.custom_kpi_content_type = 'UserCustomKpi'
     }
     delete _values.custom_kpi
-    // createGoalMutation.mutate({ ...values, track_kpi: values.track_kpi ?? 'LiabilityPercent' })
-    createGoalMutation.mutate({ ..._values, track_kpi: values.track_kpi ?? 'LiabilityPercent' })
+    createGoalMutation.mutate({ ..._values })
   }
 
   return (

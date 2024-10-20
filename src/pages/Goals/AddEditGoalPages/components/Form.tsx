@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import dayjs from 'dayjs'
 import { UseFormReturn } from 'react-hook-form'
 import { Link, useLocation } from 'react-router-dom'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Step, StepItem, Stepper } from '@/components/ui/stepper'
 import DatePicker from '@/components/DatePicker/DatePicker'
@@ -130,7 +130,7 @@ export default function GoalForm({ form, onSubmit, isLoading, isError, isEdit = 
                                 example='Slash That Debt!'
                               />
                               <FormControl>
-                                <Input value={field.value} onChange={field.onChange} />
+                                <Input value={field.value} onChange={field.onChange} placeholder='Enter Name' />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -233,7 +233,7 @@ export default function GoalForm({ form, onSubmit, isLoading, isError, isEdit = 
                           <FormField
                             control={form.control}
                             name='track_kpi'
-                            render={({ field }) => (
+                            render={() => (
                               <FormItem>
                                 <FormLabelForGoalForm
                                   required
@@ -249,12 +249,12 @@ export default function GoalForm({ form, onSubmit, isLoading, isError, isEdit = 
                                       onValueChange={(value) => {
                                         form.setValue('track_kpi', value || null)
                                       }}
-                                      disabled={!!form.watch().custom_kpi}
+                                      // disabled={!form.watch().track_kpi}
                                     >
-                                      <SelectTrigger placeholder='KPI'>
+                                      <SelectTrigger>
                                         <SelectValue placeholder='KPI' />
                                       </SelectTrigger>
-                                      <SelectContent placeholder='KPI'>
+                                      <SelectContent>
                                         {getTargetKpi?.map((item) => (
                                           <SelectItem key={item.id} value={item.value}>
                                             {item.label}
@@ -291,7 +291,7 @@ export default function GoalForm({ form, onSubmit, isLoading, isError, isEdit = 
                           <FormField
                             control={form.control}
                             name='custom_kpi'
-                            render={({ field }) => (
+                            render={() => (
                               <FormItem>
                                 <FormLabelForGoalForm
                                   label='Custom KPI'
@@ -302,7 +302,7 @@ export default function GoalForm({ form, onSubmit, isLoading, isError, isEdit = 
                                 <div className='flex gap-4'>
                                   <FormControl>
                                     <Select
-                                      disabled={!!form.watch().track_kpi}
+                                      // disabled={!form.watch().custom_kpi}
                                       value={String(form.watch().custom_kpi) || undefined}
                                       onValueChange={(value) => {
                                         form.setValue('custom_kpi', value ? Number(value) : null)
@@ -311,7 +311,7 @@ export default function GoalForm({ form, onSubmit, isLoading, isError, isEdit = 
                                       <SelectTrigger>
                                         <SelectValue placeholder='Select a KPI' />
                                       </SelectTrigger>
-                                      <SelectContent placeholder='Select a KPI'>
+                                      <SelectContent>
                                         {mergedKpis.map((item: { id: number; name: string }) => (
                                           <SelectItem key={item.id} value={item.id.toString()}>
                                             {item.name}
@@ -343,6 +343,7 @@ export default function GoalForm({ form, onSubmit, isLoading, isError, isEdit = 
                                   <Link
                                     to={`/custom_kpi/new?${getFormValue()}`}
                                     className='text-sm underline text-primary'
+                                    replace
                                   >
                                     Create a new KPI
                                   </Link>
@@ -381,6 +382,7 @@ export default function GoalForm({ form, onSubmit, isLoading, isError, isEdit = 
                                   min={1}
                                   value={field.value}
                                   onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                                  placeholder='Enter Target'
                                 />
                               </FormControl>
                               <FormMessage />
@@ -405,7 +407,7 @@ export default function GoalForm({ form, onSubmit, isLoading, isError, isEdit = 
                                 }}
                                 disabled={Boolean(!incomeExpenses?.length)}
                               >
-                                <SelectTrigger placeholder='Source'>
+                                <SelectTrigger>
                                   <SelectValue placeholder='Source' />
                                 </SelectTrigger>
                                 <SelectContent>

@@ -3,7 +3,7 @@ import Chart from 'react-apexcharts'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { round } from 'lodash'
 import colors from 'tailwindcss/colors'
 import { cn } from '@/utils/utils'
@@ -26,6 +26,7 @@ type Props = {
   createdAt: string
   color: string
   reachable_by_days: number
+  goal: GoalType
 }
 
 const circleSize = 160
@@ -38,6 +39,7 @@ export default function Goal({
   category,
   createdAt,
   color,
+  goal,
   reachable_by_days,
 }: Props) {
   const { data: progressQuery } = useQuery({
@@ -139,8 +141,12 @@ export default function Goal({
       style={{ ...style, borderColor: color }}
       onClick={handleViewDetail}
     >
-      <GoalOptions id={id} handleAllowRename={handleAllowRename} />
-      <div title='Click to view detail' className='flex items-center justify-center gap-4 flex-col h-full'>
+      <GoalOptions id={id} handleAllowRename={handleAllowRename} goal={goal} />
+      <Link
+        title='Click to view detail'
+        to={!allowRename ? `/goals/${id}` : ''}
+        className='flex items-center justify-center gap-4 flex-col h-full'
+      >
         <Chart options={chartOptions} series={chartSeries} type='radialBar' height={circleSize} />
 
         {allowRename ? (
@@ -175,7 +181,7 @@ export default function Goal({
               : `This goal was reached ${remainingDays}`}
           </p>
         </div>
-      </div>
+      </Link>
     </div>
   )
 }

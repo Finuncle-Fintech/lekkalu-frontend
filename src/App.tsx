@@ -14,7 +14,6 @@ import MobileApp from './components/MobileApp'
 const Dashboard = lazy(() => import('@/pages/Dashboard/Dashboard'))
 const Goals = lazy(() => import('@/pages/Goals/Goals'))
 const KPIs = lazy(() => import('@/pages/KPIs/CustomKPIList'))
-const CreateGoal = lazy(() => import('@/pages/Goals/AddEditGoalPages/CreateGoal/CreateGoal'))
 const CreateCustomKPI = lazy(() => import('@/pages/KPIs/CustomKPICreate'))
 const EditGoal = lazy(() => import('@/pages/Goals/AddEditGoalPages/EditGoal'))
 const EditKpi = lazy(() => import('@/pages/KPIs/CustomKpiEdit'))
@@ -80,12 +79,11 @@ function App() {
           <Route path='/dashboard' element={<Dashboard />} />
           <Route path='/goals' element={<Goals />} />
           <Route path='/kpis' element={<KPIs />} />
-          <Route path='/goals/new' element={<CreateGoal />} />
           <Route path='/custom_kpi/new' element={<CreateCustomKPI />} />
-          <Route path='/goals/edit/:id' element={<EditGoal />} />
           <Route path='/kpis/edit/:id' element={<EditKpi />} />
-          <Route path='/goals/:id' element={<GoalDetails />} />
           <Route path='/kpis/:id' element={<CustomKPIDetails />} />
+          <Route path='/goals/edit/:id' element={<EditGoal />} />
+          <Route path='/goals/:id' element={<GoalDetails />} />
           <Route path='/income-statement' element={<IncomeStatement />} />
           <Route path='/expenses' element={<Expenses />} />
           <Route path='/lending' element={<Lending />} />

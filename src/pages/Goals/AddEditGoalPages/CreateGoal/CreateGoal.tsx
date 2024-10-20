@@ -1,18 +1,24 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { ArrowLeftIcon } from 'lucide-react'
-import { useMutation } from '@tanstack/react-query'
-import { useNavigate, Link } from 'react-router-dom'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useLocation, useNavigate } from 'react-router-dom'
 import dayjs from 'dayjs'
-import Page from '@/components/Page/Page'
 import { AddGoalSchema, addGoalSchema } from '@/schema/goals'
 import { addGoal } from '@/queries/goals'
 import { useToast } from '@/components/ui/use-toast'
 import Form from '../components/Form'
+import { GOALS } from '@/utils/query-keys'
+import { getCorrectType, getSearchParamFromLocationSearch } from '@/utils/utils'
 
-export default function CreateGoal() {
+type CreateGoalType = {
+  setIsDialogOpen: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+export default function CreateGoal({ setIsDialogOpen }: CreateGoalType) {
   const { toast } = useToast()
+  const queryClient = useQueryClient()
+  const location = useLocation()
   const navigate = useNavigate()
   const form = useForm<AddGoalSchema>({
     resolver: zodResolver(addGoalSchema),
@@ -21,11 +27,24 @@ export default function CreateGoal() {
     },
   })
 
+  useEffect(() => {
+    const values: any = getSearchParamFromLocationSearch(location.search)
+    if (Object.keys(values).length) {
+      Object.keys(values).forEach((each: any) => {
+        form.setValue(each, getCorrectType(values[each]))
+      })
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.search])
+
   const createGoalMutation = useMutation({
     mutationFn: addGoal,
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [GOALS.GOALS] })
       toast({ title: 'Goal created successfully!' })
-      navigate('/goals')
+      setIsDialogOpen(false)
+      navigate('/goals', { replace: true })
     },
     onError: (response: any) => {
       const message = response?.response?.data?.message
@@ -34,20 +53,26 @@ export default function CreateGoal() {
   })
 
   const handleGoalCreate = (values: AddGoalSchema) => {
-    createGoalMutation.mutate(values)
+    const _values: any = {
+      ...values,
+    }
+    if (values.custom_kpi) {
+      _values.custom_kpi_object_id = values.custom_kpi
+      _values.custom_kpi_content_type = 'UserCustomKpi'
+    }
+    delete _values.custom_kpi
+    if (!_values.target_contribution_source) {
+      delete _values.target_contribution_source
+    }
+    createGoalMutation.mutate({ ..._values })
   }
 
   return (
-    <Page className='space-y-8'>
-      <div>
-        <h1 className='text-2xl font-bold'>Create a new goal</h1>
-        <div className='w-full h-[1px] bg-gray-200 my-2' />
-      </div>
-      <Link className='flex items-center gap-2 text-muted-foreground' to='/goals'>
-        <ArrowLeftIcon className='w-4 h-4' />
-        Back to Goals
-      </Link>
-      <Form form={form} onSubmit={handleGoalCreate} isLoading={createGoalMutation.isPending} />
-    </Page>
+    <Form
+      form={form}
+      onSubmit={handleGoalCreate}
+      isLoading={createGoalMutation.isPending}
+      isError={createGoalMutation?.isError}
+    />
   )
 }

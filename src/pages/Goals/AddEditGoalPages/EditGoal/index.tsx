@@ -1,92 +1,94 @@
 import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { ArrowLeftIcon } from 'lucide-react'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useNavigate, useParams, Link } from 'react-router-dom'
-import { range } from 'lodash'
-import Page from '@/components/Page/Page'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { addGoalSchema, AddGoalSchema } from '@/schema/goals'
 import { GOALS } from '@/utils/query-keys'
-import { editGoal, fetchGoalDetails } from '@/queries/goals'
+import { editGoal } from '@/queries/goals'
 import { useToast } from '@/components/ui/use-toast'
-import { Goal } from '@/types/goals'
-import { Skeleton } from '@/components/ui/skeleton'
 import Form from '@/pages/Goals/AddEditGoalPages/components/Form'
+import { getCorrectType, getSearchParamFromLocationSearch } from '@/utils/utils'
 
-export default function EditGoal() {
+export default function EditGoal({ goal, goalId, setIsDialogOpen }: any) {
   const { toast } = useToast()
-  const navigate = useNavigate()
+  const location = useLocation()
   const queryClient = useQueryClient()
-
-  const { id } = useParams() as { id: string }
-  const goalId = Number(id)
-  const QUERY_NAME = `${GOALS.GOAL}-${goalId}`
-
-  const {
-    data: goal,
-    isLoading: isFetchingGoal,
-    isError: isFetchingGoalError,
-  } = useQuery({
-    queryKey: [QUERY_NAME],
-    queryFn: () => fetchGoalDetails(goalId),
-  })
-
-  if (isFetchingGoalError) {
-    toast({ title: 'Something went wrong.' })
-  }
+  const navigate = useNavigate()
+  const QUERY_NAME = `${GOALS.GOALS}`
 
   const editGoalMutation = useMutation({
-    mutationFn: (dto: Partial<Goal>) => editGoal(goalId, dto),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [QUERY_NAME] })
-      toast({ title: 'Goal edited successfully!' })
-      navigate('/goals')
+    mutationFn: (dto: Partial<AddGoalSchema>) => editGoal(goalId, dto),
+    onError: () => {
+      toast({ title: 'Something went wrong' })
     },
   })
+
+  useEffect(() => {
+    if (editGoalMutation.isSuccess) {
+      queryClient.invalidateQueries({ queryKey: [QUERY_NAME] })
+      toast({ title: 'Goal edited successfully!' })
+      setIsDialogOpen(false)
+      navigate('/goals', { replace: true })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [editGoalMutation.isSuccess])
 
   const form = useForm<AddGoalSchema>({
     resolver: zodResolver(addGoalSchema),
   })
 
   useEffect(() => {
-    if (!isFetchingGoal && goal) {
-      form.setValue('name', goal?.name)
+    if (goal) {
+      form.setValue('name', getCorrectType(goal?.name))
       form.setValue('target_date', goal?.target_date)
-      form.setValue('target_value', goal?.target_value)
-      form.setValue('goal_proportionality', goal?.goal_proportionality)
-      form.setValue('track_kpi', goal?.track_kpi)
-      form.setValue('target_contribution_source', goal?.target_contribution_source)
+      form.setValue('target_value', getCorrectType(goal?.target_value))
+      form.setValue('goal_proportionality', getCorrectType(goal?.goal_proportionality))
+      !goal?.custom_kpi_content_type && form.setValue('track_kpi', goal?.track_kpi)
+      form.setValue('target_contribution_source', getCorrectType(goal?.target_contribution_source))
+      form.setValue('custom_kpi', goal?.custom_kpi_object_id)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [goal, isFetchingGoal])
+  }, [goal])
+
+  useEffect(() => {
+    const values: any = getSearchParamFromLocationSearch(location.search)
+    if (Object.keys(values).length) {
+      Object.keys(values).forEach((each: any) => {
+        if (each === 'target_date') {
+          form.setValue(each, values[each])
+        } else {
+          form.setValue(each, getCorrectType(values[each]))
+        }
+      })
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.search])
 
   const handleGoalEdit = (values: AddGoalSchema) => {
-    editGoalMutation.mutate(values)
+    const _values: any = { ...values }
+    if (values.custom_kpi) {
+      _values.custom_kpi_object_id = values.custom_kpi
+      _values.custom_kpi_content_type = 'UserCustomKpi'
+    }
+    delete _values.custom_kpi
+    if (!values.target_contribution_source) {
+      delete _values.target_contribution_source
+    }
+    editGoalMutation.mutate({
+      ..._values,
+    })
   }
 
   return (
-    <Page className='space-y-8'>
-      <div>
-        <h1 className='text-2xl font-bold'>{isFetchingGoal ? 'Loading...' : `Edit ${goal?.name}`}</h1>
-        <div className='w-full h-[1px] bg-gray-200 my-2' />
-      </div>
-      <div>
-        <Link className='flex w-[150px] items-center gap-2 text-muted-foreground' to='/goals'>
-          <ArrowLeftIcon className='w-4 h-4' />
-          Back to Goals
-        </Link>
-      </div>
-      {isFetchingGoal ? (
-        <div className='grid md:grid-cols-2 gap-4 items-center'>
-          {range(6).map((i) => (
-            <Skeleton key={i} className='w-full h-[50px]' />
-          ))}
-          <Skeleton className='w-20 h-[50px]' />
-        </div>
-      ) : (
-        <Form form={form} onSubmit={handleGoalEdit} isLoading={editGoalMutation.isPending} isEdit />
-      )}
-    </Page>
+    <Form
+      form={form}
+      onSubmit={handleGoalEdit}
+      isLoading={editGoalMutation.isPending}
+      isEdit
+      isError={editGoalMutation.isError}
+      goalId={goalId}
+    />
   )
 }

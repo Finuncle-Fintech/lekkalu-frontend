@@ -9,6 +9,7 @@ import { addPhysicalAssetV1 } from '@/queries/balance-sheet'
 import { BALANCE_SHEET } from '@/utils/query-keys'
 import { getErrorMessage } from '@/utils/utils'
 import { toast } from '@/components/ui/use-toast'
+import DatePickerV1 from '@/components/DatePicker/DatePickerV1'
 
 type FieldName = 'name' | 'purchase_value' | 'purchase_date' | 'expected_returns'
 export type FieldProp = {
@@ -17,7 +18,7 @@ export type FieldProp = {
   placeholder: string
   type: string
   error: FieldError | undefined
-  icon?: React.ReactElement
+  icon?: React.ReactNode
 }
 type AssetModalProps = {
   isDialogOpen: boolean
@@ -38,7 +39,16 @@ export default function AssetModal({
   fields,
   assetForm,
 }: AssetModalProps) {
+  const fieldInputStyle =
+    "bg-inherit text-black font-normal font-['Charter'] leading-snug focus:outline-none text-right min-w-10 max-w-30 max-h-40"
   const qc = useQueryClient()
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined)
+  const dateChangeHandler = (date: Date | undefined) => {
+    setSelectedDate(date)
+    if (date) {
+      assetForm.setValue('purchase_date', date)
+    }
+  }
   const addPhysicalAssetMutation = useMutation({
     mutationFn: addPhysicalAssetV1,
     onSuccess: () => {
@@ -115,6 +125,7 @@ export default function AssetModal({
               name={'name'}
               register={assetForm.register}
               placeholder={'Asset Name'}
+              textAlign={'left'}
               className="w-full bg-inherit self-stretch text-black/25 text-4xl font-normal font-['Charter'] leading-9
               focus:outline-none"
             />
@@ -125,19 +136,33 @@ export default function AssetModal({
               {fieldSet.map((field) => (
                 <DetailField key={field.name} label={field.label} error={field.error}>
                   <div className='justify-start items-center gap-[5px] inline-flex'>
-                    <GenericFormField
-                      type={field.type}
-                      placeholder={field.placeholder}
-                      register={assetForm.register}
-                      valueAsNumber={field.type === 'number'}
-                      name={field.name}
-                      className="bg-inherit text-black font-normal font-['Charter'] leading-snug focus:outline-none
-                      text-right min-w-10 max-w-20"
-                    />
+                    {field.type === 'date' ? (
+                      <GenericFormField
+                        type={'text'}
+                        placeholder={field.placeholder}
+                        register={assetForm.register}
+                        name={field.name}
+                        className={fieldInputStyle}
+                        value={selectedDate ? selectedDate.toISOString().split('T')[0] : ''}
+                      />
+                    ) : (
+                      <GenericFormField
+                        type={field.type}
+                        placeholder={field.placeholder}
+                        register={assetForm.register}
+                        valueAsNumber={field.type === 'number'}
+                        name={field.name}
+                        className={fieldInputStyle}
+                      />
+                    )}
                     <div className='ml-2'>
-                      {field.icon &&
-                        React.isValidElement(field.icon) &&
-                        React.cloneElement(field.icon as React.ReactElement, { className: 'mr-2 h-4 w-4' })}
+                      {field.type === 'date' ? (
+                        <DatePickerV1 value={selectedDate} onChange={dateChangeHandler} />
+                      ) : (
+                        <div className='mr-2 h-4 w-4'>
+                          {React.cloneElement(field.icon as React.ReactElement, { width: 15, height: 15 })}
+                        </div>
+                      )}
                     </div>
                   </div>
                 </DetailField>

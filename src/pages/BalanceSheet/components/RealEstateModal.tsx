@@ -1,10 +1,9 @@
-import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { IndianRupee, Percent } from 'lucide-react'
+import React from 'react'
 import AssetModal, { FieldProp } from '@/pages/BalanceSheet/components/AssetModal'
 import { addPhysicalAssetSchemaV1, AddPhysicalAssetSchemaV1 } from '@/schema/balance-sheet'
-import DatePickerV1 from '@/components/DatePicker/DatePickerV1'
 
 type AssetModalProps = {
   isDialogOpen: boolean
@@ -15,8 +14,7 @@ type AssetModalProps = {
   }>
 }
 
-export default function RealEstateModal({ isDialogOpen, setIsDialogOpen, dispatch }: AssetModalProps) {
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined)
+const RealEstateModal: React.FC<AssetModalProps> = ({ isDialogOpen, setIsDialogOpen, dispatch }: AssetModalProps) => {
   const assetForm = useForm<AddPhysicalAssetSchemaV1>({
     resolver: zodResolver(addPhysicalAssetSchemaV1),
   })
@@ -25,26 +23,15 @@ export default function RealEstateModal({ isDialogOpen, setIsDialogOpen, dispatc
       {
         name: 'purchase_date',
         label: 'Bought On',
-        placeholder: '40,00,000',
-        type: 'number',
+        placeholder: 'Sun, 14 Jul',
+        type: 'date',
         error: assetForm.formState.errors.purchase_date,
-        icon: (
-          <DatePickerV1
-            value={selectedDate}
-            onChange={(date) => {
-              setSelectedDate(date)
-              if (date) {
-                assetForm.setValue('purchase_date', date)
-              }
-            }}
-            className='mr-2 h-4 w-4'
-          />
-        ),
+        icon: null,
       },
       {
         name: 'purchase_value',
         label: 'At Price',
-        placeholder: 'Sun, 14 Jul',
+        placeholder: '40,00,000',
         type: 'number',
         error: assetForm.formState.errors.purchase_date,
         icon: <IndianRupee className='mr-2 h-4 w-4' />,
@@ -74,3 +61,5 @@ export default function RealEstateModal({ isDialogOpen, setIsDialogOpen, dispatc
     />
   )
 }
+
+export default RealEstateModal

@@ -37,16 +37,14 @@ export default function DatePicker({ className, style, onChange, placeholder, va
         <Calendar
           {...props}
           mode='single'
-          captionLayout='dropdown-buttons'
+          captionLayout='dropdown'
           selected={date}
           onDayClick={(selectedDate: Date) => {
             setDate(selectedDate)
             onChange?.(selectedDate)
             setIsCalendarOpen(false)
           }}
-          initialFocus
-          fromYear={1960}
-          toYear={2035}
+          endMonth={new Date('2035')}
         />
       </PopoverContent>
     </Popover>

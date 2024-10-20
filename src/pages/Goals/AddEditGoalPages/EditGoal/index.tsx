@@ -17,7 +17,12 @@ export default function EditGoal({ goal, goalId, setIsDialogOpen }: any) {
   const navigate = useNavigate()
   const QUERY_NAME = `${GOALS.GOALS}`
 
-  const editGoalMutation = useMutation({ mutationFn: (dto: Partial<AddGoalSchema>) => editGoal(goalId, dto) })
+  const editGoalMutation = useMutation({
+    mutationFn: (dto: Partial<AddGoalSchema>) => editGoal(goalId, dto),
+    onError: () => {
+      toast({ title: 'Something went wrong' })
+    },
+  })
 
   useEffect(() => {
     if (editGoalMutation.isSuccess) {

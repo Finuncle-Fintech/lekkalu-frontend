@@ -61,6 +61,9 @@ export default function CreateGoal({ setIsDialogOpen }: CreateGoalType) {
       _values.custom_kpi_content_type = 'UserCustomKpi'
     }
     delete _values.custom_kpi
+    if (!_values.target_contribution_source) {
+      delete _values.target_contribution_source
+    }
     createGoalMutation.mutate({ ..._values })
   }
 

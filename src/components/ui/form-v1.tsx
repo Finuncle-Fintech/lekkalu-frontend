@@ -49,7 +49,7 @@ const GenericFormField = <T extends FieldValues>({
   placeholder = '', // default to an empty string for placeholder
   valueAsNumber = false, // default to false for valueAsNumber
   disabled = false, // default to false for disabled
-  textAlign = 'left', // default to left for textAlight
+  textAlign = 'right', // default to left for textAlight
   value,
 }: GenericFieldProps<T>) => {
   return (
@@ -57,7 +57,7 @@ const GenericFormField = <T extends FieldValues>({
       placeholder={placeholder}
       {...register(name, { valueAsNumber })}
       type={type}
-      className={`${className}`} // Apply custom styles
+      className={`${className} ${type === 'number' ? 'no-spinner' : ''}`} // Add custom class for number inputs
       style={{ textAlign }} // Apply custom text alignment
       disabled={disabled}
       value={value}

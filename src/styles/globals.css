@@ -138,7 +138,7 @@ html {
     animation-iteration-count: infinite;
     animation-timing-function: ease-out;
     will-change: transform, opacity;
-    animation-delay: 0;
+    animation-delay: 0s;
 }
 
 @keyframes ripple {
@@ -153,40 +153,51 @@ html {
 }
 
 @keyframes bounce {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
 }
 
 @keyframes bounce200 {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
 }
 
 @keyframes bounce400 {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
 }
 
 .animate-bounce {
-  animation: bounce 1s infinite;
+    animation: bounce 1s infinite;
 }
 
 .animate-bounce200 {
-  animation: bounce 1s infinite 0.2s;
+    animation: bounce 1s infinite 0.2s;
 }
 
 .animate-bounce400 {
-  animation: bounce 1s infinite 0.4s;
+    animation: bounce 1s infinite 0.4s;
+}
+
+/* Add this CSS to your stylesheet */
+.no-spinner::-webkit-outer-spin-button,
+.no-spinner::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.no-spinner {
+    -moz-appearance: textfield; /* Firefox */
 }

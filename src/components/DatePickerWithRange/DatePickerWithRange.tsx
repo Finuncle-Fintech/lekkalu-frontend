@@ -41,7 +41,6 @@ export default function DatePickerWithRange({ className, dateRange, onChange, ..
         </PopoverTrigger>
         <PopoverContent className='w-auto p-0' align='start'>
           <Calendar
-            initialFocus
             mode='range'
             defaultMonth={date?.from}
             selected={date}

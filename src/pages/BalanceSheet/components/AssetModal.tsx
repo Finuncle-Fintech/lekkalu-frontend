@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { ChevronDown, House } from 'lucide-react'
 import { FieldError, UseFormReturn } from 'react-hook-form'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { House } from 'lucide-react'
 import GenericFormField, { CancelButton, DetailField, Field, FieldContainer, SaveButton } from '@/components/ui/form-v1'
 import logger from '@/logger'
 import { AddPhysicalAssetSchemaV1 } from '@/schema/balance-sheet'
@@ -10,6 +10,7 @@ import { BALANCE_SHEET } from '@/utils/query-keys'
 import { getErrorMessage } from '@/utils/utils'
 import { toast } from '@/components/ui/use-toast'
 import DatePickerV1 from '@/components/DatePicker/DatePickerV1'
+import AssetTypeSelect from '@/pages/BalanceSheet/components/AssetTypeSelect'
 
 type FieldName = 'name' | 'purchase_value' | 'purchase_date' | 'expected_returns'
 export type FieldProp = {
@@ -83,39 +84,32 @@ export default function AssetModal({
             {description}
           </div>
         </div>
-        <div className='flex-col justify-start items-start gap-[31px] inline-flex'>
-          <div
-            onClick={toggleOverlay}
-            className='px-2.5 py-[5px] bg-[#c6ddff] rounded-[5px] justify-center items-center gap-2.5 inline-flex cursor-pointer'
-          >
-            <div className='w-[15px] h-[15px] relative'>
-              <House className='w-[15px] h-[15px]' />
-            </div>
-            <div className="text-black text-base font-normal font-['Charter'] leading-snug">Real Estate</div>
-            <div className='w-[15px] h-[15px] p-[1.25px] justify-center items-center flex'>
-              <ChevronDown className='w-[15px] h-[15px]' />
-            </div>
-          </div>
+        <div className='flex-col justify-start items-start gap-[31px] inline-flex relative'>
+          <AssetTypeSelect toggleOverlay={toggleOverlay}>
+            <House />
+          </AssetTypeSelect>
           {isOverlayVisible && (
-            <div className='absolute bg-white shadow-md rounded-md mt-2'>
+            <div className='absolute bg-white shadow-md rounded-md mt-8 left-0'>
               <ul>
-                <li
-                  className='p-2 cursor-pointer hover:bg-gray-200'
-                  onClick={() => dispatch({ type: 'SET_MODAL', payload: 'Real Estate' })}
-                >
-                  Option 1
+                <li>
+                  <AssetTypeSelect
+                    toggleOverlay={toggleOverlay}
+                    asOption={true}
+                    dispatch={dispatch}
+                    payload='Real Estate'
+                  >
+                    <House />
+                  </AssetTypeSelect>
                 </li>
-                <li
-                  className='p-2 cursor-pointer hover:bg-gray-200'
-                  onClick={() => dispatch({ type: 'SET_MODAL', payload: 'Metal' })}
-                >
-                  Option 2
-                </li>
-                <li
-                  className='p-2 cursor-pointer hover:bg-gray-200'
-                  onClick={() => dispatch({ type: 'SET_MODAL', payload: 'Equity' })}
-                >
-                  Option 3
+                <li>
+                  <AssetTypeSelect
+                    toggleOverlay={toggleOverlay}
+                    asOption={true}
+                    dispatch={dispatch}
+                    payload='Real Estate'
+                  >
+                    <House />
+                  </AssetTypeSelect>
                 </li>
               </ul>
             </div>

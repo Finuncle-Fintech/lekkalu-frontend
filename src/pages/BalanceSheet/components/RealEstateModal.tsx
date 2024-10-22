@@ -4,6 +4,7 @@ import { IndianRupee, Percent } from 'lucide-react'
 import React from 'react'
 import AssetModal, { FieldProp } from '@/pages/BalanceSheet/components/AssetModal'
 import { addPhysicalAssetSchemaV1, AddPhysicalAssetSchemaV1 } from '@/schema/balance-sheet'
+import { PhysicalAsset } from '@/types/balance-sheet'
 
 type AssetModalProps = {
   isDialogOpen: boolean
@@ -12,11 +13,26 @@ type AssetModalProps = {
     type: 'SET_MODAL'
     payload: 'Real Estate' | 'Metal' | 'Equity' | 'Bank Account' | 'Mutual Fund'
   }>
+  asset?: PhysicalAsset
 }
 
-const RealEstateModal: React.FC<AssetModalProps> = ({ isDialogOpen, setIsDialogOpen, dispatch }: AssetModalProps) => {
+const RealEstateModal: React.FC<AssetModalProps> = ({
+  isDialogOpen,
+  setIsDialogOpen,
+  dispatch,
+  asset,
+}: AssetModalProps) => {
   const assetForm = useForm<AddPhysicalAssetSchemaV1>({
     resolver: zodResolver(addPhysicalAssetSchemaV1),
+    defaultValues: asset
+      ? {
+          name: asset.name,
+          purchase_date: new Date(asset.purchase_date), // Convert to Date object
+          purchase_value: parseFloat(asset.purchase_value), // Convert to number
+          expected_returns: -asset.depreciation_percent_per_year,
+          type: asset.type.toString(), // Convert to string
+        }
+      : {},
   })
   const fields: Array<Array<FieldProp>> = [
     [

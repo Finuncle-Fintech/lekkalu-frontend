@@ -57,6 +57,7 @@ export default function AssetsTable() {
                       <PencilIcon className='w-4 h-5' />
                     </Button>
                   }
+                  asset={asset}
                 />
                 <DeleteAssetDialog id={asset.id} />
               </TableCell>

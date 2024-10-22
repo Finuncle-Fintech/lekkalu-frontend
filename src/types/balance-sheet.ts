@@ -7,6 +7,7 @@ export type PhysicalAsset = {
   sell_date: string
   depreciation_percent: string
   depreciation_frequency: number
+  depreciation_percent_per_year: string
   market_value: string
   user: number
   type: number

@@ -1,10 +1,11 @@
 import React, { cloneElement, useEffect, useReducer, useState } from 'react'
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog-v1'
 import RealEstateModal from '@/pages/BalanceSheet/components/RealEstateModal'
-import MetalModal from '@/pages/BalanceSheet/components/MetalModal'
+import { PhysicalAsset } from '@/types/balance-sheet'
 
 type Props = {
   trigger: React.ReactElement
+  asset?: PhysicalAsset
 }
 type ModalState = 'Real Estate' | 'Metal' | 'Equity' | 'Bank Account' | 'Mutual Fund'
 
@@ -18,7 +19,7 @@ const modalReducer = (state: ModalState, action: Action): ModalState => {
       return state
   }
 }
-export default function AddOrEditAssetDialogV1({ trigger }: Props) {
+export default function AddOrEditAssetDialogV1({ trigger, asset }: Props) {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [theme] = useState('light')
   const [activeModal, dispatch] = useReducer(modalReducer, 'Real Estate')
@@ -38,10 +39,14 @@ export default function AddOrEditAssetDialogV1({ trigger }: Props) {
   const renderModalContent = () => {
     switch (activeModal) {
       case 'Real Estate':
-        return <RealEstateModal isDialogOpen={isDialogOpen} setIsDialogOpen={setIsDialogOpen} dispatch={dispatch} />
-      case 'Metal':
-        return <MetalModal isDialogOpen={isDialogOpen} setIsDialogOpen={setIsDialogOpen} />
-      // Add cases for other modals
+        return (
+          <RealEstateModal
+            asset={asset}
+            isDialogOpen={isDialogOpen}
+            setIsDialogOpen={setIsDialogOpen}
+            dispatch={dispatch}
+          />
+        )
       default:
         return null
     }
@@ -62,3 +67,5 @@ export default function AddOrEditAssetDialogV1({ trigger }: Props) {
 }
 
 // todo: this dialog on mobile devices
+// todo: add more modals
+// todo: design dropdown for asset type

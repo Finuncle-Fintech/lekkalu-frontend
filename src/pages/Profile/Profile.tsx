@@ -131,6 +131,7 @@ export default function Profile() {
                         {userData?.email_verified ? null : (
                           <Button
                             variant='link'
+                            disabled={!userData?.email}
                             type='button'
                             className='absolute right-0 top-0'
                             style={{ paddingLeft: '10px', paddingRight: '10px', zIndex: 1 }}
@@ -162,7 +163,9 @@ export default function Profile() {
             />
           </div>
 
-          <Button type='submit'>Update</Button>
+          <Button type='submit' loading={updateUserDetailMutation.isPending}>
+            Update
+          </Button>
         </form>
       </Form>
 

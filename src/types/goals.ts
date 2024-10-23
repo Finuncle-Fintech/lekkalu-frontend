@@ -1,18 +1,23 @@
 export type Goal = {
   id: number
   name: string
-  target_value: number
-  current_value: number
-  reachable_by_days: number
-  goal_proportionality: string
-  track_kpi: string
-  created_at: string
-  updated_at: string
+  targetValue: number
+  currentValue: number
+  reachableByDays: number
+  goalProportionality: string
+  trackKpi: string
+  createdAt: string
+  updatedAt: string
   target_contribution_source: number
-  target_date: string
+  targetDate: string
   met: boolean
-  custom_kpi: number
+  customKpi: number
 }
+
+export type GoalResponseType = {
+  financialGoals: Goal[]
+}
+
 export type CustomKPI = {
   id: number
   name: string

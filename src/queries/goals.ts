@@ -1,10 +1,33 @@
+import { gql } from 'graphql-request'
 import { AddGoalSchema } from '@/schema/goals'
-import { Goal, GoalProportionalityType, KpiType, Timeline, CustomKPI } from '@/types/goals'
+import { Goal, GoalProportionalityType, KpiType, Timeline, CustomKPI, GoalResponseType } from '@/types/goals'
 import { v1ApiClient, v2ApiClient } from '@/utils/client'
 import { AddCustomKPISchema } from '@/schema/custom_kpi'
+import { getGraphQLClient } from '@/utils/graphql-client'
 
+// TODO: delete rest api for goals.
 export async function fetchGoals() {
   const { data } = await v2ApiClient.get<Goal[]>('financial_goal/')
+  return data
+}
+
+export async function fetchGoalsWithGraphql() {
+  const docs = gql`
+    query MyQuery {
+      financialGoals {
+        id
+        createdAt
+        name
+        met
+        trackKpi
+        targetValue
+        targetDate
+        reachableByDays
+      }
+    }
+  `
+  const client = getGraphQLClient('GET')
+  const data = client.request<GoalResponseType>(docs)
   return data
 }
 

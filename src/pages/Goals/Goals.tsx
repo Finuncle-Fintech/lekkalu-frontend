@@ -10,7 +10,7 @@ import ProgressChart from '@/components/ProgressChart/ProgressChart'
 import { buttonVariants } from '@/components/ui/button'
 import Goal from './components/Goal'
 import { GOALS } from '@/utils/query-keys'
-import { fetchGoals } from '@/queries/goals'
+import { fetchGoalsWithGraphql } from '@/queries/goals'
 import { Skeleton } from '@/components/ui/skeleton'
 import { GoalStatus } from '@/types/goals'
 
@@ -24,18 +24,25 @@ const INITIAL_GOAL_STATUS: GoalStatus = {
 }
 
 export default function Goals() {
-  const { data, isLoading, isFetching } = useQuery({ queryKey: [GOALS.GOALS], queryFn: fetchGoals })
+  const { data, isLoading, isFetching } = useQuery({
+    queryKey: [GOALS.GOALS],
+    queryFn: fetchGoalsWithGraphql,
+    select: (data) => {
+      const _data = data?.financialGoals
+      return _data
+    },
+  })
   const [goalStatus, setGoalStatus] = useState<GoalStatus>(INITIAL_GOAL_STATUS)
 
   useEffect(() => {
     if (!isLoading) {
       const goalStatus = { ...INITIAL_GOAL_STATUS, total: data?.length || 0 }
-      data?.forEach(({ target_date, met }) => {
+      data?.forEach(({ targetDate, met }) => {
         if (met) {
           goalStatus.completed++
-        } else if (dayjs(target_date).isAfter(TODAY)) {
+        } else if (dayjs(targetDate).isAfter(TODAY)) {
           goalStatus.onTrack++
-        } else if (dayjs(target_date).isBefore(TODAY)) {
+        } else if (dayjs(targetDate).isBefore(TODAY)) {
           goalStatus.offTrack++
         }
       })
@@ -111,10 +118,10 @@ export default function Goals() {
                 key={goal.id}
                 id={goal.id}
                 goalTitle={goal.name}
-                category={goal.track_kpi}
-                createdAt={dayjs(goal.created_at).toISOString()}
-                color={goal?.reachable_by_days > 0 ? colors.violet['500'] : colors.red['500']}
-                reachable_by_days={goal?.reachable_by_days}
+                category={goal.trackKpi}
+                createdAt={dayjs(goal.createdAt).toISOString()}
+                color={goal?.reachableByDays > 0 ? colors.violet['500'] : colors.red['500']}
+                reachable_by_days={goal?.reachableByDays}
               />
             ))
           ) : (

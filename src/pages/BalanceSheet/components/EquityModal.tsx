@@ -12,7 +12,7 @@ type AssetModalProps = {
   asset?: PhysicalAsset
 }
 
-const RealEstateModal: React.FC<AssetModalProps> = ({ isDialogOpen, setIsDialogOpen, asset }: AssetModalProps) => {
+const EquityModal: React.FC<AssetModalProps> = ({ isDialogOpen, setIsDialogOpen, asset }: AssetModalProps) => {
   const assetForm = useForm<AddPhysicalAssetSchemaV1>({
     resolver: zodResolver(addPhysicalAssetSchemaV1),
     defaultValues: asset
@@ -60,12 +60,12 @@ const RealEstateModal: React.FC<AssetModalProps> = ({ isDialogOpen, setIsDialogO
     <AssetModal
       isDialogOpen={isDialogOpen}
       setIsDialogOpen={setIsDialogOpen}
-      description='Add any Real Estate properties that you own. Flat in an apartment, Commercial shop.
-      And specify expected returns to gauge your total financial performance over past and future '
+      description='Add any Shares in Stock Market or ESPP/RSU Stocks that you own.
+      And specify expected returns to gauge your total financial performance over past and future'
       fields={fields}
       assetForm={assetForm}
     />
   )
 }
 
-export default RealEstateModal
+export default EquityModal

@@ -11,6 +11,7 @@ import { getErrorMessage } from '@/utils/utils'
 import { toast } from '@/components/ui/use-toast'
 import DatePickerV1 from '@/components/DatePicker/DatePickerV1'
 import AssetTypeSelect from '@/pages/BalanceSheet/components/AssetTypeSelect'
+import { useModalDispatch, useModalState } from '@/pages/BalanceSheet/components/ModalContext'
 
 type FieldName = 'name' | 'purchase_value' | 'purchase_date' | 'expected_returns'
 export type FieldProp = {
@@ -24,22 +25,13 @@ export type FieldProp = {
 type AssetModalProps = {
   isDialogOpen: boolean
   setIsDialogOpen: (value: boolean) => void
-  dispatch: React.Dispatch<{
-    type: 'SET_MODAL'
-    payload: 'Real Estate' | 'Metal' | 'Equity' | 'Bank Account' | 'Mutual Fund'
-  }>
   description: string
   fields: Array<Array<FieldProp>>
   assetForm: UseFormReturn<AddPhysicalAssetSchemaV1>
 }
-export default function AssetModal({
-  isDialogOpen,
-  setIsDialogOpen,
-  dispatch,
-  description,
-  fields,
-  assetForm,
-}: AssetModalProps) {
+export default function AssetModal({ isDialogOpen, setIsDialogOpen, description, fields, assetForm }: AssetModalProps) {
+  const activeModal = useModalState()
+  const dispatch = useModalDispatch()
   const fieldInputStyle =
     "bg-inherit text-black font-normal font-['Charter'] leading-snug focus:outline-none text-right min-w-10 max-w-30 max-h-40"
   const qc = useQueryClient()
@@ -85,33 +77,26 @@ export default function AssetModal({
           </div>
         </div>
         <div className='flex-col justify-start items-start gap-[31px] inline-flex relative'>
-          <AssetTypeSelect toggleOverlay={toggleOverlay}>
+          <AssetTypeSelect toggleOverlay={toggleOverlay} dispatch={dispatch} payload={activeModal}>
             <House />
           </AssetTypeSelect>
           {isOverlayVisible && (
-            <div className='absolute bg-white shadow-md rounded-md mt-8 left-0'>
-              <ul>
-                <li>
-                  <AssetTypeSelect
-                    toggleOverlay={toggleOverlay}
-                    asOption={true}
-                    dispatch={dispatch}
-                    payload='Real Estate'
-                  >
-                    <House />
-                  </AssetTypeSelect>
-                </li>
-                <li>
-                  <AssetTypeSelect
-                    toggleOverlay={toggleOverlay}
-                    asOption={true}
-                    dispatch={dispatch}
-                    payload='Real Estate'
-                  >
-                    <House />
-                  </AssetTypeSelect>
-                </li>
-              </ul>
+            <div className='absolute bg-white shadow-md rounded-lg mt-[32px] left-0 flex flex-col'>
+              <AssetTypeSelect toggleOverlay={toggleOverlay} asOption={true} dispatch={dispatch} payload='Real Estate'>
+                <House />
+              </AssetTypeSelect>
+              <AssetTypeSelect toggleOverlay={toggleOverlay} asOption={true} dispatch={dispatch} payload='Metal'>
+                <House />
+              </AssetTypeSelect>
+              <AssetTypeSelect toggleOverlay={toggleOverlay} asOption={true} dispatch={dispatch} payload='Equity'>
+                <House />
+              </AssetTypeSelect>
+              <AssetTypeSelect toggleOverlay={toggleOverlay} asOption={true} dispatch={dispatch} payload='Bank Account'>
+                <House />
+              </AssetTypeSelect>
+              <AssetTypeSelect toggleOverlay={toggleOverlay} asOption={true} dispatch={dispatch} payload='Mutual Fund'>
+                <House />
+              </AssetTypeSelect>
             </div>
           )}
           <Field error={assetForm.formState.errors.name}>
@@ -173,5 +158,3 @@ export default function AssetModal({
     </form>
   )
 }
-
-// todo: fix the date picker

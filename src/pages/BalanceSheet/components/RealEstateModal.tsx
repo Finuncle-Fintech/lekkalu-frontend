@@ -5,7 +5,7 @@ import React from 'react'
 import AssetModal, { FieldProp } from '@/pages/BalanceSheet/components/AssetModal'
 import { addPhysicalAssetSchemaV1, AddPhysicalAssetSchemaV1 } from '@/schema/balance-sheet'
 import { PhysicalAsset } from '@/types/balance-sheet'
-import { addPhysicalAssetV1 } from '@/queries/balance-sheet'
+import { addPhysicalAsset } from '@/queries/balance-sheet'
 
 type AssetModalProps = {
   isDialogOpen: boolean
@@ -65,7 +65,7 @@ const RealEstateModal: React.FC<AssetModalProps> = ({ isDialogOpen, setIsDialogO
       And specify expected returns to gauge your total financial performance over past and future '
       fields={fields}
       assetForm={assetForm}
-      addMutation={addPhysicalAssetV1}
+      addMutation={addPhysicalAsset}
     />
   )
 }

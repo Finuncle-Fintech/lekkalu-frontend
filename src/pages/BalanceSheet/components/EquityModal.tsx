@@ -3,9 +3,9 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { IndianRupee, Percent } from 'lucide-react'
 import React from 'react'
 import AssetModal, { FieldProp } from '@/pages/BalanceSheet/components/AssetModal'
-import { addPhysicalAssetSchemaV1, AddPhysicalAssetSchemaV1 } from '@/schema/balance-sheet'
+import { AddEquitySchema, addPhysicalAssetSchemaV1 } from '@/schema/balance-sheet'
 import { PhysicalAsset } from '@/types/balance-sheet'
-import { addPhysicalAssetV1 } from '@/queries/balance-sheet'
+import { addEquity } from '@/queries/balance-sheet'
 
 type AssetModalProps = {
   isDialogOpen: boolean
@@ -14,7 +14,7 @@ type AssetModalProps = {
 }
 
 const EquityModal: React.FC<AssetModalProps> = ({ isDialogOpen, setIsDialogOpen, asset }: AssetModalProps) => {
-  const assetForm = useForm<AddPhysicalAssetSchemaV1>({
+  const assetForm = useForm<AddEquitySchema>({
     resolver: zodResolver(addPhysicalAssetSchemaV1),
     defaultValues: asset
       ? {
@@ -44,6 +44,14 @@ const EquityModal: React.FC<AssetModalProps> = ({ isDialogOpen, setIsDialogOpen,
         error: assetForm.formState.errors.purchase_date,
         icon: <IndianRupee className='mr-2 h-4 w-4' />,
       },
+      {
+        name: 'quantity',
+        label: 'Quantity',
+        placeholder: '100',
+        type: 'number',
+        error: assetForm.formState.errors.quantity,
+        icon: null,
+      },
     ],
     [
       {
@@ -65,7 +73,7 @@ const EquityModal: React.FC<AssetModalProps> = ({ isDialogOpen, setIsDialogOpen,
       And specify expected returns to gauge your total financial performance over past and future'
       fields={fields}
       assetForm={assetForm}
-      addMutation={addPhysicalAssetV1}
+      addMutation={addEquity}
     />
   )
 }

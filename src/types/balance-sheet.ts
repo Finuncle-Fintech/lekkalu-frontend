@@ -9,11 +9,26 @@ export type PhysicalAsset = {
   depreciation_frequency: number
   depreciation_percent_per_year: string
   market_value: string
-  user: number
   type: number
   tags: []
 }
 
+export type BankAccount = {
+  id: number
+  acc_id: string
+  name: string
+  balance: number
+  interest_rate: number
+}
+export type Equity = {
+  id: number
+  name: string
+  purchase_value: string
+  sell_value: string
+  purchase_date: string
+  sell_date: string
+  market_value: string
+}
 export type Metal = {
   id: number
   name: string
@@ -22,7 +37,6 @@ export type Metal = {
   purchase_date: string
   sell_date: string
   market_value: string
-  user: number
   type: string
 }
 export type Liability = {
@@ -36,7 +50,6 @@ export type Liability = {
   name: string
   principal: string
   tenure: number
-  user: number
 }
 
 export type LoanTransaction = {
@@ -45,6 +58,5 @@ export type LoanTransaction = {
   loan: number
   time: string
   type: number
-  user: number
   user_remark: string
 }

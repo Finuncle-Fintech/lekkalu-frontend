@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button'
 import InputFieldsRenderer, { InputField } from '@/components/InputFieldsRenderer/InputFieldsRenderer'
 import { Form } from '@/components/ui/form'
 import { LENDING } from '@/utils/query-keys'
-import { AddAccountSchema } from '@/types/lending'
+import { AddLendingAccountSchema } from '@/types/lending'
 import { useToast } from '@/components/ui/use-toast'
 import { getErrorMessage } from '@/utils/utils'
 import { addAccountSchema } from '@/schema/lending'
@@ -15,7 +15,7 @@ import { addLendingAccount, updateLendingAccount } from '@/queries/lending'
 
 type Props = {
   trigger: React.ReactElement
-  accounts?: AddAccountSchema
+  accounts?: AddLendingAccountSchema
 }
 
 export default function AddOrEditLending({ accounts, trigger }: Props) {
@@ -23,7 +23,7 @@ export default function AddOrEditLending({ accounts, trigger }: Props) {
   const { toast } = useToast()
   const queryClient = useQueryClient()
 
-  const form = useForm<AddAccountSchema>({
+  const form = useForm<AddLendingAccountSchema>({
     resolver: zodResolver(addAccountSchema),
     defaultValues: {
       name: accounts?.name,
@@ -45,7 +45,7 @@ export default function AddOrEditLending({ accounts, trigger }: Props) {
   })
 
   const updateAccountMutation = useMutation({
-    mutationFn: (dto: AddAccountSchema) => updateLendingAccount(accounts?.id!, dto),
+    mutationFn: (dto: AddLendingAccountSchema) => updateLendingAccount(accounts?.id!, dto),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [LENDING.ACCOUNTS] })
       toast({ title: 'Account updated successfully!' })

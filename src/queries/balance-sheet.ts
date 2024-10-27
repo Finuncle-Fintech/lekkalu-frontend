@@ -4,7 +4,6 @@ import {
   AddLiabilitySchema,
   AddMetalSchema,
   AddPhysicalAssetSchema,
-  AddPhysicalAssetSchemaV1,
 } from '@/schema/balance-sheet'
 import { BankAccount, Equity, Liability, LoanTransaction, Metal, PhysicalAsset } from '@/types/balance-sheet'
 import { v1ApiClient } from '@/utils/client'

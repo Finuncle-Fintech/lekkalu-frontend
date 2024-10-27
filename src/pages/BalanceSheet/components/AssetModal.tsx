@@ -4,8 +4,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { House } from 'lucide-react'
 import GenericFormField, { CancelButton, DetailField, Field, FieldContainer, SaveButton } from '@/components/ui/form-v1'
 import logger from '@/logger'
-import { AddPhysicalAssetSchemaV1 } from '@/schema/balance-sheet'
-import { addPhysicalAssetV1 } from '@/queries/balance-sheet'
+import { AddMetalSchema, AddPhysicalAssetSchemaV1 } from '@/schema/balance-sheet'
 import { BALANCE_SHEET } from '@/utils/query-keys'
 import { getErrorMessage } from '@/utils/utils'
 import { toast } from '@/components/ui/use-toast'
@@ -13,7 +12,7 @@ import DatePickerV1 from '@/components/DatePicker/DatePickerV1'
 import AssetTypeSelect from '@/pages/BalanceSheet/components/AssetTypeSelect'
 import { useModalDispatch, useModalState } from '@/pages/BalanceSheet/components/ModalContext'
 
-type FieldName = 'name' | 'purchase_value' | 'purchase_date' | 'expected_returns'
+type FieldName = 'name' | 'purchase_value' | 'purchase_date' | 'expected_returns' | 'type'
 export type FieldProp = {
   name: FieldName
   label: string
@@ -21,6 +20,7 @@ export type FieldProp = {
   type: string
   error: FieldError | undefined
   icon?: React.ReactNode
+  choices?: string[]
 }
 type AssetModalProps = {
   isDialogOpen: boolean
@@ -28,8 +28,16 @@ type AssetModalProps = {
   description: string
   fields: Array<Array<FieldProp>>
   assetForm: UseFormReturn<AddPhysicalAssetSchemaV1>
+  addMutation: (data: any) => any
 }
-export default function AssetModal({ isDialogOpen, setIsDialogOpen, description, fields, assetForm }: AssetModalProps) {
+export default function AssetModal({
+  isDialogOpen,
+  setIsDialogOpen,
+  description,
+  fields,
+  assetForm,
+  addMutation,
+}: AssetModalProps) {
   const activeModal = useModalState()
   const dispatch = useModalDispatch()
   const fieldInputStyle =
@@ -43,7 +51,7 @@ export default function AssetModal({ isDialogOpen, setIsDialogOpen, description,
     }
   }
   const addPhysicalAssetMutation = useMutation({
-    mutationFn: addPhysicalAssetV1,
+    mutationFn: addMutation,
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: [BALANCE_SHEET.ASSETS] })
       toast({ title: 'Asset created successfully!' })
@@ -51,7 +59,7 @@ export default function AssetModal({ isDialogOpen, setIsDialogOpen, description,
     },
     onError: (err) => toast(getErrorMessage(err)),
   })
-  const handleAddOrEditPhysicalAsset = (data: AddPhysicalAssetSchemaV1) => {
+  const handleAddOrEditAsset = (data: AddPhysicalAssetSchemaV1 | AddMetalSchema) => {
     logger.info(data)
     addPhysicalAssetMutation.mutate(data)
   }
@@ -67,8 +75,11 @@ export default function AssetModal({ isDialogOpen, setIsDialogOpen, description,
   useEffect(() => {
     assetForm.clearErrors()
   }, [assetForm, isDialogOpen])
+
+  const hasTypeField = fields.some((fieldSet) => fieldSet.some((field) => field.name === 'type'))
+
   return (
-    <form onSubmit={assetForm.handleSubmit(handleAddOrEditPhysicalAsset)}>
+    <form onSubmit={assetForm.handleSubmit(handleAddOrEditAsset)}>
       <div className='h-auto p-[25px] bg-accent rounded-[10px] shadow justify-start items-start gap-[31px] inline-flex'>
         <div className='flex-col justify-center items-start gap-2.5 inline-flex'>
           <div className="text-right text-black text-2xl font-bold font-['Charter'] leading-[33.60px]">About</div>
@@ -124,6 +135,15 @@ export default function AssetModal({ isDialogOpen, setIsDialogOpen, description,
                         className={fieldInputStyle}
                         value={selectedDate ? selectedDate.toISOString().split('T')[0] : ''}
                       />
+                    ) : field.type === 'choice' ? (
+                      <GenericFormField
+                        type={field.type}
+                        placeholder={field.placeholder}
+                        register={assetForm.register}
+                        name={field.name}
+                        className={fieldInputStyle}
+                        choices={field.choices}
+                      />
                     ) : (
                       <GenericFormField
                         type={field.type}
@@ -137,11 +157,11 @@ export default function AssetModal({ isDialogOpen, setIsDialogOpen, description,
                     <div className='ml-2'>
                       {field.type === 'date' ? (
                         <DatePickerV1 value={selectedDate} onChange={dateChangeHandler} />
-                      ) : (
+                      ) : field.icon ? (
                         <div className='mr-2 h-4 w-4'>
                           {React.cloneElement(field.icon as React.ReactElement, { width: 15, height: 15 })}
                         </div>
-                      )}
+                      ) : null}
                     </div>
                   </div>
                 </DetailField>
@@ -154,7 +174,7 @@ export default function AssetModal({ isDialogOpen, setIsDialogOpen, description,
           </div>
         </div>
       </div>
-      <input type='hidden' {...assetForm.register('type')} value='1' />
+      {!hasTypeField && <input type='hidden' {...assetForm.register('type')} value='1' />}
     </form>
   )
 }

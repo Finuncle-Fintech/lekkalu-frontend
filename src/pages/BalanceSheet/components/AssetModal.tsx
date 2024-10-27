@@ -4,7 +4,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { House } from 'lucide-react'
 import GenericFormField, { CancelButton, DetailField, Field, FieldContainer, SaveButton } from '@/components/ui/form-v1'
 import logger from '@/logger'
-import { AddMetalSchema, AddPhysicalAssetSchemaV1 } from '@/schema/balance-sheet'
+import { AddBankAccountSchema, AddEquitySchema, AddMetalSchema, AddPhysicalAssetSchemaV1 } from '@/schema/balance-sheet'
 import { BALANCE_SHEET } from '@/utils/query-keys'
 import { getErrorMessage } from '@/utils/utils'
 import { toast } from '@/components/ui/use-toast'
@@ -12,7 +12,18 @@ import DatePickerV1 from '@/components/DatePicker/DatePickerV1'
 import AssetTypeSelect from '@/pages/BalanceSheet/components/AssetTypeSelect'
 import { useModalDispatch, useModalState } from '@/pages/BalanceSheet/components/ModalContext'
 
-type FieldName = 'name' | 'purchase_value' | 'purchase_price' | 'purchase_date' | 'expected_returns' | 'type' | 'weight'
+type FieldName =
+  | 'name'
+  | 'purchase_value'
+  | 'purchase_price'
+  | 'purchase_date'
+  | 'expected_returns'
+  | 'type'
+  | 'weight'
+  | 'quantity'
+  | 'balance'
+  | 'id'
+  | 'interest_rate'
 export type FieldProp = {
   name: FieldName
   label: string
@@ -30,14 +41,9 @@ type AssetModalProps<T extends FieldValues> = {
   assetForm: UseFormReturn<T>
   addMutation: (data: any) => any
 }
-export default function AssetModal<T extends AddPhysicalAssetSchemaV1 | AddMetalSchema>({
-  isDialogOpen,
-  setIsDialogOpen,
-  description,
-  fields,
-  assetForm,
-  addMutation,
-}: AssetModalProps<T>) {
+export default function AssetModal<
+  T extends AddPhysicalAssetSchemaV1 | AddMetalSchema | AddEquitySchema | AddBankAccountSchema,
+>({ isDialogOpen, setIsDialogOpen, description, fields, assetForm, addMutation }: AssetModalProps<T>) {
   const activeModal = useModalState()
   const dispatch = useModalDispatch()
   const fieldInputStyle =
@@ -59,7 +65,9 @@ export default function AssetModal<T extends AddPhysicalAssetSchemaV1 | AddMetal
     },
     onError: (err) => toast(getErrorMessage(err)),
   })
-  const handleAddOrEditAsset = (data: AddPhysicalAssetSchemaV1 | AddMetalSchema) => {
+  const handleAddOrEditAsset = (
+    data: AddPhysicalAssetSchemaV1 | AddMetalSchema | AddEquitySchema | AddBankAccountSchema,
+  ) => {
     logger.info(data)
     addPhysicalAssetMutation.mutate(data)
   }

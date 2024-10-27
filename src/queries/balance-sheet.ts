@@ -1,10 +1,12 @@
 import {
+  AddBankAccountSchema,
+  AddEquitySchema,
   AddLiabilitySchema,
   AddMetalSchema,
   AddPhysicalAssetSchema,
   AddPhysicalAssetSchemaV1,
 } from '@/schema/balance-sheet'
-import { Liability, LoanTransaction, Metal, PhysicalAsset } from '@/types/balance-sheet'
+import { BankAccount, Equity, Liability, LoanTransaction, Metal, PhysicalAsset } from '@/types/balance-sheet'
 import { v1ApiClient } from '@/utils/client'
 
 export async function fetchPhysicalAssets() {
@@ -32,8 +34,13 @@ export async function addMetal(dto: AddMetalSchema) {
   return data
 }
 
-export async function addPhysicalAssetV1(dto: AddPhysicalAssetSchemaV1) {
-  const { data } = await v1ApiClient.post<PhysicalAsset[]>('/physical_assets/', dto)
+export async function addEquity(dto: AddEquitySchema) {
+  const { data } = await v1ApiClient.post<Equity[]>('/shares/', dto)
+  return data
+}
+
+export async function addBankAccount(dto: AddBankAccountSchema) {
+  const { data } = await v1ApiClient.post<BankAccount[]>('/accounts/', dto)
   return data
 }
 

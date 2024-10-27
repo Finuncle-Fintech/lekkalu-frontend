@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { FieldError, UseFormReturn } from 'react-hook-form'
+import { FieldError, FieldValues, Path, PathValue, UseFormReturn } from 'react-hook-form'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { House } from 'lucide-react'
 import GenericFormField, { CancelButton, DetailField, Field, FieldContainer, SaveButton } from '@/components/ui/form-v1'
@@ -12,7 +12,7 @@ import DatePickerV1 from '@/components/DatePicker/DatePickerV1'
 import AssetTypeSelect from '@/pages/BalanceSheet/components/AssetTypeSelect'
 import { useModalDispatch, useModalState } from '@/pages/BalanceSheet/components/ModalContext'
 
-type FieldName = 'name' | 'purchase_value' | 'purchase_date' | 'expected_returns' | 'type'
+type FieldName = 'name' | 'purchase_value' | 'purchase_price' | 'purchase_date' | 'expected_returns' | 'type' | 'weight'
 export type FieldProp = {
   name: FieldName
   label: string
@@ -22,22 +22,22 @@ export type FieldProp = {
   icon?: React.ReactNode
   choices?: string[]
 }
-type AssetModalProps = {
+type AssetModalProps<T extends FieldValues> = {
   isDialogOpen: boolean
   setIsDialogOpen: (value: boolean) => void
   description: string
   fields: Array<Array<FieldProp>>
-  assetForm: UseFormReturn<AddPhysicalAssetSchemaV1>
+  assetForm: UseFormReturn<T>
   addMutation: (data: any) => any
 }
-export default function AssetModal({
+export default function AssetModal<T extends AddPhysicalAssetSchemaV1 | AddMetalSchema>({
   isDialogOpen,
   setIsDialogOpen,
   description,
   fields,
   assetForm,
   addMutation,
-}: AssetModalProps) {
+}: AssetModalProps<T>) {
   const activeModal = useModalState()
   const dispatch = useModalDispatch()
   const fieldInputStyle =
@@ -47,7 +47,7 @@ export default function AssetModal({
   const dateChangeHandler = (date: Date | undefined) => {
     setSelectedDate(date)
     if (date) {
-      assetForm.setValue('purchase_date', date)
+      assetForm.setValue('purchase_date' as Path<T>, date as PathValue<T, Path<T>>)
     }
   }
   const addPhysicalAssetMutation = useMutation({
@@ -110,9 +110,9 @@ export default function AssetModal({
               </AssetTypeSelect>
             </div>
           )}
-          <Field error={assetForm.formState.errors.name}>
+          <Field error={assetForm.formState.errors.name as FieldError}>
             <GenericFormField
-              name={'name'}
+              name={'name' as Path<T>}
               register={assetForm.register}
               placeholder={'Asset Name'}
               textAlign={'left'}
@@ -131,7 +131,7 @@ export default function AssetModal({
                         type={'text'}
                         placeholder={field.placeholder}
                         register={assetForm.register}
-                        name={field.name}
+                        name={field.name as Path<T>}
                         className={fieldInputStyle}
                         value={selectedDate ? selectedDate.toISOString().split('T')[0] : ''}
                       />
@@ -140,7 +140,7 @@ export default function AssetModal({
                         type={field.type}
                         placeholder={field.placeholder}
                         register={assetForm.register}
-                        name={field.name}
+                        name={field.name as Path<T>}
                         className={fieldInputStyle}
                         choices={field.choices}
                       />
@@ -150,7 +150,7 @@ export default function AssetModal({
                         placeholder={field.placeholder}
                         register={assetForm.register}
                         valueAsNumber={field.type === 'number'}
-                        name={field.name}
+                        name={field.name as Path<T>}
                         className={fieldInputStyle}
                       />
                     )}
@@ -174,7 +174,7 @@ export default function AssetModal({
           </div>
         </div>
       </div>
-      {!hasTypeField && <input type='hidden' {...assetForm.register('type')} value='1' />}
+      {!hasTypeField && <input type='hidden' {...assetForm.register('type' as Path<T>)} value='1' />}
     </form>
   )
 }

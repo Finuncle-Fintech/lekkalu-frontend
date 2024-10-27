@@ -3,7 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { IndianRupee, Percent } from 'lucide-react'
 import React from 'react'
 import AssetModal, { FieldProp } from '@/pages/BalanceSheet/components/AssetModal'
-import { addMetalSchema, AddPhysicalAssetSchemaV1 } from '@/schema/balance-sheet'
+import { AddMetalSchema, addMetalSchema } from '@/schema/balance-sheet'
 import { PhysicalAsset } from '@/types/balance-sheet'
 import { addMetal } from '@/queries/balance-sheet'
 
@@ -14,13 +14,13 @@ type AssetModalProps = {
 }
 
 const MetalModel: React.FC<AssetModalProps> = ({ isDialogOpen, setIsDialogOpen, asset }: AssetModalProps) => {
-  const assetForm = useForm<AddPhysicalAssetSchemaV1>({
+  const assetForm = useForm<AddMetalSchema>({
     resolver: zodResolver(addMetalSchema),
     defaultValues: asset
       ? {
           name: asset.name,
           purchase_date: new Date(asset.purchase_date), // Convert to Date object
-          purchase_value: parseFloat(asset.purchase_value), // Convert to number
+          purchase_price: parseFloat(asset.purchase_value), // Convert to number
           expected_returns: -asset.depreciation_percent_per_year,
           type: asset.type.toString(), // Convert to string
         }
@@ -37,7 +37,7 @@ const MetalModel: React.FC<AssetModalProps> = ({ isDialogOpen, setIsDialogOpen, 
         icon: null,
       },
       {
-        name: 'purchase_value',
+        name: 'purchase_price',
         label: 'At Price',
         placeholder: '40,00,000',
         type: 'number',
@@ -53,6 +53,16 @@ const MetalModel: React.FC<AssetModalProps> = ({ isDialogOpen, setIsDialogOpen, 
         type: 'number',
         error: assetForm.formState.errors.expected_returns,
         icon: <Percent />,
+      },
+    ],
+    [
+      {
+        name: 'weight',
+        label: 'Weight',
+        placeholder: '10',
+        type: 'number',
+        error: assetForm.formState.errors.weight,
+        icon: null,
       },
     ],
     [

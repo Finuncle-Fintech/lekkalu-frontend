@@ -5,6 +5,7 @@ import React from 'react'
 import AssetModal, { FieldProp } from '@/pages/BalanceSheet/components/AssetModal'
 import { addPhysicalAssetSchemaV1, AddPhysicalAssetSchemaV1 } from '@/schema/balance-sheet'
 import { PhysicalAsset } from '@/types/balance-sheet'
+import { addPhysicalAssetV1 } from '@/queries/balance-sheet'
 
 type AssetModalProps = {
   isDialogOpen: boolean
@@ -12,11 +13,7 @@ type AssetModalProps = {
   asset?: PhysicalAsset
 }
 
-const BankAccountModal: React.FC<AssetModalProps> = ({
-  isDialogOpen,
-  setIsDialogOpen,
-  asset,
-}: AssetModalProps) => {
+const BankAccountModal: React.FC<AssetModalProps> = ({ isDialogOpen, setIsDialogOpen, asset }: AssetModalProps) => {
   const assetForm = useForm<AddPhysicalAssetSchemaV1>({
     resolver: zodResolver(addPhysicalAssetSchemaV1),
     defaultValues: asset
@@ -68,6 +65,7 @@ const BankAccountModal: React.FC<AssetModalProps> = ({
       total financial performance over past and future'
       fields={fields}
       assetForm={assetForm}
+      addMutation={addPhysicalAssetV1}
     />
   )
 }

@@ -66,7 +66,7 @@
     "zod": "^3.22.4"
   },
   "scripts": {
-    "test": "craco test",
+    "test": "craco test --watchAll=false",
     "eject": "craco eject",
     "start:dev": "env-cmd -f ./environments/.dev.env craco start",
     "build:dev": "env-cmd -f ./environments/.dev.env craco build",
@@ -76,7 +76,9 @@
     "build": "env-cmd -f ./environments/.prod.env craco build",
     "start": "npm run start:prod",
     "format": "prettier --write src/**/*.{js,jsx,ts,tsx,css,md,json,scss} --config ./.prettierrc",
-    "lint": "eslint --fix --no-error-on-unmatched-pattern --ignore-path .gitignore --ext ts,tsx,js,jsx ."
+    "lint": "eslint --fix --no-error-on-unmatched-pattern --ignore-path .gitignore --ext ts,tsx,js,jsx .",
+    "check:duplicates": "jscpd src --min-lines 5 --reporters console",
+    "prepare": "husky install"
   },
   "browserslist": {
     "production": [
@@ -119,8 +121,10 @@
     "eslint-plugin-react": "^7.34.4",
     "eslint-plugin-react-hooks": "^4.6.2",
     "fork-ts-checker-webpack-plugin": "^9.0.2",
+    "husky": "^8.0.0",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
+    "jscpd": "^4.0.5",
     "prettier": "3.1.1",
     "recharts": "^2.12.4",
     "tailwindcss": "^3.4.4",

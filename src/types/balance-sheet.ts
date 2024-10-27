@@ -14,6 +14,17 @@ export type PhysicalAsset = {
   tags: []
 }
 
+export type Metal = {
+  id: number
+  name: string
+  purchase_value: string
+  sell_value: string
+  purchase_date: string
+  sell_date: string
+  market_value: string
+  user: number
+  type: string
+}
 export type Liability = {
   id: number
   balance: string

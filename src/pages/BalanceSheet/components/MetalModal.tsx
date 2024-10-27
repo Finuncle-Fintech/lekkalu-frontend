@@ -3,8 +3,9 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { IndianRupee, Percent } from 'lucide-react'
 import React from 'react'
 import AssetModal, { FieldProp } from '@/pages/BalanceSheet/components/AssetModal'
-import { addPhysicalAssetSchemaV1, AddPhysicalAssetSchemaV1 } from '@/schema/balance-sheet'
+import { addMetalSchema, AddPhysicalAssetSchemaV1 } from '@/schema/balance-sheet'
 import { PhysicalAsset } from '@/types/balance-sheet'
+import { addMetal } from '@/queries/balance-sheet'
 
 type AssetModalProps = {
   isDialogOpen: boolean
@@ -14,7 +15,7 @@ type AssetModalProps = {
 
 const MetalModel: React.FC<AssetModalProps> = ({ isDialogOpen, setIsDialogOpen, asset }: AssetModalProps) => {
   const assetForm = useForm<AddPhysicalAssetSchemaV1>({
-    resolver: zodResolver(addPhysicalAssetSchemaV1),
+    resolver: zodResolver(addMetalSchema),
     defaultValues: asset
       ? {
           name: asset.name,
@@ -54,6 +55,16 @@ const MetalModel: React.FC<AssetModalProps> = ({ isDialogOpen, setIsDialogOpen, 
         icon: <Percent />,
       },
     ],
+    [
+      {
+        name: 'type',
+        label: 'Type',
+        placeholder: 'Gold',
+        type: 'choice',
+        error: assetForm.formState.errors.type,
+        choices: ['Gold', 'Silver', 'Platinum'],
+      },
+    ],
   ]
 
   return (
@@ -64,6 +75,7 @@ const MetalModel: React.FC<AssetModalProps> = ({ isDialogOpen, setIsDialogOpen, 
       total financial performance over past and future'
       fields={fields}
       assetForm={assetForm}
+      addMutation={addMetal}
     />
   )
 }

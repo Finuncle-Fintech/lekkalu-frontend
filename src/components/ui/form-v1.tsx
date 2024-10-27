@@ -44,6 +44,7 @@ interface GenericFieldProps<T extends FieldValues> {
   disabled?: boolean
   textAlign?: 'left' | 'center' | 'right' // Accept custom textAlight as a prop
   value?: string | number
+  choices?: string[]
 }
 
 // Generic component for rendering a field
@@ -57,8 +58,17 @@ const GenericFormField = <T extends FieldValues>({
   disabled = false, // default to false for disabled
   textAlign = 'right', // default to left for textAlight
   value,
+  choices, //Destructive choices
 }: GenericFieldProps<T>) => {
-  return (
+  return type === 'choice' ? (
+    <select {...register(name)} className={className} disabled={disabled} style={{ textAlign }}>
+      {choices?.map((choice, idx) => (
+        <option key={idx} value={choice}>
+          {choice}
+        </option>
+      ))}
+    </select>
+  ) : (
     <input
       placeholder={placeholder}
       {...register(name, { valueAsNumber })}

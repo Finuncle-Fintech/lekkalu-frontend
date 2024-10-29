@@ -22,7 +22,7 @@ export type Transaction = {
   lending_account: number
 }
 
-export type AddAccountSchema = {
+export type AddLendingAccountSchema = {
   id?: number
   name: string
   partner_email: string

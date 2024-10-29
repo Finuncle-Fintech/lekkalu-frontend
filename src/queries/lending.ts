@@ -1,4 +1,4 @@
-import { Accounts, AddAccountSchema, AddTransactionSchema } from '@/types/lending'
+import { Accounts, AddLendingAccountSchema, AddTransactionSchema } from '@/types/lending'
 import { apiClient } from '@/utils/client'
 
 // Lending Accounts
@@ -7,13 +7,13 @@ export async function fetchLendingAccounts() {
   return data
 }
 
-export async function addLendingAccount(dto: AddAccountSchema) {
-  const { data } = await apiClient.post<{ data: AddAccountSchema }>('v2/lending_accounts', dto)
+export async function addLendingAccount(dto: AddLendingAccountSchema) {
+  const { data } = await apiClient.post<{ data: AddLendingAccountSchema }>('v2/lending_accounts', dto)
   return data
 }
 
-export async function updateLendingAccount(id: number, dto: AddAccountSchema) {
-  const { data } = await apiClient.put<{ data: AddAccountSchema }>(`v2/lending_accounts/${id}`, dto)
+export async function updateLendingAccount(id: number, dto: AddLendingAccountSchema) {
+  const { data } = await apiClient.put<{ data: AddLendingAccountSchema }>(`v2/lending_accounts/${id}`, dto)
   return data
 }
 

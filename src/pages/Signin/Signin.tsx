@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { Link, Navigate, useSearchParams } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { AppleIcon, FacebookIcon } from 'lucide-react'
+// import { AppleIcon, FacebookIcon } from 'lucide-react'
 import When from '@/components/When/When'
 import { LoginSchema, loginSchema } from '@/schema/auth'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
@@ -12,7 +12,7 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Button } from '@/components/ui/button'
 import { useAuthContext } from '@/hooks/use-auth'
 import Page from '@/components/Page/Page'
-import GoogleAuth from '@/components/SocialAuth/GoogleAuth'
+// import GoogleAuth from '@/components/SocialAuth/GoogleAuth'
 
 export const Signin = () => {
   const { tokenData, loginMutation, googleSignupMutation } = useAuthContext()
@@ -126,14 +126,14 @@ export const Signin = () => {
               Don&apos;t have an account? Sign Up
             </Link>
             <div className='space-y-4'>
-              <div className='flex items-center gap-2'>
-                <div className='h-[1px] bg-muted w-full' />
-                <p>OR</p>
-                <div className='h-[1px] bg-muted w-full' />
-              </div>
-              <div className='flex justify-center items-center mx-0'>
-                <GoogleAuth buttonText='Login with Google' />
-              </div>
+              {/*<div className='flex items-center gap-2'>*/}
+              {/*  <div className='h-[1px] bg-muted w-full' />*/}
+              {/*  <p>OR</p>*/}
+              {/*  <div className='h-[1px] bg-muted w-full' />*/}
+              {/*</div>*/}
+              {/*<div className='flex justify-center items-center mx-0'>*/}
+              {/*  <GoogleAuth buttonText='Login with Google' />*/}
+              {/*</div>*/}
             </div>
             <When truthy={!isUnderDevelopment}>
               <div className='space-y-4'>
@@ -143,19 +143,19 @@ export const Signin = () => {
                   <div className='h-[1px] bg-muted w-full' />
                 </div>
 
-                <Button className='w-full' variant='outline'>
-                  <FacebookIcon className='mr-2 w-4 h-4' />
-                  <span>Continue with Facebook</span>
-                </Button>
-                <Button className='w-full' variant='outline'>
-                  <span>Continue with Google</span>
-                </Button>
+                {/*<Button className='w-full' variant='outline'>*/}
+                {/*  <FacebookIcon className='mr-2 w-4 h-4' />*/}
+                {/*  <span>Continue with Facebook</span>*/}
+                {/*</Button>*/}
+                {/*<Button className='w-full' variant='outline'>*/}
+                {/*  <span>Continue with Google</span>*/}
+                {/*</Button>*/}
 
                 {/* @TODO: Update Apple icon */}
-                <Button className='w-full' variant='outline'>
-                  <AppleIcon className='mr-2 w-4 h-4' />
-                  <span>Continue with Apple</span>
-                </Button>
+                {/*<Button className='w-full' variant='outline'>*/}
+                {/*  <AppleIcon className='mr-2 w-4 h-4' />*/}
+                {/*  <span>Continue with Apple</span>*/}
+                {/*</Button>*/}
               </div>
             </When>
           </div>

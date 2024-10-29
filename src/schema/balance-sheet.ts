@@ -22,6 +22,47 @@ export type AddPhysicalAssetSchema = Omit<z.infer<typeof addPhysicalAssetSchema>
   depreciation_frequency: number
 }
 
+export const addPhysicalAssetSchemaV1 = z.object({
+  name: z.string().min(1, { message: 'Name must have at least one character' }),
+  purchase_value: z.number().min(1),
+  purchase_date: z.date(),
+  expected_returns: z.number(),
+  type: z.string().default('1'),
+})
+
+export type AddPhysicalAssetSchemaV1 = z.infer<typeof addPhysicalAssetSchemaV1>
+
+export const addMetalSchema = z.object({
+  name: z.string().min(1, { message: 'Name must have at least one character' }),
+  purchase_price: z.number().min(1),
+  purchase_date: z.date(),
+  expected_returns: z.number(),
+  type: z.string(),
+  weight: z.number(),
+})
+
+export type AddMetalSchema = z.infer<typeof addMetalSchema>
+
+export const addEquitySchema = z.object({
+  name: z.string().min(1, { message: 'Name must have at least one character' }),
+  purchase_value: z.number().min(1),
+  purchase_date: z.date(),
+  expected_returns: z.number(),
+  type: z.string(),
+  quantity: z.number(),
+})
+
+export type AddEquitySchema = z.infer<typeof addEquitySchema>
+
+export const addBankAccountSchema = z.object({
+  name: z.string().min(1, { message: 'Name must have at least one character' }),
+  interest_rate: z.number(),
+  balance: z.number(),
+  id: z.string(),
+})
+
+export type AddBankAccountSchema = z.infer<typeof addBankAccountSchema>
+
 export const addPhysicalAssetSchemaForScenario = z.object({
   name: z.string().min(1, 'Asset name is required!'),
   purchase_value: z.coerce.number().min(1, 'Purchase value is required!'),
@@ -33,8 +74,6 @@ export const addPhysicalAssetSchemaForScenario = z.object({
   market_value: z.coerce.number().optional(),
   type: z.coerce.number(),
   tags: z.array(z.string()),
-  // months: z.coerce.number(),
-  // years: z.coerce.number(),
   user: z.number(),
 })
 

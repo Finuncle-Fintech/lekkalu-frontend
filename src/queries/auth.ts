@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { EmailVerifyPayloadType, LoginSchema, SignupSchemaNew } from '@/schema/auth'
-import { googleClient, registrationClient, tokenClient, userClient } from '@/utils/client'
+import { baseUserApiClient, googleClient, registrationClient, tokenClient, userClient } from '@/utils/client'
 import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from '@/utils/constants'
 import { getCookie } from '@/utils/cookie'
 import { User } from '@/types/user'
@@ -53,6 +53,19 @@ export async function refreshToken() {
       refresh: getCookie(REFRESH_TOKEN_KEY),
     })
     return data
+  }
+}
+
+export async function fetchCSRFToken() {
+  const token = getCookie(ACCESS_TOKEN_KEY)
+  if (token) {
+    const { data } = await baseUserApiClient.get<{ csrfToken: string }>('/csrf', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    })
+    return data.csrfToken
   }
 }
 

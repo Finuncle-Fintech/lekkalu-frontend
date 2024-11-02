@@ -2,9 +2,17 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import constate from 'constate'
 import { useNavigate } from 'react-router-dom'
-import { fetchUser, googleSignup, login, refreshToken, signup, logout as logoutAPI } from '@/queries/auth'
+import {
+  fetchUser,
+  googleSignup,
+  login,
+  refreshToken,
+  signup,
+  logout as logoutAPI,
+  fetchCSRFToken,
+} from '@/queries/auth'
 import { deleteCookie, getCookie, setCookie } from '@/utils/cookie'
-import { ACCESS_TOKEN_KEY, COOKIE_CONSENT, REFRESH_TOKEN_KEY } from '@/utils/constants'
+import { ACCESS_TOKEN_KEY, COOKIE_CONSENT, CSRF_TOKEN, REFRESH_TOKEN_KEY } from '@/utils/constants'
 import { AUTH } from '@/utils/query-keys'
 import { useToast } from '@/components/ui/use-toast'
 import { getErrorMessage } from '@/utils/utils'
@@ -19,6 +27,20 @@ export function useAuth() {
     refetch: fetchUserData,
     isLoading: isLoadingUserData,
   } = useQuery({ queryKey: [AUTH.USER], queryFn: fetchUser })
+
+  const {
+    data: csrfToken,
+    refetch: getCSRFToken,
+    isSuccess: CSRFTokenFetchingSuccess,
+  } = useQuery({
+    queryKey: [AUTH.CSRF_TOKEN],
+    queryFn: fetchCSRFToken,
+    enabled: false,
+  })
+
+  useEffect(() => {
+    if (CSRFTokenFetchingSuccess && csrfToken) setCookie(CSRF_TOKEN, csrfToken, 30)
+  }, [CSRFTokenFetchingSuccess, csrfToken])
 
   const [isOpen, setIsOpen] = useState<boolean>(() => {
     const storedIsOpen = localStorage.getItem('isOpen')
@@ -101,8 +123,9 @@ export function useAuth() {
   useEffect(() => {
     if (getCookie(ACCESS_TOKEN_KEY)) {
       fetchUserData()
+      getCSRFToken()
     }
-  }, [fetchUserData])
+  }, [fetchUserData, getCSRFToken])
 
   return useMemo(
     () => ({

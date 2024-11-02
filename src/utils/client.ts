@@ -87,6 +87,18 @@ v2ApiClient?.interceptors.request.use((config) => {
   return config
 })
 
+export const baseUserApiClient = axios.create({
+  baseURL: process.env.REACT_APP_ACCOUNTS_BASE_URL,
+  headers: BASIC_HEADER,
+})
+v2ApiClient?.interceptors.request.use((config) => {
+  if (!config.headers.Authorization) {
+    config.headers.Authorization = `Bearer ${getCookie('access')}`
+  }
+
+  return config
+})
+
 /** For resend-email-verification request */
 
 export const registrationClient = axios.create({

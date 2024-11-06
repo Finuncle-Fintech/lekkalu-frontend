@@ -12,7 +12,7 @@ export const MAX_EXPENSES_ALLOWED = 100
 
 export const REFRESH_TOKEN_KEY = 'refresh'
 export const ACCESS_TOKEN_KEY = 'access'
-export const CSRF_TOKEN = 'csrf'
+export const CSRF_TOKEN = 'csrf-token'
 export const COOKIE_CONSENT = 'cookie-consent'
 export const RADIAN = Math.PI / 180
 export const PIE_CHART_COLORS = [

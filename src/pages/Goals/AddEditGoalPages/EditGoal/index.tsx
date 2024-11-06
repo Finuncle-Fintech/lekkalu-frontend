@@ -52,11 +52,11 @@ export default function EditGoal() {
   useEffect(() => {
     if (!isFetchingGoal && goal) {
       form.setValue('name', goal?.name)
-      form.setValue('target_date', goal?.target_date)
-      form.setValue('target_value', goal?.target_value)
-      form.setValue('goal_proportionality', goal?.goal_proportionality)
-      form.setValue('track_kpi', goal?.track_kpi)
-      form.setValue('target_contribution_source', goal?.target_contribution_source)
+      form.setValue('target_date', goal?.targetDate)
+      form.setValue('target_value', goal?.targetValue)
+      form.setValue('goal_proportionality', goal?.goalProportionality)
+      form.setValue('track_kpi', goal?.trackKpi)
+      form.setValue('target_contribution_source', goal?.targetContributionSource)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [goal, isFetchingGoal])

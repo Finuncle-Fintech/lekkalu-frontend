@@ -1,6 +1,15 @@
+/* eslint-disable no-console */
 import { gql } from 'graphql-request'
 import { AddGoalSchema } from '@/schema/goals'
-import { Goal, GoalProportionalityType, KpiType, Timeline, CustomKPI, GoalResponseType } from '@/types/goals'
+import {
+  Goal,
+  GoalProportionalityType,
+  KpiType,
+  Timeline,
+  CustomKPI,
+  GoalResponseType,
+  GoalsResponseType,
+} from '@/types/goals'
 import { v1ApiClient, v2ApiClient } from '@/utils/client'
 import { AddCustomKPISchema } from '@/schema/custom_kpi'
 import { getGraphQLClient } from '@/utils/graphql-client'
@@ -27,7 +36,7 @@ export async function fetchGoalsWithGraphql() {
     }
   `
   const client = getGraphQLClient('GET')
-  const data = client.request<GoalResponseType>(docs)
+  const data = client.request<GoalsResponseType>(docs)
   return data
 }
 
@@ -71,6 +80,41 @@ export async function addGoal(dto: AddGoalSchema) {
   return data
 }
 
+export async function addGoalWithGraphql() {
+  const docs = gql`
+    mutation {
+      createFinancialGoal(
+        name: "New Test Goal using graphql"
+        customKpiContentType: "customkpi"
+        customKpiObjectId: 2
+        targetValue: 1
+        goalProportionality: "HigherTheBetter"
+      ) {
+        financialGoal {
+          id
+          contentType
+          objectId
+          relatedObject {
+            ... on UserCustomKPIType {
+              idf
+              name
+              description
+            }
+            ... on CustomKPIType {
+              id
+              name
+            }
+          }
+        }
+      }
+    }
+  `
+  const client = getGraphQLClient('POST')
+  const data = await client.request<any>(docs)
+  console.log('hello world', data)
+  return data
+}
+
 export async function editGoal(id: number, dto: Partial<AddGoalSchema>) {
   const { data } = await v1ApiClient.put(`financial_goal/${id}`, dto)
   return data
@@ -81,6 +125,19 @@ export async function deleteGoal(id: number) {
   return data
 }
 
+export async function deleteGoalWithGraphql(id: number) {
+  const docs = gql`
+    mutation {
+      deleteFinancialGoal(id: ${id}) {
+        success
+      }
+    }
+  `
+  const client = getGraphQLClient('POST')
+  const data = await client.request<GoalResponseType>(docs)
+  return data.financialGoals
+}
+
 export async function getGoalProgress(id: number) {
   const { data } = await v2ApiClient.get<{ name: string; progress_percent: number }>(`financial_goal/progress/${id}`)
   return data
@@ -88,6 +145,26 @@ export async function getGoalProgress(id: number) {
 
 export async function fetchGoalDetails(id: number) {
   const { data } = await v2ApiClient.get<Goal>(`financial_goal/${id}`)
+  return data
+}
+
+export async function fetchGoalsDetailsWithGraphql(id: number) {
+  const docs = gql`
+    query MyQuery {
+      financialGoal(id: ${id}) {
+        id
+        createdAt
+        name
+        met
+        trackKpi
+        targetValue
+        targetDate
+        reachableByDays
+      }
+    }
+  `
+  const client = getGraphQLClient('GET')
+  const data = await client.request<GoalResponseType>(docs)
   return data
 }
 

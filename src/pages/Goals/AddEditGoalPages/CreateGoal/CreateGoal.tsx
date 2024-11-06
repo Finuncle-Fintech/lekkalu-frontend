@@ -7,9 +7,10 @@ import { useNavigate, Link } from 'react-router-dom'
 import dayjs from 'dayjs'
 import Page from '@/components/Page/Page'
 import { AddGoalSchema, addGoalSchema } from '@/schema/goals'
-import { addGoal } from '@/queries/goals'
+import { addGoal, addGoalWithGraphql } from '@/queries/goals'
 import { useToast } from '@/components/ui/use-toast'
 import Form from '../components/Form'
+import { Button } from '@/components/ui/button'
 
 export default function CreateGoal() {
   const { toast } = useToast()
@@ -48,6 +49,7 @@ export default function CreateGoal() {
         Back to Goals
       </Link>
       <Form form={form} onSubmit={handleGoalCreate} isLoading={createGoalMutation.isPending} />
+      <Button onClick={addGoalWithGraphql}>Create Goal with graphql</Button>
     </Page>
   )
 }

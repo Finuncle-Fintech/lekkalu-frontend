@@ -4,7 +4,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import Alert from '@/components/Alert/Alert'
 import { Button } from '@/components/ui/button'
 import { useToast } from '@/components/ui/use-toast'
-import { deleteGoal } from '@/queries/goals'
+import { deleteGoalWithGraphql } from '@/queries/goals'
 import { GOALS } from '@/utils/query-keys'
 import { getErrorMessage } from '@/utils/utils'
 
@@ -17,7 +17,7 @@ export default function DeleteGoal({ id }: Props) {
   const { toast } = useToast()
 
   const deleteGoalMutation = useMutation({
-    mutationFn: deleteGoal,
+    mutationFn: deleteGoalWithGraphql,
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: [GOALS.GOALS] })
       toast({ title: 'Goal deleted successfully!' })

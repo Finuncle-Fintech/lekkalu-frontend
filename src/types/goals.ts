@@ -8,14 +8,18 @@ export type Goal = {
   trackKpi: string
   createdAt: string
   updatedAt: string
-  target_contribution_source: number
+  targetContributionSource: number
   targetDate: string
   met: boolean
   customKpi: number
 }
 
-export type GoalResponseType = {
+export type GoalsResponseType = {
   financialGoals: Goal[]
+}
+
+export type GoalResponseType = {
+  financialGoals: Goal
 }
 
 export type CustomKPI = {

@@ -1,9 +1,11 @@
 import axios from 'axios'
+import { gql } from 'graphql-request'
 import { EmailVerifyPayloadType, LoginSchema, SignupSchemaNew } from '@/schema/auth'
 import { baseUserApiClient, googleClient, registrationClient, tokenClient, userClient } from '@/utils/client'
-import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from '@/utils/constants'
-import { getCookie } from '@/utils/cookie'
+import { ACCESS_TOKEN_KEY, CSRF_TOKEN, REFRESH_TOKEN_KEY } from '@/utils/constants'
+import { getCookie, setCookie } from '@/utils/cookie'
 import { User } from '@/types/user'
+import { getGraphQLClient } from '@/utils/graphql-client'
 
 export async function signup(dto: Omit<SignupSchemaNew, 'termsAndConditions' | 'privacyPolicy'>) {
   const { data } = await axios
@@ -25,7 +27,24 @@ export async function googleSignup(dto: { code: string }) {
 
 export async function login(dto: Omit<LoginSchema, 'rememberMe'>) {
   const { data } = await tokenClient.post<{ access: string; refresh: string }>('/', dto)
-  return data
+  setCookie(REFRESH_TOKEN_KEY, data.refresh, 30)
+  setCookie(ACCESS_TOKEN_KEY, data.access, 30)
+  const csrfToken = await fetchCSRFToken(data.access)
+  setCookie(CSRF_TOKEN, csrfToken ?? '', 30)
+  const jwtForQL = await fetchJWTForGraphql({
+    username: dto.username,
+    password: dto.password,
+    csrfToken: csrfToken || '',
+  })
+
+  console.log('jwt', jwtForQL)
+
+  // New process of login includes
+  // get JWT token -> get csrf token using JWT token -> get jwt-ql token using csrf token and jwt token
+
+  setCookie('JWTQL', jwtForQL, 30)
+
+  return { access: data.access, refresh: data.refresh, username: dto.username, password: dto.password }
 }
 
 export async function logout() {
@@ -56,17 +75,39 @@ export async function refreshToken() {
   }
 }
 
-export async function fetchCSRFToken() {
-  const token = getCookie(ACCESS_TOKEN_KEY)
+export async function fetchCSRFToken(token?: string) {
+  const _token = token ?? getCookie(ACCESS_TOKEN_KEY)
   if (token) {
-    const { data } = await baseUserApiClient.get<{ csrfToken: string }>('/csrf', {
+    const { data } = await baseUserApiClient.get<{ csrfToken: string }>('/csrf/', {
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${_token}`,
         'Content-Type': 'application/json',
       },
     })
     return data.csrfToken
   }
+}
+
+export async function fetchJWTForGraphql({
+  csrfToken,
+  username,
+  password,
+}: {
+  csrfToken: string
+  username: string
+  password: string
+}) {
+  const doc = gql`
+    mutation MyMutation {
+      tokenAuth(password: ${password}, username: ${username}){
+        token
+      }
+    }
+  `
+  const client = getGraphQLClient('POST', csrfToken)
+  const data = client.request<string>(doc)
+  console.log(data)
+  return data
 }
 
 export async function fetchUser() {

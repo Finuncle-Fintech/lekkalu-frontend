@@ -12,7 +12,7 @@ import {
   fetchCSRFToken,
 } from '@/queries/auth'
 import { deleteCookie, getCookie, setCookie } from '@/utils/cookie'
-import { ACCESS_TOKEN_KEY, COOKIE_CONSENT, CSRF_TOKEN, REFRESH_TOKEN_KEY } from '@/utils/constants'
+import { ACCESS_TOKEN_KEY, COOKIE_CONSENT, CSRF_TOKEN, JWT_GRAPHQL, REFRESH_TOKEN_KEY } from '@/utils/constants'
 import { AUTH } from '@/utils/query-keys'
 import { useToast } from '@/components/ui/use-toast'
 import { getErrorMessage } from '@/utils/utils'
@@ -34,7 +34,7 @@ export function useAuth() {
     isSuccess: CSRFTokenFetchingSuccess,
   } = useQuery({
     queryKey: [AUTH.CSRF_TOKEN],
-    queryFn: fetchCSRFToken,
+    queryFn: () => fetchCSRFToken(),
     enabled: false,
   })
 
@@ -113,6 +113,8 @@ export function useAuth() {
     await logoutAPI()
     deleteCookie(REFRESH_TOKEN_KEY)
     deleteCookie(ACCESS_TOKEN_KEY)
+    deleteCookie(CSRF_TOKEN)
+    deleteCookie(JWT_GRAPHQL)
     qc.removeQueries({ queryKey: [AUTH.LOGGED_IN] })
     qc.clear()
     clearData()

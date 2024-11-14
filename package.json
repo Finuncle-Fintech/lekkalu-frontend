@@ -37,7 +37,7 @@
     "clsx": "^2.1.0",
     "cmdk": "^0.2.0",
     "constate": "^3.3.2",
-    "date-fns": "^3.2.0",
+    "date-fns": "^3.6.0",
     "dayjs": "^1.11.12",
     "env-cmd": "^10.1.0",
     "eslint-plugin-jest": "^28.6.0",

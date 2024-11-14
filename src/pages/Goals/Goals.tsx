@@ -23,40 +23,22 @@ const INITIAL_GOAL_STATUS: GoalStatus = {
   offTrack: 0,
   onTrack: 0,
 }
+const INITIAL_GOALS_DATA: DumbbellChartProps = {
+  Goals: [],
+}
 
 export default function Goals() {
   const { data, isLoading, isFetching } = useQuery({ queryKey: [GOALS.GOALS], queryFn: fetchGoals })
   const [goalStatus, setGoalStatus] = useState<GoalStatus>(INITIAL_GOAL_STATUS)
-
-  const goals_data: DumbbellChartProps = {
-    Goals: [
-      {
-        name: 'Goal-1',
-        Scenarios: [
-          {
-            name: 'Scenario-1',
-            start_date: new Date('2023-01-01'),
-            finish_date: new Date('2023-03-01'),
-          },
-          {
-            name: 'Scenario-2',
-            start_date: new Date('2023-02-01'),
-            finish_date: new Date('2023-04-01'),
-          },
-          {
-            name: 'Scnario-3',
-            start_date: new Date('2023-03-01'),
-            finish_date: new Date('2023-05-01'),
-          },
-        ],
-      },
-    ],
-  }
+  const [goals_data] = useState<DumbbellChartProps>(INITIAL_GOALS_DATA)
 
   useEffect(() => {
     if (!isLoading) {
       const goalStatus = { ...INITIAL_GOAL_STATUS, total: data?.length || 0 }
-      data?.forEach(({ target_date, met }) => {
+      if (goals_data) {
+        goals_data.Goals.length = 0
+      }
+      data?.forEach(({ name, target_date, met }) => {
         if (met) {
           goalStatus.completed++
         } else if (dayjs(target_date).isAfter(TODAY)) {
@@ -64,10 +46,30 @@ export default function Goals() {
         } else if (dayjs(target_date).isBefore(TODAY)) {
           goalStatus.offTrack++
         }
+        goals_data?.Goals.push({
+          name,
+          Scenarios: [
+            {
+              name: 'Scenario-1',
+              start_date: new Date('2023-01-01'),
+              finish_date: new Date('2023-03-01'),
+            },
+            {
+              name: 'Scenario-2',
+              start_date: new Date('2023-02-01'),
+              finish_date: new Date('2023-04-01'),
+            },
+            {
+              name: 'Scnario-3',
+              start_date: new Date('2023-03-01'),
+              finish_date: new Date('2023-05-01'),
+            },
+          ],
+        })
       })
       setGoalStatus(goalStatus)
     }
-  }, [data, isLoading])
+  }, [data, goals_data, isLoading])
 
   const getPercentage = useCallback((value: number, total: number) => {
     return +((value / total) * 100).toFixed(2) || 0

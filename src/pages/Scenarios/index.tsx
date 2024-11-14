@@ -9,34 +9,10 @@ import { Skeleton } from '@/components/ui/skeleton'
 import EachScenario from './components/EachScenario'
 import { SCENARIOS } from '@/utils/query-keys'
 import { fetchScenarios } from '@/queries/scenarios'
-import DumbbellChart, { DumbbellChartProps } from '@/pages/Scenarios/components/DumbbellChart'
 
 const ScenarioPage = () => {
   const { data: scenarios, isLoading } = useQuery({ queryKey: [SCENARIOS.SCENARIOS], queryFn: fetchScenarios })
-  const goals_data: DumbbellChartProps = {
-    Goals: [
-      {
-        name: 'Goal-1',
-        Scenarios: [
-          {
-            name: 'Scenario-1',
-            start_date: new Date('2023-01-01'),
-            finish_date: new Date('2023-03-01'),
-          },
-          {
-            name: 'Scenario-2',
-            start_date: new Date('2023-02-01'),
-            finish_date: new Date('2023-04-01'),
-          },
-          {
-            name: 'Scnario-3',
-            start_date: new Date('2023-03-01'),
-            finish_date: new Date('2023-05-01'),
-          },
-        ],
-      },
-    ],
-  }
+
   return (
     <Page className='space-y-5'>
       <div className='flex justify-end'>
@@ -77,7 +53,6 @@ const ScenarioPage = () => {
           </div>
         )}
       </div>
-      <DumbbellChart {...goals_data} />
     </Page>
   )
 }

@@ -13,6 +13,7 @@ import { GOALS } from '@/utils/query-keys'
 import { fetchGoals } from '@/queries/goals'
 import { Skeleton } from '@/components/ui/skeleton'
 import { GoalStatus } from '@/types/goals'
+import DumbbellChart, { DumbbellChartProps } from '@/pages/Goals/DumbbellChart'
 
 const TODAY = new Date()
 
@@ -26,6 +27,31 @@ const INITIAL_GOAL_STATUS: GoalStatus = {
 export default function Goals() {
   const { data, isLoading, isFetching } = useQuery({ queryKey: [GOALS.GOALS], queryFn: fetchGoals })
   const [goalStatus, setGoalStatus] = useState<GoalStatus>(INITIAL_GOAL_STATUS)
+
+  const goals_data: DumbbellChartProps = {
+    Goals: [
+      {
+        name: 'Goal-1',
+        Scenarios: [
+          {
+            name: 'Scenario-1',
+            start_date: new Date('2023-01-01'),
+            finish_date: new Date('2023-03-01'),
+          },
+          {
+            name: 'Scenario-2',
+            start_date: new Date('2023-02-01'),
+            finish_date: new Date('2023-04-01'),
+          },
+          {
+            name: 'Scnario-3',
+            start_date: new Date('2023-03-01'),
+            finish_date: new Date('2023-05-01'),
+          },
+        ],
+      },
+    ],
+  }
 
   useEffect(() => {
     if (!isLoading) {
@@ -73,6 +99,8 @@ export default function Goals() {
           <span>Add Goal</span>
         </Link>
       </div>
+
+      <DumbbellChart {...goals_data} />
 
       <div className='grid sm:grid-cols-2 md:grid-cols-3 gap-4'>
         <ProgressChart

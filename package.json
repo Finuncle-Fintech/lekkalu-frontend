@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "dependencies": {
+    "@apollo/client": "^3.11.10",
     "@craco/craco": "^7.1.0",
     "@headlessui/react": "^2.1.2",
     "@heroicons/react": "^2.1.5",

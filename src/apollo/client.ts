@@ -12,7 +12,7 @@ const authLink = setContext((_, { headers }) => {
   return {
     headers: {
       ...headers,
-      Authorization: `JWT ${getCookie('access')}`,
+      Authorization: `JWT ${getCookie('graphql_token')}`,
     },
   }
 })

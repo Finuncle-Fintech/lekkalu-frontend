@@ -11,34 +11,36 @@ export async function fetchGoals() {
 }
 
 const FETCH_GOALS_QUERY = gql`
-  query fetchGoals {
-    financialGoals {
-      id
-      name
-      contentType
-      objectId
-      userId
-      scenarios {
-        name
+    query fetchGoals {
         financialGoals {
-          name
-          createdAt
-          reachableByDays
+            id
+            name
+            contentType
+            objectId
+            userId
+            createdAt
+            reachableByDays
+            scenarios {
+                name
+                financialGoals {
+                    name
+                    createdAt
+                    reachableByDays
+                }
+            }
+            relatedObject {
+                ... on UserCustomKPIType {
+                    id
+                    name
+                    description
+                }
+                ... on CustomKPIType {
+                    id
+                    name
+                }
+            }
         }
-      }
-      relatedObject {
-        ... on UserCustomKPIType {
-          id
-          name
-          description
-        }
-        ... on CustomKPIType {
-          id
-          name
-        }
-      }
     }
-  }
 `
 
 // fetch goals from apollo client

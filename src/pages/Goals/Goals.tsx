@@ -29,18 +29,17 @@ const INITIAL_GOALS_DATA: DumbbellChartProps = {
 }
 
 export default function Goals() {
-  // const { data, isLoading, isFetching } = useQuery({ queryKey: [GOALS.GOALS], queryFn: fetchGoals })
-  const { data, isLoading, isFetching } = useQuery({ queryKey: [GOALS.GOALS], queryFn: fetchGoalsGql })
+  const { data: goals_data, isLoading, isFetching } = useQuery({ queryKey: [GOALS.GOALS], queryFn: fetchGoalsGql })
   const [goalStatus, setGoalStatus] = useState<GoalStatus>(INITIAL_GOAL_STATUS)
   const [goals_chart_data] = useState<DumbbellChartProps>(INITIAL_GOALS_DATA)
 
   useEffect(() => {
     if (!isLoading) {
-      const goalStatus = { ...INITIAL_GOAL_STATUS, total: data?.length || 0 }
+      const goalStatus = { ...INITIAL_GOAL_STATUS, total: goals_data?.length || 0 }
       if (goals_chart_data) {
         goals_chart_data.Goals.length = 0
       }
-      data?.forEach(({ name, target_date, met, scenarios }) => {
+      goals_data?.forEach(({ name, target_date, met, scenarios, createdAt, reachableByDays }) => {
         if (met) {
           goalStatus.completed++
         } else if (dayjs(target_date).isAfter(TODAY)) {
@@ -48,18 +47,22 @@ export default function Goals() {
         } else if (dayjs(target_date).isBefore(TODAY)) {
           goalStatus.offTrack++
         }
-        goals_chart_data?.Goals.push({
-          name,
-          Scenarios: scenarios?.map((scenario) => ({
+        const temp = scenarios
+          ?.map((scenario) => ({
             name: scenario.name,
             start_date: new Date(scenario.financialGoals[0].createdAt),
             finish_date: addDays(new Date(), scenario.financialGoals[0].reachableByDays),
-          })),
-        })
+          }))
+          .concat({
+            name: 'Current Scenario',
+            start_date: new Date(createdAt),
+            finish_date: addDays(new Date(createdAt), reachableByDays),
+          })
+        goals_chart_data?.Goals.push({ name, Scenarios: temp })
       })
       setGoalStatus(goalStatus)
     }
-  }, [data, goals_chart_data, isLoading])
+  }, [goals_data, goals_chart_data, isLoading])
 
   const getPercentage = useCallback((value: number, total: number) => {
     return +((value / total) * 100).toFixed(2) || 0
@@ -123,10 +126,10 @@ export default function Goals() {
         </div>
       ) : (
         <div>
-          {data?.length ? (
+          {goals_data?.length ? (
             <>
               <div className='grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 gap-y-10'>
-                {data?.map((goal) => (
+                {goals_data?.map((goal) => (
                   <Goal
                     key={goal.id}
                     id={goal.id}

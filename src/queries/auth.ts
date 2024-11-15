@@ -1,9 +1,11 @@
+import { gql } from '@apollo/client'
 import axios from 'axios'
 import { EmailVerifyPayloadType, LoginSchema, SignupSchemaNew } from '@/schema/auth'
 import { googleClient, registrationClient, tokenClient, userClient } from '@/utils/client'
 import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from '@/utils/constants'
 import { getCookie } from '@/utils/cookie'
 import { User } from '@/types/user'
+import client from '@/apollo/client'
 
 export async function signup(dto: Omit<SignupSchemaNew, 'termsAndConditions' | 'privacyPolicy'>) {
   const { data } = await axios
@@ -26,6 +28,25 @@ export async function googleSignup(dto: { code: string }) {
 export async function login(dto: Omit<LoginSchema, 'rememberMe'>) {
   const { data } = await tokenClient.post<{ access: string; refresh: string }>('/', dto)
   return data
+}
+
+const LOGIN_MUTATION = gql`
+  mutation tokenAuthMutation($username: String!, $password: String!) {
+    tokenAuth(username: $username, password: $password) {
+      token
+    }
+  }
+`
+
+export async function loginGql(dto: Omit<LoginSchema, 'rememberMe'>) {
+  const { data } = await client.mutate({
+    mutation: LOGIN_MUTATION,
+    variables: {
+      username: dto.username,
+      password: dto.password,
+    },
+  })
+  return data.tokenAuth
 }
 
 export async function logout() {

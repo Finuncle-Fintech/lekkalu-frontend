@@ -15,7 +15,7 @@ import Page from '@/components/Page/Page'
 // import GoogleAuth from '@/components/SocialAuth/GoogleAuth'
 
 export const Signin = () => {
-  const { tokenData, loginMutation, googleSignupMutation } = useAuthContext()
+  const { tokenData, loginMutation, loginMutationGql, googleSignupMutation } = useAuthContext()
   const [searchParams] = useSearchParams()
   const redirectTo = searchParams.get('redirectTo') ?? '/dashboard'
   const authCode = searchParams.get('code')
@@ -32,6 +32,7 @@ export const Signin = () => {
 
   const handleSignin = (values: LoginSchema) => {
     loginMutation.mutate(values)
+    loginMutationGql.mutate(values)
   }
 
   useEffect(() => {
@@ -69,7 +70,11 @@ export const Signin = () => {
                     <FormItem>
                       <FormLabel>Username</FormLabel>
                       <FormControl>
-                        <Input disabled={loginMutation.isPending} placeholder='Enter your username' {...field} />
+                        <Input
+                          disabled={loginMutation.isPending || loginMutationGql.isPending}
+                          placeholder='Enter your username'
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -83,7 +88,11 @@ export const Signin = () => {
                     <FormItem>
                       <FormLabel>Password</FormLabel>
                       <FormControl>
-                        <Password disabled={loginMutation.isPending} placeholder='Enter your password' {...field} />
+                        <Password
+                          disabled={loginMutation.isPending || loginMutationGql.isPending}
+                          placeholder='Enter your password'
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -98,7 +107,7 @@ export const Signin = () => {
                       <FormControl>
                         <div className='flex items-center space-x-2'>
                           <Checkbox
-                            disabled={loginMutation.isPending}
+                            disabled={loginMutation.isPending || loginMutationGql.isPending}
                             id='rememberMe'
                             checked={field.value}
                             onCheckedChange={field.onChange}
@@ -116,7 +125,7 @@ export const Signin = () => {
                   )}
                 />
 
-                <Button type='submit' loading={loginMutation.isPending}>
+                <Button type='submit' loading={loginMutationGql.isPending || loginMutationGql.isPending}>
                   Continue
                 </Button>
               </form>

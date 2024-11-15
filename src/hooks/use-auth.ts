@@ -2,9 +2,9 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import constate from 'constate'
 import { useNavigate } from 'react-router-dom'
-import { fetchUser, googleSignup, login, refreshToken, signup, logout as logoutAPI } from '@/queries/auth'
+import { fetchUser, googleSignup, login, refreshToken, signup, logout as logoutAPI, loginGql } from '@/queries/auth'
 import { deleteCookie, getCookie, setCookie } from '@/utils/cookie'
-import { ACCESS_TOKEN_KEY, COOKIE_CONSENT, REFRESH_TOKEN_KEY } from '@/utils/constants'
+import { ACCESS_TOKEN_KEY, COOKIE_CONSENT, GRAPHQL_TOKEN_KEY, REFRESH_TOKEN_KEY } from '@/utils/constants'
 import { AUTH } from '@/utils/query-keys'
 import { useToast } from '@/components/ui/use-toast'
 import { getErrorMessage } from '@/utils/utils'
@@ -59,6 +59,20 @@ export function useAuth() {
     onError: (err) => toast(getErrorMessage(err)),
   })
 
+  const loginMutationGql = useMutation({
+    mutationFn: loginGql,
+    onSuccess: (data) => {
+      toast({ title: 'Successfully logged in!' })
+      /** Saving the tokens in cookies */
+      setCookie(GRAPHQL_TOKEN_KEY, data.token, 30)
+      setCookie(COOKIE_CONSENT, 'accept', 30)
+      /** updating the data in queryClient */
+      qc.setQueryData([AUTH.LOGGED_IN_GQL], data)
+
+      fetchUserData()
+    },
+  })
+
   const signupMutation = useMutation({
     mutationFn: signup,
     onSuccess: () => {
@@ -109,6 +123,7 @@ export function useAuth() {
       isAuthenticationInProgress,
       tokenData,
       loginMutation,
+      loginMutationGql,
       logout,
       signupMutation,
       userData,
@@ -122,6 +137,7 @@ export function useAuth() {
       isAuthenticationInProgress,
       tokenData,
       loginMutation,
+      loginMutationGql,
       logout,
       signupMutation,
       userData,

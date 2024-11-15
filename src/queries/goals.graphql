@@ -1,0 +1,45 @@
+scalar Date
+type Scenario{
+    id: ID!
+    name: String!
+    goalID: Int!
+    userID: Int!
+    financialGoals: [Goal]
+}
+
+type UserCustomKPIType {
+    id: ID!
+    name: String!
+    description: String!
+}
+
+type CustomKPIType {
+    id: ID!
+    name: String!
+}
+union RelatedObject = UserCustomKPIType | CustomKPIType
+type Goal{
+    id: ID!
+    name: String!
+    contentType: String!
+    objectId: Int!
+    userId: Int!
+    scenarios: [Scenario]
+    createdAt: Date!
+    reachableByDays: Int!
+    relatedObject: RelatedObject
+}
+type Query {
+    financialGoals: [Goal]
+}
+query fetchGoals {
+    financialGoals {
+        id
+        name
+        contentType
+        objectId
+        userId
+        createdAt
+        reachableByDays
+    }
+}

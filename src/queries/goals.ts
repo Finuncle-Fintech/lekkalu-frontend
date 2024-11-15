@@ -10,41 +10,41 @@ export async function fetchGoals() {
   return data
 }
 
-const GOALS_QUERY = gql`
-    {
+const FETCH_GOALS_QUERY = gql`
+  query fetchGoals {
+    financialGoals {
+      id
+      name
+      contentType
+      objectId
+      userId
+      scenarios {
+        name
         financialGoals {
-            id
-            name
-            contentType
-            objectId
-            userId
-            scenarios {
-                name
-                financialGoals {
-                    name
-                    createdAt
-                    reachableByDays
-                }
-            }
-            relatedObject {
-                ... on UserCustomKPIType {
-                    id
-                    name
-                    description
-                }
-                ... on CustomKPIType {
-                    id
-                    name
-                }
-            }
+          name
+          createdAt
+          reachableByDays
         }
+      }
+      relatedObject {
+        ... on UserCustomKPIType {
+          id
+          name
+          description
+        }
+        ... on CustomKPIType {
+          id
+          name
+        }
+      }
     }
+  }
 `
 
 // fetch goals from apollo client
 export async function fetchGoalsGql() {
   const { data } = await client.query({
-    query: GOALS_QUERY,
+    query: FETCH_GOALS_QUERY,
   })
   return data.financialGoals as Goal[]
 }

@@ -1,17 +1,20 @@
+import { Scenario } from '@/types/scenarios'
+
 export type Goal = {
   id: number
   name: string
   target_value: number
   current_value: number
-  reachable_by_days: number
+  reachableByDays: number
   goal_proportionality: string
   track_kpi: string
-  created_at: string
+  createdAt: string
   updated_at: string
   target_contribution_source: number
   target_date: string
   met: boolean
   custom_kpi: number
+  scenarios: Scenario[]
 }
 export type CustomKPI = {
   id: number

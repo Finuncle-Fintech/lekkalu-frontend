@@ -1,11 +1,52 @@
+import { gql } from '@apollo/client'
 import { AddGoalSchema } from '@/schema/goals'
 import { Goal, GoalProportionalityType, KpiType, Timeline, CustomKPI } from '@/types/goals'
 import { v1ApiClient, v2ApiClient } from '@/utils/client'
 import { AddCustomKPISchema } from '@/schema/custom_kpi'
+import client from '@/apollo/client'
 
 export async function fetchGoals() {
   const { data } = await v2ApiClient.get<Goal[]>('financial_goal/')
   return data
+}
+
+const GOALS_QUERY = gql`
+    {
+        financialGoals {
+            id
+            name
+            contentType
+            objectId
+            userId
+            scenarios {
+                name
+                financialGoals {
+                    name
+                    createdAt
+                    reachableByDays
+                }
+            }
+            relatedObject {
+                ... on UserCustomKPIType {
+                    id
+                    name
+                    description
+                }
+                ... on CustomKPIType {
+                    id
+                    name
+                }
+            }
+        }
+    }
+`
+
+// fetch goals from apollo client
+export async function fetchGoalsGql() {
+  const { data } = await client.query({
+    query: GOALS_QUERY,
+  })
+  return data.financialGoals as Goal[]
 }
 
 export async function fetchUserCustomKPIs() {

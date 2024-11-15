@@ -30,8 +30,8 @@ export default function GoalDetails() {
   })
 
   const reachableDays = useMemo(
-    () => goalReachedString(convertDays(data?.reachable_by_days || 0)),
-    [data?.reachable_by_days],
+    () => goalReachedString(convertDays(data?.reachableByDays || 0)),
+    [data?.reachableByDays],
   )
 
   if (isLoading) {
@@ -55,42 +55,42 @@ export default function GoalDetails() {
   }
 
   return (
-    <Page className="space-y-4">
-      <h1 className="text-2xl font-bold mb-8">{data.name}</h1>
+    <Page className='space-y-4'>
+      <h1 className='text-2xl font-bold mb-8'>{data.name}</h1>
       <BackButton />
-      <div className="grid md:grid-cols-2 gap-4">
-        <div className="flex">
-          <div className="flex gap-2 flex-1 items-center">
-            <TargetIcon className="w-4 h-4" />
+      <div className='grid md:grid-cols-2 gap-4'>
+        <div className='flex'>
+          <div className='flex gap-2 flex-1 items-center'>
+            <TargetIcon className='w-4 h-4' />
             <div>Target</div>
           </div>
-          <div className="flex-1 font-medium">{formatIndianMoneyNotation(data.target_value)}</div>
+          <div className='flex-1 font-medium'>{formatIndianMoneyNotation(data.target_value)}</div>
         </div>
 
-        <div className="flex">
-          <div className="flex gap-2 flex-1 items-center">
-            <GaugeIcon className="w-4 h-4" />
+        <div className='flex'>
+          <div className='flex gap-2 flex-1 items-center'>
+            <GaugeIcon className='w-4 h-4' />
             <div>KPI</div>
           </div>
-          <div className="flex-1 font-medium">{data.track_kpi}</div>
+          <div className='flex-1 font-medium'>{data.track_kpi}</div>
         </div>
 
-        <div className="flex">
-          <div className="flex gap-2 flex-1 items-center">
-            <SplitIcon className="w-4 h-4" />
+        <div className='flex'>
+          <div className='flex gap-2 flex-1 items-center'>
+            <SplitIcon className='w-4 h-4' />
             <div>Source</div>
           </div>
-          <div className="flex-1 font-medium">{data.target_contribution_source}</div>
+          <div className='flex-1 font-medium'>{data.target_contribution_source}</div>
         </div>
 
-        <div className="flex">
-          <div className="flex gap-2 flex-1 items-center">
-            <BadgeCheckIcon className="w-4 h-4" />
+        <div className='flex'>
+          <div className='flex gap-2 flex-1 items-center'>
+            <BadgeCheckIcon className='w-4 h-4' />
             <div>
-              <p>{data?.reachable_by_days < 0 ? 'Reached' : 'Reachable by'}</p>
+              <p>{data?.reachableByDays < 0 ? 'Reached' : 'Reachable by'}</p>
             </div>
           </div>
-          <div className="flex-1 font-medium">
+          <div className='flex-1 font-medium'>
             <p>{reachableDays}</p>
           </div>
         </div>

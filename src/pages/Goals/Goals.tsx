@@ -5,12 +5,13 @@ import { PlusIcon } from 'lucide-react'
 import dayjs from 'dayjs'
 import { useQuery } from '@tanstack/react-query'
 import { range } from 'lodash'
+import { addDays } from 'date-fns'
 import Page from '@/components/Page/Page'
 import ProgressChart from '@/components/ProgressChart/ProgressChart'
 import { buttonVariants } from '@/components/ui/button'
 import Goal from './components/Goal'
 import { GOALS } from '@/utils/query-keys'
-import { fetchGoals } from '@/queries/goals'
+import { fetchGoalsGql } from '@/queries/goals'
 import { Skeleton } from '@/components/ui/skeleton'
 import { GoalStatus } from '@/types/goals'
 import DumbbellChart, { DumbbellChartProps } from '@/pages/Goals/DumbbellChart'
@@ -28,17 +29,18 @@ const INITIAL_GOALS_DATA: DumbbellChartProps = {
 }
 
 export default function Goals() {
-  const { data, isLoading, isFetching } = useQuery({ queryKey: [GOALS.GOALS], queryFn: fetchGoals })
+  // const { data, isLoading, isFetching } = useQuery({ queryKey: [GOALS.GOALS], queryFn: fetchGoals })
+  const { data, isLoading, isFetching } = useQuery({ queryKey: [GOALS.GOALS], queryFn: fetchGoalsGql })
   const [goalStatus, setGoalStatus] = useState<GoalStatus>(INITIAL_GOAL_STATUS)
-  const [goals_data] = useState<DumbbellChartProps>(INITIAL_GOALS_DATA)
+  const [goals_chart_data] = useState<DumbbellChartProps>(INITIAL_GOALS_DATA)
 
   useEffect(() => {
     if (!isLoading) {
       const goalStatus = { ...INITIAL_GOAL_STATUS, total: data?.length || 0 }
-      if (goals_data) {
-        goals_data.Goals.length = 0
+      if (goals_chart_data) {
+        goals_chart_data.Goals.length = 0
       }
-      data?.forEach(({ name, target_date, met }) => {
+      data?.forEach(({ name, target_date, met, scenarios }) => {
         if (met) {
           goalStatus.completed++
         } else if (dayjs(target_date).isAfter(TODAY)) {
@@ -46,30 +48,18 @@ export default function Goals() {
         } else if (dayjs(target_date).isBefore(TODAY)) {
           goalStatus.offTrack++
         }
-        goals_data?.Goals.push({
+        goals_chart_data?.Goals.push({
           name,
-          Scenarios: [
-            {
-              name: 'Scenario-1',
-              start_date: new Date('2023-01-01'),
-              finish_date: new Date('2023-03-01'),
-            },
-            {
-              name: 'Scenario-2',
-              start_date: new Date('2023-02-01'),
-              finish_date: new Date('2023-04-01'),
-            },
-            {
-              name: 'Scnario-3',
-              start_date: new Date('2023-03-01'),
-              finish_date: new Date('2023-05-01'),
-            },
-          ],
+          Scenarios: scenarios?.map((scenario) => ({
+            name: scenario.name,
+            start_date: new Date(scenario.financialGoals[0].createdAt),
+            finish_date: addDays(new Date(), scenario.financialGoals[0].reachableByDays),
+          })),
         })
       })
       setGoalStatus(goalStatus)
     }
-  }, [data, goals_data, isLoading])
+  }, [data, goals_chart_data, isLoading])
 
   const getPercentage = useCallback((value: number, total: number) => {
     return +((value / total) * 100).toFixed(2) || 0
@@ -142,13 +132,13 @@ export default function Goals() {
                     id={goal.id}
                     goalTitle={goal.name}
                     category={goal.track_kpi}
-                    createdAt={dayjs(goal.created_at).toISOString()}
-                    color={goal?.reachable_by_days > 0 ? colors.violet['500'] : colors.red['500']}
-                    reachable_by_days={goal?.reachable_by_days}
+                    createdAt={dayjs(goal.createdAt).toISOString()}
+                    color={goal?.reachableByDays > 0 ? colors.violet['500'] : colors.red['500']}
+                    reachable_by_days={goal?.reachableByDays}
                   />
                 ))}
               </div>
-              <DumbbellChart {...goals_data} />
+              <DumbbellChart {...goals_chart_data} />
             </>
           ) : (
             <div>

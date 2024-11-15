@@ -3,12 +3,16 @@ import dayjs from 'dayjs'
 import { Lock, UnlockIcon } from 'lucide-react'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { useNavigate } from 'react-router-dom'
-import { Scenario } from '@/types/scenarios'
 import EachScenarioOptions from './EachScenarioOptions'
 
 dayjs.extend(relativeTime)
+type EachScenarioProps = {
+  id: number
+  name: string
+  access: string
+}
 
-const EachScenario = ({ id, name, access }: Scenario) => {
+const EachScenario = ({ id, name, access }: EachScenarioProps) => {
   const navigate = useNavigate()
 
   const handleClick = () => {

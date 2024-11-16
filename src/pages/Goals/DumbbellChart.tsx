@@ -74,7 +74,7 @@ const DumbbellChart = ({ Goals }: DumbbellChartProps) => {
       min: minDate,
       max: maxDate,
     },
-    title: { text: 'Goal Scenarios Timeline' },
+    title: { text: '' },
     legend: {
       show: true,
       showForSingleSeries: true,

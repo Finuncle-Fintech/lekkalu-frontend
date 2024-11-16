@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import colors from 'tailwindcss/colors'
 import { Link } from 'react-router-dom'
 import { PlusIcon } from 'lucide-react'
@@ -7,66 +7,67 @@ import { useQuery } from '@tanstack/react-query'
 import { range } from 'lodash'
 import { addDays } from 'date-fns'
 import Page from '@/components/Page/Page'
-import ProgressChart from '@/components/ProgressChart/ProgressChart'
 import { buttonVariants } from '@/components/ui/button'
 import Goal from './components/Goal'
 import { GOALS } from '@/utils/query-keys'
 import { fetchGoalsGql } from '@/queries/goals'
 import { Skeleton } from '@/components/ui/skeleton'
-import { GoalStatus } from '@/types/goals'
-import DumbbellChart, { DumbbellChartProps } from '@/pages/Goals/DumbbellChart'
+import DumbbellChart, { DumbbellChartProps, GoalDumbbellChartProps } from '@/pages/Goals/DumbbellChart'
+import GoalListItem from '@/pages/Goals/components/GoalListItem'
 
+type CheckedItems = {
+  [key: string]: boolean
+}
 const TODAY = new Date()
 
-const INITIAL_GOAL_STATUS: GoalStatus = {
-  completed: 0,
-  total: 0,
-  offTrack: 0,
-  onTrack: 0,
-}
 const INITIAL_GOALS_DATA: DumbbellChartProps = {
   Goals: [],
 }
 
 export default function Goals() {
   const { data: goals_data, isLoading, isFetching } = useQuery({ queryKey: [GOALS.GOALS], queryFn: fetchGoalsGql })
-  const [goalStatus, setGoalStatus] = useState<GoalStatus>(INITIAL_GOAL_STATUS)
-  const [goals_chart_data] = useState<DumbbellChartProps>(INITIAL_GOALS_DATA)
+  const [checkedItems, setCheckedItems] = useState<CheckedItems>({})
+  const [goalsChartData, setGoalsChartData] = useState<DumbbellChartProps>(INITIAL_GOALS_DATA)
+
+  const handleCheckboxChange = (id: string) => {
+    setCheckedItems((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }))
+  }
+  useEffect(() => {
+    if (!isLoading) {
+      // set all checked items to true
+      const initialCheckedItems = goals_data?.reduce((acc, goal) => {
+        acc[goal.id] = true
+        return acc
+      }, {} as CheckedItems)
+      setCheckedItems(initialCheckedItems ?? {})
+    }
+  }, [goals_data, isLoading])
 
   useEffect(() => {
     if (!isLoading) {
-      const goalStatus = { ...INITIAL_GOAL_STATUS, total: goals_data?.length || 0 }
-      if (goals_chart_data) {
-        goals_chart_data.Goals.length = 0
-      }
-      goals_data?.forEach(({ name, target_date, met, scenarios, createdAt, reachableByDays }) => {
-        if (met) {
-          goalStatus.completed++
-        } else if (dayjs(target_date).isAfter(TODAY)) {
-          goalStatus.onTrack++
-        } else if (dayjs(target_date).isBefore(TODAY)) {
-          goalStatus.offTrack++
-        }
-        const temp = scenarios
-          ?.map((scenario) => ({
-            name: scenario.name,
-            start_date: new Date(scenario.financialGoals[0].createdAt),
-            finish_date: addDays(new Date(), scenario.financialGoals[0].reachableByDays),
-          }))
-          .concat({
-            name: 'Current Scenario',
-            start_date: new Date(createdAt),
-            finish_date: addDays(new Date(createdAt), reachableByDays),
-          })
-        goals_chart_data?.Goals.push({ name, Scenarios: temp })
-      })
-      setGoalStatus(goalStatus)
+      const selectedGoals = goals_data?.filter((goal) => checkedItems[goal.id])
+      const goals: GoalDumbbellChartProps[] =
+        selectedGoals?.map(({ name, scenarios, createdAt, reachableByDays }) => ({
+          name,
+          Scenarios: [
+            ...(scenarios?.map((scenario) => ({
+              name: scenario.name,
+              start_date: new Date(scenario.financialGoals[0].createdAt),
+              finish_date: addDays(TODAY, scenario.financialGoals[0].reachableByDays),
+            })) || []),
+            {
+              name: 'Current Scenario',
+              start_date: new Date(createdAt),
+              finish_date: addDays(new Date(createdAt), reachableByDays),
+            },
+          ],
+        })) || []
+      setGoalsChartData({ Goals: goals })
     }
-  }, [goals_data, goals_chart_data, isLoading])
-
-  const getPercentage = useCallback((value: number, total: number) => {
-    return +((value / total) * 100).toFixed(2) || 0
-  }, [])
+  }, [goals_data, isLoading, checkedItems, goalsChartData])
 
   if (isLoading) {
     return (
@@ -95,27 +96,6 @@ export default function Goals() {
         </Link>
       </div>
 
-      <div className='grid sm:grid-cols-2 md:grid-cols-3 gap-4'>
-        <ProgressChart
-          title='On Track'
-          color={colors.indigo['500']}
-          value={getPercentage(goalStatus?.onTrack, goalStatus?.total)}
-          unit='%'
-        />
-        <ProgressChart
-          title='Off Track'
-          color={colors.red['500']}
-          value={getPercentage(goalStatus?.offTrack, goalStatus?.total)}
-          unit='%'
-        />
-        <ProgressChart
-          title='Completed'
-          color={colors.green['500']}
-          value={getPercentage(goalStatus?.completed, goalStatus?.total)}
-          unit='%'
-        />
-      </div>
-
       <div className='text-2xl font-bold truncate block py-4'>Your ongoing financial goals</div>
 
       {isFetching ? (
@@ -141,7 +121,18 @@ export default function Goals() {
                   />
                 ))}
               </div>
-              <DumbbellChart {...goals_chart_data} />
+              <div className=''>
+                <h2 className='mt-8 mb-4 text-2xl font-bold truncate block py-4'>Analyze different Scenarios</h2>
+                <DumbbellChart {...goalsChartData} />
+                {goals_data?.map((goal) => (
+                  <GoalListItem
+                    key={goal.id}
+                    goal={goal}
+                    isChecked={checkedItems[goal.id] || false}
+                    onCheckboxChange={() => handleCheckboxChange(goal.id.toString())}
+                  />
+                ))}
+              </div>
             </>
           ) : (
             <div>

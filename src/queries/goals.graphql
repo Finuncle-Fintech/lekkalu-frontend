@@ -7,17 +7,13 @@ type Scenario{
     financialGoals: [Goal]
 }
 
-type UserCustomKPIType {
+type Kpi {
     id: ID!
     name: String!
     description: String!
+    latex: String!
 }
 
-type CustomKPIType {
-    id: ID!
-    name: String!
-}
-union RelatedObject = UserCustomKPIType | CustomKPIType
 type Goal{
     id: ID!
     name: String!
@@ -27,7 +23,7 @@ type Goal{
     scenarios: [Scenario]
     createdAt: Date!
     reachableByDays: Int!
-    relatedObject: RelatedObject
+    kpi: Kpi
 }
 type Query {
     financialGoals: [Goal]

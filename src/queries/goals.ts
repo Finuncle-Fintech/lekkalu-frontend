@@ -28,16 +28,11 @@ const FETCH_GOALS_QUERY = gql`
                     reachableByDays
                 }
             }
-            relatedObject {
-                ... on UserCustomKPIType {
-                    id
-                    name
-                    description
-                }
-                ... on CustomKPIType {
-                    id
-                    name
-                }
+            kpi{
+                id
+                name
+                latex
+                description
             }
         }
     }

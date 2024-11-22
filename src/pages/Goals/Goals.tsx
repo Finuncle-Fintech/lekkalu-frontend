@@ -61,13 +61,13 @@ export default function Goals() {
             {
               name: 'Current Scenario',
               start_date: new Date(createdAt),
-              finish_date: addDays(new Date(createdAt), reachableByDays),
+              finish_date: addDays(new Date(), reachableByDays),
             },
           ],
         })) || []
       setGoalsChartData({ Goals: goals })
     }
-  }, [goals_data, isLoading, checkedItems, goalsChartData])
+  }, [goals_data, isLoading, checkedItems])
 
   if (isLoading) {
     return (

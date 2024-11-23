@@ -70,7 +70,7 @@ export default function GoalDetails() {
         <div className='flex'>
           <div className='flex gap-2 flex-1 items-center'>
             <GaugeIcon className='w-4 h-4' />
-            <div>KPI</div>
+            <div>KPI*</div>
           </div>
           <div className='flex-1 font-medium'>{data.track_kpi}</div>
         </div>

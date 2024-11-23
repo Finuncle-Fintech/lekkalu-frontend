@@ -40,6 +40,7 @@ const AddScenario = () => {
           track_kpi: 'NetWorth',
           target_value: 1,
           target_date: ONE_YEAR_LATER,
+          custom_kpi: 1,
         },
         apiClient,
       ),

@@ -20,30 +20,24 @@ type GoalFormType = {
 }
 
 export default function GoalForm({ form, onSubmit, isLoading, isEdit = false }: GoalFormType) {
-  const {
-    custom_kpis,
-    user_custom_kpis,
-    incomeExpenses,
-    goalProportionality,
-    getTargetKpi,
-    isFetchingOptions,
-  } = useGetSelectOptionsForGoal()
+  const { custom_kpis, user_custom_kpis, incomeExpenses, goalProportionality, getTargetKpi, isFetchingOptions } =
+    useGetSelectOptionsForGoal()
 
   if (isFetchingOptions) {
     return <></>
   }
 
   const mergedKpis: CustomKPI[] = [
-    ...(custom_kpis ?? []).map(item => ({ ...item })),
-    ...(user_custom_kpis ?? []).map(item => ({ ...item })),
+    ...(custom_kpis ?? []).map((item) => ({ ...item })),
+    ...(user_custom_kpis ?? []).map((item) => ({ ...item })),
   ]
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="grid md:grid-cols-2 gap-4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className='grid md:grid-cols-2 gap-4'>
         <FormField
           control={form.control}
-          name="name"
+          name='name'
           render={({ field }) => (
             <FormItem>
               <FormLabel>Name*</FormLabel>
@@ -57,12 +51,12 @@ export default function GoalForm({ form, onSubmit, isLoading, isEdit = false }: 
 
         <FormField
           control={form.control}
-          name="target_value"
+          name='target_value'
           render={({ field }) => (
             <FormItem>
               <FormLabel>Target*</FormLabel>
               <FormControl>
-                <Input type="number" value={field.value} onChange={(e) => field.onChange(e.target.valueAsNumber)} />
+                <Input type='number' value={field.value} onChange={(e) => field.onChange(e.target.valueAsNumber)} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -71,7 +65,7 @@ export default function GoalForm({ form, onSubmit, isLoading, isEdit = false }: 
 
         <FormField
           control={form.control}
-          name="target_date"
+          name='target_date'
           render={({ field }) => {
             return (
               <FormItem>
@@ -90,7 +84,7 @@ export default function GoalForm({ form, onSubmit, isLoading, isEdit = false }: 
 
         <FormField
           control={form.control}
-          name="target_contribution_source"
+          name='target_contribution_source'
           render={({ field }) => (
             <FormItem>
               <FormLabel>Source*</FormLabel>
@@ -101,7 +95,7 @@ export default function GoalForm({ form, onSubmit, isLoading, isEdit = false }: 
                   disabled={Boolean(!incomeExpenses?.length)}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Source" />
+                    <SelectValue placeholder='Source' />
                   </SelectTrigger>
                   <SelectContent>
                     {incomeExpenses?.map((item) => (
@@ -114,7 +108,7 @@ export default function GoalForm({ form, onSubmit, isLoading, isEdit = false }: 
               </FormControl>
               <div>
                 {!incomeExpenses?.length ? (
-                  <Link to="/income-statement" className="text-gray-500 text-xs hover:underline">
+                  <Link to='/income-statement' className='text-gray-500 text-xs hover:underline'>
                     No Income Expense found. Click here to add.
                   </Link>
                 ) : (
@@ -128,7 +122,7 @@ export default function GoalForm({ form, onSubmit, isLoading, isEdit = false }: 
 
         <FormField
           control={form.control}
-          name="goal_proportionality"
+          name='goal_proportionality'
           render={({ field }) => (
             <FormItem>
               <FormLabel>Goal Proportionality*</FormLabel>
@@ -139,7 +133,7 @@ export default function GoalForm({ form, onSubmit, isLoading, isEdit = false }: 
                   disabled={Boolean(!goalProportionality?.length)}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Goal Propotionality" />
+                    <SelectValue placeholder='Goal Propotionality' />
                   </SelectTrigger>
                   <SelectContent>
                     {goalProportionality?.map((item) => (
@@ -152,7 +146,7 @@ export default function GoalForm({ form, onSubmit, isLoading, isEdit = false }: 
               </FormControl>
               <div>
                 {!goalProportionality?.length ? (
-                  <p className="text-red-500 text-xs">No goal propotionality found.</p>
+                  <p className='text-red-500 text-xs'>No goal propotionality found.</p>
                 ) : (
                   <></>
                 )}
@@ -164,14 +158,14 @@ export default function GoalForm({ form, onSubmit, isLoading, isEdit = false }: 
 
         <FormField
           control={form.control}
-          name="track_kpi"
+          name='track_kpi'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>KPI</FormLabel>
+              <FormLabel>Track KPI</FormLabel>
               <FormControl>
                 <Select value={field.value} onValueChange={field.onChange} disabled={Boolean(!getTargetKpi?.length)}>
                   <SelectTrigger>
-                    <SelectValue placeholder="KPI" />
+                    <SelectValue placeholder='KPI' />
                   </SelectTrigger>
                   <SelectContent>
                     {getTargetKpi?.map((item) => (
@@ -182,7 +176,7 @@ export default function GoalForm({ form, onSubmit, isLoading, isEdit = false }: 
                   </SelectContent>
                 </Select>
               </FormControl>
-              <div>{!getTargetKpi?.length ? <p className="text-red-500 text-xs">No Target KPI found.</p> : <></>}</div>
+              <div>{!getTargetKpi?.length ? <p className='text-red-500 text-xs'>No Target KPI found.</p> : <></>}</div>
               <FormMessage />
             </FormItem>
           )}
@@ -190,10 +184,10 @@ export default function GoalForm({ form, onSubmit, isLoading, isEdit = false }: 
 
         <FormField
           control={form.control}
-          name="custom_kpi"
+          name='custom_kpi'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>KPI</FormLabel>
+              <FormLabel>KPI*</FormLabel>
               <FormControl>
                 <Select
                   value={field.value?.toString()}
@@ -201,7 +195,7 @@ export default function GoalForm({ form, onSubmit, isLoading, isEdit = false }: 
                   disabled={Boolean(!mergedKpis.length)}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Select a KPI" />
+                    <SelectValue placeholder='Select a KPI' />
                   </SelectTrigger>
                   <SelectContent>
                     {mergedKpis.map((item: { id: number; name: string }) => (
@@ -214,7 +208,7 @@ export default function GoalForm({ form, onSubmit, isLoading, isEdit = false }: 
               </FormControl>
               <div>
                 {!mergedKpis.length ? (
-                  <Link to="/income-statement" className="text-gray-500 text-xs hover:underline">
+                  <Link to='/income-statement' className='text-gray-500 text-xs hover:underline'>
                     No KPIs found. Click here to add.
                   </Link>
                 ) : (
@@ -225,8 +219,8 @@ export default function GoalForm({ form, onSubmit, isLoading, isEdit = false }: 
             </FormItem>
           )}
         />
-        <Button type="submit" className="col-span-full w-max" loading={isLoading}>
-          <PlusCircle className="w-4 h-4 mr-2" />
+        <Button type='submit' className='col-span-full w-max' loading={isLoading}>
+          <PlusCircle className='w-4 h-4 mr-2' />
           <span>{isEdit ? 'Edit Goal' : 'Add Goal'}</span>
         </Button>
       </form>

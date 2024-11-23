@@ -17,7 +17,7 @@ export const addGoalSchema = z.object({
   track_kpi: z.string().optional(),
   target_date: z.string().transform((value) => dayjs(value).format('YYYY-MM-DD')),
   goal_proportionality: z.string(),
-  custom_kpi: z.coerce.number({ errorMap: customErrorMap }).optional(),
+  custom_kpi: z.coerce.number({ errorMap: customErrorMap }),
 })
 
 export type AddGoalSchema = z.infer<typeof addGoalSchema>

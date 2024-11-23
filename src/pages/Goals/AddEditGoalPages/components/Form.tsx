@@ -184,7 +184,7 @@ export default function GoalForm({ form, onSubmit, isLoading, isEdit = false }: 
 
         <FormField
           control={form.control}
-          name='custom_kpi'
+          name='kpi'
           render={({ field }) => (
             <FormItem>
               <FormLabel>KPI*</FormLabel>

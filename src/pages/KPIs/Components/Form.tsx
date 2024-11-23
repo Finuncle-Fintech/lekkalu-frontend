@@ -89,7 +89,7 @@ export default function CustomKPIForm({
 
         <Button type="submit" className="col-span-full w-max" loading={isLoading}>
           <PlusCircle className="w-4 h-4 mr-2" />
-          <span>{isEdit ? 'Edit Goal' : 'Add Goal'}</span>
+          <span>{isEdit ? 'Edit KPI' : 'Add KPI'}</span>
         </Button>
       </form>
     </Form>

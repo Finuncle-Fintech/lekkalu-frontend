@@ -167,7 +167,7 @@ export default function GoalForm({ form, onSubmit, isLoading, isEdit = false }: 
           name="track_kpi"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>KPI*</FormLabel>
+              <FormLabel>KPI</FormLabel>
               <FormControl>
                 <Select value={field.value} onValueChange={field.onChange} disabled={Boolean(!getTargetKpi?.length)}>
                   <SelectTrigger>
@@ -193,7 +193,7 @@ export default function GoalForm({ form, onSubmit, isLoading, isEdit = false }: 
           name="custom_kpi"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Custom KPI</FormLabel>
+              <FormLabel>KPI</FormLabel>
               <FormControl>
                 <Select
                   value={field.value?.toString()}

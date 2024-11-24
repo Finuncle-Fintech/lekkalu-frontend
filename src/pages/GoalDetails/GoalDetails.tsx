@@ -23,7 +23,8 @@ export default function GoalDetails() {
     select: (data) => {
       return {
         ...data,
-        target_contribution_source: incomeExpenses?.find((each) => each?.id === data?.target_contribution_source)?.name,
+        target_contribution_source: incomeExpenses?.find((each) => each?.id === data?.target_contribution_source[0])
+          ?.name,
         custom_kpi: custom_kpis?.find((each) => each?.id === data?.custom_kpi)?.name,
       }
     },

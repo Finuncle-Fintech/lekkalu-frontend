@@ -10,7 +10,7 @@ export type Goal = {
   track_kpi: string
   createdAt: string
   updated_at: string
-  target_contribution_source: number
+  target_contribution_source: number[]
   target_date: string
   met: boolean
   custom_kpi: number
@@ -38,11 +38,4 @@ export type KpiType = {
   id: number
   label: string
   value: string
-}
-
-export type GoalStatus = {
-  total: number
-  onTrack: number
-  offTrack: number
-  completed: number
 }

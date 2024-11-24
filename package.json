@@ -79,7 +79,7 @@
     "format": "prettier --write src/**/*.{js,jsx,ts,tsx,css,md,json,scss} --config ./.prettierrc",
     "lint": "eslint --fix --no-error-on-unmatched-pattern --ignore-path .gitignore --ext ts,tsx,js,jsx .",
     "check:duplicates": "jscpd src --min-lines 5 --reporters console",
-    "prepare": "husky install"
+    "prepare": "npx husky install"
   },
   "browserslist": {
     "production": [

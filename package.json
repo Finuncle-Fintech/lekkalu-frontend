@@ -34,7 +34,7 @@
     "aos": "^2.3.4",
     "apexcharts": "^3.52.0",
     "axios": "^1.6.7",
-    "class-variance-authority": "^0.7.0",
+    "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.0",
     "cmdk": "^1.0.4",
     "constate": "^3.3.2",
